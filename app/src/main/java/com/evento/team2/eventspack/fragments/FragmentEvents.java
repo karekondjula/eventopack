@@ -49,6 +49,7 @@ public class FragmentEvents extends Fragment {
             extends RecyclerView.Adapter<SimpleStringRecyclerViewAdapter.ViewHolder> {
 
         private ArrayList<Event> events;
+        private Context context;
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -76,6 +77,7 @@ public class FragmentEvents extends Fragment {
         }
 
         public SimpleStringRecyclerViewAdapter(Context context, ArrayList<Event> eventNames) {
+            this.context = context;
             this.events = eventNames;
         }
 
@@ -92,10 +94,10 @@ public class FragmentEvents extends Fragment {
 
             // TODO daniel problem with image, does not load ?!?!?!
             if (TextUtils.isEmpty(events.get(position).pictureUri)) {
-                Glide.with(holder.mEventImage.getContext()).load(R.drawable.cheese_2).centerCrop().into(holder.mEventImage);
+                Glide.with(context).load(R.drawable.cheese_2).centerCrop().into(holder.mEventImage);
             } else {
                 // TODO daniel implement picture uri as picture
-                Glide.with(holder.mEventImage.getContext()).load(new File(events.get(position).pictureUri))
+                Glide.with(context).load(new File(events.get(position).pictureUri))
                         .fitCenter().into(holder.mEventImage);
             }
 
