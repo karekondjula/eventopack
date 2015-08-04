@@ -28,7 +28,8 @@ import com.bumptech.glide.Glide;
 
 public class EventDetailActivity extends AppCompatActivity {
 
-    public static final String EXTRA_NAME = "cheese_name";
+    public static final String EXTRA_NAME = "event_name";
+    public static final String EXTRA_PICTURE_URI = "picture_uri";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,8 @@ public class EventDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_detail);
 
         Intent intent = getIntent();
-        final String cheeseName = intent.getStringExtra(EXTRA_NAME);
+        final String eventName = intent.getStringExtra(EXTRA_NAME);
+        final String eventPictureUri = intent.getStringExtra(EXTRA_PICTURE_URI);
 
         final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -44,12 +46,13 @@ public class EventDetailActivity extends AppCompatActivity {
 
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle(cheeseName);
+        collapsingToolbar.setTitle(eventName);
 
-        loadBackdrop();
+        loadBackdrop(eventPictureUri);
     }
 
-    private void loadBackdrop() {
+    private void loadBackdrop(String pictureUri) {
+        // TODO daniel implement picture uri as picture
         final ImageView imageView = (ImageView) findViewById(R.id.backdrop);
         Glide.with(this).load(R.drawable.cheese_2).centerCrop().into(imageView);
     }

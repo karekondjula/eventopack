@@ -2,11 +2,13 @@ package com.evento.team2.eventspack.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,16 +19,16 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.EventDetailActivity;
 import com.evento.team2.eventspack.R;
+import com.evento.team2.eventspack.model.Event;
+import com.evento.team2.eventspack.utils.Utils;
 
-import java.util.Arrays;
-import java.util.List;
+import java.io.File;
+import java.util.ArrayList;
 
 /**
  * Created by Daniel on 31-Jul-15.
  */
 public class FragmentEvents extends Fragment {
-
-    public static final String[] EVENTS = {"Abbaye de Belloc", "Abbaye du Mont des Cats", "Abertam", "Abondance", "Ackawi",};
 
     @Nullable
     @Override
@@ -40,76 +42,80 @@ public class FragmentEvents extends Fragment {
 
     private void setupRecyclerView(RecyclerView recyclerView) {
         recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-        recyclerView.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(), Arrays.asList(EVENTS)));
+        recyclerView.setAdapter(new SimpleStringRecyclerViewAdapter(getActivity(), Utils.Helpers.createEvents()));
     }
 
     public static class SimpleStringRecyclerViewAdapter
             extends RecyclerView.Adapter<SimpleStringRecyclerViewAdapter.ViewHolder> {
 
-        private final TypedValue mTypedValue = new TypedValue();
-        private int mBackground;
-        private List<String> mValues;
+        private ArrayList<Event> events;
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
-            public String mBoundString;
 
             public final View mView;
-            public final ImageView mImageView;
-            public final TextView mTextView;
+            public final ImageView mEventImage;
+            public final TextView mEventTitle;
+            public final TextView mEventDetails;
 
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
-                mImageView = (ImageView) view.findViewById(R.id.avatar);
-                mTextView = (TextView) view.findViewById(android.R.id.text1);
+                mEventImage = (ImageView) view.findViewById(R.id.event_picture);
+                mEventTitle = (TextView) view.findViewById(R.id.event_title);
+                mEventDetails = (TextView) view.findViewById(R.id.event_details);
             }
 
             @Override
             public String toString() {
-                return super.toString() + " '" + mTextView.getText();
+                return super.toString() + " '" + mEventTitle.getText();
             }
         }
 
-        public String getValueAt(int position) {
-            return mValues.get(position);
+        public Event getValueAt(int position) {
+            return events.get(position);
         }
 
-        public SimpleStringRecyclerViewAdapter(Context context, List<String> items) {
-            context.getTheme().resolveAttribute(R.attr.selectableItemBackground, mTypedValue, true);
-            mBackground = mTypedValue.resourceId;
-            mValues = items;
+        public SimpleStringRecyclerViewAdapter(Context context, ArrayList<Event> eventNames) {
+            this.events = eventNames;
         }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.item_events, parent, false);
-            view.setBackgroundResource(mBackground);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_events, parent, false);
             return new ViewHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(final ViewHolder holder, int position) {
-            holder.mBoundString = mValues.get(position);
-            holder.mTextView.setText(mValues.get(position));
+        public void onBindViewHolder(final ViewHolder holder, final int position) {
+            holder.mEventTitle.setText(events.get(position).name);
+            holder.mEventDetails.setText(events.get(position).details);
+
+            // TODO daniel problem with image, does not load ?!?!?!
+            if (TextUtils.isEmpty(events.get(position).pictureUri)) {
+                Glide.with(holder.mEventImage.getContext()).load(R.drawable.cheese_2).centerCrop().into(holder.mEventImage);
+            } else {
+                // TODO daniel implement picture uri as picture
+                Glide.with(holder.mEventImage.getContext()).load(new File(events.get(position).pictureUri))
+                        .fitCenter().into(holder.mEventImage);
+            }
 
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Context context = v.getContext();
                     Intent intent = new Intent(context, EventDetailActivity.class);
-                    intent.putExtra(EventDetailActivity.EXTRA_NAME, holder.mBoundString);
-
+                    intent.putExtra(EventDetailActivity.EXTRA_NAME, events.get(position).name);
+                    if (!TextUtils.isEmpty(events.get(position).pictureUri)) {
+                        intent.putExtra(EventDetailActivity.EXTRA_PICTURE_URI, events.get(position).name);
+                    }
                     context.startActivity(intent);
                 }
             });
-
-            Glide.with(holder.mImageView.getContext()).load(R.drawable.cheese_2).fitCenter().into(holder.mImageView);
         }
 
         @Override
         public int getItemCount() {
-            return mValues.size();
+            return events.size();
         }
     }
 }
