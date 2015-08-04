@@ -42,8 +42,10 @@ public class ActivityMain extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         final ActionBar ab = getSupportActionBar();
-        ab.setHomeAsUpIndicator(R.drawable.ic_menu);
-        ab.setDisplayHomeAsUpEnabled(true);
+        if (ab != null) {
+            ab.setHomeAsUpIndicator(R.drawable.ic_menu);
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
 
         //Initializing NavigationView
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
@@ -63,14 +65,17 @@ public class ActivityMain extends AppCompatActivity {
                 switch (menuItem.getItemId()) {
 
                     //Replacing the main content with ContentFragment Which is our Inbox View;
-                    case R.id.inbox:
-                        Toast.makeText(getApplicationContext(), "Inbox Selected", Toast.LENGTH_SHORT).show();
+                    case R.id.find_events_settings:
+                        Toast.makeText(getApplicationContext(), "find_events_settings", Toast.LENGTH_SHORT).show();
                         return true;
-                    case R.id.starred:
-                        Toast.makeText(getApplicationContext(), "Stared Selected", Toast.LENGTH_SHORT).show();
+                    case R.id.notification_settings:
+                        Toast.makeText(getApplicationContext(), "notification_settings", Toast.LENGTH_SHORT).show();
                         return true;
-                    case R.id.sent_mail:
-                        Toast.makeText(getApplicationContext(), "Send Selected", Toast.LENGTH_SHORT).show();
+                    case R.id.calendar:
+                        Toast.makeText(getApplicationContext(), "notification_settings", Toast.LENGTH_SHORT).show();
+                        return true;
+                    case R.id.logout:
+                        Toast.makeText(getApplicationContext(), "notification_settings", Toast.LENGTH_SHORT).show();
                         return true;
                     default:
                         Toast.makeText(getApplicationContext(), "Somethings Wrong", Toast.LENGTH_SHORT).show();

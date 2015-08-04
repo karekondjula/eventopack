@@ -54,7 +54,7 @@ public class EventDetailActivity extends AppCompatActivity {
     private void loadBackdrop(String pictureUri) {
         // TODO daniel implement picture uri as picture
         final ImageView imageView = (ImageView) findViewById(R.id.backdrop);
-        Glide.with(this).load(R.drawable.party_image).centerCrop().into(imageView);
+        Glide.with(this).load(R.drawable.cheese_2).centerCrop().into(imageView);
     }
 
     @Override

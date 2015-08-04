@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="190dp"
-    android:background="#801623"
+    android:background="@color/colorPrimaryDark"
     android:orientation="vertical">
 
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -26,8 +26,8 @@
         android:layout_alignStart="@+id/profile_image"
         android:gravity="left"
         android:paddingBottom="4dp"
-        android:text="Akash Bangad"
-        android:textColor="#FFF"
+        android:text="Daniel Kareski"
+        android:textColor="@color/textColorPrimary"
         android:textSize="14sp"
         android:textStyle="bold" />
 
@@ -40,8 +40,8 @@
         android:layout_alignStart="@+id/username"
         android:layout_marginBottom="8dp"
         android:gravity="left"
-        android:text="Akash.bangad93@gmail.com"
-        android:textColor="#fff"
+        android:text="kondjul@gmail.com"
+        android:textColor="@color/textColorPrimary"
         android:textSize="14sp" />
 
 </RelativeLayout>

@@ -14,7 +14,7 @@ public class Utils {
         public static final String[] EVENTS_DESCRIPTION = {"auch jako", "majkata na princezata", "albert", "donzuav", "japanac",};
 
         public static ArrayList<Event> createEvents() {
-            ArrayList<Event> events = new ArrayList<Event>();
+            ArrayList<Event> events = new ArrayList<>();
 
             int i = 0;
 

@@ -4,22 +4,28 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:id="@+id/inbox"
+            android:id="@+id/find_events_settings"
             android:checked="false"
-            android:icon="@drawable/ic_inbox_black"
-            android:title="Inbox" />
+            android:icon="@drawable/ic_dashboard"
+            android:title="Find events settings" />
 
         <item
-            android:id="@+id/starred"
+            android:id="@+id/notification_settings"
             android:checked="false"
-            android:icon="@drawable/ic_star_black"
-            android:title="starred" />
+            android:icon="@drawable/ic_headset"
+            android:title="Notification settings" />
 
         <item
-            android:id="@+id/sent_mail"
+            android:id="@+id/calendar"
             android:checked="false"
-            android:icon="@drawable/ic_send_black"
-            android:title="sent_mail" />
+            android:icon="@drawable/ic_event"
+            android:title="Calendar" />
+
+        <item
+            android:id="@+id/logout"
+            android:checked="false"
+            android:icon="@drawable/abc_ic_commit_search_api_mtrl_alpha"
+            android:title="Logout" />
 
     </group>
 </menu>
