@@ -92,13 +92,11 @@ public class FragmentEvents extends Fragment {
             holder.mEventTitle.setText(events.get(position).name);
             holder.mEventDetails.setText(events.get(position).details);
 
-            // TODO daniel problem with image, does not load ?!?!?!
             if (TextUtils.isEmpty(events.get(position).pictureUri)) {
-                Glide.with(context).load(R.drawable.cheese_2).centerCrop().into(holder.mEventImage);
+                Glide.with(holder.mEventImage.getContext()).load(R.drawable.party_image).fitCenter().into(holder.mEventImage);
             } else {
                 // TODO daniel implement picture uri as picture
-                Glide.with(context).load(new File(events.get(position).pictureUri))
-                        .fitCenter().into(holder.mEventImage);
+                Glide.with(context).load(new File(events.get(position).pictureUri)).fitCenter().into(holder.mEventImage);
             }
 
             holder.mView.setOnClickListener(new View.OnClickListener() {

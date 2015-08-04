@@ -37,8 +37,10 @@
             <ImageView
                 android:id="@+id/event_picture"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                />
+                android:layout_height="wrap_content"
+                android:src="@drawable/party_image"
+                android:scaleType="centerCrop"
+                android:cropToPadding="false" />
 
             <TextView
                 android:id="@+id/event_title"
