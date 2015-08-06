@@ -40,10 +40,11 @@ public class ActivitySettings extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Log.i(">>", "getFragmentManager().getBackStackEntryCount() : " + getFragmentManager().getBackStackEntryCount());
-            getFragmentManager().popBackStack();
+
         if (getFragmentManager().getBackStackEntryCount() == 1) {
             onBackPressed();
+        } else {
+            getFragmentManager().popBackStack();
         }
 
         return true;
@@ -81,12 +82,6 @@ public class ActivitySettings extends AppCompatActivity {
                 }
             });
             ((AppCompatActivity) getActivity()).setSupportActionBar(actionbar);
-        }
-
-        @Override
-        public void onResume() {
-            getFragmentManager().beginTransaction().show(this).commit();
-            super.onResume();
         }
 
         @Override
@@ -136,7 +131,10 @@ public class ActivitySettings extends AppCompatActivity {
         @Override
         public void onDetach() {
             super.onDetach();
-            getFragmentManager().beginTransaction().show(getFragmentManager().findFragmentByTag(SettingsPreference.TAG)).commit();
+            Fragment settingsFragment = getFragmentManager().findFragmentByTag(SettingsPreference.TAG);
+            if (settingsFragment != null) {
+                getFragmentManager().beginTransaction().show(settingsFragment).commit();
+            }
         }
     }
 
@@ -174,7 +172,10 @@ public class ActivitySettings extends AppCompatActivity {
         @Override
         public void onDetach() {
             super.onDetach();
-            getFragmentManager().beginTransaction().show(getFragmentManager().findFragmentByTag(SettingsPreference.TAG)).commit();
+            Fragment settingsFragment = getFragmentManager().findFragmentByTag(SettingsPreference.TAG);
+            if (settingsFragment != null) {
+                getFragmentManager().beginTransaction().show(settingsFragment).commit();
+            }
         }
     }
 

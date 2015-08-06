@@ -6,8 +6,6 @@
         android:summary="pref_description_social_recommendations"
         android:defaultValue="true" />
 
-    <!-- NOTE: EditTextPreference accepts EditText attributes. -->
-    <!-- NOTE: EditTextPreference's summary should be set to its value by the activity code. -->
     <EditTextPreference
         android:key="example_text"
         android:title="pref_title_display_name"
@@ -18,7 +16,6 @@
         android:singleLine="true"
         android:maxLines="1" />
 
-    <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
     <MultiSelectListPreference
         android:key="example_list"
         android:title="pref_title_add_friends_to_messages"

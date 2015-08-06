@@ -127,6 +127,8 @@ public class ActivityMain extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        // TODO daniel remove the green selected in the drawer
         navigationView.setSelected(false);
     }
 
