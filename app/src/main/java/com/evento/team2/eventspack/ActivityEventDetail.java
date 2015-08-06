@@ -26,7 +26,7 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
-public class EventDetailActivity extends AppCompatActivity {
+public class ActivityEventDetail extends AppCompatActivity {
 
     public static final String EXTRA_NAME = "event_name";
     public static final String EXTRA_PICTURE_URI = "picture_uri";
@@ -54,7 +54,7 @@ public class EventDetailActivity extends AppCompatActivity {
     private void loadBackdrop(String pictureUri) {
         // TODO daniel implement picture uri as picture
         final ImageView imageView = (ImageView) findViewById(R.id.backdrop);
-        Glide.with(this).load(R.drawable.cheese_2).centerCrop().into(imageView);
+        Glide.with(this).load(R.drawable.party_image).centerCrop().into(imageView);
     }
 
     @Override

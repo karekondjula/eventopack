@@ -19,7 +19,15 @@
         </activity>
 
         <activity
-            android:name=".EventDetailActivity"
+            android:name=".ActivityEventDetail"
+            android:parentActivityName=".ActivityMain">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ActivityMain" />
+        </activity>
+
+        <activity
+            android:name=".ActivitySettings"
             android:parentActivityName=".ActivityMain">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

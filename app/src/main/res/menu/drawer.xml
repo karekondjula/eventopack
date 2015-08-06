@@ -4,16 +4,10 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:id="@+id/find_events_settings"
+            android:id="@+id/settings"
             android:checked="false"
             android:icon="@drawable/ic_dashboard"
-            android:title="Find events settings" />
-
-        <item
-            android:id="@+id/notification_settings"
-            android:checked="false"
-            android:icon="@drawable/ic_headset"
-            android:title="Notification settings" />
+            android:title="Settings" />
 
         <item
             android:id="@+id/calendar"
@@ -24,7 +18,7 @@
         <item
             android:id="@+id/logout"
             android:checked="false"
-            android:icon="@drawable/abc_ic_commit_search_api_mtrl_alpha"
+            android:icon="@android:drawable/ic_menu_revert"
             android:title="Logout" />
 
     </group>

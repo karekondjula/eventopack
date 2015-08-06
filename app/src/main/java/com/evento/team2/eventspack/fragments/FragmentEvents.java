@@ -2,14 +2,12 @@ package com.evento.team2.eventspack.fragments;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.evento.team2.eventspack.EventDetailActivity;
+import com.evento.team2.eventspack.ActivityEventDetail;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.utils.Utils;
@@ -102,10 +100,10 @@ public class FragmentEvents extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Context context = v.getContext();
-                    Intent intent = new Intent(context, EventDetailActivity.class);
-                    intent.putExtra(EventDetailActivity.EXTRA_NAME, events.get(position).name);
+                    Intent intent = new Intent(context, ActivityEventDetail.class);
+                    intent.putExtra(ActivityEventDetail.EXTRA_NAME, events.get(position).name);
                     if (!TextUtils.isEmpty(events.get(position).pictureUri)) {
-                        intent.putExtra(EventDetailActivity.EXTRA_PICTURE_URI, events.get(position).name);
+                        intent.putExtra(ActivityEventDetail.EXTRA_PICTURE_URI, events.get(position).name);
                     }
                     context.startActivity(intent);
                 }

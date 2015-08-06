@@ -1,5 +1,7 @@
 package com.evento.team2.eventspack;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
@@ -11,15 +13,17 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.evento.team2.eventspack.fragments.FragmentFriends;
+import com.astuetz.PagerSlidingTabStrip;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.evento.team2.eventspack.fragments.FragmentEvents;
+import com.evento.team2.eventspack.fragments.FragmentFriends;
 import com.evento.team2.eventspack.fragments.FragmentMessages;
 
 import java.util.ArrayList;
@@ -27,7 +31,6 @@ import java.util.List;
 
 public class ActivityMain extends AppCompatActivity {
 
-    //Defining Variables
     private Toolbar toolbar;
     private NavigationView navigationView;
     private DrawerLayout drawerLayout;
@@ -37,7 +40,6 @@ public class ActivityMain extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Initializing Toolbar and setting it as the actionbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -47,16 +49,13 @@ public class ActivityMain extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
-        //Initializing NavigationView
         navigationView = (NavigationView) findViewById(R.id.navigation_view);
 
-        //Setting Navigation View Item Selected Listener to handle the item click of the navigation menu
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
 
             @Override
             public boolean onNavigationItemSelected(MenuItem menuItem) {
 
-                //Checking if the item is in checked state or not, if not make it in checked state
                 if (menuItem.isChecked()) menuItem.setChecked(false);
                 else menuItem.setChecked(true);
 
@@ -64,12 +63,9 @@ public class ActivityMain extends AppCompatActivity {
 
                 switch (menuItem.getItemId()) {
 
-                    //Replacing the main content with ContentFragment Which is our Inbox View;
-                    case R.id.find_events_settings:
-                        Toast.makeText(getApplicationContext(), "find_events_settings", Toast.LENGTH_SHORT).show();
-                        return true;
-                    case R.id.notification_settings:
-                        Toast.makeText(getApplicationContext(), "notification_settings", Toast.LENGTH_SHORT).show();
+                    case R.id.settings:
+                        Intent i = new Intent(ActivityMain.this, ActivitySettings.class);
+                        startActivity(i);
                         return true;
                     case R.id.calendar:
                         Toast.makeText(getApplicationContext(), "notification_settings", Toast.LENGTH_SHORT).show();
@@ -123,8 +119,15 @@ public class ActivityMain extends AppCompatActivity {
             }
         });
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setupWithViewPager(viewPager);
+        PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        pagerSlidingTabStrip.setShouldExpand(true);
+        pagerSlidingTabStrip.setViewPager(viewPager);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        navigationView.setSelected(false);
     }
 
     @Override

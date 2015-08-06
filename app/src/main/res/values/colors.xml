@@ -11,7 +11,8 @@
 
     <color name="textColorPrimary">#FFFFFF</color>
     <color name="windowBackground">#FFFFFF</color>
-
+    <color name="text_highlight">#be56e2bc</color>
+    <color name="accent_state_list">#99cc00</color> <!-- in settings -->
 
     <!--<color name="tabsScrollColor">#004D40</color>-->
 </resources>

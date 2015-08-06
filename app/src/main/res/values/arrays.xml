@@ -8,4 +8,10 @@
         <item>@string/nav_item_notifications</item>
     </string-array>
 
+    <string-array name="pref_example_list_titles" />
+    <string-array name="pref_example_list_values" />
+
+    <string-array name="pref_sync_frequency_titles" />
+    <string-array name="pref_sync_frequency_values" />
+
 </resources>
