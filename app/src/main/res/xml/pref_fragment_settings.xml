@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceScreen
+        android:fragment="com.evento.team2.eventspack.ActivitySettings$NotificationSettingsFragment"
+        android:title="Notification settings"
+        android:summary="How I get notified"/>
+
+    <PreferenceScreen
+        android:fragment="com.evento.team2.eventspack.ActivitySettings$FindEventsSettingsFragment"
+        android:title="Event settings"
+        android:summary="Which events show to me"/>
+
+</PreferenceScreen>
