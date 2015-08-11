@@ -2,11 +2,11 @@
 <resources>
 
     <!-- navigation drawer item labels  -->
-    <string-array name="nav_drawer_labels">
-        <item>@string/nav_item_home</item>
-        <item>@string/nav_item_friends</item>
-        <item>@string/nav_item_notifications</item>
-    </string-array>
+    <!--<string-array name="nav_drawer_labels">-->
+        <!--<item>@string/nav_item_home</item>-->
+        <!--<item>@string/nav_item_friends</item>-->
+        <!--<item>@string/nav_item_notifications</item>-->
+    <!--</string-array>-->
 
     <string-array name="pref_example_list_titles">
         <item>one</item>

@@ -1,10 +1,16 @@
 package com.evento.team2.eventspack.fragments;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -15,10 +21,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.evento.team2.eventspack.ActivityEventDetail;
+import com.evento.team2.eventspack.ActivityEventDetails;
+import com.evento.team2.eventspack.ActivityMain;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.utils.Utils;
+import com.kogitune.activity_transition.ActivityTransitionLauncher;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -31,10 +39,36 @@ public class FragmentEvents extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        RecyclerView rv = (RecyclerView) inflater.inflate(R.layout.fragment_events_list, container, false);
+
+        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_events_list, container, false);
+
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                // Refresh items
+
+                new Thread() {
+                    @Override
+                    public void run() {
+                        // stop the wheel from turning
+                        SystemClock.sleep(2000);
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                swipeRefreshLayout.setRefreshing(false);
+                            }
+                        });
+
+                    }
+                }.start();
+            }
+        });
+
+        RecyclerView rv = (RecyclerView) swipeRefreshLayout.findViewById(R.id.recyclerview);
         setupRecyclerView(rv);
 
-        return rv;
+        return swipeRefreshLayout;
     }
 
     private void setupRecyclerView(RecyclerView recyclerView) {
@@ -100,12 +134,20 @@ public class FragmentEvents extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Context context = v.getContext();
-                    Intent intent = new Intent(context, ActivityEventDetail.class);
-                    intent.putExtra(ActivityEventDetail.EXTRA_NAME, events.get(position).name);
-                    if (!TextUtils.isEmpty(events.get(position).pictureUri)) {
-                        intent.putExtra(ActivityEventDetail.EXTRA_PICTURE_URI, events.get(position).name);
-                    }
-                    context.startActivity(intent);
+
+                        Intent intent = new Intent(context, ActivityEventDetails.class);
+                        intent.putExtra(ActivityEventDetails.EXTRA_NAME, events.get(position).name);
+                        if (!TextUtils.isEmpty(events.get(position).pictureUri)) {
+                            intent.putExtra(ActivityEventDetails.EXTRA_PICTURE_URI, events.get(position).name);
+                        }
+
+                        ActivityTransitionLauncher.with((Activity) context).from(v).launch(intent);
+//                        Intent intent = new Intent(context, ActivityEventDetails.class);
+//                        intent.putExtra(ActivityEventDetails.EXTRA_NAME, events.get(position).name);
+//                        if (!TextUtils.isEmpty(events.get(position).pictureUri)) {
+//                            intent.putExtra(ActivityEventDetails.EXTRA_PICTURE_URI, events.get(position).name);
+//                        }
+//                        context.startActivity(intent);
                 }
             });
         }
@@ -114,5 +156,12 @@ public class FragmentEvents extends Fragment {
         public int getItemCount() {
             return events.size();
         }
+    }
+
+    public static FragmentEvents newInstance() {
+        FragmentEvents f = new FragmentEvents();
+//        Bundle args = new Bundle();
+//        f.setArguments(args);
+        return f;
     }
 }

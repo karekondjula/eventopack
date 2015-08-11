@@ -16,9 +16,9 @@ import com.evento.team2.eventspack.R;
 /**
  * Created by Daniel on 31-Jul-15.
  */
-public class FragmentFriends extends Fragment {
+public class FragmentMapWithEvents extends Fragment {
 
-    public FragmentFriends() {
+    public FragmentMapWithEvents() {
         // Required empty public constructor
     }
 
@@ -58,5 +58,10 @@ public class FragmentFriends extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    public static FragmentMapWithEvents newInstance() {
+        FragmentMapWithEvents f = new FragmentMapWithEvents();
+        return f;
     }
 }

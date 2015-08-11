@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -17,14 +16,13 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.evento.team2.eventspack.fragments.FragmentEvents;
-import com.evento.team2.eventspack.fragments.FragmentFriends;
-import com.evento.team2.eventspack.fragments.FragmentMessages;
+import com.evento.team2.eventspack.fragments.FragmentMapWithEvents;
+import com.evento.team2.eventspack.fragments.FragmentSavedEvents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -156,9 +154,9 @@ public class ActivityMain extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(new FragmentEvents(), "Events");
-        adapter.addFragment(new FragmentFriends(), "Friends");
-        adapter.addFragment(new FragmentMessages(), "Messages");
+        adapter.addFragment(FragmentEvents.newInstance(), "Events");
+        adapter.addFragment(FragmentMapWithEvents.newInstance(), "Map");
+        adapter.addFragment(FragmentSavedEvents.newInstance(), "Saved");
         viewPager.setAdapter(adapter);
     }
 

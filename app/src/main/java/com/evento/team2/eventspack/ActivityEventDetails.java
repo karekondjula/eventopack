@@ -25,16 +25,21 @@ import android.view.Menu;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.kogitune.activity_transition.ActivityTransition;
+import com.kogitune.activity_transition.ExitActivityTransition;
 
-public class ActivityEventDetail extends AppCompatActivity {
+public class ActivityEventDetails extends AppCompatActivity {
 
     public static final String EXTRA_NAME = "event_name";
     public static final String EXTRA_PICTURE_URI = "picture_uri";
+
+    private ExitActivityTransition exitTransition;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_detail);
+        exitTransition = ActivityTransition.with(getIntent()).to(findViewById(R.id.backdrop)).start(savedInstanceState);
 
         Intent intent = getIntent();
         final String eventName = intent.getStringExtra(EXTRA_NAME);
@@ -55,6 +60,11 @@ public class ActivityEventDetail extends AppCompatActivity {
         // TODO daniel implement picture uri as picture
         final ImageView imageView = (ImageView) findViewById(R.id.backdrop);
         Glide.with(this).load(R.drawable.party_image).centerCrop().into(imageView);
+    }
+
+    @Override
+    public void onBackPressed() {
+        exitTransition.exit(this);
     }
 
     @Override

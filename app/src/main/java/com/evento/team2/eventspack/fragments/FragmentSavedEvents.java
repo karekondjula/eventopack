@@ -12,9 +12,9 @@ import com.evento.team2.eventspack.R;
 /**
  * Created by Daniel on 31-Jul-15.
  */
-public class FragmentMessages extends Fragment {
+public class FragmentSavedEvents extends Fragment {
 
-    public FragmentMessages() {
+    public FragmentSavedEvents() {
         // Required empty public constructor
     }
 
@@ -40,5 +40,10 @@ public class FragmentMessages extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+    }
+
+    public static FragmentSavedEvents newInstance() {
+        FragmentSavedEvents f = new FragmentSavedEvents();
+        return f;
     }
 }
