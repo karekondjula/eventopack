@@ -13,6 +13,8 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.evento.team2.eventspack.R;
 
+import butterknife.ButterKnife;
+
 /**
  * Created by Daniel on 31-Jul-15.
  */
@@ -31,9 +33,9 @@ public class FragmentMapWithEvents extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_friends, container, false);
+        View view = inflater.inflate(R.layout.fragment_friends, container, false);
 
-        rootView.findViewById(R.id.textView).setOnClickListener(new View.OnClickListener() {
+        ButterKnife.findById(view, R.id.textView).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Snackbar.make(v, "Had a snack at Snackbar", Snackbar.LENGTH_LONG)
@@ -47,7 +49,7 @@ public class FragmentMapWithEvents extends Fragment {
             }
         });
         // Inflate the layout for this fragment
-        return rootView;
+        return view;
     }
 
     @Override

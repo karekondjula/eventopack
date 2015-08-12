@@ -1,6 +1,5 @@
 package com.evento.team2.eventspack;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.preference.Preference;
@@ -8,9 +7,10 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+
+import butterknife.ButterKnife;
 
 /**
  * Created by Daniel on 05-Aug-15.
@@ -22,7 +22,7 @@ public class ActivitySettings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        Toolbar actionbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar actionbar = ButterKnife.findById(this, R.id.toolbar);
         actionbar.setTitle("Settings");
         actionbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_dashboard));
         actionbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -72,7 +72,7 @@ public class ActivitySettings extends AppCompatActivity {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_fragment_settings);
 
-            Toolbar actionbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+            Toolbar actionbar = ButterKnife.findById(getActivity(), R.id.toolbar);
             actionbar.setTitle("Settings");
             actionbar.setNavigationIcon(getResources().getDrawable(android.R.drawable.ic_menu_revert));
             actionbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -114,7 +114,7 @@ public class ActivitySettings extends AppCompatActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
-            Toolbar actionbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+            Toolbar actionbar = ButterKnife.findById(getActivity(), R.id.toolbar);
             actionbar.setTitle("NotificationSettingsFragment");
             actionbar.setNavigationIcon(getResources().getDrawable(android.R.drawable.ic_menu_revert));
             actionbar.setNavigationOnClickListener(new View.OnClickListener() {
@@ -150,7 +150,7 @@ public class ActivitySettings extends AppCompatActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
-            Toolbar actionbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+            Toolbar actionbar = ButterKnife.findById(getActivity(), R.id.toolbar);
             actionbar.setTitle("FindEventsSettingsFragment");
             actionbar.setNavigationIcon(getResources().getDrawable(android.R.drawable.ic_menu_revert));
             actionbar.setOnClickListener(new View.OnClickListener() {

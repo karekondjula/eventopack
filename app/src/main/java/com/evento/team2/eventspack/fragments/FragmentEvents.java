@@ -1,11 +1,7 @@
 package com.evento.team2.eventspack.fragments;
 
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
@@ -22,14 +18,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.ActivityEventDetails;
-import com.evento.team2.eventspack.ActivityMain;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.utils.Utils;
-import com.kogitune.activity_transition.ActivityTransitionLauncher;
 
 import java.io.File;
 import java.util.ArrayList;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 /**
  * Created by Daniel on 31-Jul-15.
@@ -85,21 +82,14 @@ public class FragmentEvents extends Fragment {
         public static class ViewHolder extends RecyclerView.ViewHolder {
 
             public final View mView;
-            public final ImageView mEventImage;
-            public final TextView mEventTitle;
-            public final TextView mEventDetails;
+            @Bind(R.id.event_picture) public ImageView mEventImage;
+            @Bind(R.id.event_title) public TextView mEventTitle;
+            @Bind(R.id.event_details) public TextView mEventDetails;
 
             public ViewHolder(View view) {
                 super(view);
                 mView = view;
-                mEventImage = (ImageView) view.findViewById(R.id.event_picture);
-                mEventTitle = (TextView) view.findViewById(R.id.event_title);
-                mEventDetails = (TextView) view.findViewById(R.id.event_details);
-            }
-
-            @Override
-            public String toString() {
-                return super.toString() + " '" + mEventTitle.getText();
+                ButterKnife.bind(this, view);
             }
         }
 
@@ -141,13 +131,9 @@ public class FragmentEvents extends Fragment {
                             intent.putExtra(ActivityEventDetails.EXTRA_PICTURE_URI, events.get(position).name);
                         }
 
-                        ActivityTransitionLauncher.with((Activity) context).from(v).launch(intent);
-//                        Intent intent = new Intent(context, ActivityEventDetails.class);
-//                        intent.putExtra(ActivityEventDetails.EXTRA_NAME, events.get(position).name);
-//                        if (!TextUtils.isEmpty(events.get(position).pictureUri)) {
-//                            intent.putExtra(ActivityEventDetails.EXTRA_PICTURE_URI, events.get(position).name);
-//                        }
-//                        context.startActivity(intent);
+                        context.startActivity(intent);
+                        // TODO daniel find better looking transition (do not forget to remove the library)
+//                        ActivityTransitionLauncher.with((Activity) context).from(v).launch(intent);
                 }
             });
         }

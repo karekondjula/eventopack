@@ -25,27 +25,30 @@ import android.view.Menu;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
-import com.kogitune.activity_transition.ActivityTransition;
-import com.kogitune.activity_transition.ExitActivityTransition;
+
+import butterknife.ButterKnife;
 
 public class ActivityEventDetails extends AppCompatActivity {
 
     public static final String EXTRA_NAME = "event_name";
     public static final String EXTRA_PICTURE_URI = "picture_uri";
 
-    private ExitActivityTransition exitTransition;
+//    private ExitActivityTransition exitTransition;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_detail);
-        exitTransition = ActivityTransition.with(getIntent()).to(findViewById(R.id.backdrop)).start(savedInstanceState);
+//        ButterKnife.bind(this);
+
+        // TODO daniel find better looking transition (do not forget to remove the library)
+//        exitTransition = ActivityTransition.with(getIntent()).to(findViewById(R.id.backdrop)).start(savedInstanceState);
 
         Intent intent = getIntent();
         final String eventName = intent.getStringExtra(EXTRA_NAME);
         final String eventPictureUri = intent.getStringExtra(EXTRA_PICTURE_URI);
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        final Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -58,14 +61,14 @@ public class ActivityEventDetails extends AppCompatActivity {
 
     private void loadBackdrop(String pictureUri) {
         // TODO daniel implement picture uri as picture
-        final ImageView imageView = (ImageView) findViewById(R.id.backdrop);
+        final ImageView imageView = ButterKnife.findById(this, R.id.backdrop);
         Glide.with(this).load(R.drawable.party_image).centerCrop().into(imageView);
     }
 
-    @Override
-    public void onBackPressed() {
-        exitTransition.exit(this);
-    }
+//    @Override
+//    public void onBackPressed() {
+//        exitTransition.exit(this);
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
