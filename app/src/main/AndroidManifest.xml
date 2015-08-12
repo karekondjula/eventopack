@@ -8,7 +8,7 @@
         android:label="@string/app_name"
         android:theme="@style/MyMaterialTheme">
         <activity
-            android:name=".ActivityMain"
+            android:name=".ui.fragments.activites.ActivityMain"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,19 +19,19 @@
         </activity>
 
         <activity
-            android:name=".ActivityEventDetails"
-            android:parentActivityName=".ActivityMain">
+            android:name=".ui.fragments.activites.ActivityEventDetails"
+            android:parentActivityName=".ui.fragments.activites.ActivityMain">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ActivityMain" />
+                android:value=".ui.fragments.activites.ActivityMain" />
         </activity>
 
         <activity
-            android:name=".ActivitySettings"
-            android:parentActivityName=".ActivityMain">
+            android:name=".ui.fragments.activites.ActivitySettings"
+            android:parentActivityName=".ui.fragments.activites.ActivityMain">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ActivityMain" />
+                android:value=".ui.fragments.activites.ActivityMain" />
         </activity>
 
     </application>

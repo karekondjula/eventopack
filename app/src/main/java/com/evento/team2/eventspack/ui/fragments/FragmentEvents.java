@@ -1,4 +1,4 @@
-package com.evento.team2.eventspack.fragments;
+package com.evento.team2.eventspack.ui.fragments.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.evento.team2.eventspack.ActivityEventDetails;
+import com.evento.team2.eventspack.ui.fragments.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.utils.Utils;

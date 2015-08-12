@@ -1,4 +1,4 @@
-package com.evento.team2.eventspack.fragments;
+package com.evento.team2.eventspack.ui.fragments.fragments;
 
 import android.app.Activity;
 import android.os.Bundle;

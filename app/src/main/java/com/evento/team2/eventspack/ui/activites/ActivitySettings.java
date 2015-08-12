@@ -1,4 +1,4 @@
-package com.evento.team2.eventspack;
+package com.evento.team2.eventspack.ui.fragments.activites;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+
+import com.evento.team2.eventspack.R;
 
 import butterknife.ButterKnife;
 

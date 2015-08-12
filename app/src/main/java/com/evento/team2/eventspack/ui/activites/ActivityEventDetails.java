@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.evento.team2.eventspack;
+package com.evento.team2.eventspack.ui.fragments.activites;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,6 +25,7 @@ import android.view.Menu;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.evento.team2.eventspack.R;
 
 import butterknife.ButterKnife;
 
