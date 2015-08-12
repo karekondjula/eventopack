@@ -1,4 +1,4 @@
-package com.evento.team2.eventspack.ui.fragments.activites;
+package com.evento.team2.eventspack.ui.activites;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,9 +20,10 @@ import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.evento.team2.eventspack.R;
-import com.evento.team2.eventspack.ui.fragments.fragments.FragmentEvents;
-import com.evento.team2.eventspack.ui.fragments.fragments.FragmentMapWithEvents;
-import com.evento.team2.eventspack.ui.fragments.fragments.FragmentSavedEvents;
+import com.evento.team2.eventspack.ui.activites.ActivitySettings;
+import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
+import com.evento.team2.eventspack.ui.fragments.FragmentMapWithEvents;
+import com.evento.team2.eventspack.ui.fragments.FragmentSavedEvents;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,6 +117,9 @@ public class ActivityMain extends AppCompatActivity {
         PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
         pagerSlidingTabStrip.setShouldExpand(true);
         pagerSlidingTabStrip.setViewPager(viewPager);
+
+        Intent intent = new Intent(this, ActivityLogin.class);
+        startActivity(intent);
     }
 
     @Override

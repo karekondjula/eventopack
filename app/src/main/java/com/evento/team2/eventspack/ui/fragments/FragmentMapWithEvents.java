@@ -1,4 +1,4 @@
-package com.evento.team2.eventspack.ui.fragments.fragments;
+package com.evento.team2.eventspack.ui.fragments;
 
 import android.app.Activity;
 import android.graphics.Color;

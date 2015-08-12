@@ -38,6 +38,8 @@ dependencies {
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1' // pager sliding tabs for the ActivityMain
     compile 'com.jakewharton:butterknife:7.0.1' // happy layouts
 
+//    compile 'jp.wasabeef:recyclerview-animators:1.2.1' // recyclerView animators
+
     apt 'com.bluelinelabs:logansquare-compiler:1.1.0' // compile-time annotation processing
     compile 'com.bluelinelabs:logansquare:1.1.0' // thunder fast JSON parser
 

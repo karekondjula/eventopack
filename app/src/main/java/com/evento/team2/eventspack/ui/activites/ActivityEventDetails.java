@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.evento.team2.eventspack.ui.fragments.activites;
+package com.evento.team2.eventspack.ui.activites;
 
 import android.content.Intent;
 import android.os.Bundle;
