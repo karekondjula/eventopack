@@ -1,10 +1,7 @@
 package com.evento.team2.eventspack.ui.fragments;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.LevelListDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,19 +9,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
+import com.evento.team2.eventspack.utils.EventsController;
 import com.evento.team2.eventspack.utils.Utils;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import butterknife.Bind;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by Daniel on 31-Jul-15.
@@ -32,47 +28,39 @@ import butterknife.Bind;
 // TODO daniel butter-ify the code
 public class FragmentMapWithEvents extends Fragment implements OnMapReadyCallback {
 
-    private SupportMapFragment map;
+    private SupportMapFragment supportMapFragment;
     private GoogleMap mapView;
-
-    public FragmentMapWithEvents() {
-        // Required empty public constructor
-    }
+    private View view;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_map_with_events, container, false);
+        if (view != null) {
+            // this might be buggy
+            return view;
+        }
+
+        view = inflater.inflate(R.layout.fragment_map_with_events, container, false);
 
         FragmentManager fm = getChildFragmentManager();
-        map = (SupportMapFragment) fm.findFragmentById(R.id.location_map);
-        if (map == null) {
-            map = SupportMapFragment.newInstance();
-            getChildFragmentManager().beginTransaction().replace(R.id.location_map, map).commit();
+        supportMapFragment = (SupportMapFragment) fm.findFragmentById(R.id.location_map);
+        if (supportMapFragment == null) {
+            supportMapFragment = SupportMapFragment.newInstance();
+            getChildFragmentManager().beginTransaction().replace(R.id.location_map, supportMapFragment).commit();
         }
-        map.getMapAsync(this);
+        supportMapFragment.getMapAsync(this);
 
-        // Inflate the layout for this fragment
         return view;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        if (map != null) {
-            getActivity().getSupportFragmentManager().beginTransaction()
-                    .remove(getActivity().getSupportFragmentManager().findFragmentById(R.id.location_map)).commit();
-            map = null;
+        if (supportMapFragment != null) {
+            if (getActivity() != null && supportMapFragment.isAdded()) {
+                getActivity().getSupportFragmentManager().beginTransaction().remove(supportMapFragment).commit();
+            }
+            supportMapFragment = null;
         }
     }
 
@@ -80,7 +68,7 @@ public class FragmentMapWithEvents extends Fragment implements OnMapReadyCallbac
     public void onMapReady(GoogleMap googleMap) {
         mapView = googleMap;
         mapView.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mapView.getUiSettings().setMyLocationButtonEnabled(true);
+        mapView.setMyLocationEnabled(true);
         mapView.getUiSettings().setCompassEnabled(true);
         mapView.getUiSettings().setRotateGesturesEnabled(true);
 
@@ -88,16 +76,33 @@ public class FragmentMapWithEvents extends Fragment implements OnMapReadyCallbac
         Bitmap bhalfsize = Bitmap.createScaledBitmap(b, b.getWidth() / 4, b.getHeight() / 4, false);
         for (Event event : Utils.Helpers.createEvents()) {
             mapView.addMarker(new MarkerOptions()
-                    .position(new LatLng(event.position.latitude,
-                            event.position.longitude))
+                    .position(new LatLng(event.location.latitude,
+                            event.location.longitude))
                     .title(event.name)
                     .icon(BitmapDescriptorFactory.fromBitmap(bhalfsize)));
         }
 
+        mapView.getMyLocation();
+//        SmartLocation.with(getActivity()).location()
+//                .oneFix()
+//                .start(new OnLocationUpdatedListener() {
+//
+//                    @Override
+//                    public void onLocationUpdated(Location location) {
+//                        mapView.getMyLocation()
+//                    }
+//                });
+
+        // TODO daniel, go to my location, move FAB button if possible, span to events
     }
 
-    public static FragmentMapWithEvents newInstance() {
+    public void onEvent(EventsController.UpdateEvents updateEvents) {
+        // TODO refresh markers with new events
+    }
+
+    public static FragmentMapWithEvents newInstance(EventBus eventBus) {
         FragmentMapWithEvents f = new FragmentMapWithEvents();
+        eventBus.register(f);
         return f;
     }
 }

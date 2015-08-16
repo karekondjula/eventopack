@@ -19,13 +19,15 @@ import com.evento.team2.eventspack.utils.Utils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by Daniel on 31-Jul-15.
  */
 public class FragmentEvents extends Fragment {
 
-    @Bind(R.id.eventsRecyclerView) RecyclerView eventsRecyclerView;
+    @Bind(R.id.eventsRecyclerView)
+    RecyclerView eventsRecyclerView;
 
     private EventsRecyclerViewAdapter eventsAdapter;
 
@@ -59,7 +61,7 @@ public class FragmentEvents extends Fragment {
 
                                 swipeRefreshLayout.setRefreshing(false);
 
-                                if (((LinearLayoutManager)eventsRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition() == 0) {
+                                if (((LinearLayoutManager) eventsRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition() == 0) {
                                     eventsRecyclerView.getLayoutManager().scrollToPosition(0);
                                 }
                             }

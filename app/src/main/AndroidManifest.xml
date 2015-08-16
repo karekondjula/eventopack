@@ -64,6 +64,14 @@
                 android:value=".ui.activites.ActivityMain" />
         </activity>
 
+        <activity
+            android:name=".ui.activites.ActivityCalendar"
+            android:parentActivityName=".ui.activites.ActivityMain">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activites.ActivityMain" />
+        </activity>
+
     </application>
 
 </manifest>

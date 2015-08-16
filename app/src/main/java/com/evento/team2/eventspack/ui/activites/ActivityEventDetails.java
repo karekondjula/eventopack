@@ -27,6 +27,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.R;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class ActivityEventDetails extends AppCompatActivity {
@@ -34,13 +35,15 @@ public class ActivityEventDetails extends AppCompatActivity {
     public static final String EXTRA_NAME = "event_name";
     public static final String EXTRA_PICTURE_URI = "picture_uri";
 
+    @Bind(R.id.backdrop) ImageView backdropImage;
+
 //    private ExitActivityTransition exitTransition;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_detail);
-//        ButterKnife.bind(this);
+        ButterKnife.bind(this);
 
         // TODO daniel find better looking transition (do not forget to remove the library)
 //        exitTransition = ActivityTransition.with(getIntent()).to(findViewById(R.id.backdrop)).start(savedInstanceState);
@@ -57,13 +60,8 @@ public class ActivityEventDetails extends AppCompatActivity {
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle(eventName);
 
-        loadBackdrop(eventPictureUri);
-    }
-
-    private void loadBackdrop(String pictureUri) {
         // TODO daniel implement picture uri as picture
-        final ImageView imageView = ButterKnife.findById(this, R.id.backdrop);
-        Glide.with(this).load(R.drawable.party_image).centerCrop().into(imageView);
+        Glide.with(this).load(R.drawable.party_image).centerCrop().into(backdropImage);
     }
 
 //    @Override

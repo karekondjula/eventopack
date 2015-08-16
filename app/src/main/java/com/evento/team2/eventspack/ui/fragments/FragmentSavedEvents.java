@@ -1,53 +1,51 @@
 package com.evento.team2.eventspack.ui.fragments;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.DefaultItemAnimator;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.evento.team2.eventspack.R;
+import com.evento.team2.eventspack.adapter.EventsRecyclerViewAdapter;
+import com.evento.team2.eventspack.model.Event;
+import com.evento.team2.eventspack.provider.EventsDatabase;
+import com.evento.team2.eventspack.utils.EventsController;
 
+import java.util.ArrayList;
+
+import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.greenrobot.event.EventBus;
 
 /**
  * Created by Daniel on 31-Jul-15.
  */
 public class FragmentSavedEvents extends Fragment {
 
-    public FragmentSavedEvents() {
-        // Required empty public constructor
-    }
+    @Bind(R.id.savedEventsRecyclerView)
+    RecyclerView savedEventsRecyclerView;
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
+    private EventsRecyclerViewAdapter savedEventsAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_messages, container, false);
+        View view = inflater.inflate(R.layout.fragment_saved_events, container, false);
+        ButterKnife.bind(this, view);
 
-        ButterKnife.findById(view, R.id.textView).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Snackbar.make(v, "Had a snack at Snackbar", Snackbar.LENGTH_LONG)
-                        .setAction("Undo", null)
-                        .setActionTextColor(Color.RED)
-                        .show();
-
-                YoYo.with(Techniques.Tada)
-                        .duration(700)
-                        .playOn(getView().findViewById(R.id.textView));
-            }
-        });
+        savedEventsAdapter = new EventsRecyclerViewAdapter(getActivity(), EventsDatabase.getInstance().getAllSavedEvents());
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        savedEventsRecyclerView.setHasFixedSize(true);
+        savedEventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        savedEventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        savedEventsRecyclerView.setAdapter(savedEventsAdapter);
 
         return view;
     }
@@ -62,8 +60,26 @@ public class FragmentSavedEvents extends Fragment {
         super.onDetach();
     }
 
-    public static FragmentSavedEvents newInstance() {
+    public void onEvent(EventsController.UpdateSavedEvents updateEvents) {
+
+        Log.i(">>", "UpdateSavedEvents");
+
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ArrayList<Event> savedEvents = EventsDatabase.getInstance().getAllSavedEvents();
+                savedEventsAdapter.refreshEvents(savedEvents);
+//                savedEventsAdapter.notifyItemRangeChanged(0, savedEvents.size());
+                savedEventsAdapter.notifyDataSetChanged();
+//        savedEventsAdapter.notifyItemInserted(0);
+//                savedEventsRecyclerView.setAdapter(savedEventsAdapter);
+            }
+        });
+    };
+
+    public static FragmentSavedEvents newInstance(EventBus eventBus) {
         FragmentSavedEvents f = new FragmentSavedEvents();
+        eventBus.register(f);
         return f;
     }
 }
