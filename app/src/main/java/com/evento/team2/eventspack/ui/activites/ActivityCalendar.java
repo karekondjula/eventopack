@@ -1,15 +1,15 @@
 package com.evento.team2.eventspack.ui.activites;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
@@ -23,6 +23,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 
+import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
@@ -37,10 +38,18 @@ public class ActivityCalendar extends FragmentActivity {
     private HashSet<Date> selectedDates;
     private HashSet<Date> eventDates;
 
+    @Bind(R.id.calendarEventsLayout)
+    LinearLayout calendarEventsLayout;
+
+    private Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
+
+        ButterKnife.bind(this);
+        context = this;
 
         selectedDates = new HashSet<Date>();
         eventDates = new HashSet<Date>();
@@ -116,6 +125,15 @@ public class ActivityCalendar extends FragmentActivity {
                 }
                 caldroidFragment.refreshView();
             }
+
+            // TODO daniel do this in an organized way, CardView or something
+            // a click opens the details screen
+            for (int i = 0; i < 5; i++) {
+                View v = LayoutInflater.from(context).inflate(R.layout.item_events, calendarEventsLayout, false);
+                ((TextView)v.findViewById(R.id.event_title)).setText("asdfasdfasd");
+                calendarEventsLayout.addView(v);
+            }
+
         }
 
         @Override
