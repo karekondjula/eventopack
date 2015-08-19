@@ -10,10 +10,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bluelinelabs.logansquare.LoganSquare;
 import com.evento.team2.eventspack.R;
+import com.evento.team2.eventspack.soapservice.ServiceEvento;
+import com.evento.team2.eventspack.soapservice.model.User;
+
+import java.io.IOException;
+import java.util.HashMap;
 
 import butterknife.ButterKnife;
 import butterknife.Bind;
+import butterknife.OnClick;
 
 public class ActivitySignup extends AppCompatActivity {
     private static final String TAG = "ActivitySignup";
@@ -34,23 +41,9 @@ public class ActivitySignup extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
-
-        signupButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                signup();
-            }
-        });
-
-        loginLink.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Finish the registration screen and return to the Login activity
-                finish();
-            }
-        });
     }
 
+    @OnClick(R.id.btn_signup)
     public void signup() {
         Log.d(TAG, "Signup");
 
@@ -70,6 +63,22 @@ public class ActivitySignup extends AppCompatActivity {
         String email = emailText.getText().toString();
         String password = passwordText.getText().toString();
 
+
+        User user = new User();
+        user.timestamp = System.currentTimeMillis();
+        user.email = email;
+        user.name = name;
+        user.username = email;
+        user.password = password;
+        HashMap<String, Object> params = new HashMap<>();
+        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_ADD_USER);
+        try {
+            params.put(ServiceEvento.ADD_USER_USER_REQUEST_KEY, LoganSquare.serialize(user));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ServiceEvento.getInstance().callServiceMethod(params);
+
         // TODO daniel : Implement your own signup logic here.
 
         new android.os.Handler().postDelayed(
@@ -84,6 +93,12 @@ public class ActivitySignup extends AppCompatActivity {
                 }, 3000);
     }
 
+
+    @OnClick(R.id.link_login)
+    public void login(View v) {
+        // Finish the registration screen and return to the Login activity
+        finish();
+    }
 
     public void onSignupSuccess() {
         signupButton.setEnabled(true);

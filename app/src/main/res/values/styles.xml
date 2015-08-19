@@ -14,10 +14,10 @@
     </style>
 
     <style name="Widget.CardContent" parent="android:Widget">
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:paddingTop">5dp</item>
-        <item name="android:paddingBottom">2dp</item>
+        <!--<item name="android:paddingLeft">16dp</item>-->
+        <!--<item name="android:paddingRight">16dp</item>-->
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">1dp</item>
         <item name="android:orientation">vertical</item>
     </style>
 
@@ -27,6 +27,12 @@
         <item name="colorAccent">@color/colorAccent</item>
 
         <item name="android:textColorHighlight">@color/text_highlight</item>
+    </style>
+
+    <style name="TwoLineHeaderDescription">
+        <item name="android:layout_alignParentLeft">true</item>
+        <item name="android:layout_alignParentStart">true</item>
+        <item name="android:layout_marginLeft">5dp</item>
     </style>
 
 </resources>

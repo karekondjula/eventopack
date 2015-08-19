@@ -15,7 +15,7 @@ public class Utils {
     public static class Helpers {
 
         public static final String[] EVENTS = {"Abbaye de Belloc", "Abbaye du Mont des Cats", "Abertam", "Abondance", "Ackawi",};
-        public static final String[] EVENTS_DESCRIPTION = {"auch jako", "majkata na princezata", "albert", "donzuav", "japanac",};
+        public static final String[] EVENTS_DESCRIPTION = {"auch jakosadf sdfsdfasdfasdfsadfsad", "majkata na ", "albert", "donzuav", "japanac",};
 
         public static ArrayList<Event> events;
 

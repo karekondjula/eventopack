@@ -19,7 +19,6 @@ public class EventsSqliteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase database) {
-        // TODO remove after testingggggggg!!!!!!!!!!!!!!
         database.execSQL(EventsTable.DATABASE_CREATE);
     }
 

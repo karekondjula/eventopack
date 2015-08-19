@@ -50,7 +50,6 @@ dependencies {
 //    compile 'io.nlopez.smartlocation:library:3.0.11' // location helper
     compile 'de.greenrobot:eventbus:2.4.0' // similar to Observer
 
-//    compile 'com.alexgilleran:icesoap:1.0.7'
     compile 'com.github.joaocruz04:jsoap:1.0.0'
     apt 'com.bluelinelabs:logansquare-compiler:1.1.0' // compile-time annotation processing
     compile 'com.bluelinelabs:logansquare:1.1.0' // thunder fast JSON parser

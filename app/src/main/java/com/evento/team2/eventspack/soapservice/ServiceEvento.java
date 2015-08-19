@@ -3,6 +3,9 @@ package com.evento.team2.eventspack.soapservice;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.bluelinelabs.logansquare.LoganSquare;
+import com.evento.team2.eventspack.soapservice.model.HelloWorld;
+
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
 import org.ksoap2.serialization.PropertyInfo;
@@ -10,6 +13,7 @@ import org.ksoap2.serialization.SoapObject;
 import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
+import java.io.IOException;
 import java.util.HashMap;
 
 /**
@@ -23,7 +27,11 @@ public class ServiceEvento {
     private final String SOAP_ACTION = "http://ap.mk/evento/server.php/";
 
     // parameter keys
-    public static final String METHOD_NAME_KEY = "METHOD_NAME_KEY";
+    public static final String METHOD_NAME_KEY = "method_name_key";
+    public static final String ADD_USER_USER_REQUEST_KEY = "user";
+    public static final String GET_USER_USERNAME_REQUEST_KEY = "username";
+    public static final String GET_USER_PASSWORD_REQUEST_KEY = "password";
+    public static final String RESPONSE_KEY = "response_key";
     // end parameter keys
 
     // methods
@@ -53,28 +61,35 @@ public class ServiceEvento {
         return instance;
     }
 
-    /*
-     * Must contain at least <METHOD_NAME_KEY, methodName> pair
+    /**
+     * Must contain at least [ServiceEvento.METHOD_NAME_KEY, methodName] pair
      */
     public void callServiceMethod(HashMap<String, Object> params) {
         new AsyncCallWS().execute(params);
     }
 
-    private class AsyncCallWS extends AsyncTask<HashMap<String, Object>, Void, String> {
+    private class AsyncCallWS extends AsyncTask<HashMap<String, Object>, Void, HashMap<String, Object>> {
         @Override
-        protected String doInBackground(HashMap<String, Object>... params) {
+        protected HashMap<String, Object> doInBackground(HashMap<String, Object>... params) {
             Log.i(TAG, "doInBackground");
             return getResponse(params[0]);
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            Log.i(TAG, "onPostExecute");
-        }
+        protected void onPostExecute(HashMap<String, Object> responseMap) {
+            try {
+                Boolean result;
+                if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_ADD_USER)) {
+                    result = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), Boolean.class);
+                    Log.i(TAG, "METHOD_ADD_USER " + result.toString());
+                } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_USER)) {
+                    result = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), Boolean.class);
+                    Log.i(TAG, "METHOD_GET_USER " + result.toString());
+                }
 
-        @Override
-        protected void onPreExecute() {
-            Log.i(TAG, "onPreExecute");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         @Override
@@ -83,9 +98,13 @@ public class ServiceEvento {
         }
     }
 
-    private String getResponse(HashMap<String, Object> inputParameters) {
+    private HashMap<String, Object> getResponse(HashMap<String, Object> inputParameters) {
         String methodNameParam = (String) inputParameters.get(METHOD_NAME_KEY);
         String soapActionParam = SOAP_ACTION.concat(methodNameParam);
+
+        HashMap<String, Object> responseMap = new HashMap<>();
+
+        responseMap.put(METHOD_NAME_KEY, inputParameters.get(METHOD_NAME_KEY));
 
         inputParameters.remove(METHOD_NAME_KEY);
 
@@ -94,7 +113,6 @@ public class ServiceEvento {
 
         //Property which holds input parameters
         PropertyInfo property = new PropertyInfo();
-
         for (String key : inputParameters.keySet()) {
             property.setName(key);
 
@@ -102,8 +120,6 @@ public class ServiceEvento {
                 property.setType(String.class);
             } else if (inputParameters.get(key) instanceof Integer) {
                 property.setType(Integer.class);
-            } else if (inputParameters.get(key) instanceof Double) {
-                property.setType(Double.class);
             }
 
             property.setValue(inputParameters.get(key));
@@ -119,21 +135,19 @@ public class ServiceEvento {
         HttpTransportSE androidHttpTransport = new HttpTransportSE(URL);
 
         try {
-            //Invole web service
             androidHttpTransport.call(soapActionParam, envelope);
             Log.i(TAG, envelope.getResponse().toString());
 
+            responseMap.put(RESPONSE_KEY, envelope.getResponse().toString());
 
-            return envelope.getResponse().toString();
+            return responseMap;
         } catch (SoapFault soapFault) {
             soapFault.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        return "ERROR";
-//            //Get the response
-//            SoapPrimitive response = (SoapPrimitive) envelope.getResponse();
+        return null;
     }
 }
 

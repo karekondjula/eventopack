@@ -44,6 +44,8 @@
                 android:id="@+id/event_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:text="Info"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
@@ -51,6 +53,8 @@
                 android:id="@+id/event_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
                 android:text="Details for the current event" />
 
         </LinearLayout>

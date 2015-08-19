@@ -1,16 +1,22 @@
 package com.evento.team2.eventspack.ui.activites;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.provider.EventsDatabase;
@@ -42,6 +48,7 @@ public class ActivityCalendar extends FragmentActivity {
     LinearLayout calendarEventsLayout;
 
     private Context context;
+    private ArrayList<Event> eventsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,15 +61,6 @@ public class ActivityCalendar extends FragmentActivity {
         selectedDates = new HashSet<Date>();
         eventDates = new HashSet<Date>();
 
-//        Toolbar actionbar = ButterKnife.findById(this, R.id.toolbar);
-//        actionbar.setTitle("Calendar");
-//        actionbar.setNavigationOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                getFragmentManager().popBackStack();
-//            }
-//        });
-
         caldroidFragment = new CaldroidFragment();
         caldroidFragment.setCaldroidListener(listener);
         Bundle args = new Bundle();
@@ -72,17 +70,17 @@ public class ActivityCalendar extends FragmentActivity {
         args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
         caldroidFragment.setArguments(args);
 
-        ArrayList<Event> list = null;
+        // TODO daniel do I haz internet?
         if (/*has internet*/true) {
             // fetch all the events
-            list = Utils.Helpers.createEvents();
+            eventsList = Utils.Helpers.createEvents();
         } else {
             // fetch only saved events from database
-            list = EventsDatabase.getInstance().getAllSavedEvents();
+            eventsList = EventsDatabase.getInstance().getAllSavedEvents();
         }
 
         Date eventDate;
-        for (Event event : list) {
+        for (Event event : eventsList) {
             eventDate = new Date(event.date);
             caldroidFragment.setBackgroundResourceForDate(R.color.colorPrimaryDark, eventDate);
             cal.setTimeInMillis(eventDate.getTime());
@@ -101,6 +99,8 @@ public class ActivityCalendar extends FragmentActivity {
 
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        // TODO daniel check on 4.0.3, it behaves weird
+        collapsingToolbar.setCollapsedTitleTextAppearance(R.string.app_name);
 //        collapsingToolbar.setTitle("Calendar");
     }
 
@@ -126,14 +126,34 @@ public class ActivityCalendar extends FragmentActivity {
                 caldroidFragment.refreshView();
             }
 
-            // TODO daniel do this in an organized way, CardView or something
-            // a click opens the details screen
-            for (int i = 0; i < 5; i++) {
-                View v = LayoutInflater.from(context).inflate(R.layout.item_events, calendarEventsLayout, false);
-                ((TextView)v.findViewById(R.id.event_title)).setText("asdfasdfasd");
-                calendarEventsLayout.addView(v);
-            }
+            // TODO daniel fetch all events for the current date
+            for (final Event event : eventsList) {
 
+                View calendarItemView = LayoutInflater.from(context).inflate(R.layout.item_calendar_events, calendarEventsLayout, false);
+                ImageView calendar_event_picture = (ImageView) ButterKnife.findById(calendarItemView, R.id.calendar_event_picture);
+                calendar_event_picture.setImageResource(R.drawable.party_image);
+//                Glide.with(context).load(R.drawable.party_image).into(calendar_event_picture);
+                ((TextView) ButterKnife.findById(calendarItemView, R.id.name)).setText(event.name);
+                ((TextView) ButterKnife.findById(calendarItemView, R.id.details)).setText(event.details);
+                calendarItemView.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent motionEvent) {
+                        if (motionEvent.getDownTime() < 500) {
+                            Intent intent = new Intent(context, ActivityEventDetails.class);
+                            intent.putExtra(ActivityEventDetails.EXTRA_NAME, event.name);
+                            if (!TextUtils.isEmpty("")) {
+                                intent.putExtra(ActivityEventDetails.EXTRA_PICTURE_URI, "");
+                            }
+                            context.startActivity(intent);
+
+                            return true;
+                        }
+
+                        return false;
+                    }
+                });
+                calendarEventsLayout.addView(calendarItemView);
+            }
         }
 
         @Override

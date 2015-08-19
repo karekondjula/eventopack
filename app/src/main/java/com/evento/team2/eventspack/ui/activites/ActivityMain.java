@@ -19,13 +19,16 @@ import android.widget.Toast;
 import com.astuetz.PagerSlidingTabStrip;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.provider.EventsDatabase;
+import com.evento.team2.eventspack.soapservice.ServiceEvento;
 import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
 import com.evento.team2.eventspack.ui.fragments.FragmentMapWithEvents;
 import com.evento.team2.eventspack.ui.fragments.FragmentSavedEvents;
 import com.evento.team2.eventspack.utils.EventsController;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -111,8 +114,8 @@ public class ActivityMain extends AppCompatActivity {
         pagerSlidingTabStrip.setShouldExpand(true);
         pagerSlidingTabStrip.setViewPager(viewPager);
 
-//        Intent intent = new Intent(this, ActivityLogin.class);
-//        startActivity(intent);
+        Intent intent = new Intent(this, ActivityLogin.class);
+        startActivity(intent);
     }
 
     @Override
@@ -141,6 +144,7 @@ public class ActivityMain extends AppCompatActivity {
         adapter.addFragment(FragmentMapWithEvents.newInstance(eventBus), "Map");
         adapter.addFragment(FragmentEvents.newInstance(), "Events");
         adapter.addFragment(FragmentSavedEvents.newInstance(eventBus), "Saved");
+        adapter.addFragment(new Fragment(), "Tickets");
         viewPager.setAdapter(adapter);
     }
 
