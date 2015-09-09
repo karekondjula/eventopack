@@ -2,12 +2,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
     <PreferenceScreen
-        android:fragment="com.evento.team2.eventspack.ui.fragments.activites.ActivitySettings$NotificationSettingsFragment"
+        android:fragment="com.evento.team2.eventspack.ui.activites.ActivitySettings$NotificationSettingsFragment"
         android:title="Notification settings"
         android:summary="How I get notified"/>
 
     <PreferenceScreen
-        android:fragment="com.evento.team2.eventspack.ui.fragments.activites.ActivitySettings$FindEventsSettingsFragment"
+        android:fragment="com.evento.team2.eventspack.ui.activites.ActivitySettings$FindEventsSettingsFragment"
         android:title="Event settings"
         android:summary="Which events show to me"/>
 

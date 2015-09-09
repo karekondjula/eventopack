@@ -16,6 +16,8 @@ import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapter.EventsRecyclerViewAdapter;
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.utils.Utils;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.IoniconsModule;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,6 +39,7 @@ public class FragmentEvents extends Fragment {
 
         final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_events_list, container, false);
         ButterKnife.bind(this, swipeRefreshLayout);
+        Iconify.with(new IoniconsModule());
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {

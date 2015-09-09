@@ -91,9 +91,9 @@ public class ActivitySettings extends AppCompatActivity {
 
             String nextFragment = preference.getFragment().toString();
             Fragment nextFragmentSettings = null;
-            if (nextFragment.equals(NotificationSettingsFragment.NAME)) {
+            if (nextFragment.contains(NotificationSettingsFragment.NAME)) {
                 nextFragmentSettings = new NotificationSettingsFragment();
-            } else if (nextFragment.equals(FindEventsSettingsFragment.NAME)) {
+            } else if (nextFragment.contains(FindEventsSettingsFragment.NAME)) {
                 nextFragmentSettings = new FindEventsSettingsFragment();
             }
 

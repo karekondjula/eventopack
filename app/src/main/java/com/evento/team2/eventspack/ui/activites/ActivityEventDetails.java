@@ -17,8 +17,10 @@
 package com.evento.team2.eventspack.ui.activites;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -26,6 +28,10 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.R;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.IoniconsIcons;
+import com.joanzapata.iconify.fonts.IoniconsModule;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -44,6 +50,11 @@ public class ActivityEventDetails extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_detail);
         ButterKnife.bind(this);
+        Iconify.with(new IoniconsModule());
+
+        FloatingActionButton printButton = (FloatingActionButton) findViewById(R.id.fab_add_to_favorites);
+        Drawable print = new IconDrawable(this, IoniconsIcons.ion_android_favorite_outline).colorRes(android.R.color.white).actionBarSize();
+        printButton.setImageDrawable(print);
 
         // TODO daniel find better looking transition (do not forget to remove the library)
 //        exitTransition = ActivityTransition.with(getIntent()).to(findViewById(R.id.backdrop)).start(savedInstanceState);

@@ -26,17 +26,31 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/party_image" />
 
-                <ToggleButton
-                    android:id="@+id/btn_bookmark_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:background="@drawable/bookmark_on_off"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:textOff=""
-                    android:textOn="" />
+                <!--<ToggleButton-->
+                    <!--android:id="@+id/btn_bookmark_icon"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_alignParentRight="true"-->
+                    <!--android:layout_alignParentTop="true"-->
+                    <!--android:focusable="false"-->
+                    <!--android:focusableInTouchMode="false"-->
+                    <!--android:textOff=""-->
+                    <!--android:textOn="">-->
+
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignParentTop="true"
+                        android:shadowColor="#22000000"
+                        android:shadowDx="3"
+                        android:shadowDy="3"
+                        android:shadowRadius="1"
+                        android:text="{ion-android-favorite-outline}"
+                        android:textColor="#000000"
+                        android:textSize="40sp" />
+
+                <!--</ToggleButton>-->
 
             </RelativeLayout>
 

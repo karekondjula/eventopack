@@ -21,6 +21,8 @@ import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.utils.EventsController;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.IoniconsModule;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -46,8 +48,8 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         public TextView mEventTitle;
         @Bind(R.id.event_details)
         public TextView mEventDetails;
-        @Bind(R.id.btn_bookmark_icon)
-        public ToggleButton isEventSaved;
+//        @Bind(R.id.btn_bookmark_icon)
+//        public ToggleButton isEventSaved;
 
         public ViewHolder(View view) {
             super(view);
@@ -93,34 +95,34 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
             Glide.with(context).load(new File(events.get(position).pictureUri)).fitCenter().into(holder.mEventImage);
         }
 
-        holder.isEventSaved.setChecked(events.get(position).isEventSaved);
-
-        holder.isEventSaved.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                events.get(position).isEventSaved = !events.get(position).isEventSaved;
-
-                if (events.get(position).isEventSaved) {
-                    EventsDatabase.getInstance().saveEvent(events.get(position));
-                } else {
-                    EventsDatabase.getInstance().removeSavedEvent(events.get(position));
-                }
-                EventsController.getInstance().getEventBus().post(new EventsController.UpdateSavedEvents());
-
-                Snackbar.make(v,
-                            events.get(position).isEventSaved ?
-                                    "Event is saved" :
-                                    "Event is removed from saved events",
-                            Snackbar.LENGTH_LONG)
-                        .setAction("Undo", null)
-                        .setActionTextColor(Color.RED)
-                        .show();
-
-                YoYo.with(Techniques.Tada)
-                        .duration(700)
-                        .playOn(v);
-            }
-        });
+//        holder.isEventSaved.setChecked(events.get(position).isEventSaved);
+//
+//        holder.isEventSaved.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                events.get(position).isEventSaved = !events.get(position).isEventSaved;
+//
+//                if (events.get(position).isEventSaved) {
+//                    EventsDatabase.getInstance().saveEvent(events.get(position));
+//                } else {
+//                    EventsDatabase.getInstance().removeSavedEvent(events.get(position));
+//                }
+//                EventsController.getInstance().getEventBus().post(new EventsController.UpdateSavedEvents());
+//
+//                Snackbar.make(v,
+//                            events.get(position).isEventSaved ?
+//                                    "Event is saved" :
+//                                    "Event is removed from saved events",
+//                            Snackbar.LENGTH_LONG)
+//                        .setAction("Undo", null)
+//                        .setActionTextColor(Color.RED)
+//                        .show();
+//
+//                YoYo.with(Techniques.Tada)
+//                        .duration(700)
+//                        .playOn(v);
+//            }
+//        });
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
