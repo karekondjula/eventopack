@@ -31,7 +31,6 @@
 
     <style name="TwoLineHeaderDescription">
         <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:layout_alignParentStart">true</item>
         <item name="android:layout_marginLeft">5dp</item>
     </style>
 

@@ -21,14 +21,12 @@ import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.soapservice.ServiceEvento;
 import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
-import com.evento.team2.eventspack.ui.fragments.FragmentMapWithEvents;
 import com.evento.team2.eventspack.ui.fragments.FragmentSavedEvents;
 import com.evento.team2.eventspack.utils.EventsController;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -107,15 +105,24 @@ public class ActivityMain extends AppCompatActivity {
         ViewPager viewPager = ButterKnife.findById(this, R.id.viewpager);
         if (viewPager != null) {
             setupViewPager(viewPager, EventsController.getInstance().getEventBus());
-            viewPager.setCurrentItem(1);
         }
 
         PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        pagerSlidingTabStrip.setTextColor(getResources().getColor(android.R.color.white));
         pagerSlidingTabStrip.setShouldExpand(true);
         pagerSlidingTabStrip.setViewPager(viewPager);
 
-        Intent intent = new Intent(this, ActivityLogin.class);
-        startActivity(intent);
+//        Intent intent = new Intent(this, ActivityLogin.class);
+//        startActivity(intent);
+
+//        HashMap<String, Object> params = new HashMap<>();
+//        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_TEST_FUNC);
+//        ServiceEvento.getInstance().callServiceMethod(params);
+
+        HashMap<String, Object> params = new HashMap<>();
+        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
+
+        ServiceEvento.getInstance().callServiceMethod(params);
     }
 
     @Override
@@ -131,9 +138,14 @@ public class ActivityMain extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.action_map) {
+            Intent intent = new Intent(ActivityMain.this, ActivityMap.class);
+            startActivity(intent);
+        } else if (id == R.id.action_calendar) {
+            Intent intentCalendar = new Intent(ActivityMain.this, ActivityCalendar.class);
+            startActivity(intentCalendar);
         }
 
         return super.onOptionsItemSelected(item);
@@ -141,10 +153,9 @@ public class ActivityMain extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager, EventBus eventBus) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(FragmentMapWithEvents.newInstance(eventBus), "Map");
         adapter.addFragment(FragmentEvents.newInstance(), "Events");
+        adapter.addFragment(new Fragment(), "Places");
         adapter.addFragment(FragmentSavedEvents.newInstance(eventBus), "Saved");
-        adapter.addFragment(new Fragment(), "Tickets");
         viewPager.setAdapter(adapter);
     }
 

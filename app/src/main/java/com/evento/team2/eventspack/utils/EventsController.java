@@ -13,6 +13,11 @@ public class EventsController {
     public static class UpdateEvents {}
 
     /**
+     * An events message used with the events framework for notifying changes
+     */
+    public static class LoginResult {}
+
+    /**
      * Update the saved events list
      */
     public static class UpdateSavedEvents {}

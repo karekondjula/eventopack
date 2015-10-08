@@ -32,41 +32,37 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ui.activites.ActivityEventDetails"
-            android:parentActivityName=".ui.activites.ActivityMain">
+        <activity android:name=".ui.activites.ActivityEventDetails">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activites.ActivityMain" />
         </activity>
 
-        <activity
-            android:name=".ui.activites.ActivitySettings"
-            android:parentActivityName=".ui.activites.ActivityMain">
+        <activity android:name=".ui.activites.ActivitySettings">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activites.ActivityMain" />
         </activity>
 
-        <activity
-            android:name=".ui.activites.ActivityLogin"
-            android:parentActivityName=".ui.activites.ActivityMain">
+        <activity android:name=".ui.activites.ActivityLogin">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activites.ActivityMain" />
         </activity>
 
-        <activity
-            android:name=".ui.activites.ActivitySignup"
-            android:parentActivityName=".ui.activites.ActivityMain">
+        <activity android:name=".ui.activites.ActivitySignup">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activites.ActivityMain" />
         </activity>
 
-        <activity
-            android:name=".ui.activites.ActivityCalendar"
-            android:parentActivityName=".ui.activites.ActivityMain">
+        <activity android:name=".ui.activites.ActivityCalendar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.activites.ActivityMain" />
+        </activity>
+
+        <activity android:name=".ui.activites.ActivityMap">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activites.ActivityMain" />

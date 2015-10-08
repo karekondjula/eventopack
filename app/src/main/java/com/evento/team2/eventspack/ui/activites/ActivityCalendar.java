@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
 import android.text.TextUtils;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -16,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.provider.EventsDatabase;
@@ -38,7 +39,7 @@ import butterknife.ButterKnife;
 // TODO clear all selections in settings or something
 public class ActivityCalendar extends FragmentActivity {
 
-    private final static long DAY_IN_SECONDS = 24*60*60*1000;
+    private final static long DAY_IN_SECONDS = 24 * 60 * 60 * 1000;
 
     private CaldroidFragment caldroidFragment;
     private HashSet<Date> selectedDates;
@@ -100,9 +101,11 @@ public class ActivityCalendar extends FragmentActivity {
         CollapsingToolbarLayout collapsingToolbar =
                 (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         // TODO daniel check on 4.0.3, it behaves weird
-        collapsingToolbar.setCollapsedTitleTextAppearance(R.string.app_name);
+//        collapsingToolbar.setCollapsedTitleTextAppearance();
 //        collapsingToolbar.setTitle("Calendar");
     }
+
+    boolean isDragging = false;
 
     final CaldroidListener listener = new CaldroidListener() {
 
@@ -129,16 +132,30 @@ public class ActivityCalendar extends FragmentActivity {
             // TODO daniel fetch all events for the current date
             for (final Event event : eventsList) {
 
-                View calendarItemView = LayoutInflater.from(context).inflate(R.layout.item_calendar_events, calendarEventsLayout, false);
+                final CardView calendarItemView = (CardView) LayoutInflater.from(context).inflate(R.layout.item_calendar_events, calendarEventsLayout, false);
                 ImageView calendar_event_picture = (ImageView) ButterKnife.findById(calendarItemView, R.id.calendar_event_picture);
                 calendar_event_picture.setImageResource(R.drawable.party_image);
 //                Glide.with(context).load(R.drawable.party_image).into(calendar_event_picture);
                 ((TextView) ButterKnife.findById(calendarItemView, R.id.name)).setText(event.name);
                 ((TextView) ButterKnife.findById(calendarItemView, R.id.details)).setText(event.details);
+                calendarItemView.setClickable(true);
+                calendarItemView.setOnDragListener(new View.OnDragListener() {
+                    @Override
+                    public boolean onDrag(View view, DragEvent dragEvent) {
+
+                        if (dragEvent.getAction() == DragEvent.ACTION_DRAG_ENDED) {
+                            isDragging = false;
+                        } else {
+                            isDragging = true;
+                        }
+                        return true;
+                    }
+                });
                 calendarItemView.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent motionEvent) {
-                        if (motionEvent.getDownTime() < 500) {
+//                        if (motionEvent.getDownTime() < 500) {
+                        if (!isDragging) {
                             Intent intent = new Intent(context, ActivityEventDetails.class);
                             intent.putExtra(ActivityEventDetails.EXTRA_NAME, event.name);
                             if (!TextUtils.isEmpty("")) {
@@ -152,18 +169,33 @@ public class ActivityCalendar extends FragmentActivity {
                         return false;
                     }
                 });
+//                calendarItemView.setOnClickListener(new OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        Intent intent = new Intent(context, ActivityEventDetails.class);
+//                        intent.putExtra(ActivityEventDetails.EXTRA_NAME, event.name);
+//                        if (!TextUtils.isEmpty("")) {
+//                            intent.putExtra(ActivityEventDetails.EXTRA_PICTURE_URI, "");
+//                        }
+//                        context.startActivity(intent);
+//                    }
+//                });
                 calendarEventsLayout.addView(calendarItemView);
+
             }
         }
 
         @Override
-        public void onChangeMonth(int month, int year) {}
+        public void onChangeMonth(int month, int year) {
+        }
 
         @Override
-        public void onLongClickDate(Date date, View view) {}
+        public void onLongClickDate(Date date, View view) {
+        }
 
         @Override
-        public void onCaldroidViewCreated() {}
+        public void onCaldroidViewCreated() {
+        }
     };
 
     @Override

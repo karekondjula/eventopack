@@ -1,55 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:layout_height="@dimen/calendar_item_height"
+    android:layout_margin="1dp">
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/calendar_item_height"
-        android:layout_margin="1dp">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+        <ImageView
+            android:id="@+id/calendar_event_picture"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:layout_margin="5dp"
+            android:layout_weight="2"
+            android:src="@drawable/party_image" />
 
-            <ImageView
-                android:id="@+id/calendar_event_picture"
+        <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            style="@style/TwoLineHeaderDescription"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="5dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/name"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="start"
-                android:layout_margin="5dp"
-                android:layout_weight="2"
-                android:src="@drawable/party_image" />
+                android:layout_height="wrap_content"
+                android:text="TItle"
+                android:textAppearance="?android:attr/textAppearanceListItem" />
 
-            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                style="@style/TwoLineHeaderDescription"
+            <TextView
+                android:id="@+id/details"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="5dp"
-                android:layout_weight="1">
+                android:layout_height="wrap_content"
+                android:layout_below="@id/name"
+                android:singleLine="true"
+                android:text="description longer"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
 
-                <TextView
-                    android:id="@+id/name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="TItle"
-                    android:textAppearance="?android:attr/textAppearanceListItem" />
+        </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/details"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/name"
-                    android:singleLine="true"
-                    android:text="description olnger"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+    </LinearLayout>
 
-            </RelativeLayout>
-
-        </LinearLayout>
-
-    </android.support.v7.widget.CardView>
-
-</LinearLayout>
+</android.support.v7.widget.CardView>

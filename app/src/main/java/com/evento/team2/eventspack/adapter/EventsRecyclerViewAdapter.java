@@ -1,9 +1,8 @@
 package com.evento.team2.eventspack.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,22 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.bumptech.glide.Glide;
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
-import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
-import com.evento.team2.eventspack.utils.EventsController;
-import com.joanzapata.iconify.Iconify;
-import com.joanzapata.iconify.fonts.IoniconsModule;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -89,10 +80,10 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         holder.mEventDetails.setText(events.get(position).details);
 
         if (TextUtils.isEmpty(events.get(position).pictureUri)) {
-            Glide.with(holder.mEventImage.getContext()).load(R.drawable.party_image).fitCenter().into(holder.mEventImage);
+            Glide.with(holder.mEventImage.getContext()).load(R.drawable.party_image).into(holder.mEventImage);
         } else {
             // TODO daniel implement picture uri as picture
-            Glide.with(context).load(new File(events.get(position).pictureUri)).fitCenter().into(holder.mEventImage);
+            Glide.with(context).load(new File(events.get(position).pictureUri)).into(holder.mEventImage);
         }
 
 //        holder.isEventSaved.setChecked(events.get(position).isEventSaved);
@@ -127,17 +118,19 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Context context = v.getContext();
+
+                Activity activity = (Activity) v.getContext();
 
                 Intent intent = new Intent(context, ActivityEventDetails.class);
                 intent.putExtra(ActivityEventDetails.EXTRA_NAME, events.get(position).name);
+                // TODO put whole event as extra, easier to do a save
                 if (!TextUtils.isEmpty(events.get(position).pictureUri)) {
                     intent.putExtra(ActivityEventDetails.EXTRA_PICTURE_URI, events.get(position).name);
                 }
 
-                context.startActivity(intent);
-                // TODO daniel find better looking transition (do not forget to remove the library)
-//                        ActivityTransitionLauncher.with((Activity) context).from(v).launch(intent);
+                activity.startActivity(intent);
+                // TODO fancy animation please ^_^
+//                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
         });
     }

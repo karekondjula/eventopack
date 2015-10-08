@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.bluelinelabs.logansquare.LoganSquare;
+import com.evento.team2.eventspack.soapservice.model.Event;
 import com.evento.team2.eventspack.soapservice.model.HelloWorld;
 
 import org.ksoap2.SoapEnvelope;
@@ -14,6 +15,7 @@ import org.ksoap2.serialization.SoapSerializationEnvelope;
 import org.ksoap2.transport.HttpTransportSE;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -46,6 +48,7 @@ public class ServiceEvento {
     public static final String METHOD_GET_USER = "get_user";
     public static final String METHOD_SEARCH_EVENTS = "search_events";
     public static final String METHOD_DELETE_EVENTS = "delete_event";
+    public static final String METHOD_GET_ALL_EVENTS = "get_all_events";
     // end methods
 
     private static ServiceEvento instance;
@@ -78,15 +81,20 @@ public class ServiceEvento {
         @Override
         protected void onPostExecute(HashMap<String, Object> responseMap) {
             try {
-                Boolean result;
-                if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_ADD_USER)) {
-                    result = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), Boolean.class);
-                    Log.i(TAG, "METHOD_ADD_USER " + result.toString());
-                } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_USER)) {
-                    result = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), Boolean.class);
-                    Log.i(TAG, "METHOD_GET_USER " + result.toString());
+                if (responseMap != null) {
+                    if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_ADD_USER)) {
+                        Boolean result = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), Boolean.class);
+                        Log.i(TAG, "METHOD_ADD_USER " + result.toString());
+                    } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_USER)) {
+                        Boolean result = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), Boolean.class);
+                        Log.i(TAG, "METHOD_GET_USER " + result.toString());
+                    } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_EVENTS)) {
+//                    ArrayList<Event> events = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), new TypeToken<ArrayList<Event>>().getType());
+//                    Log.i(TAG, "METHOD_GET_ALL_EVENTS " + ((String) responseMap.get(RESPONSE_KEY)));
+                    }
+                } else {
+                    Log.i(TAG, "no response ;( ");
                 }
-
             } catch (IOException e) {
                 e.printStackTrace();
             }

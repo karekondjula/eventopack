@@ -17,17 +17,22 @@
 package com.evento.team2.eventspack.ui.activites;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.R;
+import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
@@ -35,15 +40,21 @@ import com.joanzapata.iconify.fonts.IoniconsModule;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class ActivityEventDetails extends AppCompatActivity {
 
     public static final String EXTRA_NAME = "event_name";
     public static final String EXTRA_PICTURE_URI = "picture_uri";
 
-    @Bind(R.id.backdrop) ImageView backdropImage;
+    @Bind(R.id.backdrop)
+    ImageView backdropImage;
 
-//    private ExitActivityTransition exitTransition;
+    @Bind(R.id.fab_add_to_favorites)
+    FloatingActionButton addToFavorites;
+
+    boolean isEventSaved = false;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,19 +67,18 @@ public class ActivityEventDetails extends AppCompatActivity {
         Drawable print = new IconDrawable(this, IoniconsIcons.ion_android_favorite_outline).colorRes(android.R.color.white).actionBarSize();
         printButton.setImageDrawable(print);
 
-        // TODO daniel find better looking transition (do not forget to remove the library)
-//        exitTransition = ActivityTransition.with(getIntent()).to(findViewById(R.id.backdrop)).start(savedInstanceState);
-
         Intent intent = getIntent();
         final String eventName = intent.getStringExtra(EXTRA_NAME);
         final String eventPictureUri = intent.getStringExtra(EXTRA_PICTURE_URI);
 
         final Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        final ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-        CollapsingToolbarLayout collapsingToolbar =
-                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
         collapsingToolbar.setTitle(eventName);
 
         // TODO daniel implement picture uri as picture
@@ -79,6 +89,26 @@ public class ActivityEventDetails extends AppCompatActivity {
 //    public void onBackPressed() {
 //        exitTransition.exit(this);
 //    }
+
+    @OnClick(R.id.fab_add_to_favorites)
+    public void saveEvent(View view) {
+        if (!isEventSaved) {
+            isEventSaved = true;
+//            EventsDatabase.getInstance().saveEvent(events.get(position));
+        } else {
+            isEventSaved = false;
+//            EventsDatabase.getInstance().removeSavedEvent(events.get(position));
+        }
+
+        Snackbar.make(view,
+                isEventSaved ?
+                        "Event is saved" :
+                        "Event is removed from saved events",
+                Snackbar.LENGTH_LONG)
+                .setAction("Undo", null)
+                .setActionTextColor(Color.RED)
+                .show();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
