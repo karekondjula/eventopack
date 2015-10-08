@@ -4,10 +4,8 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bluelinelabs.logansquare.LoganSquare;
@@ -18,8 +16,8 @@ import com.evento.team2.eventspack.soapservice.model.User;
 import java.io.IOException;
 import java.util.HashMap;
 
-import butterknife.ButterKnife;
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ActivitySignup extends AppCompatActivity {
@@ -33,8 +31,6 @@ public class ActivitySignup extends AppCompatActivity {
     EditText passwordText;
     @Bind(R.id.btn_signup)
     Button signupButton;
-    @Bind(R.id.link_login)
-    TextView loginLink;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -63,7 +59,6 @@ public class ActivitySignup extends AppCompatActivity {
         String email = emailText.getText().toString();
         String password = passwordText.getText().toString();
 
-
         User user = new User();
         user.timestamp = System.currentTimeMillis();
         user.email = email;
@@ -77,7 +72,7 @@ public class ActivitySignup extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        ServiceEvento.getInstance().callServiceMethod(params);
+//        ServiceEvento.getInstance().callServiceMethod(params);
 
         // TODO daniel : Implement your own signup logic here.
 
@@ -91,13 +86,6 @@ public class ActivitySignup extends AppCompatActivity {
                         progressDialog.dismiss();
                     }
                 }, 3000);
-    }
-
-
-    @OnClick(R.id.link_login)
-    public void login(View v) {
-        // Finish the registration screen and return to the Login activity
-        finish();
     }
 
     public void onSignupSuccess() {

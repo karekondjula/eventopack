@@ -3,6 +3,9 @@ package com.evento.team2.eventspack.ui.activites;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.util.Log;
@@ -14,6 +17,10 @@ import android.widget.Toast;
 
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.soapservice.ServiceEvento;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.EntypoModule;
+import com.joanzapata.iconify.fonts.IoniconsModule;
+import com.joanzapata.iconify.widget.IconTextView;
 
 import java.util.HashMap;
 
@@ -23,7 +30,10 @@ import butterknife.OnClick;
 
 public class ActivityLogin extends AppCompatActivity {
     private static final String TAG = "ActivityLogin";
-    private static final int REQUEST_SIGNUP = 0;
+
+    private static final int SIGNUP_REQUEST = 0;
+    private static final int LOGIN_SUCCESS = 1;
+    private static final int LOGIN_FAILED = 2;
 
     @Bind(R.id.input_email)
     EditText emailText;
@@ -36,14 +46,21 @@ public class ActivityLogin extends AppCompatActivity {
     @Bind(R.id.link_skip_login)
     TextView skipLoginLink;
 
+    private Handler loginHandler;
+
+    static {
+        Iconify.with(new EntypoModule());
+        Iconify.with(new IoniconsModule());
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        signupLink.setText(Html.fromHtml("No account yet? Click <i>here</i>"));
-        skipLoginLink.setText(Html.fromHtml("Skip login <i>here</i>"));
+        signupLink.setText(Html.fromHtml("No account yet? Click <font color=\"#99cc00\"><i>here</i></font>"));
+        skipLoginLink.setText(Html.fromHtml("Skip login <font color=\"#2638C2\"><i>here</i></font>"));
     }
 
     @OnClick(R.id.btn_login)
@@ -73,6 +90,13 @@ public class ActivityLogin extends AppCompatActivity {
 
         ServiceEvento.getInstance().callServiceMethod(params);
 
+        loginHandler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(Message msg) {
+                Log.wtf("", "main:" + msg);
+            }
+        };
+
         new android.os.Handler().postDelayed(
                 new Runnable() {
                     public void run() {
@@ -84,11 +108,22 @@ public class ActivityLogin extends AppCompatActivity {
                 }, 1000);
     }
 
+    @OnClick(R.id.login_facebook)
+    public void loginWithFacebook(IconTextView iconTextView) {
+        iconTextView.setShadowLayer(3, 9, 9, android.R.color.darker_gray);
+        iconTextView.invalidate();
+    }
+
+    @OnClick(R.id.link_skip_login)
+    public void loginWithGmail(IconTextView iconTextView) {
+
+    }
+
     @OnClick(R.id.link_signup)
     public void openSignupActivity(View v) {
         // Start the Signup activity
         Intent intent = new Intent(getApplicationContext(), ActivitySignup.class);
-        startActivityForResult(intent, REQUEST_SIGNUP);
+        startActivityForResult(intent, SIGNUP_REQUEST);
     }
 
     @OnClick(R.id.link_skip_login)
@@ -99,7 +134,7 @@ public class ActivityLogin extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SIGNUP) {
+        if (requestCode == SIGNUP_REQUEST) {
             if (resultCode == RESULT_OK) {
 
                 // TODO: Implement successful signup logic here
