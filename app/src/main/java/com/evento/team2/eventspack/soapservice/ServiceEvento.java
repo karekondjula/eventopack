@@ -86,8 +86,8 @@ public class ServiceEvento {
                         Boolean result = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), Boolean.class);
                         Log.i(TAG, "METHOD_ADD_USER " + result.toString());
                     } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_USER)) {
-                        Boolean result = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), Boolean.class);
-                        Log.i(TAG, "METHOD_GET_USER " + result.toString());
+//                        Boolean result = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), Boolean.class);
+                        Log.i(TAG, "METHOD_GET_USER " + responseMap.get(RESPONSE_KEY));
                     } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_EVENTS)) {
 //                    ArrayList<Event> events = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), new TypeToken<ArrayList<Event>>().getType());
 //                    Log.i(TAG, "METHOD_GET_ALL_EVENTS " + ((String) responseMap.get(RESPONSE_KEY)));

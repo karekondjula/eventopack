@@ -114,7 +114,7 @@ public class ActivityLogin extends AppCompatActivity {
         iconTextView.invalidate();
     }
 
-    @OnClick(R.id.link_skip_login)
+    @OnClick(R.id.login_gmail)
     public void loginWithGmail(IconTextView iconTextView) {
 
     }
