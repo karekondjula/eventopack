@@ -10,20 +10,10 @@
             android:title="Settings" />
 
         <item
-            android:id="@+id/calendar"
+            android:id="@+id/social"
             android:checked="false"
-            android:icon="@drawable/ic_event"
-            android:title="Calendar" />
-
-    </group>
-
-    <group android:checkableBehavior="none">
-
-        <item
-            android:id="@+id/logout"
-            android:checked="false"
-            android:icon="@android:drawable/ic_menu_revert"
-            android:title="Logout" />
+            android:icon="@android:drawable/star_big_off"
+            android:title="Social" />
 
     </group>
 

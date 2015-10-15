@@ -36,7 +36,7 @@
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-    <!--TODO daniel maybe put map here-->
+    <!--TODO daniel maybe put map here or something else useful unique unambigious-->
     <!--<android.support.design.widget.FloatingActionButton-->
         <!--android:id="@+id/fab"-->
         <!--android:layout_width="wrap_content"-->

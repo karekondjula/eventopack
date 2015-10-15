@@ -110,19 +110,20 @@ public class ActivityLogin extends AppCompatActivity {
 
     @OnClick(R.id.login_facebook)
     public void loginWithFacebook(IconTextView iconTextView) {
-        iconTextView.setShadowLayer(3, 9, 9, android.R.color.darker_gray);
-        iconTextView.invalidate();
+        // TODO daniel add some animation for > L devices
+//        iconTextView.setShadowLayer(3, 9, 9, android.R.color.darker_gray);
+//        iconTextView.invalidate();
     }
 
     @OnClick(R.id.login_gmail)
     public void loginWithGmail(IconTextView iconTextView) {
-
+        // TODO daniel add some animation for > L devices
     }
 
     @OnClick(R.id.link_signup)
     public void openSignupActivity(View v) {
         // Start the Signup activity
-        Intent intent = new Intent(getApplicationContext(), ActivitySignup.class);
+        Intent intent = new Intent(this, ActivitySignup.class);
         startActivityForResult(intent, SIGNUP_REQUEST);
     }
 
@@ -138,7 +139,10 @@ public class ActivityLogin extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
 
                 // TODO: Implement successful signup logic here
-                // By default we just finish the Activity and log them in automatically
+                this.finish();
+            } else if (resultCode == RESULT_FIRST_USER) {
+
+                // TODO: Implement skip login logic here
                 this.finish();
             }
         }

@@ -21,7 +21,6 @@ import com.joanzapata.iconify.fonts.IoniconsModule;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by Daniel on 31-Jul-15.

@@ -1,17 +1,23 @@
 package com.evento.team2.eventspack.ui.activites;
 
 import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.soapservice.ServiceEvento;
 import com.evento.team2.eventspack.soapservice.model.User;
+import com.evento.team2.eventspack.utils.NetworkUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -31,20 +37,43 @@ public class ActivitySignup extends AppCompatActivity {
     EditText passwordText;
     @Bind(R.id.btn_signup)
     Button signupButton;
+    @Bind(R.id.link_skip_login)
+    TextView skipLoginLink;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         ButterKnife.bind(this);
+
+        skipLoginLink.setText(Html.fromHtml("Skip login <font color=\"#2638C2\"><i>here</i></font>"));
+    }
+
+    @Override
+    protected void onDestroy() {
+        ButterKnife.unbind(this);
+        super.onDestroy();
     }
 
     @OnClick(R.id.btn_signup)
-    public void signup() {
+    public void signup(View view) {
         Log.d(TAG, "Signup");
 
+        if (!NetworkUtils.getInstance().isNetworkAvailable(this)) {
+            Snackbar.make(view,
+                    "No internet connection. Please continue without login in",
+                    Snackbar.LENGTH_LONG)
+//                    .setAction("Undo", null)
+//                    .setActionTextColor(Color.RED)
+                    .show();
+
+            signupButton.setEnabled(true);
+
+            return;
+        }
+
         if (!validate()) {
-            onSignupFailed();
+            signupButton.setEnabled(true);
             return;
         }
 
@@ -88,16 +117,17 @@ public class ActivitySignup extends AppCompatActivity {
                 }, 3000);
     }
 
+    @OnClick(R.id.link_skip_login)
+    public void skipLogin(View v) {
+        signupButton.setEnabled(true);
+        setResult(RESULT_FIRST_USER, null);
+        this.finish();
+    }
+
     public void onSignupSuccess() {
         signupButton.setEnabled(true);
         setResult(RESULT_OK, null);
         finish();
-    }
-
-    public void onSignupFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
-
-        signupButton.setEnabled(true);
     }
 
     public boolean validate() {

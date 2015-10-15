@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
-import com.evento.team2.eventspack.utils.EventsController;
 import com.evento.team2.eventspack.utils.Utils;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -54,6 +53,12 @@ public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback
     }
 
     @Override
+    protected void onDestroy() {
+        ButterKnife.unbind(this);
+        super.onDestroy();
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         mapView = googleMap;
         mapView.setMapType(GoogleMap.MAP_TYPE_HYBRID);
@@ -85,9 +90,5 @@ public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback
 //                });
 
         // TODO daniel, go to my location, move FAB button if possible, span to events
-    }
-
-    public void onEvent(EventsController.UpdateEvents updateEvents) {
-        // TODO refresh markers with new events
     }
 }

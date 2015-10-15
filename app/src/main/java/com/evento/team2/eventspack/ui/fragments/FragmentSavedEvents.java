@@ -15,13 +15,11 @@ import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapter.EventsRecyclerViewAdapter;
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.provider.EventsDatabase;
-import com.evento.team2.eventspack.utils.EventsController;
 
 import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
 
 /**
  * Created by Daniel on 31-Jul-15.
@@ -60,26 +58,25 @@ public class FragmentSavedEvents extends Fragment {
         super.onDetach();
     }
 
-    public void onEvent(EventsController.UpdateSavedEvents updateEvents) {
+//    public void onEvent(EventsController.UpdateSavedEvents updateEvents) {
+//
+//        Log.i(">>", "UpdateSavedEvents");
+//
+//        getActivity().runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                ArrayList<Event> savedEvents = EventsDatabase.getInstance().getAllSavedEvents();
+//                savedEventsAdapter.refreshEvents(savedEvents);
+////                savedEventsAdapter.notifyItemRangeChanged(0, savedEvents.size());
+//                savedEventsAdapter.notifyDataSetChanged();
+////        savedEventsAdapter.notifyItemInserted(0);
+////                savedEventsRecyclerView.setAdapter(savedEventsAdapter);
+//            }
+//        });
+//    };
 
-        Log.i(">>", "UpdateSavedEvents");
-
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ArrayList<Event> savedEvents = EventsDatabase.getInstance().getAllSavedEvents();
-                savedEventsAdapter.refreshEvents(savedEvents);
-//                savedEventsAdapter.notifyItemRangeChanged(0, savedEvents.size());
-                savedEventsAdapter.notifyDataSetChanged();
-//        savedEventsAdapter.notifyItemInserted(0);
-//                savedEventsRecyclerView.setAdapter(savedEventsAdapter);
-            }
-        });
-    };
-
-    public static FragmentSavedEvents newInstance(EventBus eventBus) {
+    public static FragmentSavedEvents newInstance() {
         FragmentSavedEvents f = new FragmentSavedEvents();
-        eventBus.register(f);
         return f;
     }
 }

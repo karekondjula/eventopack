@@ -14,15 +14,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.soapservice.ServiceEvento;
+import com.evento.team2.eventspack.ui.fragments.FragmentCalendar;
 import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
 import com.evento.team2.eventspack.ui.fragments.FragmentSavedEvents;
-import com.evento.team2.eventspack.utils.EventsController;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +29,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.greenrobot.event.EventBus;
 
 public class ActivityMain extends AppCompatActivity {
 
@@ -71,12 +69,9 @@ public class ActivityMain extends AppCompatActivity {
                         Intent intentSettings = new Intent(ActivityMain.this, ActivitySettings.class);
                         startActivity(intentSettings);
                         break;
-                    case R.id.calendar:
-                        Intent intentCalendar = new Intent(ActivityMain.this, ActivityCalendar.class);
-                        startActivity(intentCalendar);
-                        break;
-                    case R.id.logout:
-                        Toast.makeText(getApplicationContext(), "Log me out :(", Toast.LENGTH_SHORT).show();
+                    case R.id.social:
+                        Intent intentSocial = new Intent(ActivityMain.this, ActivitySocial.class);
+                        startActivity(intentSocial);
                         break;
                 }
 
@@ -104,7 +99,7 @@ public class ActivityMain extends AppCompatActivity {
 
         ViewPager viewPager = ButterKnife.findById(this, R.id.viewpager);
         if (viewPager != null) {
-            setupViewPager(viewPager, EventsController.getInstance().getEventBus());
+            setupViewPager(viewPager);
         }
 
         PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
@@ -112,17 +107,20 @@ public class ActivityMain extends AppCompatActivity {
         pagerSlidingTabStrip.setShouldExpand(true);
         pagerSlidingTabStrip.setViewPager(viewPager);
 
-        Intent intent = new Intent(this, ActivityLogin.class);
-        startActivity(intent);
-
-//        HashMap<String, Object> params = new HashMap<>();
-//        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_TEST_FUNC);
+        HashMap<String, Object> params = new HashMap<>();
+        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_TEST_FUNC);
 //        ServiceEvento.getInstance().callServiceMethod(params);
 
-//        HashMap<String, Object> params = new HashMap<>();
+//        params = new HashMap<>();
 //        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
 //
 //        ServiceEvento.getInstance().callServiceMethod(params);
+    }
+
+    @Override
+    protected void onDestroy() {
+        ButterKnife.unbind(this);
+        super.onDestroy();
     }
 
     @Override
@@ -151,11 +149,11 @@ public class ActivityMain extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private void setupViewPager(ViewPager viewPager, EventBus eventBus) {
+    private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
         adapter.addFragment(FragmentEvents.newInstance(), "Events");
         adapter.addFragment(new Fragment(), "Places");
-        adapter.addFragment(FragmentSavedEvents.newInstance(eventBus), "Saved");
+        adapter.addFragment(FragmentSavedEvents.newInstance(), "Saved");
         viewPager.setAdapter(adapter);
     }
 

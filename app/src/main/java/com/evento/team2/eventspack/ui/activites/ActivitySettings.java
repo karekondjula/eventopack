@@ -41,6 +41,12 @@ public class ActivitySettings extends AppCompatActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        ButterKnife.unbind(this);
+        super.onDestroy();
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (getFragmentManager().getBackStackEntryCount() == 1) {

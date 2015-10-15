@@ -55,7 +55,6 @@ public class ActivityEventDetails extends AppCompatActivity {
 
     boolean isEventSaved = false;
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +82,12 @@ public class ActivityEventDetails extends AppCompatActivity {
 
         // TODO daniel implement picture uri as picture
         Glide.with(this).load(R.drawable.party_image).centerCrop().into(backdropImage);
+    }
+
+    @Override
+    protected void onDestroy() {
+        ButterKnife.unbind(this);
+        super.onDestroy();
     }
 
 //    @Override
