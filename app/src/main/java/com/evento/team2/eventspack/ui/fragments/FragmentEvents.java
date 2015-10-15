@@ -75,9 +75,6 @@ public class FragmentEvents extends Fragment {
         });
 
         eventsAdapter = new EventsRecyclerViewAdapter(getActivity(), Utils.Helpers.createEvents());
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
-        eventsRecyclerView.setHasFixedSize(true);
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         eventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
         eventsRecyclerView.setAdapter(eventsAdapter);

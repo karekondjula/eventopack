@@ -62,11 +62,10 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         events.add(0, event);
     }
 
-    public void refreshEvents(ArrayList<Event> events) {
-        events.clear();
-        events = new ArrayList<>(events);
-    }
-
+//    public void refreshEvents(ArrayList<Event> events) {
+//        events.clear();
+//        events = new ArrayList<>(events);
+//    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

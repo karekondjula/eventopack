@@ -1,19 +1,24 @@
 package com.evento.team2.eventspack.ui.fragments;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.CardView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.evento.team2.eventspack.R;
+import com.evento.team2.eventspack.adapter.SmallLayoutEventsRecyclerViewAdapter;
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.provider.EventsDatabase;
-import com.evento.team2.eventspack.utils.NetworkUtils;
+import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.utils.Utils;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
@@ -30,32 +35,27 @@ import butterknife.ButterKnife;
  * Created by Daniel on 16-Aug-15.
  */
 public class FragmentCalendar extends Fragment {
-
-    private final static long DAY_IN_SECONDS = 24 * 60 * 60 * 1000;
     public static final String TAG = "FragmentCalendar";
 
-    CaldroidFragment caldroidFragment;
+    private final static long DAY_IN_SECONDS = 24 * 60 * 60 * 1000;
 
+    private CaldroidFragment caldroidFragment;
     private HashSet<Date> selectedDates;
+    private SmallLayoutEventsRecyclerViewAdapter eventsAdapter;
+    private ArrayList<Event> eventsList;
     private HashSet<Date> eventDates;
 
     @Bind(R.id.caldroidCalendar)
     FrameLayout calendarContainer;
 
-//    @Bind(R.id.calendarEventsLayout)
-//    LinearLayout calendarEventsLayout;
-
-    private Context context;
-
-    private ArrayList<Event> eventsList;
+    @Bind(R.id.calendarEventsLinearLayout)
+    LinearLayout calendarEventsLinearLayout;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
         ButterKnife.bind(this, view);
-
-        context = getContext();
 
         selectedDates = new HashSet<Date>();
         eventDates = new HashSet<Date>();
@@ -73,6 +73,7 @@ public class FragmentCalendar extends Fragment {
         t.replace(R.id.caldroidCalendar, caldroidFragment);
         t.commit();
 
+        // TODO do not forget me please :*
 //        if (NetworkUtils.getInstance().isNetworkAvailable(context)) {
         if (true) {
             // fetch all the events
@@ -96,7 +97,14 @@ public class FragmentCalendar extends Fragment {
 
         caldroidFragment.setBackgroundResourceForDate(R.color.colorPrimary, new Date(System.currentTimeMillis()));
 
-        calendarContainer.getViewTreeObserver().addOnGlobalLayoutListener(CalendarViewTreeObserver);
+
+        eventsAdapter = new SmallLayoutEventsRecyclerViewAdapter(getActivity(), eventsList);
+//        calendarRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        calendarRecyclerView.setItemAnimator(new DefaultItemAnimator());
+//        calendarRecyclerView.setAdapter(eventsAdapter);
+
+//        int viewHeight = eventsAdapter.getItemCount() * adapterData.size();
+//        calendarRecyclerView.getLayoutParams().height = viewHeight;
 
         return view;
     }
@@ -129,44 +137,7 @@ public class FragmentCalendar extends Fragment {
                 caldroidFragment.refreshView();
             }
 
-            // TODO daniel fetch all events for the current date
-//            for (final Event event : eventsList) {
-//
-//                final CardView calendarItemView = (CardView) LayoutInflater.from(context).inflate(R.layout.item_calendar_events, calendarEventsLayout, false);
-//                ImageView calendar_event_picture = (ImageView) ButterKnife.findById(calendarItemView, R.id.calendar_event_picture);
-//                calendar_event_picture.setImageResource(R.drawable.party_image);
-////                Glide.with(context).load(R.drawable.party_image).into(calendar_event_picture);
-//                ((TextView) ButterKnife.findById(calendarItemView, R.id.name)).setText(event.name);
-//                ((TextView) ButterKnife.findById(calendarItemView, R.id.details)).setText(event.details);
-//                calendarItemView.setClickable(true);
-//                calendarItemView.setOnTouchListener(new View.OnTouchListener() {
-//                    @Override
-//                    public boolean onTouch(View v, MotionEvent motionEvent) {
-////                        if (motionEvent.getDownTime() < 500) {
-//                            Intent intent = new Intent(context, ActivityEventDetails.class);
-//                            intent.putExtra(ActivityEventDetails.EXTRA_NAME, event.name);
-//                            if (!TextUtils.isEmpty("")) {
-//                                intent.putExtra(ActivityEventDetails.EXTRA_PICTURE_URI, "");
-//                            }
-//                            context.startActivity(intent);
-//
-//                        return false;
-//                    }
-//                });
-////                calendarItemView.setOnClickListener(new OnClickListener() {
-////                    @Override
-////                    public void onClick(View v) {
-////                        Intent intent = new Intent(context, ActivityEventDetails.class);
-////                        intent.putExtra(ActivityEventDetails.EXTRA_NAME, event.name);
-////                        if (!TextUtils.isEmpty("")) {
-////                            intent.putExtra(ActivityEventDetails.EXTRA_PICTURE_URI, "");
-////                        }
-////                        context.startActivity(intent);
-////                    }
-////                });
-//                calendarEventsLayout.addView(calendarItemView);
-//
-//            }
+            fetchEventsOnSelectedDates(selectedDates);
         }
 
         @Override
@@ -182,19 +153,34 @@ public class FragmentCalendar extends Fragment {
         }
     };
 
+    private void fetchEventsOnSelectedDates(HashSet<Date> selectedDates) {
+        // TODO daniel fetch all events for the current date
+        for (final Event event : eventsList) {
+
+            final CardView calendarItemView = (CardView) LayoutInflater.from(getActivity()).inflate(R.layout.item_small_events, calendarEventsLinearLayout, false);
+            ImageView calendarEventImageView = (ImageView) ButterKnife.findById(calendarItemView, R.id.small_event_picture);
+            calendarEventImageView.setImageResource(R.drawable.party_image);
+//                Glide.with(getActivity()).load(R.drawable.party_image).into(calendarEventImageView);
+            ((TextView) ButterKnife.findById(calendarItemView, R.id.event_title)).setText(event.name);
+            ((TextView) ButterKnife.findById(calendarItemView, R.id.event_details)).setText(event.details);
+            calendarItemView.setClickable(true);
+            calendarItemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), ActivityEventDetails.class);
+                    intent.putExtra(ActivityEventDetails.EXTRA_NAME, event.name);
+                    if (!TextUtils.isEmpty("")) {
+                        intent.putExtra(ActivityEventDetails.EXTRA_PICTURE_URI, "");
+                    }
+                    getActivity().startActivity(intent);
+                }
+            });
+            calendarEventsLinearLayout.addView(calendarItemView);
+        }
+    }
+
     public static FragmentCalendar newInstance() {
         FragmentCalendar fragmentCalendar = new FragmentCalendar();
         return fragmentCalendar;
     }
-
-    private ViewTreeObserver.OnGlobalLayoutListener CalendarViewTreeObserver = new ViewTreeObserver.OnGlobalLayoutListener() {
-        @Override
-        public void onGlobalLayout() {
-            calendarContainer.getViewTreeObserver().removeOnGlobalLayoutListener(CalendarViewTreeObserver);
-            ViewGroup.MarginLayoutParams lp = (ViewGroup.MarginLayoutParams) calendarContainer.getLayoutParams();
-            lp.height = ((ViewGroup)calendarContainer).getChildAt(0).getHeight();
-            calendarContainer.setLayoutParams(lp);
-            calendarContainer.requestLayout();
-        }
-    };
 }

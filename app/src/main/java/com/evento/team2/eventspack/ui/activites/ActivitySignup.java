@@ -26,6 +26,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+// TODO daniel NOT USED ... REMOVE IT!
 public class ActivitySignup extends AppCompatActivity {
     private static final String TAG = "ActivitySignup";
 
