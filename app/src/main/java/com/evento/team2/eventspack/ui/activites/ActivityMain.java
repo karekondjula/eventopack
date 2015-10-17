@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -24,7 +24,6 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.soapservice.ServiceEvento;
-import com.evento.team2.eventspack.ui.fragments.FragmentCalendar;
 import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
 import com.evento.team2.eventspack.ui.fragments.FragmentSavedEvents;
 
@@ -78,6 +77,9 @@ public class ActivityMain extends AppCompatActivity {
                         Intent intentSocial = new Intent(ActivityMain.this, ActivitySocial.class);
                         startActivity(intentSocial);
                         break;
+                    case R.id.about:
+                        Snackbar.make(getCurrentFocus(), "Here's a Snackbar", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                        break;
                 }
 
                 return true;
@@ -116,10 +118,10 @@ public class ActivityMain extends AppCompatActivity {
         params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_TEST_FUNC);
 //        ServiceEvento.getInstance().callServiceMethod(params);
 
-//        params = new HashMap<>();
-//        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
-//
-//        ServiceEvento.getInstance().callServiceMethod(params);
+        params = new HashMap<>();
+        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
+
+        ServiceEvento.getInstance().callServiceMethod(params);
     }
 
     @Override
@@ -127,8 +129,6 @@ public class ActivityMain extends AppCompatActivity {
         ButterKnife.unbind(this);
         super.onDestroy();
     }
-
-    private SearchView searchView;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

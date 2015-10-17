@@ -10,37 +10,101 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 public class Event {
 
     @JsonField
+    String calendar;
+    @JsonField
     long id;
     @JsonField
-    String name;
+    long pid;
     @JsonField
-    String description;
+    long tstamp;
     @JsonField
-    long date_from;
+    String title;
     @JsonField
-    long date_to;
+    String alias;
     @JsonField
-    double lat;
+    String author;
     @JsonField
-    double lng;
+    long addTime;
     @JsonField
-    String image_url;
+    long startTime;
     @JsonField
-    String contact;
+    long endTime;
     @JsonField
-    String website;
+    long startDate;
     @JsonField
-    int price;
-    String address;
+    long endDate;
     @JsonField
-    long id_user;
+    String location;
+    @JsonField
+    String teaser;
+    @JsonField
+    String addImage;
+    @JsonField
+    String singleSRC;
+    @JsonField
+    String alt;
+    @JsonField
+    String size;
+    @JsonField
+    String imageMargin;
+    @JsonField
+    String imageUrl;
+    @JsonField
+    String fullsize;
+    @JsonField
+    String caption;
+    @JsonField
+    String floating;
+    @JsonField
+    String recurring;
+    @JsonField
+    int repeatEach;
+    @JsonField
+    int repeatEnd;
+    @JsonField
+    int recurrences;
+    @JsonField
+    String addEnclosure;
+    @JsonField
+    String enclosure;
+    @JsonField
+    String source;
+    @JsonField
+    int jumpTo;
+    @JsonField
+    int articleId;
+    @JsonField
+    String url;
+    @JsonField
+    String target;
+    @JsonField
+    String cssClass;
+    @JsonField
+    String noComments;
     @JsonField
     int published;
     @JsonField
-    int is_premium;
+    String start;
     @JsonField
-    long premium_date_from;
-    @JsonField
-    long premium_date_to;
-}
+    String stop;
 
+//    @JsonField
+//    double lat;
+//    @JsonField
+//    double lng;
+//    @JsonField
+//    String contact;
+//    @JsonField
+//    String website;
+//    @JsonField
+//    int price;
+//    String address;
+//    @JsonField
+//    long id_user;
+//    @JsonField
+//    int is_premium;
+//    @JsonField
+//    long premium_date_from;
+//    @JsonField
+//    long premium_date_to;
+}

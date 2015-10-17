@@ -15,6 +15,12 @@
             android:icon="@android:drawable/star_big_off"
             android:title="Social" />
 
+        <item
+            android:id="@+id/about"
+            android:checked="false"
+            android:icon="@android:drawable/ic_dialog_info"
+            android:title="About" />
+
     </group>
 
 </menu>

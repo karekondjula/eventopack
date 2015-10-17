@@ -157,7 +157,7 @@ public class FragmentCalendar extends Fragment {
         // TODO daniel fetch all events for the current date
         for (final Event event : eventsList) {
 
-            final CardView calendarItemView = (CardView) LayoutInflater.from(getActivity()).inflate(R.layout.item_small_events, calendarEventsLinearLayout, false);
+            final View calendarItemView = LayoutInflater.from(getActivity()).inflate(R.layout.item_small_events, calendarEventsLinearLayout, false);
             ImageView calendarEventImageView = (ImageView) ButterKnife.findById(calendarItemView, R.id.small_event_picture);
             calendarEventImageView.setImageResource(R.drawable.party_image);
 //                Glide.with(getActivity()).load(R.drawable.party_image).into(calendarEventImageView);

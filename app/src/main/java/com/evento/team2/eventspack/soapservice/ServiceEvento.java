@@ -5,7 +5,6 @@ import android.util.Log;
 
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.evento.team2.eventspack.soapservice.model.Event;
-import com.evento.team2.eventspack.soapservice.model.HelloWorld;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
@@ -16,17 +15,18 @@ import org.ksoap2.transport.HttpTransportSE;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 /**
  * Created by Daniel on 18-Aug-15.
  */
 public class ServiceEvento {
-    private static final String TAG = "ServiceEvento";
+    private static final String TAG = "ServiceEvento >>";
 
-    private final String NAMESPACE = "urn:eventservice";
-    private final String URL = "http://ap.mk/evento/server.php";
-    private final String SOAP_ACTION = "http://ap.mk/evento/server.php/";
+    private static final String NAMESPACE = "urn:eventservice";
+    private static final String URL = "http://ap.mk/evento/server.php";
+    private static final String SOAP_ACTION = "http://ap.mk/evento/server.php/";
 
     // parameter keys
     public static final String METHOD_NAME_KEY = "method_name_key";
@@ -89,8 +89,11 @@ public class ServiceEvento {
 //                        Boolean result = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), Boolean.class);
                         Log.i(TAG, "METHOD_GET_USER " + responseMap.get(RESPONSE_KEY));
                     } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_EVENTS)) {
-//                    ArrayList<Event> events = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), new TypeToken<ArrayList<Event>>().getType());
-//                    Log.i(TAG, "METHOD_GET_ALL_EVENTS " + ((String) responseMap.get(RESPONSE_KEY)));
+                        ArrayList<Event> eventsArrayList = new ArrayList(LoganSquare.parseList((String) responseMap.get(RESPONSE_KEY), Event.class));
+
+                        for (Event event : eventsArrayList) {
+                            Log.i(TAG, METHOD_GET_ALL_EVENTS + " " + event.toString());
+                        }
                     }
                 } else {
                     Log.i(TAG, "no response ;( ");
