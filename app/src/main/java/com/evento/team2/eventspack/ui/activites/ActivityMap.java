@@ -80,7 +80,7 @@ public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback
         mapView.getUiSettings().setZoomControlsEnabled(true);
         mapView.getUiSettings().setZoomGesturesEnabled(true);
         mapView.setOnMarkerClickListener(this);
-//        mapView.setOnMapClickListener(this);
+        mapView.setOnMapClickListener(this);
 
         Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.party_image);
         Bitmap bhalfsize = Bitmap.createScaledBitmap(b, b.getWidth() / 8, b.getHeight() / 8, false);
@@ -105,7 +105,7 @@ public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback
 //                    }
 //                });
 
-        // TODO daniel, go to my location, move FAB button if possible, span to events
+        // TODO daniel map span to events nearby
     }
 
     @Override
@@ -114,18 +114,19 @@ public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback
         mapEventDetailsLinearLayout.removeAllViews();
 
         final View mapEventItemView = LayoutInflater.from(ActivityMap.this).inflate(R.layout.item_small_events, mapEventDetailsLinearLayout, false);
+        ImageView mapEventImageView = (ImageView) ButterKnife.findById(mapEventItemView, R.id.small_event_picture);
+        mapEventImageView.setImageResource(R.drawable.party_image);
+//                Glide.with(getActivity()).load(R.drawable.party_image).into(calendarEventImageView);
+        ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_title)).setText(marker.getTitle());
+        ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_details)).setText(marker.getSnippet());
+        ButterKnife.findById(mapEventItemView, R.id.close_event).setVisibility(View.VISIBLE);
+        mapEventItemView.setClickable(true);
         ButterKnife.findById(mapEventItemView, R.id.close_event).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mapEventDetailsLinearLayout.removeAllViews();
             }
         });
-        ImageView mapEventImageView = (ImageView) ButterKnife.findById(mapEventItemView, R.id.small_event_picture);
-        mapEventImageView.setImageResource(R.drawable.party_image);
-//                Glide.with(getActivity()).load(R.drawable.party_image).into(calendarEventImageView);
-        ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_title)).setText(marker.getTitle());
-        ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_details)).setText(marker.getSnippet());
-        mapEventItemView.setClickable(true);
         mapEventItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,6 +145,6 @@ public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onMapClick(LatLng latLng) {
-//        mapEventDetailsLinearLayout.removeAllViews();
+        mapEventDetailsLinearLayout.removeAllViews();
     }
 }

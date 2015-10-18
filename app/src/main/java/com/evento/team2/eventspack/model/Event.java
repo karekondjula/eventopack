@@ -27,7 +27,7 @@ public class Event {
 
     public boolean isEventSaved;
 
-    public Event(String name, String description) {
+    public Event(String name, @Nullable String description) {
         this.name = name;
         this.details = description;
     }
@@ -36,5 +36,32 @@ public class Event {
         this.name = name;
         this.details = description;
         this.pictureUri = pictureUri;
+    }
+
+    public final static class Table {
+        public static final String TABLE_EVENTS = "Events";
+
+        public static final String COLUMN_ID = "id";
+        public static final String COLUMN_NAME = "name";
+        public static final String COLUMN_DETAILS = "details";
+        public static final String COLUMN_PICTURE_URI = "pictureUri";
+        public static final String COLUMN_LOCATION_STRING = "locationString";
+        public static final String COLUMN_LATITUDE = "latitude";
+        public static final String COLUMN_LONGITUDE = "longitude";
+        public static final String COLUMN_START_DATE = "startDate";
+        public static final String COLUMN_END_DATE = "endDate";
+
+        // Database creation sql statement
+        public static final String DATABASE_CREATE = "create table " + TABLE_EVENTS + "("
+                + COLUMN_ID + " integer primary key, "
+                + COLUMN_NAME + " text not null, "
+                + COLUMN_DETAILS + " text, "
+                + COLUMN_PICTURE_URI + " text, "
+                + COLUMN_LOCATION_STRING + " text, "
+                + COLUMN_LATITUDE + " real, "
+                + COLUMN_LONGITUDE + " real, "
+                + COLUMN_START_DATE + " long, "
+                + COLUMN_END_DATE + " long "
+                + ");";
     }
 }

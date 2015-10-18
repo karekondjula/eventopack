@@ -153,6 +153,7 @@ public class FragmentCalendar extends Fragment {
     };
 
     private void fetchEventsOnSelectedDates(HashSet<Date> selectedDates) {
+        calendarEventsLinearLayout.removeAllViews();
         // TODO daniel fetch all events for the current startDate
         for (final Event event : eventsList) {
 

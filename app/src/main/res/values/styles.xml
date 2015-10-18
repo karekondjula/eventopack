@@ -29,7 +29,7 @@
         <item name="android:textColorHighlight">@color/text_highlight</item>
     </style>
 
-    <style name="TwoLineHeaderDescription">
+    <style name="ThreeLineHeaderDescription">
         <item name="android:layout_alignParentLeft">true</item>
         <item name="android:layout_marginLeft">5dp</item>
     </style>

@@ -22,13 +22,15 @@ public class EventsDatabase {
 
     private SQLiteDatabase database;
     private EventsSqliteHelper dbHelper;
-    private String[] allColumns = {EventsTable.COLUMN_ID,
-            EventsTable.COLUMN_NAME,
-            EventsTable.COLUMN_DETAILS,
-            EventsTable.COLUMN_PICTURE_URI,
-            EventsTable.COLUMN_LATITUDE,
-            EventsTable.COLUMN_LONGITUDE,
-            EventsTable.COLUMN_DATE};
+    private String[] allColumns = {Event.Table.COLUMN_ID,
+            Event.Table.COLUMN_NAME,
+            Event.Table.COLUMN_DETAILS,
+            Event.Table.COLUMN_PICTURE_URI,
+            Event.Table.COLUMN_LOCATION_STRING,
+            Event.Table.COLUMN_LATITUDE,
+            Event.Table.COLUMN_LONGITUDE,
+            Event.Table.COLUMN_START_DATE,
+            Event.Table.COLUMN_END_DATE,};
 
     private EventsDatabase() {}
 
@@ -56,31 +58,33 @@ public class EventsDatabase {
 
     public long saveEvent(Event event) {
         ContentValues values = new ContentValues();
-        values.put(EventsTable.COLUMN_ID, event.id);
-        values.put(EventsTable.COLUMN_NAME, event.name);
+        values.put(Event.Table.COLUMN_ID, event.id);
+        values.put(Event.Table.COLUMN_NAME, event.name);
         if (event.details != null) {
-            values.put(EventsTable.COLUMN_DETAILS, event.details);
+            values.put(Event.Table.COLUMN_DETAILS, event.details);
         }
-        values.put(EventsTable.COLUMN_PICTURE_URI, event.pictureUri);
+        values.put(Event.Table.COLUMN_PICTURE_URI, event.pictureUri);
+        values.put(Event.Table.COLUMN_LOCATION_STRING, event.locationString);
         if (event.location != null) {
-            values.put(EventsTable.COLUMN_LATITUDE, event.location.latitude);
-            values.put(EventsTable.COLUMN_LONGITUDE, event.location.longitude);
+            values.put(Event.Table.COLUMN_LATITUDE, event.location.latitude);
+            values.put(Event.Table.COLUMN_LONGITUDE, event.location.longitude);
         }
-        values.put(EventsTable.COLUMN_DATE, event.startDate);
+        values.put(Event.Table.COLUMN_START_DATE, event.startDate);
+        values.put(Event.Table.COLUMN_END_DATE, event.endDate);
 
-        long insertId = database.insert(EventsTable.TABLE_EVENTS, null, values);
+        long insertId = database.insert(Event.Table.TABLE_EVENTS, null, values);
         return insertId;
     }
 
     public void removeSavedEvent(Event event) {
         long id = event.id;
-        database.delete(EventsTable.TABLE_EVENTS, EventsTable.COLUMN_ID + " = " + id, null);
+        database.delete(Event.Table.TABLE_EVENTS, Event.Table.COLUMN_ID + " = " + id, null);
     }
 
     public ArrayList<Event> getAllSavedEvents() {
         ArrayList<Event> events = new ArrayList<Event>();
 
-        Cursor cursor = database.query(EventsTable.TABLE_EVENTS,
+        Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
                 allColumns, null, null, null, null, null);
 
         cursor.moveToFirst();
@@ -96,8 +100,8 @@ public class EventsDatabase {
     }
 
     public Event getSavedEventById(long id) {
-        Cursor cursor = database.query(EventsTable.TABLE_EVENTS,
-                allColumns, EventsTable.COLUMN_ID + " = ? ", new String[]{String.valueOf(id)},
+        Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
+                allColumns, Event.Table.COLUMN_ID + " = ? ", new String[]{String.valueOf(id)},
                 null, null, null);
         cursor.moveToFirst();
         Event event = cursorToComment(cursor);
