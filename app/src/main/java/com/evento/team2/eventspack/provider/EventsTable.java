@@ -9,13 +9,15 @@ public class EventsTable {
 
     public static final String TABLE_EVENTS = "Events";
 
+    // TODO daniel we have three different classes for Events, is it stupid?!?!
+
     public static final String COLUMN_ID = "id";
     public static final String COLUMN_NAME = "name";
     public static final String COLUMN_DETAILS = "details";
     public static final String COLUMN_PICTURE_URI = "pictureUri";
     public static final String COLUMN_LATITUDE = "latitude";
     public static final String COLUMN_LONGITUDE = "longitude";
-    public static final String COLUMN_DATE = "date";
+    public static final String COLUMN_DATE = "startDate";
 
     // Database creation sql statement
     public static final String DATABASE_CREATE = "create table " + TABLE_EVENTS + "("

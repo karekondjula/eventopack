@@ -62,7 +62,7 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         events.add(0, event);
     }
 
-//    public void refreshEvents(ArrayList<Event> events) {
+//    public void refreshEvents(ArrayList<JsonEvent> events) {
 //        events.clear();
 //        events = new ArrayList<>(events);
 //    }
@@ -101,8 +101,8 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
 //
 //                Snackbar.make(v,
 //                            events.get(position).isEventSaved ?
-//                                    "Event is saved" :
-//                                    "Event is removed from saved events",
+//                                    "JsonEvent is saved" :
+//                                    "JsonEvent is removed from saved events",
 //                            Snackbar.LENGTH_LONG)
 //                        .setAction("Undo", null)
 //                        .setActionTextColor(Color.RED)

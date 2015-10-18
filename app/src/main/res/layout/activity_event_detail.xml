@@ -73,7 +73,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Details for the current event like description, locations, what tod
+                        android:text="Details for the current jsonEvent like description, locations, what tod
                         and what not to do and everyhing connected with that and hashtags and whatnot" />
 
                 </LinearLayout>
@@ -101,10 +101,10 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Details for the current event lorum ipsos kratos Details for
-                        the current event lorum ipsos kratos Details for the current event lorum
-                        ipsos kratos Details for the current event lorum ipsos kratos Details for
-                        the current event lorum ipsos kratos " />
+                        android:text="Details for the current jsonEvent lorum ipsos kratos Details for
+                        the current jsonEvent lorum ipsos kratos Details for the current jsonEvent lorum
+                        ipsos kratos Details for the current jsonEvent lorum ipsos kratos Details for
+                        the current jsonEvent lorum ipsos kratos " />
 
                 </LinearLayout>
 
@@ -131,10 +131,10 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Details for the current event event lorum ipsos kratos Details
-                        the current event lorum ipsos kratos Details for the current event lorum
-                        ipsos kratos Details for the current event lorum ipsos kratos Details for
-                        the current event lorum ipsos kratos" />
+                        android:text="Details for the current jsonEvent jsonEvent lorum ipsos kratos Details
+                        the current jsonEvent lorum ipsos kratos Details for the current jsonEvent lorum
+                        ipsos kratos Details for the current jsonEvent lorum ipsos kratos Details for
+                        the current jsonEvent lorum ipsos kratos" />
 
                 </LinearLayout>
 

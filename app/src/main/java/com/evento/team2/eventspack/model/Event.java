@@ -19,9 +19,13 @@ public class Event {
     public String details;
     public String pictureUri;
     public LatLng location;
+    public String locationString;
+    public long startDate;
+    public long endDate;
+    public String startDateString;
+    public String endDateString;
+
     public boolean isEventSaved;
-    public long date;
-    public String dateString;
 
     public Event(String name, String description) {
         this.name = name;

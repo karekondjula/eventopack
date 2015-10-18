@@ -114,11 +114,11 @@ public class ActivityMain extends AppCompatActivity {
         pagerSlidingTabStrip.setShouldExpand(true);
         pagerSlidingTabStrip.setViewPager(viewPager);
 
-        HashMap<String, Object> params = new HashMap<>();
-        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_TEST_FUNC);
+//        HashMap<String, Object> params = new HashMap<>();
+//        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_TEST_FUNC);
 //        ServiceEvento.getInstance().callServiceMethod(params);
 
-        params = new HashMap<>();
+        HashMap<String, Object> params = new HashMap<>();
         params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
 
         ServiceEvento.getInstance().callServiceMethod(params);
@@ -208,6 +208,7 @@ public class ActivityMain extends AppCompatActivity {
 
     //    @OnClick(R.id.fab)
 //    public void fabAction(View view) {
+//    maybe use this for creating a new event
 //        Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG).setAction("Action", null).show();
 //    }
 }

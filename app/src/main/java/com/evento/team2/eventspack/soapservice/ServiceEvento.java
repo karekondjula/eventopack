@@ -4,7 +4,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.bluelinelabs.logansquare.LoganSquare;
-import com.evento.team2.eventspack.soapservice.model.Event;
+import com.evento.team2.eventspack.model.Event;
+import com.evento.team2.eventspack.soapservice.model.JsonEvent;
+import com.evento.team2.eventspack.utils.ConversionUtils;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
@@ -15,7 +17,6 @@ import org.ksoap2.transport.HttpTransportSE;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -71,7 +72,7 @@ public class ServiceEvento {
         new AsyncCallWS().execute(params);
     }
 
-    private class AsyncCallWS extends AsyncTask<HashMap<String, Object>, Void, HashMap<String, Object>> {
+    private final class AsyncCallWS extends AsyncTask<HashMap<String, Object>, Void, HashMap<String, Object>> {
         @Override
         protected HashMap<String, Object> doInBackground(HashMap<String, Object>... params) {
             Log.i(TAG, "doInBackground");
@@ -84,16 +85,20 @@ public class ServiceEvento {
                 if (responseMap != null) {
                     if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_ADD_USER)) {
                         Boolean result = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), Boolean.class);
-                        Log.i(TAG, "METHOD_ADD_USER " + result.toString());
+//                        Log.i(TAG, "METHOD_ADD_USER " + result.toString());
                     } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_USER)) {
 //                        Boolean result = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), Boolean.class);
-                        Log.i(TAG, "METHOD_GET_USER " + responseMap.get(RESPONSE_KEY));
+//                        Log.i(TAG, "METHOD_GET_USER " + responseMap.get(RESPONSE_KEY));
                     } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_EVENTS)) {
-                        ArrayList<Event> eventsArrayList = new ArrayList(LoganSquare.parseList((String) responseMap.get(RESPONSE_KEY), Event.class));
+                        ArrayList<JsonEvent> jsonEventArrayList = new ArrayList(LoganSquare.parseList((String) responseMap.get(RESPONSE_KEY), JsonEvent.class));
 
-                        for (Event event : eventsArrayList) {
-                            Log.i(TAG, METHOD_GET_ALL_EVENTS + " " + event.toString());
-                        }
+                        ArrayList<Event> eventArrayList = ConversionUtils.convertJsonEventsArrayListToEventArrayList(jsonEventArrayList);
+
+                        // TODO daniel RxAndroid for announcing the result back
+
+//                        for (Event event : eventArrayList) {
+//                            Log.i(TAG, METHOD_GET_ALL_EVENTS + " " + event.toString());
+//                        }
                     }
                 } else {
                     Log.i(TAG, "no response ;( ");

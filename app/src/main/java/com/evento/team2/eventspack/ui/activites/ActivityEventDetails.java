@@ -107,8 +107,8 @@ public class ActivityEventDetails extends AppCompatActivity {
 
         Snackbar.make(view,
                 isEventSaved ?
-                        "Event is saved" :
-                        "Event is removed from saved events",
+                        "JsonEvent is saved" :
+                        "JsonEvent is removed from saved events",
                 Snackbar.LENGTH_LONG)
                 .setAction("Undo", null)
                 .setActionTextColor(Color.RED)

@@ -7,86 +7,86 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
  * Created by Daniel on 10-Sep-15.
  */
 @JsonObject
-public class Event {
+public class JsonEvent {
 
     @JsonField
-    String calendar;
+    public String calendar;
     @JsonField
-    long id;
+    public long id;
     @JsonField
-    long pid;
+    public long pid;
     @JsonField
-    long tstamp;
+    public long tstamp;
     @JsonField
-    String title;
+    public String title;
     @JsonField
-    String alias;
+    public String alias;
     @JsonField
-    String author;
+    public String author;
     @JsonField
-    long addTime;
+    public long addTime;
     @JsonField
-    long startTime;
+    public long startTime;
     @JsonField
-    long endTime;
+    public long endTime;
     @JsonField
-    long startDate;
+    public long startDate;
     @JsonField
-    long endDate;
+    public long endDate;
     @JsonField
-    String location;
+    public String location;
     @JsonField
-    String teaser;
+    public String teaser;
     @JsonField
-    String addImage;
+    public String addImage;
     @JsonField
-    String singleSRC;
+    public String singleSRC;
     @JsonField
-    String alt;
+    public String alt;
     @JsonField
-    String size;
+    public String size;
     @JsonField
-    String imageMargin;
+    public String imageMargin;
     @JsonField
-    String imageUrl;
+    public String imageUrl;
     @JsonField
-    String fullsize;
+    public String fullsize;
     @JsonField
-    String caption;
+    public String caption;
     @JsonField
-    String floating;
+    public String floating;
     @JsonField
-    String recurring;
+    public String recurring;
     @JsonField
-    int repeatEach;
+    public int repeatEach;
     @JsonField
-    int repeatEnd;
+    public int repeatEnd;
     @JsonField
-    int recurrences;
+    public int recurrences;
     @JsonField
-    String addEnclosure;
+    public String addEnclosure;
     @JsonField
-    String enclosure;
+    public String enclosure;
     @JsonField
-    String source;
+    public String source;
     @JsonField
-    int jumpTo;
+    public int jumpTo;
     @JsonField
-    int articleId;
+    public int articleId;
     @JsonField
-    String url;
+    public String url;
     @JsonField
-    String target;
+    public String target;
     @JsonField
-    String cssClass;
+    public String cssClass;
     @JsonField
-    String noComments;
+    public String noComments;
     @JsonField
-    int published;
+    public int published;
     @JsonField
-    String start;
+    public String start;
     @JsonField
-    String stop;
+    public String stop;
 
 //    @JsonField
 //    double lat;

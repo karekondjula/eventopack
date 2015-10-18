@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,7 +84,7 @@ public class FragmentCalendar extends Fragment {
 
         Date eventDate;
         for (Event event : eventsList) {
-            eventDate = new Date(event.date);
+            eventDate = new Date(event.startDate);
             caldroidFragment.setBackgroundResourceForDate(R.color.colorPrimaryDark, eventDate);
             cal.setTimeInMillis(eventDate.getTime());
             cal.set(Calendar.HOUR_OF_DAY, 0);
@@ -154,7 +153,7 @@ public class FragmentCalendar extends Fragment {
     };
 
     private void fetchEventsOnSelectedDates(HashSet<Date> selectedDates) {
-        // TODO daniel fetch all events for the current date
+        // TODO daniel fetch all events for the current startDate
         for (final Event event : eventsList) {
 
             final View calendarItemView = LayoutInflater.from(getActivity()).inflate(R.layout.item_small_events, calendarEventsLinearLayout, false);
