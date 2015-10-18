@@ -94,7 +94,6 @@ public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback
         }
 
         mapView.getMyLocation();
-        mapView.setPadding(0, 0, 0, 50); // rise the zoom controls when an event is clicked
 //        SmartLocation.with(getActivity()).location()
 //                .oneFix()
 //                .start(new OnLocationUpdatedListener() {
@@ -111,7 +110,9 @@ public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public boolean onMarkerClick(final Marker marker) {
 
-        mapEventDetailsLinearLayout.removeAllViews();
+        removeSelectedEventLayout();
+
+        mapView.setPadding(0, 0, 0, 140); // rise the zoom controls when an event is clicked
 
         final View mapEventItemView = LayoutInflater.from(ActivityMap.this).inflate(R.layout.item_small_events, mapEventDetailsLinearLayout, false);
         ImageView mapEventImageView = (ImageView) ButterKnife.findById(mapEventItemView, R.id.small_event_picture);
@@ -124,7 +125,7 @@ public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback
         ButterKnife.findById(mapEventItemView, R.id.close_event).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mapEventDetailsLinearLayout.removeAllViews();
+                removeSelectedEventLayout();
             }
         });
         mapEventItemView.setOnClickListener(new View.OnClickListener() {
@@ -145,6 +146,11 @@ public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onMapClick(LatLng latLng) {
+        removeSelectedEventLayout();
+    }
+
+    private void removeSelectedEventLayout() {
         mapEventDetailsLinearLayout.removeAllViews();
+        mapView.setPadding(0, 0, 0, 0);
     }
 }
