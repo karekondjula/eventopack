@@ -37,7 +37,7 @@ public class FragmentSavedEvents extends Fragment {
         View view = inflater.inflate(R.layout.fragment_saved_events, container, false);
         ButterKnife.bind(this, view);
 
-        savedEventsAdapter = new EventsRecyclerViewAdapter(getActivity(), EventsDatabase.getInstance().getAllSavedEvents());
+        savedEventsAdapter = new EventsRecyclerViewAdapter(getActivity());
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         savedEventsRecyclerView.setHasFixedSize(true);

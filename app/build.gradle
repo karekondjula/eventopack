@@ -6,14 +6,17 @@ android {
 
     defaultConfig {
         applicationId "com.evento.team2.eventspack"
-        minSdkVersion 15
+        minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        // Enabling multidex support.
+        multiDexEnabled true
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -23,9 +26,14 @@ android {
     packagingOptions {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -47,12 +55,15 @@ dependencies {
 //    compile 'jp.wasabeef:recyclerview-animators:1.2.1' // recyclerView animators
 
 //    compile 'io.nlopez.smartlocation:library:3.0.11' // location helper
-    compile 'de.greenrobot:eventbus:2.4.0' // similar to Observer
+
+//    compile 'io.reactivex:rxandroid:1.0.1' // Rx
 
     compile 'com.github.joaocruz04:jsoap:1.0.0'
     apt 'com.bluelinelabs:logansquare-compiler:1.1.0' // compile-time annotation processing
     compile 'com.bluelinelabs:logansquare:1.1.0' // thunder fast JSON parser
 
-    compile 'com.joanzapata.iconify:android-iconify-ionicons:2.1.0'
+    compile 'com.joanzapata.iconify:android-iconify-ionicons:2.1.0' // ikonchinja
     compile 'com.joanzapata.iconify:android-iconify-entypo:2.1.0'
+
+    compile 'com.android.support:multidex:1.0.1' // overcome 65K methods limit
 }

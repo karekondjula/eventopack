@@ -17,10 +17,10 @@ import android.widget.Toast;
 
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.soapservice.ServiceEvento;
-import com.joanzapata.iconify.Iconify;
-import com.joanzapata.iconify.fonts.EntypoModule;
-import com.joanzapata.iconify.fonts.IoniconsModule;
-import com.joanzapata.iconify.widget.IconTextView;
+//import com.joanzapata.iconify.Iconify;
+//import com.joanzapata.iconify.fonts.EntypoModule;
+//import com.joanzapata.iconify.fonts.IoniconsModule;
+//import com.joanzapata.iconify.widget.IconTextView;
 
 import java.util.HashMap;
 
@@ -50,8 +50,8 @@ public class ActivityLogin extends AppCompatActivity {
     private Handler loginHandler;
 
     static {
-        Iconify.with(new EntypoModule());
-        Iconify.with(new IoniconsModule());
+//        Iconify.with(new EntypoModule());
+//        Iconify.with(new IoniconsModule());
     }
 
     @Override
@@ -109,17 +109,17 @@ public class ActivityLogin extends AppCompatActivity {
                 }, 1000);
     }
 
-    @OnClick(R.id.login_facebook)
-    public void loginWithFacebook(IconTextView iconTextView) {
-        // TODO daniel add some animation for > L devices
-//        iconTextView.setShadowLayer(3, 9, 9, android.R.color.darker_gray);
-//        iconTextView.invalidate();
-    }
-
-    @OnClick(R.id.login_gmail)
-    public void loginWithGmail(IconTextView iconTextView) {
-        // TODO daniel add some animation for > L devices
-    }
+//    @OnClick(R.id.login_facebook)
+//    public void loginWithFacebook(IconTextView iconTextView) {
+//        // TODO daniel add some animation for > L devices
+////        iconTextView.setShadowLayer(3, 9, 9, android.R.color.darker_gray);
+////        iconTextView.invalidate();
+//    }
+//
+//    @OnClick(R.id.login_gmail)
+//    public void loginWithGmail(IconTextView iconTextView) {
+//        // TODO daniel add some animation for > L devices
+//    }
 
     @OnClick(R.id.link_signup)
     public void openSignupActivity(View v) {

@@ -15,22 +15,32 @@ import android.view.ViewGroup;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapter.EventsRecyclerViewAdapter;
 import com.evento.team2.eventspack.model.Event;
-import com.evento.team2.eventspack.utils.Utils;
-import com.joanzapata.iconify.Iconify;
-import com.joanzapata.iconify.fonts.IoniconsModule;
+import com.evento.team2.eventspack.soapservice.ServiceEvento;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Observable;
+import java.util.Observer;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+//import com.joanzapata.iconify.Iconify;
+//import com.joanzapata.iconify.fonts.IoniconsModule;
+//import rx.Observable;
+//import rx.Subscription;
+
 /**
  * Created by Daniel on 31-Jul-15.
  */
-public class FragmentEvents extends Fragment {
+public class FragmentEvents extends Fragment implements Observer{
 
     @Bind(R.id.eventsRecyclerView)
     RecyclerView eventsRecyclerView;
 
     private EventsRecyclerViewAdapter eventsAdapter;
+
+    private boolean updateFromServerArrived = false;
 
     @Nullable
     @Override
@@ -38,54 +48,87 @@ public class FragmentEvents extends Fragment {
 
         final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_events_list, container, false);
         ButterKnife.bind(this, swipeRefreshLayout);
-        Iconify.with(new IoniconsModule());
+//        Iconify.with(new IoniconsModule());
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                // Refresh items
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            // Refresh items
 
-                new Thread() {
-                    @Override
-                    public void run() {
-                        // TODO daniel fetch new events from almighty service
+            new Thread() {
+                @Override
+                public void run() {
+                    updateFromServerArrived = false;
 
-                        // stop the wheel from turning
-                        SystemClock.sleep(1000);
+                    HashMap<String, Object> params = new HashMap();
+                    params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
+                    ServiceEvento.getInstance().callServiceMethod(params);
 
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                eventsAdapter.addEvent(new Event("Brand new event", "FUck yeah!"));
-//                                eventsAdapter.notifyItemRangeInserted(0, 6);
-                                eventsAdapter.notifyItemInserted(0);
-
-                                swipeRefreshLayout.setRefreshing(false);
-
-                                if (((LinearLayoutManager) eventsRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition() == 0) {
-                                    eventsRecyclerView.getLayoutManager().scrollToPosition(0);
-                                }
-                            }
-                        });
-
+                    while (!updateFromServerArrived) {
+                        SystemClock.sleep(100);
                     }
-                }.start();
-            }
+
+                    getActivity().runOnUiThread(() -> {
+//                                eventsAdapter.notifyItemRangeInserted(0, 6);
+//                        eventsAdapter.notifyItemInserted(0);
+
+                        swipeRefreshLayout.setRefreshing(false);
+
+//                        if (((LinearLayoutManager) eventsRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition() == 0) {
+//                            eventsRecyclerView.getLayoutManager().scrollToPosition(0);
+//                        }
+                    });
+
+                }
+            }.start();
         });
 
-        eventsAdapter = new EventsRecyclerViewAdapter(getActivity(), Utils.Helpers.createEvents());
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         eventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        eventsAdapter = new EventsRecyclerViewAdapter(getActivity());
         eventsRecyclerView.setAdapter(eventsAdapter);
+
+        HashMap<String, Object> params = new HashMap();
+        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
+        ServiceEvento.getInstance().callServiceMethod(params);
 
         return swipeRefreshLayout;
     }
 
+    @Override
+    public void onDestroy() {
+        // TODO daniel check whether we need addObserver in OnREsume and the other
+        // TODO lifecycle methods
+        ServiceEvento.getInstance().deleteObserver(this);
+        super.onDestroy();
+    }
+
     public static FragmentEvents newInstance() {
-        FragmentEvents f = new FragmentEvents();
-//        Bundle args = new Bundle();
-//        f.setArguments(args);
-        return f;
+        FragmentEvents fragmentEvents = new FragmentEvents();
+        ServiceEvento.getInstance().addObserver(fragmentEvents);
+        return fragmentEvents;
+    }
+
+    @Override
+    public void update(Observable observable, Object eventsArrayList) {
+
+        if (eventsArrayList instanceof ArrayList) {
+            updateFromServerArrived = true;
+            eventsAdapter.addEvents((ArrayList<Event>) eventsArrayList);
+            eventsAdapter.notifyDataSetChanged();
+        }
     }
 }
+
+
+//    Subscription newEventsSubscription;
+//
+//    private Subscription subscribeOnEventsObservable() {
+//        Observable<Event> eventsObservable = EventsObservable.getObservableBackgroundThread();
+//
+//        return eventsObservable.subscribe(sub -> eventsAdapter.addEvent(sub),
+//                err -> {},
+//                () -> {
+//                    eventsAdapter = new EventsRecyclerViewAdapter(getActivity(), eventsAdapter.getEventsList());
+//                    eventsRecyclerView.setAdapter(eventsAdapter);
+//                });
+//    }

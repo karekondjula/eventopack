@@ -18,11 +18,13 @@ import org.ksoap2.transport.HttpTransportSE;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Created by Daniel on 18-Aug-15.
  */
-public class ServiceEvento {
+public class ServiceEvento extends Observable {
     private static final String TAG = "ServiceEvento >>";
 
     private static final String NAMESPACE = "urn:eventservice";
@@ -75,7 +77,6 @@ public class ServiceEvento {
     private final class AsyncCallWS extends AsyncTask<HashMap<String, Object>, Void, HashMap<String, Object>> {
         @Override
         protected HashMap<String, Object> doInBackground(HashMap<String, Object>... params) {
-            Log.i(TAG, "doInBackground");
             return getResponse(params[0]);
         }
 
@@ -93,6 +94,9 @@ public class ServiceEvento {
                         ArrayList<JsonEvent> jsonEventArrayList = new ArrayList(LoganSquare.parseList((String) responseMap.get(RESPONSE_KEY), JsonEvent.class));
 
                         ArrayList<Event> eventArrayList = ConversionUtils.convertJsonEventsArrayListToEventArrayList(jsonEventArrayList);
+
+                        setChanged();
+                        notifyObservers(eventArrayList);
 
                         // TODO daniel RxAndroid for announcing the result back
 

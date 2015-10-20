@@ -9,7 +9,7 @@ import java.util.Random;
 /**
  * Created by Daniel on 04-Aug-15.
  */
-public class Event {
+public class Event implements Comparable<Event>{
 
     /**
      * Universal id for the event, same on all devices
@@ -36,6 +36,17 @@ public class Event {
         this.name = name;
         this.details = description;
         this.pictureUri = pictureUri;
+    }
+
+    @Override
+    public int compareTo(Event event) {
+        if (id == event.id) {
+            return 0;
+        } else if (id > event.id) {
+            return 1;
+        } else {
+            return -1;
+        }
     }
 
     public final static class Table {

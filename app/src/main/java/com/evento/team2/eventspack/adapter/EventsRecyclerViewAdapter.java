@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,19 +54,29 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         return events.get(position);
     }
 
-    public EventsRecyclerViewAdapter(Context context, ArrayList<Event> eventNames) {
+    public EventsRecyclerViewAdapter(Context context) {
         this.context = context;
-        this.events = eventNames;
+//        this.events = eventNames;
+        events = new ArrayList<>();
     }
 
     public void addEvent(Event event) {
         events.add(0, event);
     }
 
-//    public void refreshEvents(ArrayList<JsonEvent> events) {
-//        events.clear();
-//        events = new ArrayList<>(events);
-//    }
+    public void addEvents(ArrayList<Event> eventArrayList) {
+        if (!events.equals(eventArrayList)) {
+            Log.i(">>", "time to clear list, new events!!!");
+            events.clear();
+            events.addAll(eventArrayList);
+        } else {
+            Log.i(">>", "same ol' events!!!");
+        }
+    }
+
+    public ArrayList<Event> getEventsList() {
+        return events;
+    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

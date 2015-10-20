@@ -118,11 +118,6 @@ public class ActivityMain extends AppCompatActivity {
 //        HashMap<String, Object> params = new HashMap<>();
 //        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_TEST_FUNC);
 //        ServiceEvento.getInstance().callServiceMethod(params);
-
-        HashMap<String, Object> params = new HashMap<>();
-        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
-
-        ServiceEvento.getInstance().callServiceMethod(params);
     }
 
     @Override
