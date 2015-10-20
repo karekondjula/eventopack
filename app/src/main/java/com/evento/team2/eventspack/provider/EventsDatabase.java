@@ -32,7 +32,8 @@ public class EventsDatabase {
             Event.Table.COLUMN_START_DATE,
             Event.Table.COLUMN_END_DATE,};
 
-    private EventsDatabase() {}
+    private EventsDatabase() {
+    }
 
     public static EventsDatabase getInstance() {
         if (instance == null) {
@@ -56,6 +57,12 @@ public class EventsDatabase {
         dbHelper.close();
     }
 
+    public void saveEvents(ArrayList<Event> events) {
+        for (Event event : events) {
+            saveEvent(event);
+        }
+    }
+
     public long saveEvent(Event event) {
         ContentValues values = new ContentValues();
         values.put(Event.Table.COLUMN_ID, event.id);
@@ -72,8 +79,14 @@ public class EventsDatabase {
         values.put(Event.Table.COLUMN_START_DATE, event.startDate);
         values.put(Event.Table.COLUMN_END_DATE, event.endDate);
 
-        long insertId = database.insert(Event.Table.TABLE_EVENTS, null, values);
-        return insertId;
+        long updateRows = database.update(Event.Table.TABLE_EVENTS, values, Event.Table.COLUMN_ID + " = ?", new String[]{String.valueOf(event.id)});
+
+        if (updateRows == 0) {
+            long insertId = database.insert(Event.Table.TABLE_EVENTS, null, values);
+            return insertId;
+        } else {
+            return updateRows;
+        }
     }
 
     public void removeSavedEvent(Event event) {
@@ -89,7 +102,7 @@ public class EventsDatabase {
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            Event event = cursorToComment(cursor);
+            Event event = cursorToEvent(cursor);
             event.isEventSaved = true;
             events.add(event);
             cursor.moveToNext();
@@ -104,13 +117,14 @@ public class EventsDatabase {
                 allColumns, Event.Table.COLUMN_ID + " = ? ", new String[]{String.valueOf(id)},
                 null, null, null);
         cursor.moveToFirst();
-        Event event = cursorToComment(cursor);
+        Event event = cursorToEvent(cursor);
         cursor.close();
 
         return event;
     }
 
-    private Event cursorToComment(Cursor cursor) {
+    // TODO daniel update this method with all the new fields
+    private Event cursorToEvent(Cursor cursor) {
         Event event = new Event("", "");
         event.id = cursor.getLong(0);
         event.name = cursor.getString(1);

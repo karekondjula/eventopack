@@ -79,7 +79,7 @@ public class ActivityMain extends AppCompatActivity {
                         startActivity(intentSocial);
                         break;
                     case R.id.about:
-                        Snackbar.make(getCurrentFocus(), "Here's a Snackbar", Snackbar.LENGTH_LONG).setAction("Action", null).show();
+                        Snackbar.make(getCurrentFocus(), "Here's a Snackbar", Snackbar.LENGTH_LONG).show();
                         break;
                 }
 

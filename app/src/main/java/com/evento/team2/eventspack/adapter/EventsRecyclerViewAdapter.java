@@ -56,7 +56,6 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
 
     public EventsRecyclerViewAdapter(Context context) {
         this.context = context;
-//        this.events = eventNames;
         events = new ArrayList<>();
     }
 

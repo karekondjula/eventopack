@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.evento.team2.eventspack.model.Event;
+import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.soapservice.model.JsonEvent;
 import com.evento.team2.eventspack.utils.ConversionUtils;
 
@@ -97,6 +98,8 @@ public class ServiceEvento extends Observable {
 
                         setChanged();
                         notifyObservers(eventArrayList);
+
+                        EventsDatabase.getInstance().saveEvents(eventArrayList);
 
                         // TODO daniel RxAndroid for announcing the result back
 

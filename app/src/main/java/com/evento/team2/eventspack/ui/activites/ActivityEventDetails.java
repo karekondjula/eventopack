@@ -17,7 +17,6 @@
 package com.evento.team2.eventspack.ui.activites;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -109,8 +108,6 @@ public class ActivityEventDetails extends AppCompatActivity {
                         "JsonEvent is saved" :
                         "JsonEvent is removed from saved events",
                 Snackbar.LENGTH_LONG)
-                .setAction("Undo", null)
-                .setActionTextColor(Color.RED)
                 .show();
     }
 

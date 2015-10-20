@@ -1,8 +1,11 @@
 package com.evento.team2.eventspack.ui.fragments;
 
+import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -15,7 +18,9 @@ import android.view.ViewGroup;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapter.EventsRecyclerViewAdapter;
 import com.evento.team2.eventspack.model.Event;
+import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.soapservice.ServiceEvento;
+import com.evento.team2.eventspack.utils.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,53 +38,25 @@ import butterknife.ButterKnife;
 /**
  * Created by Daniel on 31-Jul-15.
  */
-public class FragmentEvents extends Fragment implements Observer{
+public class FragmentEvents extends Fragment implements Observer {
 
     @Bind(R.id.eventsRecyclerView)
     RecyclerView eventsRecyclerView;
 
+    private SwipeRefreshLayout swipeRefreshLayout;
     private EventsRecyclerViewAdapter eventsAdapter;
-
-    private boolean updateFromServerArrived = false;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        final SwipeRefreshLayout swipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_events_list, container, false);
+        swipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_events_list, container, false);
         ButterKnife.bind(this, swipeRefreshLayout);
 //        Iconify.with(new IoniconsModule());
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            // Refresh items
-
-            new Thread() {
-                @Override
-                public void run() {
-                    updateFromServerArrived = false;
-
-                    HashMap<String, Object> params = new HashMap();
-                    params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
-                    ServiceEvento.getInstance().callServiceMethod(params);
-
-                    while (!updateFromServerArrived) {
-                        SystemClock.sleep(100);
-                    }
-
-                    getActivity().runOnUiThread(() -> {
-//                                eventsAdapter.notifyItemRangeInserted(0, 6);
-//                        eventsAdapter.notifyItemInserted(0);
-
-                        swipeRefreshLayout.setRefreshing(false);
-
-//                        if (((LinearLayoutManager) eventsRecyclerView.getLayoutManager()).findFirstCompletelyVisibleItemPosition() == 0) {
-//                            eventsRecyclerView.getLayoutManager().scrollToPosition(0);
-//                        }
-                    });
-
-                }
-            }.start();
+            new FetchEventsAsyncTask().execute();
         });
 
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -87,24 +64,31 @@ public class FragmentEvents extends Fragment implements Observer{
         eventsAdapter = new EventsRecyclerViewAdapter(getActivity());
         eventsRecyclerView.setAdapter(eventsAdapter);
 
-        HashMap<String, Object> params = new HashMap();
-        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
-        ServiceEvento.getInstance().callServiceMethod(params);
+        new FetchEventsAsyncTask().execute();
 
         return swipeRefreshLayout;
     }
 
+    private void fetchEventsFromServer() {
+        HashMap<String, Object> params = new HashMap();
+        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
+        ServiceEvento.getInstance().callServiceMethod(params);
+    }
+
     @Override
-    public void onDestroy() {
-        // TODO daniel check whether we need addObserver in OnREsume and the other
-        // TODO lifecycle methods
+    public void onResume() {
+        super.onResume();
+        ServiceEvento.getInstance().addObserver(this);
+    }
+
+    @Override
+    public void onPause() {
         ServiceEvento.getInstance().deleteObserver(this);
-        super.onDestroy();
+        super.onPause();
     }
 
     public static FragmentEvents newInstance() {
         FragmentEvents fragmentEvents = new FragmentEvents();
-        ServiceEvento.getInstance().addObserver(fragmentEvents);
         return fragmentEvents;
     }
 
@@ -112,9 +96,39 @@ public class FragmentEvents extends Fragment implements Observer{
     public void update(Observable observable, Object eventsArrayList) {
 
         if (eventsArrayList instanceof ArrayList) {
-            updateFromServerArrived = true;
             eventsAdapter.addEvents((ArrayList<Event>) eventsArrayList);
             eventsAdapter.notifyDataSetChanged();
+        }
+    }
+
+    private class FetchEventsAsyncTask extends AsyncTask<Void, Void, ArrayList<Event>> {
+        @Override
+        protected ArrayList<Event> doInBackground(Void... voids) {
+            if (NetworkUtils.getInstance().isNetworkAvailable(getActivity())) {
+                fetchEventsFromServer();
+                return null;
+            } else {
+                return EventsDatabase.getInstance().getAllSavedEvents();
+            }
+        }
+
+        protected void onPostExecute(ArrayList<Event> events) {
+            if (events == null) {
+                // events are coming through the observer from ServiceEvento
+            } else {
+                // the events are fetched from the database and we cal manually Observer->update()
+                update(null, events);
+
+                Snackbar.make(getActivity().getCurrentFocus(),
+                        "No internet connection. Showing cached events...",
+                        Snackbar.LENGTH_LONG)
+                        .show();
+            }
+
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+
         }
     }
 }

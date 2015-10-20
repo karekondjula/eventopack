@@ -39,22 +39,22 @@ public class JsonEvent {
     public String teaser;
     @JsonField
     public String addImage;
-    @JsonField
-    public String singleSRC;
+//    @JsonField
+//    public String singleSRC;
     @JsonField
     public String alt;
     @JsonField
     public String size;
-    @JsonField
-    public String imageMargin;
+//    @JsonField
+//    public String imageMargin;
     @JsonField
     public String imageUrl;
     @JsonField
     public String fullsize;
     @JsonField
     public String caption;
-    @JsonField
-    public String floating;
+//    @JsonField
+//    public String floating;
     @JsonField
     public String recurring;
     @JsonField
@@ -63,22 +63,22 @@ public class JsonEvent {
     public int repeatEnd;
     @JsonField
     public int recurrences;
-    @JsonField
-    public String addEnclosure;
-    @JsonField
-    public String enclosure;
-    @JsonField
-    public String source;
-    @JsonField
-    public int jumpTo;
-    @JsonField
-    public int articleId;
-    @JsonField
-    public String url;
-    @JsonField
-    public String target;
-    @JsonField
-    public String cssClass;
+//    @JsonField
+//    public String addEnclosure;
+//    @JsonField
+//    public String enclosure;
+//    @JsonField
+//    public String source;
+//    @JsonField
+//    public int jumpTo;
+//    @JsonField
+//    public int articleId;
+//    @JsonField
+//    public String url;
+//    @JsonField
+//    public String target;
+//    @JsonField
+//    public String cssClass;
     @JsonField
     public String noComments;
     @JsonField
