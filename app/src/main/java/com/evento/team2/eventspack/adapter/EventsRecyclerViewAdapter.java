@@ -65,11 +65,11 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
 
     public void addEvents(ArrayList<Event> eventArrayList) {
         if (!events.equals(eventArrayList)) {
-            Log.i(">>", "time to clear list, new events!!!");
+//            Log.i(">>", "time to clear list, new events!!!");
             events.clear();
             events.addAll(eventArrayList);
         } else {
-            Log.i(">>", "same ol' events!!!");
+//            Log.i(">>", "same ol' events!!!");
         }
     }
 

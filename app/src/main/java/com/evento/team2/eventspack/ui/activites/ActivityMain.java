@@ -8,6 +8,7 @@ import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -15,6 +16,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -43,6 +45,8 @@ public class ActivityMain extends AppCompatActivity {
     DrawerLayout drawerLayout;
 //    @Bind(R.id.fab)
 //    FloatingActionButton fab;
+
+    private FragmentEvents fragmentEvents = FragmentEvents.newInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,6 +85,8 @@ public class ActivityMain extends AppCompatActivity {
                     case R.id.about:
                         Snackbar.make(getCurrentFocus(), "Here's a Snackbar", Snackbar.LENGTH_LONG).show();
                         break;
+                    default:
+                        break;
                 }
 
                 return true;
@@ -118,6 +124,12 @@ public class ActivityMain extends AppCompatActivity {
 //        HashMap<String, Object> params = new HashMap<>();
 //        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_TEST_FUNC);
 //        ServiceEvento.getInstance().callServiceMethod(params);
+
+        Intent intent = getIntent();
+        if (intent != null && Intent.ACTION_SEARCH.equals(intent.getAction())) {
+            String query = intent.getStringExtra(SearchManager.QUERY);
+            fragmentEvents.filterEvents(query);
+        }
     }
 
     @Override
@@ -125,6 +137,8 @@ public class ActivityMain extends AppCompatActivity {
         ButterKnife.unbind(this);
         super.onDestroy();
     }
+
+    SearchView searchView = null;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -135,12 +149,33 @@ public class ActivityMain extends AppCompatActivity {
 
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 
-        SearchView searchView = null;
         if (searchItem != null) {
             searchView = (SearchView) searchItem.getActionView();
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    fragmentEvents.filterEvents(query);
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    fragmentEvents.filterEvents(newText);
+                    return true;
+                }
+            });
+            // TODO daniel how to collapse the fucking search fucking bar!!!!!!!!!
+            searchView.setOnQueryTextFocusChangeListener((view, queryTextFocused) -> {
+                if (!queryTextFocused) {
+//                    searchItem.collapseActionView();
+//                    MenuItemCompat.collapseActionView(searchItem);
+                }
+            });
         }
         if (searchView != null) {
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            searchView.setQueryRefinementEnabled(true);
+            searchView.setSubmitButtonEnabled(false);
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -170,14 +205,18 @@ public class ActivityMain extends AppCompatActivity {
 
         if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
             drawerLayout.closeDrawers();
-        } else {
+        }
+//        if (searchView.is) {
+//
+//        }
+        else {
             super.onBackPressed();
         }
     }
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(FragmentEvents.newInstance(), "Events");
+        adapter.addFragment(fragmentEvents, "Events");
         adapter.addFragment(new Fragment(), "Places");
         adapter.addFragment(FragmentSavedEvents.newInstance(), "Saved");
         viewPager.setAdapter(adapter);

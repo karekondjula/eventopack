@@ -65,7 +65,7 @@ public class FragmentSavedEvents extends Fragment {
 //        getActivity().runOnUiThread(new Runnable() {
 //            @Override
 //            public void run() {
-//                ArrayList<JsonEvent> savedEvents = EventsDatabase.getInstance().getAllSavedEvents();
+//                ArrayList<JsonEvent> savedEvents = EventsDatabase.getInstance().getSavedEvents();
 //                savedEventsAdapter.refreshEvents(savedEvents);
 ////                savedEventsAdapter.notifyItemRangeChanged(0, savedEvents.size());
 //                savedEventsAdapter.notifyDataSetChanged();

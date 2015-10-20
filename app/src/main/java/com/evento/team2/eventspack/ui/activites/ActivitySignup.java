@@ -95,13 +95,13 @@ public class ActivitySignup extends AppCompatActivity {
         user.name = name;
         user.username = email;
         user.password = password;
-        HashMap<String, Object> params = new HashMap<>();
-        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_ADD_USER);
-        try {
-            params.put(ServiceEvento.ADD_USER_USER_REQUEST_KEY, LoganSquare.serialize(user));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        HashMap<String, Object> params = new HashMap<>();
+//        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_ADD_USER);
+//        try {
+//            params.put(ServiceEvento.ADD_USER_USER_REQUEST_KEY, LoganSquare.serialize(user));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 //        ServiceEvento.getInstance().callServiceMethod(params);
 
         // TODO daniel : Implement your own signup logic here.

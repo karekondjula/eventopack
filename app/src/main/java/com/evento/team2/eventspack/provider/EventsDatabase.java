@@ -94,11 +94,16 @@ public class EventsDatabase {
         database.delete(Event.Table.TABLE_EVENTS, Event.Table.COLUMN_ID + " = " + id, null);
     }
 
-    public ArrayList<Event> getAllSavedEvents() {
+    public ArrayList<Event> getSavedEvents(String filter) {
         ArrayList<Event> events = new ArrayList<Event>();
 
         Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
-                allColumns, null, null, null, null, null);
+                allColumns,
+                Event.Table.COLUMN_NAME + " LIKE ? OR " +
+                Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
+                Event.Table.COLUMN_LOCATION_STRING + " LIKE ? ",
+                new String[]{"%" + filter + "%", "%" + filter + "%", "%" + filter + "%"},
+                null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {

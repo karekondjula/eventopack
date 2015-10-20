@@ -12,14 +12,14 @@ import java.util.Random;
  * Created by Daniel on 04-Aug-15.
  */
 public class Utils {
-    public static class Helpers {
+    public final static class Helpers {
 
         public static final String[] EVENTS = {"Abbaye de Belloc", "Abbaye du Mont des Cats", "Abertam", "Abondance", "Ackawi",};
         public static final String[] EVENTS_DESCRIPTION = {"auch jakosadf sdfsdfasdfasdfsadfsad", "majkata na ", "albert", "donzuav", "japanac",};
 
         public static ArrayList<Event> events;
 
-        public static ArrayList<Event> createEvents() {
+        public static synchronized ArrayList<Event> createEvents() {
 
             if (events == null) {
                 events = new ArrayList<>();
@@ -36,7 +36,7 @@ public class Utils {
                             new Random().nextInt(180) * (new Random().nextBoolean() ? 1 : -1));
 
                     dummyEvent.isEventSaved = new Random().nextBoolean();
-                    dummyEvent.startDate = System.currentTimeMillis() + 13579 * new Random().nextInt(97531);
+                    dummyEvent.startDate = System.currentTimeMillis() + 13579l * new Random().nextInt(97531);
                     dummyEvent.startDateString = new SimpleDateFormat("HH:mm dd.MM.yyyy ").format(new Date(dummyEvent.startDate));
 
                     events.add(dummyEvent);

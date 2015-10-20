@@ -1,9 +1,7 @@
 package com.evento.team2.eventspack.ui.fragments;
 
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -101,14 +99,25 @@ public class FragmentEvents extends Fragment implements Observer {
         }
     }
 
-    private class FetchEventsAsyncTask extends AsyncTask<Void, Void, ArrayList<Event>> {
+    public void filterEvents(String filter) {
+        new FetchEventsAsyncTask().execute(filter);
+    }
+
+    private class FetchEventsAsyncTask extends AsyncTask<String, Void, ArrayList<Event>> {
+
+        private boolean isPerformingFilter = false;
+
         @Override
-        protected ArrayList<Event> doInBackground(Void... voids) {
-            if (NetworkUtils.getInstance().isNetworkAvailable(getActivity())) {
+        protected ArrayList<Event> doInBackground(String... filter) {
+
+            if ((filter != null && filter.length == 1)) {
+                isPerformingFilter = true;
+                return EventsDatabase.getInstance().getSavedEvents(filter[0]);
+            } else if (!NetworkUtils.getInstance().isNetworkAvailable(getActivity())) {
+                return EventsDatabase.getInstance().getSavedEvents(null);
+            } else {
                 fetchEventsFromServer();
                 return null;
-            } else {
-                return EventsDatabase.getInstance().getAllSavedEvents();
             }
         }
 
@@ -119,10 +128,12 @@ public class FragmentEvents extends Fragment implements Observer {
                 // the events are fetched from the database and we cal manually Observer->update()
                 update(null, events);
 
-                Snackbar.make(getActivity().getCurrentFocus(),
-                        "No internet connection. Showing cached events...",
-                        Snackbar.LENGTH_LONG)
-                        .show();
+                if (!isPerformingFilter) {
+                    Snackbar.make(getActivity().getCurrentFocus(),
+                            "No internet connection. Showing cached events...",
+                            Snackbar.LENGTH_LONG)
+                            .show();
+                }
             }
 
             if (swipeRefreshLayout.isRefreshing()) {

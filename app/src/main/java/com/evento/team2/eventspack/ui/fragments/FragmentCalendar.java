@@ -79,7 +79,7 @@ public class FragmentCalendar extends Fragment {
             eventsList = Utils.Helpers.createEvents();
         } else {
             // fetch only saved events from database
-            eventsList = EventsDatabase.getInstance().getAllSavedEvents();
+            eventsList = EventsDatabase.getInstance().getSavedEvents(null);
         }
 
         Date eventDate;

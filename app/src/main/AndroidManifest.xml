@@ -30,6 +30,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- This is required only if we have a dedicated search activity-->
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
