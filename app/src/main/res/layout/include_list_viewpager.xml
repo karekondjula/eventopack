@@ -16,7 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="enterAlways"
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
         <com.astuetz.PagerSlidingTabStrip
@@ -24,9 +23,9 @@
             android:layout_width="match_parent"
             android:layout_height="48dip"
             android:layout_marginLeft="30dp"
+            app:pstsDividerColor="@android:color/white"
             app:pstsIndicatorColor="@android:color/white"
-            app:pstsUnderlineColor="@android:color/white"
-            app:pstsDividerColor="@android:color/white" />
+            app:pstsUnderlineColor="@android:color/white" />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -38,11 +37,11 @@
 
     <!--TODO daniel maybe put map here or something else useful unique unambigious-->
     <!--<android.support.design.widget.FloatingActionButton-->
-        <!--android:id="@+id/fab"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_gravity="end|bottom"-->
-        <!--android:layout_margin="@dimen/fab_margin"-->
-        <!--android:src="@android:drawable/ic_menu_add" />-->
+    <!--android:id="@+id/fab"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="end|bottom"-->
+    <!--android:layout_margin="@dimen/fab_margin"-->
+    <!--android:src="@android:drawable/ic_menu_add" />-->
 
 </android.support.design.widget.CoordinatorLayout>

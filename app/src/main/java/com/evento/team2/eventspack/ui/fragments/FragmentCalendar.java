@@ -14,10 +14,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.evento.team2.eventspack.R;
-import com.evento.team2.eventspack.adapter.SmallLayoutEventsRecyclerViewAdapter;
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
+import com.evento.team2.eventspack.utils.ColorUtils;
 import com.evento.team2.eventspack.utils.Utils;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
@@ -25,6 +25,7 @@ import com.roomorama.caldroid.CaldroidListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 
 import butterknife.Bind;
@@ -36,13 +37,13 @@ import butterknife.ButterKnife;
 public class FragmentCalendar extends Fragment {
     public static final String TAG = "FragmentCalendar";
 
-    private final static long DAY_IN_SECONDS = 24 * 60 * 60 * 1000;
+    private final static Date TODAY = new Date();
 
     private CaldroidFragment caldroidFragment;
     private HashSet<Date> selectedDates;
-    private SmallLayoutEventsRecyclerViewAdapter eventsAdapter;
     private ArrayList<Event> eventsList;
     private HashSet<Date> eventDates;
+    private HashMap<Date, Integer> dateColorHashMap;
 
     @Bind(R.id.caldroidCalendar)
     FrameLayout calendarContainer;
@@ -58,6 +59,7 @@ public class FragmentCalendar extends Fragment {
 
         selectedDates = new HashSet<Date>();
         eventDates = new HashSet<Date>();
+        dateColorHashMap = new HashMap();
 
         caldroidFragment = new CaldroidFragment();
         caldroidFragment.setCaldroidListener(listener);
@@ -72,15 +74,8 @@ public class FragmentCalendar extends Fragment {
         t.replace(R.id.caldroidCalendar, caldroidFragment);
         t.commit();
 
-        // TODO do not forget me please :*
-//        if (NetworkUtils.getInstance().isNetworkAvailable(context)) {
-        if (true) {
-            // fetch all the events
-            eventsList = Utils.Helpers.createEvents();
-        } else {
-            // fetch only saved events from database
-            eventsList = EventsDatabase.getInstance().getSavedEvents(null);
-        }
+//        eventsList = EventsDatabase.getInstance().getSavedEvents(null);
+        eventsList = Utils.Helpers.createEvents();
 
         Date eventDate;
         for (Event event : eventsList) {
@@ -93,17 +88,6 @@ public class FragmentCalendar extends Fragment {
             cal.set(Calendar.MILLISECOND, 0);
             eventDates.add(cal.getTime());
         }
-
-        caldroidFragment.setBackgroundResourceForDate(R.color.colorPrimary, new Date(System.currentTimeMillis()));
-
-
-        eventsAdapter = new SmallLayoutEventsRecyclerViewAdapter(getActivity(), eventsList);
-//        calendarRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        calendarRecyclerView.setItemAnimator(new DefaultItemAnimator());
-//        calendarRecyclerView.setAdapter(eventsAdapter);
-
-//        int viewHeight = eventsAdapter.getItemCount() * adapterData.size();
-//        calendarRecyclerView.getLayoutParams().height = viewHeight;
 
         return view;
     }
@@ -118,23 +102,30 @@ public class FragmentCalendar extends Fragment {
 
         @Override
         public void onSelectDate(Date date, View view) {
-            // TODO daniel add color animation?!
-            if (Math.abs(date.getTime() - new Date().getTime()) > DAY_IN_SECONDS) {
-                if (selectedDates.contains(date)) {
-                    if (eventDates.contains(date)) {
-                        // color it back with the event day color
-                        caldroidFragment.setBackgroundResourceForDate(R.color.colorPrimaryDark, date);
-                    } else {
-                        // this is ordinary day
+            if (selectedDates.contains(date)) {
+                if (eventDates.contains(date)) { // a day with events
+                    caldroidFragment.setBackgroundResourceForDate(R.color.colorPrimaryDark, date);
+                } else {
+                    if (date.getTime() == TODAY.getTime()) {
+                        caldroidFragment.setBackgroundResourceForDate(R.color.colorPrimary, date);
+                    } else { // not today and no events
                         caldroidFragment.clearBackgroundResourceForDate(date);
                     }
-                    selectedDates.remove(date);
-                } else {
-                    caldroidFragment.setBackgroundResourceForDate(R.color.colorAccent, date);
-                    selectedDates.add(date);
                 }
-                caldroidFragment.refreshView();
+                selectedDates.remove(date);
+            } else {
+                int color;
+                if (dateColorHashMap.containsKey(date)) {
+                    color = dateColorHashMap.get(date);
+                } else {
+                    color = ColorUtils.getInstance().getRandomColor(getActivity());
+                    dateColorHashMap.put(date, color);
+                }
+
+                caldroidFragment.setBackgroundResourceForDate(color, date);
+                selectedDates.add(date);
             }
+            caldroidFragment.refreshView();
 
             fetchEventsOnSelectedDates(selectedDates);
         }

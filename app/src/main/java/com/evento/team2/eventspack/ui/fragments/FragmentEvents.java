@@ -139,7 +139,6 @@ public class FragmentEvents extends Fragment implements Observer {
             if (swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(false);
             }
-
         }
     }
 }
