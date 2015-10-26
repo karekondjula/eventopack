@@ -22,7 +22,9 @@ public class ColorUtils {
         colorsResources = new ArrayList<>();
         try {
             for (Field field : R.color.class.getDeclaredFields()) {
-                colorsResources.add(field.getInt(null));
+                if (field.getName().startsWith("Color")) {
+                    colorsResources.add(field.getInt(null));
+                }
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();

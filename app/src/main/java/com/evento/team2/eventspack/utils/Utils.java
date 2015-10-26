@@ -5,6 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
 
@@ -36,7 +37,17 @@ public class Utils {
                             new Random().nextInt(180) * (new Random().nextBoolean() ? 1 : -1));
 
                     dummyEvent.isEventSaved = new Random().nextBoolean();
-                    dummyEvent.startDate = System.currentTimeMillis() + 13579l * new Random().nextInt(97531);
+                    dummyEvent.startTimeStamp = System.currentTimeMillis() + 13579l * new Random().nextInt(97531);
+
+                    Calendar cal = Calendar.getInstance();
+                    cal.setTimeInMillis(dummyEvent.startTimeStamp);
+                    cal.set(Calendar.HOUR_OF_DAY, 0);
+                    cal.set(Calendar.MINUTE, 0);
+                    cal.set(Calendar.SECOND, 0);
+                    cal.set(Calendar.MILLISECOND, 0);
+
+                    dummyEvent.startDate = cal.getTimeInMillis();
+
                     dummyEvent.startDateString = new SimpleDateFormat("HH:mm dd.MM.yyyy ").format(new Date(dummyEvent.startDate));
 
                     events.add(dummyEvent);

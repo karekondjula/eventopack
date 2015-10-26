@@ -20,6 +20,7 @@ public class Event implements Comparable<Event> {
     public String pictureUri;
     public LatLng location;
     public String locationString;
+    public long startTimeStamp;
     public long startDate;
     public long endDate;
     public String startDateString;

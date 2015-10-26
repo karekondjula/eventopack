@@ -30,6 +30,7 @@ import java.util.HashSet;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Daniel on 16-Aug-15.
@@ -40,10 +41,10 @@ public class FragmentCalendar extends Fragment {
     private final static Date TODAY = new Date();
 
     private CaldroidFragment caldroidFragment;
-    private HashSet<Date> selectedDates;
+    private HashSet<Long> selectedDates;
     private ArrayList<Event> eventsList;
-    private HashSet<Date> eventDates;
-    private HashMap<Date, Integer> dateColorHashMap;
+    private HashSet<Long> eventDates;
+    private HashMap<Long, Integer> dateColorHashMap;
 
     @Bind(R.id.caldroidCalendar)
     FrameLayout calendarContainer;
@@ -57,8 +58,8 @@ public class FragmentCalendar extends Fragment {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
         ButterKnife.bind(this, view);
 
-        selectedDates = new HashSet<Date>();
-        eventDates = new HashSet<Date>();
+        selectedDates = new HashSet<>();
+        eventDates = new HashSet<>();
         dateColorHashMap = new HashMap();
 
         caldroidFragment = new CaldroidFragment();
@@ -77,6 +78,7 @@ public class FragmentCalendar extends Fragment {
 //        eventsList = EventsDatabase.getInstance().getSavedEvents(null);
         eventsList = Utils.Helpers.createEvents();
 
+        // TODO daniel take this of main thread
         Date eventDate;
         for (Event event : eventsList) {
             eventDate = new Date(event.startDate);
@@ -86,7 +88,7 @@ public class FragmentCalendar extends Fragment {
             cal.set(Calendar.MINUTE, 0);
             cal.set(Calendar.SECOND, 0);
             cal.set(Calendar.MILLISECOND, 0);
-            eventDates.add(cal.getTime());
+            eventDates.add(cal.getTime().getTime());
         }
 
         return view;
@@ -102,8 +104,10 @@ public class FragmentCalendar extends Fragment {
 
         @Override
         public void onSelectDate(Date date, View view) {
-            if (selectedDates.contains(date)) {
-                if (eventDates.contains(date)) { // a day with events
+            long dateLong = date.getTime();
+
+            if (selectedDates.contains(dateLong)) {
+                if (eventDates.contains(dateLong)) { // a day with events
                     caldroidFragment.setBackgroundResourceForDate(R.color.colorPrimaryDark, date);
                 } else {
                     if (date.getTime() == TODAY.getTime()) {
@@ -112,18 +116,18 @@ public class FragmentCalendar extends Fragment {
                         caldroidFragment.clearBackgroundResourceForDate(date);
                     }
                 }
-                selectedDates.remove(date);
+                selectedDates.remove(dateLong);
             } else {
                 int color;
-                if (dateColorHashMap.containsKey(date)) {
-                    color = dateColorHashMap.get(date);
+                if (dateColorHashMap.containsKey(dateLong)) {
+                    color = dateColorHashMap.get(dateLong);
                 } else {
                     color = ColorUtils.getInstance().getRandomColor(getActivity());
-                    dateColorHashMap.put(date, color);
+                    dateColorHashMap.put(dateLong, color);
                 }
 
                 caldroidFragment.setBackgroundResourceForDate(color, date);
-                selectedDates.add(date);
+                selectedDates.add(dateLong);
             }
             caldroidFragment.refreshView();
 
@@ -143,30 +147,31 @@ public class FragmentCalendar extends Fragment {
         }
     };
 
-    private void fetchEventsOnSelectedDates(HashSet<Date> selectedDates) {
+    private void fetchEventsOnSelectedDates(HashSet<Long> selectedDates) {
         calendarEventsLinearLayout.removeAllViews();
         // TODO daniel fetch all events for the current startDate
         for (final Event event : eventsList) {
 
-            final View calendarItemView = LayoutInflater.from(getActivity()).inflate(R.layout.item_small_events, calendarEventsLinearLayout, false);
-            ImageView calendarEventImageView = (ImageView) ButterKnife.findById(calendarItemView, R.id.small_event_picture);
-            calendarEventImageView.setImageResource(R.drawable.party_image);
+            // TODO daniel, do we have start date and start hour or just start date? CHeck it
+            if (selectedDates.contains(event.startDate)) {
+                final View calendarItemView = LayoutInflater.from(getActivity()).inflate(R.layout.item_small_events, calendarEventsLinearLayout, false);
+                ImageView calendarEventImageView = (ImageView) ButterKnife.findById(calendarItemView, R.id.small_event_picture);
+                ((CircleImageView) ButterKnife.findById(calendarItemView, R.id.event_color)).setImageResource(dateColorHashMap.get(event.startDate));
+                calendarEventImageView.setImageResource(R.drawable.party_image);
 //                Glide.with(getActivity()).load(R.drawable.party_image).into(calendarEventImageView);
-            ((TextView) ButterKnife.findById(calendarItemView, R.id.event_title)).setText(event.name);
-            ((TextView) ButterKnife.findById(calendarItemView, R.id.event_details)).setText(event.details);
-            calendarItemView.setClickable(true);
-            calendarItemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                ((TextView) ButterKnife.findById(calendarItemView, R.id.event_title)).setText(event.name);
+                ((TextView) ButterKnife.findById(calendarItemView, R.id.event_details)).setText(event.details);
+                calendarItemView.setClickable(true);
+                calendarItemView.setOnClickListener(v -> {
                     Intent intent = new Intent(getActivity(), ActivityEventDetails.class);
                     intent.putExtra(ActivityEventDetails.EXTRA_NAME, event.name);
                     if (!TextUtils.isEmpty("")) {
                         intent.putExtra(ActivityEventDetails.EXTRA_PICTURE_URI, "");
                     }
                     getActivity().startActivity(intent);
-                }
-            });
-            calendarEventsLinearLayout.addView(calendarItemView);
+                });
+                calendarEventsLinearLayout.addView(calendarItemView);
+            }
         }
     }
 
