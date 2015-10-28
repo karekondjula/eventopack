@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceScreen;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -24,15 +25,15 @@ public class ActivitySettings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        Toolbar actionbar = ButterKnife.findById(this, R.id.toolbar);
-        actionbar.setTitle("Settings");
-        actionbar.setNavigationIcon(getResources().getDrawable(R.drawable.ic_dashboard));
-        actionbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getFragmentManager().popBackStack();
-            }
-        });
+//        final Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
+//        toolbar.setNavigationOnClickListener(v -> getFragmentManager().popBackStack());
+//        setSupportActionBar(toolbar);
+//        final ActionBar actionbar = getSupportActionBar();
+//        if (actionbar != null) {
+//            actionbar.setHomeAsUpIndicator(null);
+//            actionbar.setDisplayHomeAsUpEnabled(true);
+//            actionbar.setTitle("Settings");
+//        }
 
         getFragmentManager().beginTransaction()
                 .add(R.id.content_frame, new SettingsPreference(), SettingsPreference.TAG)
@@ -58,7 +59,16 @@ public class ActivitySettings extends AppCompatActivity {
         return true;
     }
 
-//    @Override
+    @Override
+    public void onBackPressed() { // TODO daniel chekc meeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+        if (getFragmentManager().getBackStackEntryCount() == 0) {
+            super.onBackPressed();
+        } else {
+            getFragmentManager().popBackStack();
+        }
+    }
+
+    //    @Override
 //    public void onResume() {
 //        super.onResume();
 //        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(mListener);
@@ -76,20 +86,18 @@ public class ActivitySettings extends AppCompatActivity {
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
-            // applyTheme();
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.pref_fragment_settings);
 
-            Toolbar actionbar = ButterKnife.findById(getActivity(), R.id.toolbar);
-            actionbar.setTitle("Settings");
-            actionbar.setNavigationIcon(getResources().getDrawable(android.R.drawable.ic_menu_revert));
-            actionbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getFragmentManager().popBackStack();
-                }
-            });
-            ((AppCompatActivity) getActivity()).setSupportActionBar(actionbar);
+            final Toolbar toolbar = ButterKnife.findById(getActivity(), R.id.toolbar);
+            toolbar.setNavigationOnClickListener(v -> getFragmentManager().popBackStack());
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+            final ActionBar actionbar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+            if (actionbar != null) {
+                actionbar.setHomeAsUpIndicator(null);
+                actionbar.setDisplayHomeAsUpEnabled(true);
+                actionbar.setTitle("Settings");
+            }
         }
 
         @Override
@@ -122,16 +130,10 @@ public class ActivitySettings extends AppCompatActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
-            Toolbar actionbar = ButterKnife.findById(getActivity(), R.id.toolbar);
-            actionbar.setTitle("NotificationSettingsFragment");
-            actionbar.setNavigationIcon(getResources().getDrawable(android.R.drawable.ic_menu_revert));
-            actionbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getFragmentManager().popBackStack();
-                }
-            });
-            ((AppCompatActivity) getActivity()).setSupportActionBar(actionbar);
+            Toolbar toolbar = ButterKnife.findById(getActivity(), R.id.toolbar);
+            toolbar.setNavigationOnClickListener(v -> getFragmentManager().popBackStack());
+            toolbar.setTitle("NotificationSettingsFragment");
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
             addPreferencesFromResource(R.xml.pref_notification_settings);
         }
@@ -158,16 +160,10 @@ public class ActivitySettings extends AppCompatActivity {
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
 
-            Toolbar actionbar = ButterKnife.findById(getActivity(), R.id.toolbar);
-            actionbar.setTitle("FindEventsSettingsFragment");
-            actionbar.setNavigationIcon(getResources().getDrawable(android.R.drawable.ic_menu_revert));
-            actionbar.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    getFragmentManager().popBackStack();
-                }
-            });
-            ((AppCompatActivity) getActivity()).setSupportActionBar(actionbar);
+            Toolbar toolbar = ButterKnife.findById(getActivity(), R.id.toolbar);
+            toolbar.setNavigationOnClickListener(v -> getFragmentManager().popBackStack());
+            toolbar.setTitle("FindEventsSettingsFragment");
+            ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
 
             addPreferencesFromResource(R.xml.pref_fragment_find_events);
             // Bind the summaries of EditText/List/Dialog/Ringtone preferences

@@ -12,9 +12,15 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.evento.team2.eventspack.R;
@@ -33,11 +39,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnItemSelected;
 
 /**
  * Created by Daniel on 01-Oct-15.
  */
-public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMyLocationChangeListener {
+public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
+        GoogleMap.OnMapClickListener, GoogleMap.OnMyLocationChangeListener {
 
     private static final String DELIMITER = ">>";
 
@@ -48,6 +56,9 @@ public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback
     @Bind(R.id.map_event_details)
     LinearLayout mapEventDetailsLinearLayout;
 
+    @Bind(R.id.spinner_navigation)
+    Spinner spinner;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,11 +67,12 @@ public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback
 
         final Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
-        final ActionBar ab = getSupportActionBar();
-        if (ab != null) {
-            ab.setHomeAsUpIndicator(null);
-            ab.setDisplayHomeAsUpEnabled(true);
-            ab.setTitle("Events map");
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setHomeAsUpIndicator(null);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+//            actionBar.setTitle("Events map");
+            actionBar.setDisplayShowTitleEnabled(false);
         }
 
         FragmentManager fm = getFragmentManager();
@@ -70,6 +82,40 @@ public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback
             getFragmentManager().beginTransaction().replace(R.id.location_map, supportMapFragment).commit();
         }
         supportMapFragment.getMapAsync(this);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.spinner_navigation_labes, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu_map, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.action_calendar) {
+            // TODO daniel open datepicker and show events for current dates (background thread of course)
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override

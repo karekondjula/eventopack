@@ -138,45 +138,11 @@ public class ActivityMain extends AppCompatActivity {
         super.onDestroy();
     }
 
-    SearchView searchView = null;
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_main, menu);
 
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-
-        if (searchItem != null) {
-            searchView = (SearchView) searchItem.getActionView();
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    fragmentEvents.filterEvents(query);
-                    return true;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    fragmentEvents.filterEvents(newText);
-                    return true;
-                }
-            });
-            // TODO daniel how to collapse the fucking search fucking bar!!!!!!!!!
-            searchView.setOnQueryTextFocusChangeListener((view, queryTextFocused) -> {
-                if (!queryTextFocused) {
-//                    searchItem.collapseActionView();
-//                    MenuItemCompat.collapseActionView(searchItem);
-                }
-            });
-        }
-        if (searchView != null) {
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-            searchView.setQueryRefinementEnabled(true);
-            searchView.setSubmitButtonEnabled(false);
-        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -187,9 +153,7 @@ public class ActivityMain extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_settings) {
-            return true;
-        } else if (id == R.id.action_map) {
+        if (id == R.id.action_map) {
             Intent intent = new Intent(ActivityMain.this, ActivityMap.class);
             startActivity(intent);
         } else if (id == R.id.action_calendar) {
@@ -206,9 +170,6 @@ public class ActivityMain extends AppCompatActivity {
         if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
             drawerLayout.closeDrawers();
         }
-//        if (searchView.is) {
-//
-//        }
         else {
             super.onBackPressed();
         }

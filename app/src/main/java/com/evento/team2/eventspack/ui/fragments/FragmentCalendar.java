@@ -23,7 +23,9 @@ import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -41,9 +43,9 @@ public class FragmentCalendar extends Fragment {
     private final static Date TODAY = new Date();
 
     private CaldroidFragment caldroidFragment;
-    private HashSet<Long> selectedDates;
+    private ArrayList<Long> selectedDates;
     private ArrayList<Event> eventsList;
-    private HashSet<Long> eventDates;
+    private ArrayList<Long> eventDates;
     private HashMap<Long, Integer> dateColorHashMap;
 
     @Bind(R.id.caldroidCalendar)
@@ -58,8 +60,8 @@ public class FragmentCalendar extends Fragment {
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
         ButterKnife.bind(this, view);
 
-        selectedDates = new HashSet<>();
-        eventDates = new HashSet<>();
+        selectedDates = new ArrayList<>();
+        eventDates = new ArrayList<>();
         dateColorHashMap = new HashMap();
 
         caldroidFragment = new CaldroidFragment();
@@ -77,6 +79,7 @@ public class FragmentCalendar extends Fragment {
 
 //        eventsList = EventsDatabase.getInstance().getSavedEvents(null);
         eventsList = Utils.Helpers.createEvents();
+//        Collections.sort(eventsList); // TODO events list must be sorted by date
 
         // TODO daniel take this of main thread
         Date eventDate;
@@ -147,12 +150,10 @@ public class FragmentCalendar extends Fragment {
         }
     };
 
-    private void fetchEventsOnSelectedDates(HashSet<Long> selectedDates) {
+    private void fetchEventsOnSelectedDates(ArrayList<Long> selectedDates) {
         calendarEventsLinearLayout.removeAllViews();
-        // TODO daniel fetch all events for the current startDate
+        // fetch all events for the current startDate
         for (final Event event : eventsList) {
-
-            // TODO daniel, do we have start date and start hour or just start date? CHeck it
             if (selectedDates.contains(event.startDate)) {
                 final View calendarItemView = LayoutInflater.from(getActivity()).inflate(R.layout.item_small_events, calendarEventsLinearLayout, false);
                 ImageView calendarEventImageView = (ImageView) ButterKnife.findById(calendarItemView, R.id.small_event_picture);

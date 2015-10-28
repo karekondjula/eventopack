@@ -1,5 +1,7 @@
 package com.evento.team2.eventspack.ui.fragments;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,7 +11,11 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -48,6 +54,7 @@ public class FragmentEvents extends Fragment implements Observer {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
+        setHasOptionsMenu(true);
         swipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_events_list, container, false);
         ButterKnife.bind(this, swipeRefreshLayout);
 //        Iconify.with(new IoniconsModule());
@@ -83,6 +90,46 @@ public class FragmentEvents extends Fragment implements Observer {
     public void onPause() {
         ServiceEvento.getInstance().deleteObserver(this);
         super.onPause();
+    }
+
+    SearchView searchView = null;
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
+        MenuItem searchItem = menu.findItem(R.id.action_search);
+
+        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+
+        if (searchItem != null) {
+            searchView = (SearchView) searchItem.getActionView();
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    filterEvents(query);
+                    return true;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    filterEvents(newText);
+                    return true;
+                }
+            });
+            // TODO daniel how to collapse the fucking search fucking bar!!!!!!!!!
+            searchView.setOnQueryTextFocusChangeListener((view, queryTextFocused) -> {
+                if (!queryTextFocused) {
+//                    searchItem.collapseActionView();
+//                    MenuItemCompat.collapseActionView(searchItem);
+                }
+            });
+        }
+        if (searchView != null) {
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+            searchView.setQueryRefinementEnabled(true);
+            searchView.setSubmitButtonEnabled(false);
+        }
+
+        super.onCreateOptionsMenu(menu, menuInflater);
     }
 
     public static FragmentEvents newInstance() {
