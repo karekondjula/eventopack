@@ -129,9 +129,9 @@ public class FragmentCalendar extends Fragment {
                 caldroidFragment.setBackgroundResourceForDate(color, date);
                 selectedDates.add(dateLong);
             }
-            caldroidFragment.refreshView();
-
             fetchEventsOnSelectedDates(selectedDates);
+
+            caldroidFragment.refreshView();
         }
 
         @Override

@@ -22,8 +22,10 @@ public class Event implements Comparable<Event> {
     public String locationString;
     public long startTimeStamp;
     public long startDate;
+    public long startTime;
     public long endDate;
     public String startDateString;
+    public String startTimeString;
     public String endDateString;
 
     public boolean isEventSaved;

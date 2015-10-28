@@ -33,8 +33,9 @@ public class Utils {
 
                     dummyEvent = new Event(eventNames, EVENTS_DESCRIPTION[i++]);
                     dummyEvent.id = new Random().nextLong();
-                    dummyEvent.location = new LatLng(new Random().nextInt(90) * (new Random().nextBoolean() ? 1 : -1),
-                            new Random().nextInt(180) * (new Random().nextBoolean() ? 1 : -1));
+
+                    dummyEvent.location = new LatLng(42.0016727 + (new Random().nextDouble() / (new Random().nextBoolean() ? 1000 : -100)),
+                                                     21.4085439 + (new Random().nextDouble() / (new Random().nextBoolean() ? 100 : -1000)));
 
                     dummyEvent.isEventSaved = new Random().nextBoolean();
                     dummyEvent.startTimeStamp = System.currentTimeMillis() + 13579l * new Random().nextInt(97531);
@@ -48,7 +49,10 @@ public class Utils {
 
                     dummyEvent.startDate = cal.getTimeInMillis();
 
-                    dummyEvent.startDateString = new SimpleDateFormat("HH:mm dd.MM.yyyy ").format(new Date(dummyEvent.startDate));
+                    String dateTime = new SimpleDateFormat("HH:mm dd.MM.yyyy").format(new Date(dummyEvent.startTimeStamp));
+
+                    dummyEvent.startTimeString = dateTime.split(" ")[0];
+                    dummyEvent.startDateString = dateTime.split(" ")[1];
 
                     events.add(dummyEvent);
                 }

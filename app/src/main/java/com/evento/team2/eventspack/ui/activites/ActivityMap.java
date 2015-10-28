@@ -4,11 +4,13 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -18,11 +20,14 @@ import android.widget.TextView;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.utils.Utils;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -32,10 +37,13 @@ import butterknife.ButterKnife;
 /**
  * Created by Daniel on 01-Oct-15.
  */
-public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener {
+public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener, GoogleMap.OnMapClickListener, GoogleMap.OnMyLocationChangeListener {
+
+    private static final String DELIMITER = ">>";
 
     private MapFragment supportMapFragment;
     private GoogleMap mapView;
+    private Location myLocation;
 
     @Bind(R.id.map_event_details)
     LinearLayout mapEventDetailsLinearLayout;
@@ -81,6 +89,7 @@ public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback
         mapView.getUiSettings().setZoomGesturesEnabled(true);
         mapView.setOnMarkerClickListener(this);
         mapView.setOnMapClickListener(this);
+        mapView.setOnMyLocationChangeListener(this);
 
         Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.party_image);
         Bitmap bhalfsize = Bitmap.createScaledBitmap(b, b.getWidth() / 8, b.getHeight() / 8, false);
@@ -89,22 +98,9 @@ public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback
                     .position(new LatLng(event.location.latitude,
                             event.location.longitude))
                     .title(event.name)
-                    .snippet(event.details)
+                    .snippet(event.details + DELIMITER + event.startDateString + " " + event.startTimeString)
                     .icon(BitmapDescriptorFactory.fromBitmap(bhalfsize)));
         }
-
-        mapView.getMyLocation();
-//        SmartLocation.with(getActivity()).location()
-//                .oneFix()
-//                .start(new OnLocationUpdatedListener() {
-//
-//                    @Override
-//                    public void onLocationUpdated(Location location) {
-//                        mapView.getMyLocation()
-//                    }
-//                });
-
-        // TODO daniel map span to events nearby
     }
 
     @Override
@@ -119,7 +115,10 @@ public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback
         mapEventImageView.setImageResource(R.drawable.party_image);
 //                Glide.with(getActivity()).load(R.drawable.party_image).into(calendarEventImageView);
         ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_title)).setText(marker.getTitle());
-        ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_details)).setText(marker.getSnippet());
+        String eventDetails[] = marker.getSnippet().split(DELIMITER);
+        ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_details)).setText(eventDetails[0]);
+        ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_time)).setText(eventDetails[1]);
+        ButterKnife.findById(mapEventItemView, R.id.event_color).setVisibility(View.GONE);
         ButterKnife.findById(mapEventItemView, R.id.close_event).setVisibility(View.VISIBLE);
         mapEventItemView.setClickable(true);
         ButterKnife.findById(mapEventItemView, R.id.close_event).setOnClickListener(new View.OnClickListener() {
@@ -147,6 +146,17 @@ public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapClick(LatLng latLng) {
         removeSelectedEventLayout();
+    }
+
+    @Override
+    public void onMyLocationChange(Location location) {
+        if (myLocation == null) {
+            LatLngBounds radius = new LatLngBounds(new LatLng(location.getLatitude(), location.getLongitude()),
+                    new LatLng(location.getLatitude(), location.getLongitude()));
+            CameraUpdate center = CameraUpdateFactory.newLatLngZoom(radius.getCenter(), 14);
+            mapView.animateCamera(center, 1500, null);
+            myLocation = location;
+        }
     }
 
     private void removeSelectedEventLayout() {

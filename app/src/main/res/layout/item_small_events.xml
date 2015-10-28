@@ -28,8 +28,8 @@
                 android:id="@+id/event_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="TItleddddddddddddddddddddddddddddddddddddddddddddddd"
                 android:singleLine="true"
+                android:text="TItleddddddddddddddddddddddddddddddddddddddddddddddd"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
             <TextView
@@ -47,6 +47,7 @@
                 android:layout_height="10dp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginBottom="3dp"
+                android:layout_marginRight="5dp"
                 android:src="@android:color/holo_red_dark" />
 
             <TextView
@@ -54,7 +55,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/event_color"
                 android:singleLine="true"
                 android:text="11:11"
