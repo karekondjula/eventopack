@@ -1,6 +1,5 @@
 package com.evento.team2.eventspack.soapservice;
 
-import android.os.AsyncTask;
 import android.util.Log;
 
 import com.bluelinelabs.logansquare.LoganSquare;
@@ -8,6 +7,7 @@ import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.soapservice.model.JsonEvent;
 import com.evento.team2.eventspack.utils.ConversionUtils;
+import com.evento.team2.eventspack.utils.Utils;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
@@ -20,12 +20,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
-import java.util.Observer;
 
 /**
  * Created by Daniel on 18-Aug-15.
  */
-public class ServiceEvento extends Observable {
+public class ServiceEvento {
     private static final String TAG = "ServiceEvento >>";
 
     private static final String NAMESPACE = "urn:eventservice";
@@ -72,54 +71,58 @@ public class ServiceEvento extends Observable {
      * Must contain at least [ServiceEvento.METHOD_NAME_KEY, methodName] pair
      */
     public void callServiceMethod(HashMap<String, Object> params) {
-        new AsyncCallWS().execute(params);
+//        new AsyncCallWS().execute(params);
+
+        HashMap<String, Object> responseHashMap = getResponse(params);
+        parseResponse(responseHashMap);
     }
 
-    private final class AsyncCallWS extends AsyncTask<HashMap<String, Object>, Void, HashMap<String, Object>> {
-        @Override
-        protected HashMap<String, Object> doInBackground(HashMap<String, Object>... params) {
-            return getResponse(params[0]);
-        }
 
-        @Override
-        protected void onPostExecute(HashMap<String, Object> responseMap) {
-            try {
-                if (responseMap != null) {
-                    if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_ADD_USER)) {
-                        Boolean result = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), Boolean.class);
-//                        Log.i(TAG, "METHOD_ADD_USER " + result.toString());
-                    } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_USER)) {
+//    private final class AsyncCallWS extends AsyncTask<HashMap<String, Object>, Void, HashMap<String, Object>> {
+//        @Override
+//        protected HashMap<String, Object> doInBackground(HashMap<String, Object>... params) {
+//            return getResponse(params[0]);
+//        }
+//
+//        @Override
+//        protected void onPostExecute(HashMap<String, Object> responseMap) {
+//            try {
+//                if (responseMap != null) {
+//                    if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_ADD_USER)) {
 //                        Boolean result = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), Boolean.class);
-//                        Log.i(TAG, "METHOD_GET_USER " + responseMap.get(RESPONSE_KEY));
-                    } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_EVENTS)) {
-                        ArrayList<JsonEvent> jsonEventArrayList = new ArrayList(LoganSquare.parseList((String) responseMap.get(RESPONSE_KEY), JsonEvent.class));
-
-                        ArrayList<Event> eventArrayList = ConversionUtils.convertJsonEventsArrayListToEventArrayList(jsonEventArrayList);
-
-                        setChanged();
-                        notifyObservers(eventArrayList);
-
-                        EventsDatabase.getInstance().saveEvents(eventArrayList);
-
-                        // TODO daniel RxAndroid for announcing the result back
-
-//                        for (Event event : eventArrayList) {
-//                            Log.i(TAG, METHOD_GET_ALL_EVENTS + " " + event.toString());
-//                        }
-                    }
-                } else {
-                    Log.i(TAG, "no response ;( ");
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        protected void onProgressUpdate(Void... values) {
-            Log.i(TAG, "onProgressUpdate");
-        }
-    }
+////                        Log.i(TAG, "METHOD_ADD_USER " + result.toString());
+//                    } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_USER)) {
+////                        Boolean result = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), Boolean.class);
+////                        Log.i(TAG, "METHOD_GET_USER " + responseMap.get(RESPONSE_KEY));
+//                    } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_EVENTS)) {
+//                        ArrayList<JsonEvent> jsonEventArrayList = new ArrayList(LoganSquare.parseList((String) responseMap.get(RESPONSE_KEY), JsonEvent.class));
+//
+//                        ArrayList<Event> eventArrayList = ConversionUtils.convertJsonEventsArrayListToEventArrayList(jsonEventArrayList);
+//
+//                        setChanged();
+//                        notifyObservers(eventArrayList);
+//
+//                        EventsDatabase.getInstance().saveEvents(eventArrayList);
+//
+//                        // TODO daniel RxAndroid for announcing the result back
+//
+////                        for (Event event : eventArrayList) {
+////                            Log.i(TAG, METHOD_GET_ALL_EVENTS + " " + event.toString());
+////                        }
+//                    }
+//                } else {
+//                    Log.i(TAG, "no response ;( ");
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        @Override
+//        protected void onProgressUpdate(Void... values) {
+//            Log.i(TAG, "onProgressUpdate");
+//        }
+//    }
 
     private HashMap<String, Object> getResponse(HashMap<String, Object> inputParameters) {
         String methodNameParam = (String) inputParameters.get(METHOD_NAME_KEY);
@@ -171,6 +174,38 @@ public class ServiceEvento extends Observable {
         }
 
         return null;
+    }
+
+    private void parseResponse(HashMap<String, Object> responseMap) {
+        try {
+            if (responseMap != null) {
+                if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_ADD_USER)) {
+                    Boolean result = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), Boolean.class);
+//                        Log.i(TAG, "METHOD_ADD_USER " + result.toString());
+                } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_USER)) {
+//                        Boolean result = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), Boolean.class);
+//                        Log.i(TAG, "METHOD_GET_USER " + responseMap.get(RESPONSE_KEY));
+                } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_EVENTS)) {
+//                    ArrayList<JsonEvent> jsonEventArrayList = new ArrayList<JsonEvent>(LoganSquare.parseList((String) responseMap.get(RESPONSE_KEY), JsonEvent.class));
+                    // TODO daniel once the service is fixed return to parsing original result
+                    ArrayList<JsonEvent> jsonEventArrayList = new ArrayList<JsonEvent>(LoganSquare.parseList((String) Utils.Helpers.getEventsJson(), JsonEvent.class));
+
+                    ArrayList<Event> eventArrayList = ConversionUtils.convertJsonEventsArrayListToEventArrayList(jsonEventArrayList);
+
+                    EventsDatabase.getInstance().saveEvents(eventArrayList);
+
+                    // TODO RxAndroid for announcing the result back
+
+//                        for (Event event : eventArrayList) {
+//                            Log.i(TAG, METHOD_GET_ALL_EVENTS + " " + event.toString());
+//                        }
+                }
+            } else {
+                Log.i(TAG, "no response ;( ");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
 

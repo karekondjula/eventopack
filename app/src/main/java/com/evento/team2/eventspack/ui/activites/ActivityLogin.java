@@ -89,7 +89,7 @@ public class ActivityLogin extends AppCompatActivity {
         params.put(ServiceEvento.GET_USER_USERNAME_REQUEST_KEY, email);
         params.put(ServiceEvento.GET_USER_PASSWORD_REQUEST_KEY, password);
 
-        ServiceEvento.getInstance().callServiceMethod(params);
+//        ServiceEvento.getInstance().callServiceMethod(params);
 
         loginHandler = new Handler(Looper.getMainLooper()) {
             @Override

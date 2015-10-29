@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,7 +22,7 @@ import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapter.EventsRecyclerViewAdapter;
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.provider.FetchEventsAsyncTask;
-import com.evento.team2.eventspack.soapservice.ServiceEvento;
+import com.evento.team2.eventspack.utils.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -56,7 +57,7 @@ public class FragmentEvents extends ObserverFragment {
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            new FetchEventsAsyncTask(getActivity(), this).execute();
+            new FetchEventsAsyncTask(this).execute();
         });
 
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -70,14 +71,16 @@ public class FragmentEvents extends ObserverFragment {
     @Override
     public void onResume() {
         super.onResume();
+
+        swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(true));
         // this is how we receive update for events from the service
-        ServiceEvento.getInstance().addObserver(this);
-        new FetchEventsAsyncTask(getActivity(), this).execute();
+//        ServiceEvento.getInstance().addObserver(this);
+        new FetchEventsAsyncTask(this).execute();
     }
 
     @Override
     public void onPause() {
-        ServiceEvento.getInstance().deleteObserver(this);
+//        ServiceEvento.getInstance().deleteObserver(this);
         super.onPause();
     }
 
@@ -132,6 +135,15 @@ public class FragmentEvents extends ObserverFragment {
         if (eventsArrayList instanceof ArrayList) {
             eventsAdapter.addEvents((ArrayList<Event>) eventsArrayList);
             eventsAdapter.notifyDataSetChanged();
+
+            if (!NetworkUtils.getInstance().isNetworkAvailable(getActivity())) {
+                getActivity().runOnUiThread(() -> {
+                    Snackbar.make(eventsRecyclerView,
+                            "No internet connection. Showing cached events...",
+                            Snackbar.LENGTH_LONG)
+                            .show();
+                });
+            }
         }
 
         if (swipeRefreshLayout.isRefreshing()) {
@@ -140,47 +152,8 @@ public class FragmentEvents extends ObserverFragment {
     }
 
     public void filterEvents(String filter) {
-        new FetchEventsAsyncTask(getActivity(), this).execute(filter);
+        new FetchEventsAsyncTask(this).execute(filter);
     }
-
-//    private class FetchEventsAsyncTask extends AsyncTask<String, Void, ArrayList<Event>> {
-//
-//        private boolean isPerformingFilter = false;
-//
-//        @Override
-//        protected ArrayList<Event> doInBackground(String... filter) {
-//
-//            if ((filter != null && filter.length == 1)) {
-//                isPerformingFilter = true;
-//                return EventsDatabase.getInstance().getSavedEvents(filter[0]);
-//            } else if (!NetworkUtils.getInstance().isNetworkAvailable(getActivity())) {
-//                return EventsDatabase.getInstance().getSavedEvents(null);
-//            } else {
-//                fetchEventsFromServer();
-//                return null;
-//            }
-//        }
-//
-//        protected void onPostExecute(ArrayList<Event> events) {
-//            if (events == null) {
-//                // events are coming through the observer from ServiceEvento
-//            } else {
-//                // the events are fetched from the database and we cal manually Observer->update()
-//                update(null, events);
-//
-//                if (!isPerformingFilter) {
-//                    Snackbar.make(getActivity().getCurrentFocus(),
-//                            "No internet connection. Showing cached events...",
-//                            Snackbar.LENGTH_LONG)
-//                            .show();
-//                }
-//            }
-//
-//            if (swipeRefreshLayout.isRefreshing()) {
-//                swipeRefreshLayout.setRefreshing(false);
-//            }
-//        }
-//    }
 }
 
 

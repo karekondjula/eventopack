@@ -99,10 +99,10 @@ public class EventsDatabase {
 
         Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
                 allColumns,
-                Event.Table.COLUMN_NAME + " LIKE ? OR " +
-                Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
-                Event.Table.COLUMN_LOCATION_STRING + " LIKE ? ",
-                new String[]{"%" + filter + "%", "%" + filter + "%", "%" + filter + "%"},
+                (filter != null ? Event.Table.COLUMN_NAME + " LIKE ? OR " +
+                                  Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
+                                  Event.Table.COLUMN_LOCATION_STRING + " LIKE ? " : null),
+                (filter != null ? new String[]{"%" + filter + "%", "%" + filter + "%", "%" + filter + "%"} : null),
                 null, null, null);
 
         cursor.moveToFirst();
