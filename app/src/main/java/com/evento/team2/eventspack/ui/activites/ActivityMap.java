@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,7 +14,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -36,10 +36,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.roomorama.caldroid.CaldroidFragment;
+import com.roomorama.caldroid.CaldroidListener;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnItemSelected;
 
 /**
  * Created by Daniel on 01-Oct-15.
@@ -47,11 +53,13 @@ import butterknife.OnItemSelected;
 public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
         GoogleMap.OnMapClickListener, GoogleMap.OnMyLocationChangeListener {
 
-    private static final String DELIMITER = ">>";
+    private static final String DELIMITER = "<<";
 
+    private final Calendar calendar = Calendar.getInstance();
     private MapFragment supportMapFragment;
     private GoogleMap mapView;
     private Location myLocation;
+    private CaldroidFragment dialogCaldroidFragment;
 
     @Bind(R.id.map_event_details)
     LinearLayout mapEventDetailsLinearLayout;
@@ -86,23 +94,49 @@ public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.i(">>", "i: " + i + "l: " + l);
 
+                // TODO daniel fetch all events for the current day
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.spinner_navigation_labes, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
+
+        dialogCaldroidFragment = CaldroidFragment.newInstance("", calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
+        Bundle args = new Bundle();
+        args.putInt(CaldroidFragment.START_DAY_OF_WEEK, CaldroidFragment.MONDAY);
+        dialogCaldroidFragment.setArguments(args);
+        dialogCaldroidFragment.setCaldroidListener(new CaldroidListener() {
+            @Override
+            public void onSelectDate(Date date, View view) {
+                setCalendarDate(date);
+
+                // TODO daniel fetch all events for the current day
+
+                dialogCaldroidFragment.dismiss();
+            }
+        });
     }
+
+    private void setCalendarDate(Date date) {
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        actionViewCalendar.setText(dateFormat.format(date));
+    }
+
+    private TextView actionViewCalendar;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu_map, menu);
+        getMenuInflater().inflate(R.menu.menu_map, menu);
+
+        final MenuItem calendarMenuItem = menu.findItem(R.id.action_calendar);
+        actionViewCalendar = (TextView) MenuItemCompat.getActionView(calendarMenuItem);
+        actionViewCalendar.setOnClickListener(v -> onOptionsItemSelected(calendarMenuItem));
+        setCalendarDate(calendar.getTime());
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -112,7 +146,9 @@ public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback
         int id = item.getItemId();
 
         if (id == R.id.action_calendar) {
-            // TODO daniel open datepicker and show events for current dates (background thread of course)
+
+
+            dialogCaldroidFragment.show(getSupportFragmentManager(),"Calendar");
         }
 
         return super.onOptionsItemSelected(item);
@@ -136,6 +172,8 @@ public class ActivityMap extends AppCompatActivity implements OnMapReadyCallback
         mapView.setOnMarkerClickListener(this);
         mapView.setOnMapClickListener(this);
         mapView.setOnMyLocationChangeListener(this);
+
+        // TODO daniel fetch events in a background thread
 
         Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.party_image);
         Bitmap bhalfsize = Bitmap.createScaledBitmap(b, b.getWidth() / 8, b.getHeight() / 8, false);
