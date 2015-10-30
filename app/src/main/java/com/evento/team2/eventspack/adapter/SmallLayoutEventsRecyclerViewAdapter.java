@@ -77,23 +77,16 @@ public class SmallLayoutEventsRecyclerViewAdapter extends RecyclerView.Adapter<S
             Glide.with(context).load(new File(events.get(position).pictureUri)).into(holder.mEventImage);
         }
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.mView.setOnClickListener(v -> {
 
-                Activity activity = (Activity) v.getContext();
+            Activity activity = (Activity) v.getContext();
 
-                Intent intent = new Intent(context, ActivityEventDetails.class);
-                intent.putExtra(ActivityEventDetails.EXTRA_NAME, events.get(position).name);
-                // TODO put whole event as extra, easier to do a save
-                if (!TextUtils.isEmpty(events.get(position).pictureUri)) {
-                    intent.putExtra(ActivityEventDetails.EXTRA_PICTURE_URI, events.get(position).name);
-                }
+            Intent intent = new Intent(context, ActivityEventDetails.class);
+            intent.putExtra(ActivityEventDetails.EXTRA_ID, events.get(position).id);
 
-                activity.startActivity(intent);
-                // TODO fancy animation please ^_^
+            activity.startActivity(intent);
+            // TODO fancy animation please ^_^
 //                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            }
         });
     }
 

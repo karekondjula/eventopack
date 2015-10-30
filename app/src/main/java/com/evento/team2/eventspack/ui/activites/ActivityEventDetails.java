@@ -31,6 +31,8 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.R;
+import com.evento.team2.eventspack.model.Event;
+import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
@@ -42,31 +44,41 @@ import butterknife.OnClick;
 
 public class ActivityEventDetails extends AppCompatActivity {
 
-    public static final String EXTRA_NAME = "event_name";
-    public static final String EXTRA_PICTURE_URI = "picture_uri";
+    public static final String EXTRA_ID = "event_id";
+//    public static final String EXTRA_NAME = "event_name";
+//    public static final String EXTRA_PICTURE_URI = "picture_uri";
 
     @Bind(R.id.backdrop)
     ImageView backdropImage;
 
-    @Bind(R.id.fab_add_to_favorites)
+    @Bind(R.id.fab_add_to_saved)
     FloatingActionButton addToFavorites;
 
-    boolean isEventSaved = false;
+    private boolean isEventSaved = false;
+    private Drawable emptyHeart;
+    private Drawable filledHeart;
+
+    static {
+        Iconify.with(new IoniconsModule());
+    }
+
+    private Event event;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_detail);
+        setContentView(R.layout.activity_event_details);
         ButterKnife.bind(this);
-        Iconify.with(new IoniconsModule());
 
-        FloatingActionButton printButton = (FloatingActionButton) findViewById(R.id.fab_add_to_favorites);
-        Drawable print = new IconDrawable(this, IoniconsIcons.ion_android_favorite_outline).colorRes(android.R.color.white).actionBarSize();
-        printButton.setImageDrawable(print);
+        FloatingActionButton printButton = (FloatingActionButton) findViewById(R.id.fab_add_to_saved);
+        emptyHeart = new IconDrawable(this, IoniconsIcons.ion_android_favorite_outline).colorRes(android.R.color.white).actionBarSize();
+        filledHeart = new IconDrawable(this, IoniconsIcons.ion_android_favorite).colorRes(R.color.colorPrimary).actionBarSize();
+        // TODO check if event is saved
+        printButton.setImageDrawable(emptyHeart);
 
         Intent intent = getIntent();
-        final String eventName = intent.getStringExtra(EXTRA_NAME);
-        final String eventPictureUri = intent.getStringExtra(EXTRA_PICTURE_URI);
+        final long eventId = intent.getLongExtra(EXTRA_ID, 0);
+        event = EventsDatabase.getInstance().getEventById(eventId);
 
         final Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -76,7 +88,7 @@ public class ActivityEventDetails extends AppCompatActivity {
         }
 
         CollapsingToolbarLayout collapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
-        collapsingToolbar.setTitle(eventName);
+        collapsingToolbar.setTitle(event.name);
 
         // TODO daniel implement picture uri as picture
         Glide.with(this).load(R.drawable.party_image).centerCrop().into(backdropImage);
@@ -88,19 +100,16 @@ public class ActivityEventDetails extends AppCompatActivity {
         super.onDestroy();
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        exitTransition.exit(this);
-//    }
-
-    @OnClick(R.id.fab_add_to_favorites)
+    @OnClick(R.id.fab_add_to_saved)
     public void saveEvent(View view) {
         if (!isEventSaved) {
             isEventSaved = true;
-//            EventsDatabase.getInstance().saveEvent(events.get(position));
+            EventsDatabase.getInstance().persistEvent(event);
+            ((FloatingActionButton) findViewById(R.id.fab_add_to_saved)).setImageDrawable(filledHeart);
         } else {
             isEventSaved = false;
-//            EventsDatabase.getInstance().removeSavedEvent(events.get(position));
+            EventsDatabase.getInstance().removeSavedEvent(event);
+            ((FloatingActionButton) findViewById(R.id.fab_add_to_saved)).setImageDrawable(emptyHeart);
         }
 
         Snackbar.make(view,

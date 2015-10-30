@@ -23,6 +23,7 @@ public class EventsDatabase {
 
     private SQLiteDatabase database;
     private EventsSqliteHelper dbHelper;
+
     private String[] allColumns = {Event.Table.COLUMN_ID,
             Event.Table.COLUMN_NAME,
             Event.Table.COLUMN_DETAILS,
@@ -32,7 +33,10 @@ public class EventsDatabase {
             Event.Table.COLUMN_LONGITUDE,
             Event.Table.COLUMN_START_TIME_STAMP,
             Event.Table.COLUMN_START_DATE_STRING,
-            Event.Table.COLUMN_END_TIME_STAMP,};
+            Event.Table.COLUMN_END_TIME_STAMP,
+            Event.Table.COLUMN_IS_EVENT_SAVED,
+    };
+
 
     private Event cursorToEvent(Cursor cursor) {
         Event event = new Event(cursor.getString(1), cursor.getString(2));
@@ -41,11 +45,11 @@ public class EventsDatabase {
         event.locationString = cursor.getString(4);
         event.location = new LatLng(cursor.getDouble(5), cursor.getDouble(6));
         event.startTimeStamp = cursor.getLong(7);
-//        event.startDateString = new SimpleDateFormat("HH:mm dd.MM.yyyy ").format(new Date(event.startDate));
         event.startTimeString = new SimpleDateFormat("HH:mm").format(new Date(event.startTimeStamp));
         event.startDateString = cursor.getString(8);
         event.endTimeStamp = cursor.getLong(9);
         event.endDateString = new SimpleDateFormat("HH:mm dd.MM.yyyy").format(new Date(event.endTimeStamp));
+        event.isEventSaved = cursor.getInt(10) == Event.SAVED ? true : false;
         return event;
     }
 
@@ -74,14 +78,19 @@ public class EventsDatabase {
         dbHelper.close();
     }
 
-    public void saveEvents(ArrayList<Event> events) {
+    public void changeSaveEvent(Event event) {
+        ContentValues values = new ContentValues();
+        values.put(Event.Table.COLUMN_IS_EVENT_SAVED, event.isEventSaved ? Event.SAVED : Event.NOT_SAVED);
+        database.update(Event.Table.TABLE_EVENTS, values, Event.Table.COLUMN_ID + " = ?", new String[]{String.valueOf(event.id)});
+    }
+
+    public void persistEvents(ArrayList<Event> events) {
         for (Event event : events) {
-            saveEvent(event);
+            persistEvent(event);
         }
     }
 
-    public long saveEvent(Event event) {
-        Log.i(">> save", event.toString());
+    public long persistEvent(Event event) {
         ContentValues values = new ContentValues();
         values.put(Event.Table.COLUMN_ID, event.id);
         values.put(Event.Table.COLUMN_NAME, event.name);
@@ -101,6 +110,7 @@ public class EventsDatabase {
         long updateRows = database.update(Event.Table.TABLE_EVENTS, values, Event.Table.COLUMN_ID + " = ?", new String[]{String.valueOf(event.id)});
 
         if (updateRows == 0) {
+            values.put(Event.Table.COLUMN_IS_EVENT_SAVED, Event.NOT_SAVED);
             long insertId = database.insert(Event.Table.TABLE_EVENTS, null, values);
             return insertId;
         } else {
@@ -113,30 +123,29 @@ public class EventsDatabase {
         database.delete(Event.Table.TABLE_EVENTS, Event.Table.COLUMN_ID + " = " + id, null);
     }
 
-    public ArrayList<Event> getSavedEvents(String filter) {
+    // TODO convert to String... filterPairs[column, string]
+    public ArrayList<Event> getEvents(String filter) {
         ArrayList<Event> events = new ArrayList<Event>();
 
         Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
                 allColumns,
                 (filter != null ? Event.Table.COLUMN_NAME + " LIKE ? OR " +
-                                  Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
-                                  Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
-                                  Event.Table.COLUMN_START_TIME_STAMP + " LIKE ? OR " +
-                                  Event.Table.COLUMN_START_DATE_STRING + " LIKE ? "
-                                : null),
+                        Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
+                        Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
+                        Event.Table.COLUMN_START_TIME_STAMP + " LIKE ? OR " +
+                        Event.Table.COLUMN_START_DATE_STRING + " LIKE ? "
+                        : null),
                 (filter != null ? new String[]{"%" + filter + "%",
-                                               "%" + filter + "%",
-                                               "%" + filter + "%",
-                                               "%" + filter + "%",
-                                                "%" + filter + "%",}
-                                : null),
+                        "%" + filter + "%",
+                        "%" + filter + "%",
+                        "%" + filter + "%",
+                        "%" + filter + "%",}
+                        : null),
                 null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             Event event = cursorToEvent(cursor);
-            Log.i(">>", event.toString());
-//            event.isEventSaved = true;
             events.add(event);
             cursor.moveToNext();
         }
@@ -145,7 +154,7 @@ public class EventsDatabase {
         return events;
     }
 
-    public Event getSavedEventById(long id) {
+    public Event getEventById(long id) {
         Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
                 allColumns, Event.Table.COLUMN_ID + " = ? ", new String[]{String.valueOf(id)},
                 null, null, null);

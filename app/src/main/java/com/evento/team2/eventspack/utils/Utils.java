@@ -37,7 +37,6 @@ public class Utils {
                     dummyEvent.location = new LatLng(42.0016727 + (new Random().nextDouble() / (new Random().nextBoolean() ? 1000 : -100)),
                             21.4085439 + (new Random().nextDouble() / (new Random().nextBoolean() ? 100 : -1000)));
 
-                    dummyEvent.isEventSaved = new Random().nextBoolean();
                     dummyEvent.startTimeStamp = System.currentTimeMillis()
                             + (new Random().nextBoolean() ? 13579l * new Random().nextInt(97531) : 0);
 

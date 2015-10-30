@@ -61,8 +61,6 @@ public class ActivityMap extends AppCompatActivity {
         setContentView(R.layout.activity_map);
         ButterKnife.bind(this);
 
-        EventsDatabase.getInstance().openEventsDatabase(this);
-
         Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
 

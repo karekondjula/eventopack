@@ -9,6 +9,9 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class Event implements Comparable<Event> {
 
+    public static final int NOT_SAVED = 0;
+    public static final int SAVED = 1;
+
     /**
      * Universal id for the event, same on all devices
      */
@@ -24,8 +27,10 @@ public class Event implements Comparable<Event> {
     public String startDateString;
     public String startTimeString;
     public String endDateString;
+    public boolean isEventSaved = false;
 
-    public boolean isEventSaved;
+    public Event() {
+    }
 
     public Event(String name, @Nullable String description) {
         this.name = name;
@@ -63,6 +68,7 @@ public class Event implements Comparable<Event> {
     @Override
     public String toString() {
         return "name: " + name + "\n " +
+                "id: " + id + "\n " +
                 "details:" + details + "\n " +
 //                "pictureUri: " + pictureUri + "\n " +
                 "location: " + location + "\n " +
@@ -70,9 +76,10 @@ public class Event implements Comparable<Event> {
                 "startTimeStamp " + startTimeStamp + "\n " +
                 "startDate " + startDate + "\n " +
 //                "endTimeStamp " + endTimeStamp + "\n " +
-                "startDateString " + startDateString + "\n "
+                "startDateString " + startDateString + "\n " +
 //                "startTimeString " + startTimeString + "\n " +
-//                "endDateString " + endDateString
+//                "endDateString " + endDateString + "\n " +
+                "isEventSaved: " + isEventSaved
                 ;
     }
 
@@ -89,6 +96,7 @@ public class Event implements Comparable<Event> {
         public static final String COLUMN_START_TIME_STAMP = "startTimeStamp";
         public static final String COLUMN_START_DATE_STRING = "startDateString";
         public static final String COLUMN_END_TIME_STAMP = "endTimeStamp";
+        public static final String COLUMN_IS_EVENT_SAVED = "isEventSaved";
 
         // Database creation sql statement
         public static final String DATABASE_CREATE = "create table " + TABLE_EVENTS + "("
@@ -101,7 +109,8 @@ public class Event implements Comparable<Event> {
                 + COLUMN_LONGITUDE + " double, "
                 + COLUMN_START_TIME_STAMP + " long, "
                 + COLUMN_START_DATE_STRING + " text, "
-                + COLUMN_END_TIME_STAMP + " long "
+                + COLUMN_END_TIME_STAMP + " long, "
+                + COLUMN_IS_EVENT_SAVED + " integer "
                 + ");";
     }
 }

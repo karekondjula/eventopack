@@ -11,4 +11,5 @@
     <dimen name="list_item_avatar_size">40dp</dimen>
 
     <dimen name="calendar_item_height">80dp</dimen>
+    <dimen name="item_event_text_padding">16dp</dimen>
 </resources>

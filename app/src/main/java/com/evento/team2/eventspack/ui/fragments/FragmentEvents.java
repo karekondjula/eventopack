@@ -20,20 +20,17 @@ import android.view.ViewGroup;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapter.EventsRecyclerViewAdapter;
 import com.evento.team2.eventspack.model.Event;
-import com.evento.team2.eventspack.provider.FetchEventsAsyncTask;
+import com.evento.team2.eventspack.provider.FetchAsyncTask;
 import com.evento.team2.eventspack.ui.interfaces.ObserverFragment;
 import com.evento.team2.eventspack.utils.NetworkUtils;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.IoniconsModule;
 
 import java.util.ArrayList;
 import java.util.Observable;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-
-//import com.joanzapata.iconify.Iconify;
-//import com.joanzapata.iconify.fonts.IoniconsModule;
-//import rx.Observable;
-//import rx.Subscription;
 
 /**
  * Created by Daniel on 31-Jul-15.
@@ -46,6 +43,10 @@ public class FragmentEvents extends ObserverFragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private EventsRecyclerViewAdapter eventsAdapter;
 
+    static {
+        Iconify.with(new IoniconsModule());
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,11 +54,10 @@ public class FragmentEvents extends ObserverFragment {
         setHasOptionsMenu(true);
         swipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_events_list, container, false);
         ButterKnife.bind(this, swipeRefreshLayout);
-//        Iconify.with(new IoniconsModule());
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            new FetchEventsAsyncTask(this).execute();
+            new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.FETCH_FROM_SERVER).execute();
         });
 
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -73,15 +73,7 @@ public class FragmentEvents extends ObserverFragment {
         super.onResume();
 
         swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(true));
-        // this is how we receive update for events from the service
-//        ServiceEvento.getInstance().addObserver(this);
-        new FetchEventsAsyncTask(this).execute();
-    }
-
-    @Override
-    public void onPause() {
-//        ServiceEvento.getInstance().deleteObserver(this);
-        super.onPause();
+        new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute();
     }
 
     SearchView searchView = null;
@@ -152,7 +144,7 @@ public class FragmentEvents extends ObserverFragment {
     }
 
     public void filterEvents(String filter) {
-        new FetchEventsAsyncTask(this).execute(filter);
+        new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute(filter);
     }
 }
 

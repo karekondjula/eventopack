@@ -3,17 +3,17 @@
 
     <group android:checkableBehavior="none">
 
-        <item
-            android:id="@+id/settings"
-            android:checked="false"
-            android:icon="@drawable/ic_dashboard"
-            android:title="Settings" />
+        <!--<item-->
+            <!--android:id="@+id/settings"-->
+            <!--android:checked="false"-->
+            <!--android:icon="@drawable/ic_dashboard"-->
+            <!--android:title="Settings" />-->
 
-        <item
-            android:id="@+id/social"
-            android:checked="false"
-            android:icon="@android:drawable/star_big_off"
-            android:title="Social" />
+        <!--<item-->
+            <!--android:id="@+id/social"-->
+            <!--android:checked="false"-->
+            <!--android:icon="@android:drawable/star_big_off"-->
+            <!--android:title="Social" />-->
 
         <item
             android:id="@+id/about"

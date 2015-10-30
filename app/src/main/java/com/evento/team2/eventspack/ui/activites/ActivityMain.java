@@ -78,13 +78,13 @@ public class ActivityMain extends AppCompatActivity {
                         Intent intentSettings = new Intent(ActivityMain.this, ActivitySettings.class);
                         startActivity(intentSettings);
                         break;
-                    case R.id.social:
-                        Intent intentSocial = new Intent(ActivityMain.this, ActivitySocial.class);
-                        startActivity(intentSocial);
-                        break;
-                    case R.id.about:
-                        Snackbar.make(getCurrentFocus(), "Here's a Snackbar", Snackbar.LENGTH_LONG).show();
-                        break;
+//                    case R.id.social:
+//                        Intent intentSocial = new Intent(ActivityMain.this, ActivitySocial.class);
+//                        startActivity(intentSocial);
+//                        break;
+//                    case R.id.about:
+//                        Snackbar.make(getCurrentFocus(), "Here's a Snackbar", Snackbar.LENGTH_LONG).show();
+//                        break;
                     default:
                         break;
                 }

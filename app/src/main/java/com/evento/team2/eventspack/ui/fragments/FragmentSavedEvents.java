@@ -62,7 +62,7 @@ public class FragmentSavedEvents extends ObserverFragment {
 //        getActivity().runOnUiThread(new Runnable() {
 //            @Override
 //            public void run() {
-//                ArrayList<JsonEvent> savedEvents = EventsDatabase.getInstance().getSavedEvents();
+//                ArrayList<JsonEvent> savedEvents = EventsDatabase.getInstance().getEvents();
 //                savedEventsAdapter.refreshEvents(savedEvents);
 ////                savedEventsAdapter.notifyItemRangeChanged(0, savedEvents.size());
 //                savedEventsAdapter.notifyDataSetChanged();

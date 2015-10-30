@@ -3,9 +3,9 @@ package com.evento.team2.eventspack.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +15,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
+import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
+import com.joanzapata.iconify.widget.IconTextView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,6 +32,8 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
 
     private ArrayList<Event> events;
     private Context context;
+//    private final IconDrawable emptyHeart;
+//    private final IconDrawable filledHeart;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -40,8 +44,8 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         public TextView mEventTitle;
         @Bind(R.id.event_details)
         public TextView mEventDetails;
-//        @Bind(R.id.btn_bookmark_icon)
-//        public ToggleButton isEventSaved;
+        @Bind(R.id.btn_save_icon)
+        public IconTextView isEventSaved;
 
         public ViewHolder(View view) {
             super(view);
@@ -57,6 +61,9 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
     public EventsRecyclerViewAdapter(Context context) {
         this.context = context;
         events = new ArrayList<>();
+
+//        emptyHeart = new IconDrawable(context, IoniconsIcons.ion_android_favorite_outline).colorRes(android.R.color.white).actionBarSize();
+//        filledHeart = new IconDrawable(context, IoniconsIcons.ion_android_favorite).colorRes(R.color.colorPrimary).actionBarSize();
     }
 
     public void addEvent(Event event) {
@@ -79,50 +86,53 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_events, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        holder.mEventTitle.setText(events.get(position).name);
-        holder.mEventDetails.setText(events.get(position).details);
 
-        if (TextUtils.isEmpty(events.get(position).pictureUri)) {
+        final Event event = events.get(position);
+
+        holder.mEventTitle.setText(event.name);
+        holder.mEventDetails.setText(event.details);
+
+        if (TextUtils.isEmpty(event.pictureUri)) {
             Glide.with(holder.mEventImage.getContext()).load(R.drawable.party_image).into(holder.mEventImage);
         } else {
             // TODO daniel implement picture uri as picture
-            Glide.with(context).load(new File(events.get(position).pictureUri)).into(holder.mEventImage);
+            Glide.with(context).load(new File(event.pictureUri)).into(holder.mEventImage);
         }
 
-//        holder.isEventSaved.setChecked(events.get(position).isEventSaved);
-//
-//        holder.isEventSaved.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                events.get(position).isEventSaved = !events.get(position).isEventSaved;
-//
-//                if (events.get(position).isEventSaved) {
-//                    EventsDatabase.getInstance().saveEvent(events.get(position));
-//                } else {
-//                    EventsDatabase.getInstance().removeSavedEvent(events.get(position));
-//                }
-//                EventsController.getInstance().getEventBus().post(new EventsController.UpdateSavedEvents());
-//
-//                Snackbar.make(v,
-//                            events.get(position).isEventSaved ?
-//                                    "JsonEvent is saved" :
-//                                    "JsonEvent is removed from saved events",
-//                            Snackbar.LENGTH_LONG)
-//                        .setAction("Undo", null)
-//                        .setActionTextColor(Color.RED)
-//                        .show();
-//
+        if (event.isEventSaved) {
+            holder.isEventSaved.setText("{ion-android-favorite @color/colorPrimary}");
+        } else {
+            holder.isEventSaved.setText("{ion-android-favorite-outline @color/colorPrimary}");
+        }
+
+        holder.isEventSaved.setOnClickListener(v -> {
+
+            event.isEventSaved = !event.isEventSaved;
+
+            if (event.isEventSaved) {
+                holder.isEventSaved.setText("{ion-android-favorite-outline @color/colorPrimary}");
+            } else {
+                holder.isEventSaved.setText("{ion-android-favorite @color/colorPrimary}");
+            }
+            EventsDatabase.getInstance().changeSaveEvent(event);
+
+            Snackbar.make(v,
+                    event.isEventSaved ?
+                            "JsonEvent is saved" :
+                            "JsonEvent is removed from saved events",
+                    Snackbar.LENGTH_LONG)
+                    .show();
+
 //                YoYo.with(Techniques.Tada)
 //                        .duration(700)
 //                        .playOn(v);
-//            }
-//        });
+        });
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -131,11 +141,7 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
                 Activity activity = (Activity) v.getContext();
 
                 Intent intent = new Intent(context, ActivityEventDetails.class);
-                intent.putExtra(ActivityEventDetails.EXTRA_NAME, events.get(position).name);
-                // TODO put whole event as extra, easier to do a save
-                if (!TextUtils.isEmpty(events.get(position).pictureUri)) {
-                    intent.putExtra(ActivityEventDetails.EXTRA_PICTURE_URI, events.get(position).name);
-                }
+                intent.putExtra(ActivityEventDetails.EXTRA_ID, event.id);
 
                 activity.startActivity(intent);
                 // TODO fancy animation please ^_^

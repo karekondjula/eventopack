@@ -77,7 +77,7 @@ public class FragmentCalendar extends Fragment {
         t.replace(R.id.caldroidCalendar, caldroidFragment);
         t.commit();
 
-//        eventsList = EventsDatabase.getInstance().getSavedEvents(null);
+//        eventsList = EventsDatabase.getInstance().getEvents(null);
         eventsList = Utils.Helpers.createEvents();
 //        Collections.sort(eventsList); // TODO events list must be sorted by date
 
@@ -165,10 +165,7 @@ public class FragmentCalendar extends Fragment {
                 calendarItemView.setClickable(true);
                 calendarItemView.setOnClickListener(v -> {
                     Intent intent = new Intent(getActivity(), ActivityEventDetails.class);
-                    intent.putExtra(ActivityEventDetails.EXTRA_NAME, event.name);
-                    if (!TextUtils.isEmpty("")) {
-                        intent.putExtra(ActivityEventDetails.EXTRA_PICTURE_URI, "");
-                    }
+                    intent.putExtra(ActivityEventDetails.EXTRA_ID, event.id);
                     getActivity().startActivity(intent);
                 });
                 calendarEventsLinearLayout.addView(calendarItemView);

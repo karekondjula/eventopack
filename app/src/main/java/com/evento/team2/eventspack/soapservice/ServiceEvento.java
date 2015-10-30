@@ -19,7 +19,6 @@ import org.ksoap2.transport.HttpTransportSE;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Observable;
 
 /**
  * Created by Daniel on 18-Aug-15.
@@ -102,7 +101,7 @@ public class ServiceEvento {
 //                        setChanged();
 //                        notifyObservers(eventArrayList);
 //
-//                        EventsDatabase.getInstance().saveEvents(eventArrayList);
+//                        EventsDatabase.getInstance().persistEvents(eventArrayList);
 //
 //                        // TODO daniel RxAndroid for announcing the result back
 //
@@ -187,13 +186,11 @@ public class ServiceEvento {
 //                        Log.i(TAG, "METHOD_GET_USER " + responseMap.get(RESPONSE_KEY));
                 } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_EVENTS)) {
 //                    ArrayList<JsonEvent> jsonEventArrayList = new ArrayList<JsonEvent>(LoganSquare.parseList((String) responseMap.get(RESPONSE_KEY), JsonEvent.class));
+                    ArrayList<JsonEvent> jsonEventArrayList = new ArrayList<JsonEvent>(LoganSquare.parseList((String) Utils.Helpers.getEventsJson(), JsonEvent.class));
 
-                    // TODO daniel once the service is fixed return to parsing original result
-//                    ArrayList<JsonEvent> jsonEventArrayList = new ArrayList<JsonEvent>(LoganSquare.parseList((String) Utils.Helpers.getEventsJson(), JsonEvent.class));
-//                    ArrayList<Event> eventArrayList = ConversionUtils.convertJsonEventsArrayListToEventArrayList(jsonEventArrayList);
-//                    EventsDatabase.getInstance().saveEvents(eventArrayList);
+                    ArrayList<Event> eventArrayList = ConversionUtils.convertJsonEventsArrayListToEventArrayList(jsonEventArrayList);
 
-                    EventsDatabase.getInstance().saveEvents(Utils.Helpers.createEvents());
+                    EventsDatabase.getInstance().persistEvents(eventArrayList);
 
                     // TODO RxAndroid for announcing the result back
 
@@ -202,6 +199,7 @@ public class ServiceEvento {
 //                        }
                 }
             } else {
+//                EventsDatabase.getInstance().persistEvents(Utils.Helpers.createEvents());
                 Log.i(TAG, "no response ;( ");
             }
         } catch (IOException e) {

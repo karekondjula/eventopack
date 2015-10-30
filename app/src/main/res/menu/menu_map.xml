@@ -6,7 +6,6 @@
     <item
         android:id="@+id/action_calendar"
         app:actionLayout="@layout/menu_map_date"
-        android:icon="@android:drawable/ic_menu_my_calendar"
         android:title="28.10.2015"
         app:showAsAction="always" />
 

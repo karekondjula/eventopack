@@ -1,6 +1,5 @@
 package com.evento.team2.eventspack.ui.fragments;
 
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -27,11 +26,10 @@ import android.widget.TextView;
 
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
-import com.evento.team2.eventspack.provider.FetchEventsAsyncTask;
+import com.evento.team2.eventspack.provider.FetchAsyncTask;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.ui.activites.ActivityMap;
 import com.evento.team2.eventspack.ui.interfaces.ObserverFragment;
-import com.evento.team2.eventspack.utils.Utils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,6 +40,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
@@ -50,6 +52,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Observable;
 
 import butterknife.Bind;
@@ -62,7 +65,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         GoogleMap.OnMapClickListener, GoogleMap.OnMyLocationChangeListener {
 
     public static final String TAG = "FragmentMap";
-    private static final String DELIMITER = "<<";
+    private static final String DELIMITER = "\n";
 
     private final Calendar calendar = Calendar.getInstance();
     private GoogleMap mapView;
@@ -71,6 +74,10 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
 
     @Bind(R.id.map_event_details)
     LinearLayout mapEventDetailsLinearLayout;
+
+    static {
+        Iconify.with(new FontAwesomeModule());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -124,7 +131,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
                 setCalendarDate(date);
 
                 DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-                new FetchEventsAsyncTask(FragmentMap.this).execute(dateFormat.format(date));
+                new FetchAsyncTask(FragmentMap.this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute(dateFormat.format(date));
 
                 dialogCaldroidFragment.dismiss();
             }
@@ -146,6 +153,9 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
 
         inflater.inflate(R.menu.menu_map, menu);
         final MenuItem calendarMenuItem = menu.findItem(R.id.action_calendar);
+        calendarMenuItem.setIcon(new IconDrawable(getActivity(), FontAwesomeIcons.fa_calendar)
+                .colorRes(R.color.caldroid_black).actionBarSize());
+
         actionViewCalendar = (TextView) MenuItemCompat.getActionView(calendarMenuItem);
         actionViewCalendar.setOnClickListener(v -> onOptionsItemSelected(calendarMenuItem));
 
@@ -158,7 +168,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         int id = item.getItemId();
 
         if (id == R.id.action_calendar) {
-            dialogCaldroidFragment.show(((ActivityMap) getActivity()).getSupportFragmentManager(),"Calendar");
+            dialogCaldroidFragment.show(((ActivityMap) getActivity()).getSupportFragmentManager(), "Calendar");
         }
 
         return super.onOptionsItemSelected(item);
@@ -184,7 +194,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         mapView.setOnMyLocationChangeListener(this);
 
         DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-        new FetchEventsAsyncTask(this).execute(dateFormat.format(calendar.getTimeInMillis()));
+        new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute(dateFormat.format(calendar.getTimeInMillis()));
     }
 
     @Override
@@ -199,19 +209,20 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         mapEventImageView.setImageResource(R.drawable.party_image);
 //                Glide.with(getActivity()).load(R.drawable.party_image).into(calendarEventImageView);
         ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_title)).setText(marker.getTitle());
+
         String eventDetails[] = marker.getSnippet().split(DELIMITER);
         ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_details)).setText(eventDetails[0]);
         ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_time)).setText(eventDetails[1]);
+
         ButterKnife.findById(mapEventItemView, R.id.event_color).setVisibility(View.GONE);
         ButterKnife.findById(mapEventItemView, R.id.close_event).setVisibility(View.VISIBLE);
+
         mapEventItemView.setClickable(true);
+
         ButterKnife.findById(mapEventItemView, R.id.close_event).setOnClickListener(view -> removeSelectedEventLayout());
         mapEventItemView.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), ActivityEventDetails.class);
-            intent.putExtra(ActivityEventDetails.EXTRA_NAME, marker.getTitle());
-            if (!TextUtils.isEmpty("")) {
-                intent.putExtra(ActivityEventDetails.EXTRA_PICTURE_URI, "");
-            }
+            intent.putExtra(ActivityEventDetails.EXTRA_ID, hashMapLatLngEventId.get(marker.getPosition()));
             startActivity(intent);
         });
         mapEventDetailsLinearLayout.addView(mapEventItemView);
@@ -245,6 +256,8 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         return fragmentMap;
     }
 
+    HashMap<LatLng, Long> hashMapLatLngEventId = new HashMap<>();
+
     @Override
     public void update(Observable observable, Object eventArrayList) {
 
@@ -255,13 +268,17 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
             Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.party_image);
             Bitmap bhalfsize = Bitmap.createScaledBitmap(b, b.getWidth() / 8, b.getHeight() / 8, false);
 
+            MarkerOptions markerOptions;
+            hashMapLatLngEventId = new HashMap<>();
             for (Event event : (ArrayList<Event>) eventArrayList) {
-                mapView.addMarker(new MarkerOptions()
+                markerOptions = new MarkerOptions()
                         .position(new LatLng(event.location.latitude,
                                 event.location.longitude))
                         .title(event.name)
                         .snippet(event.details + DELIMITER + event.startDateString + " " + event.startTimeString)
-                        .icon(BitmapDescriptorFactory.fromBitmap(bhalfsize)));
+                        .icon(BitmapDescriptorFactory.fromBitmap(bhalfsize));
+                hashMapLatLngEventId.put(markerOptions.getPosition(), event.id);
+                mapView.addMarker(markerOptions);
             }
         }
     }
