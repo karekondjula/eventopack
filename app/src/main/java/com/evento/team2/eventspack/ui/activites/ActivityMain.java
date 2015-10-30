@@ -1,14 +1,14 @@
 package com.evento.team2.eventspack.ui.activites;
 
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.MenuItemCompat;
+import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -176,7 +176,7 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        Adapter adapter = new Adapter(getSupportFragmentManager());
+        Adapter adapter = new Adapter(getFragmentManager());
         adapter.addFragment(fragmentEvents, "Events");
         adapter.addFragment(new Fragment(), "Places");
         adapter.addFragment(FragmentSavedEvents.newInstance(), "Saved");
@@ -187,7 +187,7 @@ public class ActivityMain extends AppCompatActivity {
         private final List<Fragment> mFragments = new ArrayList<>();
         private final List<String> mFragmentTitles = new ArrayList<>();
 
-        public Adapter(android.support.v4.app.FragmentManager fm) {
+        public Adapter(FragmentManager fm) {
             super(fm);
         }
 

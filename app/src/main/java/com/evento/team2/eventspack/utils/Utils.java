@@ -32,13 +32,14 @@ public class Utils {
                 for (String eventNames : EVENTS) {
 
                     dummyEvent = new Event(eventNames, EVENTS_DESCRIPTION[i++]);
-                    dummyEvent.id = new Random().nextLong();
+                    dummyEvent.id = i;
 
                     dummyEvent.location = new LatLng(42.0016727 + (new Random().nextDouble() / (new Random().nextBoolean() ? 1000 : -100)),
                             21.4085439 + (new Random().nextDouble() / (new Random().nextBoolean() ? 100 : -1000)));
 
                     dummyEvent.isEventSaved = new Random().nextBoolean();
-                    dummyEvent.startTimeStamp = System.currentTimeMillis() + 13579l * new Random().nextInt(97531);
+                    dummyEvent.startTimeStamp = System.currentTimeMillis()
+                            + (new Random().nextBoolean() ? 13579l * new Random().nextInt(97531) : 0);
 
                     Calendar cal = Calendar.getInstance();
                     cal.setTimeInMillis(dummyEvent.startTimeStamp);

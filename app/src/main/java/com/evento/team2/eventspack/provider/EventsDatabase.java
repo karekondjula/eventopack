@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.evento.team2.eventspack.model.Event;
 import com.google.android.gms.maps.model.LatLng;
@@ -29,8 +30,24 @@ public class EventsDatabase {
             Event.Table.COLUMN_LOCATION_STRING,
             Event.Table.COLUMN_LATITUDE,
             Event.Table.COLUMN_LONGITUDE,
-            Event.Table.COLUMN_START_DATE,
-            Event.Table.COLUMN_END_DATE,};
+            Event.Table.COLUMN_START_TIME_STAMP,
+            Event.Table.COLUMN_START_DATE_STRING,
+            Event.Table.COLUMN_END_TIME_STAMP,};
+
+    private Event cursorToEvent(Cursor cursor) {
+        Event event = new Event(cursor.getString(1), cursor.getString(2));
+        event.id = cursor.getLong(0);
+        event.pictureUri = cursor.getString(3);
+        event.locationString = cursor.getString(4);
+        event.location = new LatLng(cursor.getDouble(5), cursor.getDouble(6));
+        event.startTimeStamp = cursor.getLong(7);
+//        event.startDateString = new SimpleDateFormat("HH:mm dd.MM.yyyy ").format(new Date(event.startDate));
+        event.startTimeString = new SimpleDateFormat("HH:mm").format(new Date(event.startTimeStamp));
+        event.startDateString = cursor.getString(8);
+        event.endTimeStamp = cursor.getLong(9);
+        event.endDateString = new SimpleDateFormat("HH:mm dd.MM.yyyy").format(new Date(event.endTimeStamp));
+        return event;
+    }
 
     private EventsDatabase() {
     }
@@ -64,6 +81,7 @@ public class EventsDatabase {
     }
 
     public long saveEvent(Event event) {
+        Log.i(">> save", event.toString());
         ContentValues values = new ContentValues();
         values.put(Event.Table.COLUMN_ID, event.id);
         values.put(Event.Table.COLUMN_NAME, event.name);
@@ -76,8 +94,9 @@ public class EventsDatabase {
             values.put(Event.Table.COLUMN_LATITUDE, event.location.latitude);
             values.put(Event.Table.COLUMN_LONGITUDE, event.location.longitude);
         }
-        values.put(Event.Table.COLUMN_START_DATE, event.startDate);
-        values.put(Event.Table.COLUMN_END_DATE, event.endDate);
+        values.put(Event.Table.COLUMN_START_TIME_STAMP, event.startTimeStamp);
+        values.put(Event.Table.COLUMN_START_DATE_STRING, event.startDateString);
+        values.put(Event.Table.COLUMN_END_TIME_STAMP, event.endTimeStamp);
 
         long updateRows = database.update(Event.Table.TABLE_EVENTS, values, Event.Table.COLUMN_ID + " = ?", new String[]{String.valueOf(event.id)});
 
@@ -101,14 +120,23 @@ public class EventsDatabase {
                 allColumns,
                 (filter != null ? Event.Table.COLUMN_NAME + " LIKE ? OR " +
                                   Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
-                                  Event.Table.COLUMN_LOCATION_STRING + " LIKE ? " : null),
-                (filter != null ? new String[]{"%" + filter + "%", "%" + filter + "%", "%" + filter + "%"} : null),
+                                  Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
+                                  Event.Table.COLUMN_START_TIME_STAMP + " LIKE ? OR " +
+                                  Event.Table.COLUMN_START_DATE_STRING + " LIKE ? "
+                                : null),
+                (filter != null ? new String[]{"%" + filter + "%",
+                                               "%" + filter + "%",
+                                               "%" + filter + "%",
+                                               "%" + filter + "%",
+                                                "%" + filter + "%",}
+                                : null),
                 null, null, null);
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             Event event = cursorToEvent(cursor);
-            event.isEventSaved = true;
+            Log.i(">>", event.toString());
+//            event.isEventSaved = true;
             events.add(event);
             cursor.moveToNext();
         }
@@ -125,19 +153,6 @@ public class EventsDatabase {
         Event event = cursorToEvent(cursor);
         cursor.close();
 
-        return event;
-    }
-
-    // TODO daniel update this method with all the new fields
-    private Event cursorToEvent(Cursor cursor) {
-        Event event = new Event("", "");
-        event.id = cursor.getLong(0);
-        event.name = cursor.getString(1);
-        event.details = cursor.getString(2);
-        event.pictureUri = cursor.getString(3);
-        event.location = new LatLng(cursor.getDouble(4), cursor.getDouble(5));
-        event.startDate = cursor.getLong(6);
-        event.startDateString = new SimpleDateFormat("HH:mm dd.MM.yyyy ").format(new Date(event.startDate));
         return event;
     }
 }

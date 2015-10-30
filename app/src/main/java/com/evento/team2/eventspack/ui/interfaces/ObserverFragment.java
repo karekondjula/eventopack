@@ -1,6 +1,7 @@
 package com.evento.team2.eventspack.ui.interfaces;
 
-import android.support.v4.app.Fragment;
+
+import android.app.Fragment;
 
 import java.util.Observer;
 

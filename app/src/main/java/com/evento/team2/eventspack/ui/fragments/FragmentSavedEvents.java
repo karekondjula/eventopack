@@ -15,8 +15,10 @@ import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapter.EventsRecyclerViewAdapter;
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.provider.EventsDatabase;
+import com.evento.team2.eventspack.ui.interfaces.ObserverFragment;
 
 import java.util.ArrayList;
+import java.util.Observable;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -24,7 +26,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Daniel on 31-Jul-15.
  */
-public class FragmentSavedEvents extends Fragment {
+public class FragmentSavedEvents extends ObserverFragment {
 
     @Bind(R.id.savedEventsRecyclerView)
     RecyclerView savedEventsRecyclerView;
@@ -46,11 +48,6 @@ public class FragmentSavedEvents extends Fragment {
         savedEventsRecyclerView.setAdapter(savedEventsAdapter);
 
         return view;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
     }
 
     @Override
@@ -78,5 +75,10 @@ public class FragmentSavedEvents extends Fragment {
     public static FragmentSavedEvents newInstance() {
         FragmentSavedEvents f = new FragmentSavedEvents();
         return f;
+    }
+
+    @Override
+    public void update(Observable observable, Object o) {
+
     }
 }

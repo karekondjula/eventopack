@@ -25,7 +25,7 @@ import java.util.Observable;
  * Created by Daniel on 18-Aug-15.
  */
 public class ServiceEvento {
-    private static final String TAG = "ServiceEvento >>";
+    private static final String TAG = "ServiceEvento";
 
     private static final String NAMESPACE = "urn:eventservice";
     private static final String URL = "http://ap.mk/evento/server.php";
@@ -187,12 +187,13 @@ public class ServiceEvento {
 //                        Log.i(TAG, "METHOD_GET_USER " + responseMap.get(RESPONSE_KEY));
                 } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_EVENTS)) {
 //                    ArrayList<JsonEvent> jsonEventArrayList = new ArrayList<JsonEvent>(LoganSquare.parseList((String) responseMap.get(RESPONSE_KEY), JsonEvent.class));
+
                     // TODO daniel once the service is fixed return to parsing original result
-                    ArrayList<JsonEvent> jsonEventArrayList = new ArrayList<JsonEvent>(LoganSquare.parseList((String) Utils.Helpers.getEventsJson(), JsonEvent.class));
+//                    ArrayList<JsonEvent> jsonEventArrayList = new ArrayList<JsonEvent>(LoganSquare.parseList((String) Utils.Helpers.getEventsJson(), JsonEvent.class));
+//                    ArrayList<Event> eventArrayList = ConversionUtils.convertJsonEventsArrayListToEventArrayList(jsonEventArrayList);
+//                    EventsDatabase.getInstance().saveEvents(eventArrayList);
 
-                    ArrayList<Event> eventArrayList = ConversionUtils.convertJsonEventsArrayListToEventArrayList(jsonEventArrayList);
-
-                    EventsDatabase.getInstance().saveEvents(eventArrayList);
+                    EventsDatabase.getInstance().saveEvents(Utils.Helpers.createEvents());
 
                     // TODO RxAndroid for announcing the result back
 

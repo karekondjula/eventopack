@@ -17,11 +17,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.evento.team2.eventspack.ui.interfaces.ObserverFragment;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapter.EventsRecyclerViewAdapter;
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.provider.FetchEventsAsyncTask;
+import com.evento.team2.eventspack.ui.interfaces.ObserverFragment;
 import com.evento.team2.eventspack.utils.NetworkUtils;
 
 import java.util.ArrayList;

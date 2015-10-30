@@ -27,8 +27,10 @@ import android.widget.TextView;
 
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
+import com.evento.team2.eventspack.provider.FetchEventsAsyncTask;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.ui.activites.ActivityMap;
+import com.evento.team2.eventspack.ui.interfaces.ObserverFragment;
 import com.evento.team2.eventspack.utils.Utils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -45,8 +47,10 @@ import com.roomorama.caldroid.CaldroidListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Observable;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -54,27 +58,19 @@ import butterknife.ButterKnife;
 /**
  * Created by Daniel on 29-Oct-15.
  */
-public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
+public class FragmentMap extends ObserverFragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
         GoogleMap.OnMapClickListener, GoogleMap.OnMyLocationChangeListener {
 
     public static final String TAG = "FragmentMap";
     private static final String DELIMITER = "<<";
 
     private final Calendar calendar = Calendar.getInstance();
-    private MapFragment supportMapFragment;
     private GoogleMap mapView;
     private Location myLocation;
     private CaldroidFragment dialogCaldroidFragment;
 
     @Bind(R.id.map_event_details)
     LinearLayout mapEventDetailsLinearLayout;
-
-    Spinner spinner;
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -94,14 +90,14 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleM
         }
 
         FragmentManager fm = getFragmentManager();
-        supportMapFragment = (MapFragment) fm.findFragmentById(R.id.location_map);
-        if (supportMapFragment == null) {
-            supportMapFragment = MapFragment.newInstance();
-            getFragmentManager().beginTransaction().replace(R.id.location_map, supportMapFragment).commit();
+        MapFragment mapFragment = (MapFragment) fm.findFragmentById(R.id.location_map);
+        if (mapFragment == null) {
+            mapFragment = MapFragment.newInstance();
+            getFragmentManager().beginTransaction().replace(R.id.location_map, mapFragment).commit();
         }
-        supportMapFragment.getMapAsync(this);
+        mapFragment.getMapAsync(this);
 
-        spinner = ButterKnife.findById(getActivity(), R.id.spinner_navigation);
+        Spinner spinner = ButterKnife.findById(getActivity(), R.id.spinner_navigation);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -127,7 +123,8 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleM
             public void onSelectDate(Date date, View view) {
                 setCalendarDate(date);
 
-                // TODO daniel fetch all events for the current day
+                DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+                new FetchEventsAsyncTask(FragmentMap.this).execute(dateFormat.format(date));
 
                 dialogCaldroidFragment.dismiss();
             }
@@ -145,14 +142,15 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleM
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
+//        super.onCreateOptionsMenu(menu, inflater); we might need this?!
 
         inflater.inflate(R.menu.menu_map, menu);
         final MenuItem calendarMenuItem = menu.findItem(R.id.action_calendar);
         actionViewCalendar = (TextView) MenuItemCompat.getActionView(calendarMenuItem);
         actionViewCalendar.setOnClickListener(v -> onOptionsItemSelected(calendarMenuItem));
-        setCalendarDate(calendar.getTime());
 
+        // set today's date in the action menu
+        setCalendarDate(calendar.getTime());
     }
 
     @Override
@@ -185,18 +183,8 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleM
         mapView.setOnMapClickListener(this);
         mapView.setOnMyLocationChangeListener(this);
 
-        // TODO daniel fetch events in a background thread
-
-        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.party_image);
-        Bitmap bhalfsize = Bitmap.createScaledBitmap(b, b.getWidth() / 8, b.getHeight() / 8, false);
-        for (Event event : Utils.Helpers.createEvents()) {
-            mapView.addMarker(new MarkerOptions()
-                    .position(new LatLng(event.location.latitude,
-                            event.location.longitude))
-                    .title(event.name)
-                    .snippet(event.details + DELIMITER + event.startDateString + " " + event.startTimeString)
-                    .icon(BitmapDescriptorFactory.fromBitmap(bhalfsize)));
-        }
+        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        new FetchEventsAsyncTask(this).execute(dateFormat.format(calendar.getTimeInMillis()));
     }
 
     @Override
@@ -217,22 +205,14 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleM
         ButterKnife.findById(mapEventItemView, R.id.event_color).setVisibility(View.GONE);
         ButterKnife.findById(mapEventItemView, R.id.close_event).setVisibility(View.VISIBLE);
         mapEventItemView.setClickable(true);
-        ButterKnife.findById(mapEventItemView, R.id.close_event).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                removeSelectedEventLayout();
+        ButterKnife.findById(mapEventItemView, R.id.close_event).setOnClickListener(view -> removeSelectedEventLayout());
+        mapEventItemView.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ActivityEventDetails.class);
+            intent.putExtra(ActivityEventDetails.EXTRA_NAME, marker.getTitle());
+            if (!TextUtils.isEmpty("")) {
+                intent.putExtra(ActivityEventDetails.EXTRA_PICTURE_URI, "");
             }
-        });
-        mapEventItemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), ActivityEventDetails.class);
-                intent.putExtra(ActivityEventDetails.EXTRA_NAME, marker.getTitle());
-                if (!TextUtils.isEmpty("")) {
-                    intent.putExtra(ActivityEventDetails.EXTRA_PICTURE_URI, "");
-                }
-                startActivity(intent);
-            }
+            startActivity(intent);
         });
         mapEventDetailsLinearLayout.addView(mapEventItemView);
 
@@ -263,5 +243,26 @@ public class FragmentMap extends Fragment implements OnMapReadyCallback, GoogleM
     public static FragmentMap newInstance() {
         FragmentMap fragmentMap = new FragmentMap();
         return fragmentMap;
+    }
+
+    @Override
+    public void update(Observable observable, Object eventArrayList) {
+
+        mapView.clear();
+
+        if (eventArrayList instanceof ArrayList) {
+
+            Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.party_image);
+            Bitmap bhalfsize = Bitmap.createScaledBitmap(b, b.getWidth() / 8, b.getHeight() / 8, false);
+
+            for (Event event : (ArrayList<Event>) eventArrayList) {
+                mapView.addMarker(new MarkerOptions()
+                        .position(new LatLng(event.location.latitude,
+                                event.location.longitude))
+                        .title(event.name)
+                        .snippet(event.details + DELIMITER + event.startDateString + " " + event.startTimeString)
+                        .icon(BitmapDescriptorFactory.fromBitmap(bhalfsize)));
+            }
+        }
     }
 }

@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
+import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.ui.fragments.FragmentCalendar;
 import com.evento.team2.eventspack.ui.fragments.FragmentMap;
 import com.evento.team2.eventspack.utils.Utils;
@@ -59,6 +60,8 @@ public class ActivityMap extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
         ButterKnife.bind(this);
+
+        EventsDatabase.getInstance().openEventsDatabase(this);
 
         Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
