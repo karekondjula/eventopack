@@ -23,6 +23,7 @@ import android.view.View;
 import com.astuetz.PagerSlidingTabStrip;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.provider.EventsDatabase;
+import com.evento.team2.eventspack.ui.fragments.DialogFragmentAbout;
 import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
 import com.evento.team2.eventspack.ui.fragments.FragmentSavedEvents;
 
@@ -60,32 +61,29 @@ public class ActivityMain extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
 
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
+            drawerLayout.closeDrawers();
 
-                drawerLayout.closeDrawers();
+            switch (menuItem.getItemId()) {
 
-                switch (menuItem.getItemId()) {
-
-                    case R.id.settings:
-                        Intent intentSettings = new Intent(ActivityMain.this, ActivitySettings.class);
-                        startActivity(intentSettings);
-                        break;
+//                    case R.id.settings:
+//                        Intent intentSettings = new Intent(ActivityMain.this, ActivitySettings.class);
+//                        startActivity(intentSettings);
+//                        break;
 //                    case R.id.social:
 //                        Intent intentSocial = new Intent(ActivityMain.this, ActivitySocial.class);
 //                        startActivity(intentSocial);
 //                        break;
-//                    case R.id.about:
-//                        Snackbar.make(getCurrentFocus(), "Here's a Snackbar", Snackbar.LENGTH_LONG).show();
-//                        break;
-                    default:
-                        break;
-                }
-
-                return true;
+                case R.id.about:
+                    DialogFragmentAbout editNameDialog = new DialogFragmentAbout();
+                    editNameDialog.show(getFragmentManager(), "about");
+                    break;
+                default:
+                    break;
             }
+
+            return true;
         });
 
         ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
@@ -164,8 +162,7 @@ public class ActivityMain extends AppCompatActivity {
 
         if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
             drawerLayout.closeDrawers();
-        }
-        else {
+        } else {
             super.onBackPressed();
         }
     }

@@ -1,11 +1,10 @@
 <resources>
-    <string name="app_name">EventO</string>
+    <string name="app_name">EvEnti</string>
 
     <string name="action_search">Search</string>
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 
-    <string name="s">Close</string>
     <string name="event_is_saved">Event \'%s\' is saved</string>
     <string name="event_is_removed">"Event \'%s\' is removed from saved events</string>
     <string name="calendar">Calendar</string>
@@ -19,6 +18,7 @@
     <string name="promo_message">Find you favourite events</string>
     <string name="start">Start:</string>
     <string name="end">End:</string>
+    <string name="about_eventi">About EvEnti</string>
     <!--<string name="event_details_time">Start: %1$s \nEnd: %2$s</string>-->
 
 </resources>
