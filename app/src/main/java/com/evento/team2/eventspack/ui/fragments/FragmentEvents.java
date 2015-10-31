@@ -131,7 +131,7 @@ public class FragmentEvents extends ObserverFragment {
             if (!NetworkUtils.getInstance().isNetworkAvailable(getActivity())) {
                 getActivity().runOnUiThread(() -> {
                     Snackbar.make(eventsRecyclerView,
-                            "No internet connection. Showing cached events...",
+                            R.string.no_internet_connection_cached_events,
                             Snackbar.LENGTH_LONG)
                             .show();
                 });

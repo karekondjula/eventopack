@@ -1,6 +1,5 @@
 package com.evento.team2.eventspack.ui.fragments;
 
-import android.app.FragmentManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -72,6 +70,8 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     private Location myLocation;
     private CaldroidFragment dialogCaldroidFragment;
 
+    private DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+
     @Bind(R.id.map_event_details)
     LinearLayout mapEventDetailsLinearLayout;
 
@@ -96,8 +96,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
             actionBar.setDisplayShowTitleEnabled(false);
         }
 
-        FragmentManager fm = getFragmentManager();
-        MapFragment mapFragment = (MapFragment) fm.findFragmentById(R.id.location_map);
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.location_map);
         if (mapFragment == null) {
             mapFragment = MapFragment.newInstance();
             getFragmentManager().beginTransaction().replace(R.id.location_map, mapFragment).commit();
@@ -122,15 +121,14 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         spinner.setAdapter(adapter);
 
         dialogCaldroidFragment = CaldroidFragment.newInstance("", calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
-        Bundle args = new Bundle();
-        args.putInt(CaldroidFragment.START_DAY_OF_WEEK, CaldroidFragment.MONDAY);
-        dialogCaldroidFragment.setArguments(args);
+        Bundle bundle = new Bundle();
+        bundle.putInt(CaldroidFragment.START_DAY_OF_WEEK, CaldroidFragment.MONDAY);
+        dialogCaldroidFragment.setArguments(bundle);
         dialogCaldroidFragment.setCaldroidListener(new CaldroidListener() {
             @Override
             public void onSelectDate(Date date, View view) {
                 setCalendarDate(date);
 
-                DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
                 new FetchAsyncTask(FragmentMap.this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute(dateFormat.format(date));
 
                 dialogCaldroidFragment.dismiss();
@@ -141,7 +139,6 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     }
 
     private void setCalendarDate(Date date) {
-        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         actionViewCalendar.setText(dateFormat.format(date));
     }
 
@@ -193,7 +190,6 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         mapView.setOnMapClickListener(this);
         mapView.setOnMyLocationChangeListener(this);
 
-        DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
         new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute(dateFormat.format(calendar.getTimeInMillis()));
     }
 
@@ -205,7 +201,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         mapView.setPadding(0, 0, 0, 140); // rise the zoom controls when an event is clicked
 
         final View mapEventItemView = LayoutInflater.from(getActivity()).inflate(R.layout.item_small_events, mapEventDetailsLinearLayout, false);
-        ImageView mapEventImageView = (ImageView) ButterKnife.findById(mapEventItemView, R.id.small_event_picture);
+        ImageView mapEventImageView = ButterKnife.findById(mapEventItemView, R.id.small_event_picture);
         mapEventImageView.setImageResource(R.drawable.party_image);
 //                Glide.with(getActivity()).load(R.drawable.party_image).into(calendarEventImageView);
         ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_title)).setText(marker.getTitle());
@@ -241,7 +237,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
             LatLngBounds radius = new LatLngBounds(new LatLng(location.getLatitude(), location.getLongitude()),
                     new LatLng(location.getLatitude(), location.getLongitude()));
             CameraUpdate center = CameraUpdateFactory.newLatLngZoom(radius.getCenter(), 14);
-            mapView.animateCamera(center, 1500, null);
+            mapView.animateCamera(center, 1000, null);
             myLocation = location;
         }
     }

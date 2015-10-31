@@ -21,6 +21,19 @@
         <item name="android:orientation">vertical</item>
     </style>
 
+    <style name="Widget.CardContent.EventDetails.Title" parent="Widget.CardContent">
+        <item name="android:textSize">18sp</item>
+        <item name="android:paddingLeft">@dimen/item_event_text_padding</item>
+        <item name="android:paddingRight">@dimen/item_event_text_padding</item>
+    </style>
+
+    <style name="Widget.CardContent.EventDetails.Content" parent="Widget.CardContent.EventDetails.Title">
+        <item name="android:textSize">18sp</item>
+        <item name="android:paddingLeft">@dimen/item_event_text_padding</item>
+        <item name="android:paddingRight">@dimen/item_event_text_padding</item>
+        <item name="android:paddingTop">@dimen/item_event_text_padding</item>
+    </style>
+
     <style name="MyMaterialTheme.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>

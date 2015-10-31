@@ -5,11 +5,17 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 
-    <!--<string name="nav_item_home">Home</string>-->
-    <!--<string name="nav_item_friends">Friends</string>-->
-    <!--<string name="nav_item_notifications">Messages</string>-->
+    <string name="s">Close</string>
+    <string name="event_is_saved">Event \'%s\' is saved</string>
+    <string name="event_is_removed">"Event \'%s\' is removed from saved events</string>
+    <string name="calendar">Calendar</string>
+    <string name="events">Events</string>
+    <string name="places">Places</string>
+    <string name="saved">Saved</string>
+    <string name="no_internet_connection_cached_events">No internet connection. Showing cached events …</string>
+    <string name="date">DATE</string>
+    <string name="location">LOCATION</string>
+    <string name="event_details">EVENT DETAILS</string>
+    <string name="event_details_time">Start: %1$s \nEnd: %2$s</string>
 
-    <!--<string name="title_messages">Messages</string>-->
-    <!--<string name="title_friends">Friends</string>-->
-    <!--<string name="title_home">Home</string>-->
 </resources>

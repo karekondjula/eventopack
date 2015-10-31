@@ -67,18 +67,56 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Info"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                        android:text="@string/date"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:theme="@style/Widget.CardContent.EventDetails.Title" />
 
                     <TextView
+                        android:id="@+id/event_date"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Details for the current jsonEvent like description, locations, what tod
-                        and what not to do and everyhing connected with that and hashtags and whatnot" />
+                        android:text="Mon Nov 10.02.2015 - Tue Nov 11.02.2015"
+                        android:theme="@style/Widget.CardContent.EventDetails.Content" />
 
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/card_margin">
+
+                <LinearLayout
+                    style="@style/Widget.CardContent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/location"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:theme="@style/Widget.CardContent.EventDetails.Title" />
+
+                    <TextView
+                        android:id="@+id/event_location"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Infinity, Skopje, Macedonia"
+                        android:theme="@style/Widget.CardContent.EventDetails.Content" />
+
+                    <fragment
+                        android:id="@+id/event_detail_map"
+                        android:name="com.google.android.gms.maps.MapFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:layout_marginTop="@dimen/item_event_text_padding" />
+
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
 
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
@@ -95,46 +133,19 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Attending"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                        android:text="@string/event_details"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:theme="@style/Widget.CardContent.EventDetails.Title" />
 
                     <TextView
+                        android:id="@+id/event_details"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Details for the current jsonEvent lorum ipsos kratos Details for
                         the current jsonEvent lorum ipsos kratos Details for the current jsonEvent lorum
                         ipsos kratos Details for the current jsonEvent lorum ipsos kratos Details for
-                        the current jsonEvent lorum ipsos kratos " />
-
-                </LinearLayout>
-
-            </android.support.v7.widget.CardView>
-
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/card_margin"
-                android:layout_marginLeft="@dimen/card_margin"
-                android:layout_marginRight="@dimen/card_margin">
-
-                <LinearLayout
-                    style="@style/Widget.CardContent"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Related"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Details for the current jsonEvent jsonEvent lorum ipsos kratos Details
-                        the current jsonEvent lorum ipsos kratos Details for the current jsonEvent lorum
-                        ipsos kratos Details for the current jsonEvent lorum ipsos kratos Details for
-                        the current jsonEvent lorum ipsos kratos" />
+                        the current jsonEvent lorum ipsos kratos "
+                        android:theme="@style/Widget.CardContent.EventDetails.Content" />
 
                 </LinearLayout>
 

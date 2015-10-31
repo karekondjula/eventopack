@@ -30,6 +30,9 @@ import butterknife.ButterKnife;
  */
 public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecyclerViewAdapter.ViewHolder> {
 
+    private static final String ICON_TEXT_VIEW_FILLED_HEART = "{ion-android-favorite @color/colorPrimary}";
+    private static final String ICON_TEXT_VIEW_EMPTY_HEART = "{ion-android-favorite-outline @color/colorPrimary}";
+
     private ArrayList<Event> events;
     private Context context;
 //    private final IconDrawable emptyHeart;
@@ -106,9 +109,9 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         }
 
         if (event.isEventSaved) {
-            holder.isEventSaved.setText("{ion-android-favorite @color/colorPrimary}");
+            holder.isEventSaved.setText(ICON_TEXT_VIEW_FILLED_HEART);
         } else {
-            holder.isEventSaved.setText("{ion-android-favorite-outline @color/colorPrimary}");
+            holder.isEventSaved.setText(ICON_TEXT_VIEW_EMPTY_HEART);
         }
 
         holder.isEventSaved.setOnClickListener(v -> {
@@ -116,16 +119,16 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
             event.isEventSaved = !event.isEventSaved;
 
             if (event.isEventSaved) {
-                holder.isEventSaved.setText("{ion-android-favorite-outline @color/colorPrimary}");
+                holder.isEventSaved.setText(ICON_TEXT_VIEW_FILLED_HEART);
             } else {
-                holder.isEventSaved.setText("{ion-android-favorite @color/colorPrimary}");
+                holder.isEventSaved.setText(ICON_TEXT_VIEW_EMPTY_HEART);
             }
             EventsDatabase.getInstance().changeSaveEvent(event);
 
             Snackbar.make(v,
                     event.isEventSaved ?
-                            "JsonEvent is saved" :
-                            "JsonEvent is removed from saved events",
+                            String.format(context.getResources().getString(R.string.event_is_saved, event.name)) :
+                            String.format(context.getResources().getString(R.string.event_is_removed, event.name)),
                     Snackbar.LENGTH_LONG)
                     .show();
 

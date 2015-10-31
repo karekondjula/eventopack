@@ -8,8 +8,7 @@
         android:id="@+id/location_map"
         android:name="com.google.android.gms.maps.MapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/appbar" />
+        android:layout_height="match_parent" />
 
     <LinearLayout
         android:id="@+id/map_event_details"

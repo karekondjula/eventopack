@@ -186,11 +186,11 @@ public class ServiceEvento {
 //                        Log.i(TAG, "METHOD_GET_USER " + responseMap.get(RESPONSE_KEY));
                 } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_EVENTS)) {
 //                    ArrayList<JsonEvent> jsonEventArrayList = new ArrayList<JsonEvent>(LoganSquare.parseList((String) responseMap.get(RESPONSE_KEY), JsonEvent.class));
-                    ArrayList<JsonEvent> jsonEventArrayList = new ArrayList<JsonEvent>(LoganSquare.parseList((String) Utils.Helpers.getEventsJson(), JsonEvent.class));
+//                    ArrayList<JsonEvent> jsonEventArrayList = new ArrayList<JsonEvent>(LoganSquare.parseList((String) Utils.Helpers.getEventsJson(), JsonEvent.class));
 
-                    ArrayList<Event> eventArrayList = ConversionUtils.convertJsonEventsArrayListToEventArrayList(jsonEventArrayList);
+//                    ArrayList<Event> eventArrayList = ConversionUtils.convertJsonEventsArrayListToEventArrayList(jsonEventArrayList);
 
-                    EventsDatabase.getInstance().persistEvents(eventArrayList);
+                    EventsDatabase.getInstance().persistEvents(Utils.Helpers.createEvents());
 
                     // TODO RxAndroid for announcing the result back
 

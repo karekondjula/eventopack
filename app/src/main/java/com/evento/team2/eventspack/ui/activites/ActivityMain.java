@@ -43,8 +43,6 @@ public class ActivityMain extends AppCompatActivity {
     NavigationView navigationView;
     @Bind(R.id.drawer)
     DrawerLayout drawerLayout;
-//    @Bind(R.id.fab)
-//    FloatingActionButton fab;
 
     private FragmentEvents fragmentEvents = FragmentEvents.newInstance();
 
@@ -177,9 +175,9 @@ public class ActivityMain extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getFragmentManager());
-        adapter.addFragment(fragmentEvents, "Events");
-        adapter.addFragment(new Fragment(), "Places");
-        adapter.addFragment(FragmentSavedEvents.newInstance(), "Saved");
+        adapter.addFragment(fragmentEvents, getString(R.string.events));
+        adapter.addFragment(new Fragment(), getString(R.string.places));
+        adapter.addFragment(FragmentSavedEvents.newInstance(), getString(R.string.saved));
         viewPager.setAdapter(adapter);
     }
 
