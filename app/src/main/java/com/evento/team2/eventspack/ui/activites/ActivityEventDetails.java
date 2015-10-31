@@ -25,6 +25,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
@@ -123,6 +124,7 @@ public class ActivityEventDetails extends AppCompatActivity {
         textViewEventLocation.setText(event.locationString);
 
         textViewEventDetails.setText(event.details);
+        textViewEventDetails.setMovementMethod(LinkMovementMethod.getInstance());
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.event_detail_map);
         mapFragment.getMapAsync(googleMap -> {

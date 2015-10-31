@@ -17,24 +17,24 @@ import java.util.HashMap;
  */
 public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
 
-    @IntDef({EVENTS, PLACES, SAVED})
+    @IntDef({EVENTS, PLACES, SAVED_EVENTS})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface Update {}
+    public @interface Category {}
 
     public static final int EVENTS = 0;
     public static final int PLACES = 1;
-    public static final int SAVED = 2;
+    public static final int SAVED_EVENTS = 2;
 
     public static final int FETCH_FROM_SERVER = 3;
     public static final int DO_NOT_FETCH_FROM_SERVER = 4;
 
     private ObserverFragment observerFragment;
 
-    @Update
+    @Category
     private int what;
     private int fetchFromServer;
 
-    public FetchAsyncTask(ObserverFragment observerFragment, @Update int what, int fetchFromServer) {
+    public FetchAsyncTask(ObserverFragment observerFragment, @Category int what, int fetchFromServer) {
         this.observerFragment = observerFragment;
         this.what = what;
         this.fetchFromServer = fetchFromServer;
@@ -55,8 +55,12 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
             }
         } else if (what == PLACES) {
 
-        } else if (what == SAVED) {
-
+        } else if (what == SAVED_EVENTS) {
+            if ((filter != null && filter.length == 1)) {
+                return EventsDatabase.getInstance().getSavedEvents(filter[0]);
+            } else {
+                return EventsDatabase.getInstance().getSavedEvents(null);
+            }
         }
 
         return null;
@@ -70,5 +74,9 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
         HashMap<String, Object> params = new HashMap();
         params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
         ServiceEvento.getInstance().callServiceMethod(params);
+    }
+
+    private void fetchPlacesFromServer() {
+        // TODO exactly!
     }
 }

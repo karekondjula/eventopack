@@ -7,8 +7,8 @@ import com.google.android.gms.maps.model.LatLng;
  */
 public class Place {
 
-    public static final int NOT_SAVED = 0;
-    public static final int SAVED = 1;
+//    public static final int NOT_SAVED = 0;
+//    public static final int SAVED = 1;
 
     public long id;
     public String name;
@@ -20,7 +20,7 @@ public class Place {
     public String workDays;
 
     public final static class Table {
-        public static final String TABLE_EVENTS = "Events";
+        public static final String TABLE_PLACES = "Events";
 
         public static final String COLUMN_ID = "id";
         public static final String COLUMN_NAME = "name";
@@ -33,7 +33,7 @@ public class Place {
         public static final String COLUMN_WORK_DAYS = "workDays";
 
         // Database creation sql statement
-        public static final String DATABASE_CREATE = "create table " + TABLE_EVENTS + "("
+        public static final String TABLE_PLACES_CREATE = "create table " + TABLE_PLACES + "("
                 + COLUMN_ID + " integer primary key, "
                 + COLUMN_NAME + " text not null, "
                 + COLUMN_DETAILS + " text, "

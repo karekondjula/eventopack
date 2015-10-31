@@ -1,12 +1,9 @@
 package com.evento.team2.eventspack.ui.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +11,7 @@ import android.view.ViewGroup;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapter.EventsRecyclerViewAdapter;
 import com.evento.team2.eventspack.model.Event;
-import com.evento.team2.eventspack.provider.EventsDatabase;
+import com.evento.team2.eventspack.provider.FetchAsyncTask;
 import com.evento.team2.eventspack.ui.interfaces.ObserverFragment;
 
 import java.util.ArrayList;
@@ -34,8 +31,7 @@ public class FragmentSavedEvents extends ObserverFragment {
     private EventsRecyclerViewAdapter savedEventsAdapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_saved_events, container, false);
         ButterKnife.bind(this, view);
 
@@ -51,26 +47,16 @@ public class FragmentSavedEvents extends ObserverFragment {
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onResume() {
+        super.onResume();
+        new FetchAsyncTask(this, FetchAsyncTask.SAVED_EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute();
     }
 
-//    public void onEvent(EventsController.UpdateSavedEvents updateEvents) {
-//
-//        Log.i(">>", "UpdateSavedEvents");
-//
-//        getActivity().runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-//                ArrayList<JsonEvent> savedEvents = EventsDatabase.getInstance().getEvents();
-//                savedEventsAdapter.refreshEvents(savedEvents);
-////                savedEventsAdapter.notifyItemRangeChanged(0, savedEvents.size());
-//                savedEventsAdapter.notifyDataSetChanged();
-////        savedEventsAdapter.notifyItemInserted(0);
-////                savedEventsRecyclerView.setAdapter(savedEventsAdapter);
-//            }
-//        });
-//    };
+    @Override
+    public void onDetach() {
+        ButterKnife.unbind(this);
+        super.onDetach();
+    }
 
     public static FragmentSavedEvents newInstance() {
         FragmentSavedEvents f = new FragmentSavedEvents();
@@ -78,7 +64,14 @@ public class FragmentSavedEvents extends ObserverFragment {
     }
 
     @Override
-    public void update(Observable observable, Object o) {
+    public void update(Observable observable, Object eventsArrayList) {
+        if (eventsArrayList instanceof ArrayList) {
+            savedEventsAdapter.addEvents((ArrayList<Event>) eventsArrayList);
+            savedEventsAdapter.notifyDataSetChanged();
+        }
+    }
 
+    public void filterEvents(String filter) {
+        new FetchAsyncTask(this, FetchAsyncTask.SAVED_EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute(filter);
     }
 }

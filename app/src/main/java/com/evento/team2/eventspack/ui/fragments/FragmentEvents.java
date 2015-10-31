@@ -60,6 +60,7 @@ public class FragmentEvents extends ObserverFragment {
             new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.FETCH_FROM_SERVER).execute();
         });
 
+        eventsRecyclerView.setHasFixedSize(true);
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         eventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
         eventsAdapter = new EventsRecyclerViewAdapter(getActivity());
@@ -76,44 +77,10 @@ public class FragmentEvents extends ObserverFragment {
         new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute();
     }
 
-    SearchView searchView = null;
-
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
-        MenuItem searchItem = menu.findItem(R.id.action_search);
-
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
-
-        if (searchItem != null) {
-            searchView = (SearchView) searchItem.getActionView();
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    filterEvents(query);
-                    return true;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    filterEvents(newText);
-                    return true;
-                }
-            });
-            // TODO daniel how to collapse the fucking search fucking bar!!!!!!!!!
-            searchView.setOnQueryTextFocusChangeListener((view, queryTextFocused) -> {
-                if (!queryTextFocused) {
-//                    searchItem.collapseActionView();
-//                    MenuItemCompat.collapseActionView(searchItem);
-                }
-            });
-        }
-        if (searchView != null) {
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-            searchView.setQueryRefinementEnabled(true);
-            searchView.setSubmitButtonEnabled(false);
-        }
-
-        super.onCreateOptionsMenu(menu, menuInflater);
+    public void onDetach() {
+        ButterKnife.unbind(this);
+        super.onDetach();
     }
 
     public static FragmentEvents newInstance() {

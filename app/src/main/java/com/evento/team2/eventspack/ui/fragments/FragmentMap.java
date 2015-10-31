@@ -161,6 +161,11 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     }
 
     @Override
+    public void filterEvents(String query) {
+        // NO op
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
@@ -257,24 +262,26 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     @Override
     public void update(Observable observable, Object eventArrayList) {
 
-        mapView.clear();
+        if (mapView != null) {
+            mapView.clear();
 
-        if (eventArrayList instanceof ArrayList) {
+            if (eventArrayList instanceof ArrayList) {
 
-            Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.party_image);
-            Bitmap bhalfsize = Bitmap.createScaledBitmap(b, b.getWidth() / 8, b.getHeight() / 8, false);
+                Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.party_image);
+                Bitmap bhalfsize = Bitmap.createScaledBitmap(b, b.getWidth() / 8, b.getHeight() / 8, false);
 
-            MarkerOptions markerOptions;
-            hashMapLatLngEventId = new HashMap<>();
-            for (Event event : (ArrayList<Event>) eventArrayList) {
-                markerOptions = new MarkerOptions()
-                        .position(new LatLng(event.location.latitude,
-                                event.location.longitude))
-                        .title(event.name)
-                        .snippet(event.details + DELIMITER + event.startDateString + " " + event.startTimeString)
-                        .icon(BitmapDescriptorFactory.fromBitmap(bhalfsize));
-                hashMapLatLngEventId.put(markerOptions.getPosition(), event.id);
-                mapView.addMarker(markerOptions);
+                MarkerOptions markerOptions;
+                hashMapLatLngEventId = new HashMap<>();
+                for (Event event : (ArrayList<Event>) eventArrayList) {
+                    markerOptions = new MarkerOptions()
+                            .position(new LatLng(event.location.latitude,
+                                    event.location.longitude))
+                            .title(event.name)
+                            .snippet(event.details + DELIMITER + event.startDateString + " " + event.startTimeString)
+                            .icon(BitmapDescriptorFactory.fromBitmap(bhalfsize));
+                    hashMapLatLngEventId.put(markerOptions.getPosition(), event.id);
+                    mapView.addMarker(markerOptions);
+                }
             }
         }
     }

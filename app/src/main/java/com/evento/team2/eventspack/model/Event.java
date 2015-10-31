@@ -1,13 +1,26 @@
 package com.evento.team2.eventspack.model;
 
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * Created by Daniel on 04-Aug-15.
  */
 public class Event implements Comparable<Event> {
+
+    @IntDef({FUN, CULTURE, SPORT, OTHER})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Category {}
+
+    public static final int FUN = 0;
+    public static final int CULTURE = 1;
+    public static final int SPORT = 2;
+    public static final int OTHER = 3;
 
     public static final int NOT_SAVED = 0;
     public static final int SAVED = 1;
@@ -28,6 +41,9 @@ public class Event implements Comparable<Event> {
     public String startTimeString;
     public String endDateString;
     public boolean isEventSaved = false;
+
+    @Category
+    public int category;
 
     public Event() {
     }
@@ -104,7 +120,7 @@ public class Event implements Comparable<Event> {
         public static final String COLUMN_IS_EVENT_SAVED = "isEventSaved";
 
         // Database creation sql statement
-        public static final String DATABASE_CREATE = "create table " + TABLE_EVENTS + "("
+        public static final String TABLE_EVENTS_CREATE = "create table " + TABLE_EVENTS + "("
                 + COLUMN_ID + " integer primary key, "
                 + COLUMN_NAME + " text not null, "
                 + COLUMN_DETAILS + " text, "

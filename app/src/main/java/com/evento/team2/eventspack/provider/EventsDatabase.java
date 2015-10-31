@@ -182,6 +182,40 @@ public class EventsDatabase {
         return events;
     }
 
+    // TODO refactor it in better times (no need for two differet get<>Events methods!!!
+    public ArrayList<Event> getSavedEvents(String filter) {
+        ArrayList<Event> events = new ArrayList<Event>();
+
+        Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
+                allColumns,
+                Event.Table.COLUMN_IS_EVENT_SAVED + " = ? " +
+                (filter != null ? " AND (" +
+                        Event.Table.COLUMN_NAME + " LIKE ? OR " +
+                        Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
+                        Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
+                        Event.Table.COLUMN_START_TIME_STAMP + " LIKE ? OR " +
+                        Event.Table.COLUMN_START_DATE_STRING + " LIKE ? )"
+                        : ""),
+                (filter != null ? new String[]{String.valueOf(Event.SAVED),
+                        "%" + filter + "%",
+                        "%" + filter + "%",
+                        "%" + filter + "%",
+                        "%" + filter + "%",
+                        "%" + filter + "%",}
+                        : new String[]{String.valueOf(Event.SAVED)}),
+                null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Event event = cursorToEvent(cursor);
+            events.add(event);
+            cursor.moveToNext();
+        }
+        // make sure to close the cursor
+        cursor.close();
+        return events;
+    }
+
     public Event getEventById(long id) {
         Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
                 allColumns, Event.Table.COLUMN_ID + " = ? ", new String[]{String.valueOf(id)},
