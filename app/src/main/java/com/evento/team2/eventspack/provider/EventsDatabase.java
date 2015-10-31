@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Geocoder;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.evento.team2.eventspack.model.Event;
 import com.google.android.gms.maps.model.LatLng;
@@ -16,9 +15,9 @@ import com.google.android.gms.maps.model.LatLng;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * Created by Daniel on 15-Aug-15.
@@ -54,6 +53,15 @@ public class EventsDatabase {
         event.location = new LatLng(cursor.getDouble(5), cursor.getDouble(6));
         event.startTimeStamp = cursor.getLong(7);
         event.startTimeString = new SimpleDateFormat("HH:mm").format(new Date(event.startTimeStamp));
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(event.startTimeStamp);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        event.startDate = cal.getTimeInMillis();
+
         event.startDateString = cursor.getString(8);
         event.endTimeStamp = cursor.getLong(9);
         event.endDateString = new SimpleDateFormat("HH:mm dd.MM.yyyy").format(new Date(event.endTimeStamp));

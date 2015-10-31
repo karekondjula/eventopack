@@ -15,7 +15,8 @@ public class Event implements Comparable<Event> {
 
     @IntDef({FUN, CULTURE, SPORT, OTHER})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface Category {}
+    public @interface Category {
+    }
 
     public static final int FUN = 0;
     public static final int CULTURE = 1;
@@ -64,7 +65,15 @@ public class Event implements Comparable<Event> {
         if (id == event.id) {
             return 0;
         } else if (id > event.id) {
-            return 1;
+
+            if (startTimeStamp > event.startTimeStamp) {
+                return 1;
+            }
+            if (startTimeStamp == event.startTimeStamp) {
+                return 0;
+            } else {
+                return -1;
+            }
         } else {
             return -1;
         }
@@ -93,10 +102,10 @@ public class Event implements Comparable<Event> {
                 "details:" + details + "\n " +
 //                "pictureUri: " + pictureUri + "\n " +
                 "location: " + location + "\n " +
-//                "locationString " + locationString + "\n " +
+                "locationString " + locationString + "\n " +
                 "startTimeStamp " + startTimeStamp + "\n " +
                 "startDate " + startDate + "\n " +
-//                "endTimeStamp " + endTimeStamp + "\n " +
+                "endTimeStamp " + endTimeStamp + "\n " +
                 "startDateString " + startDateString + "\n " +
 //                "startTimeString " + startTimeString + "\n " +
 //                "endDateString " + endDateString + "\n " +

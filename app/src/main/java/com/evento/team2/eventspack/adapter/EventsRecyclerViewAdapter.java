@@ -107,8 +107,8 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         holder.mEventDetails.setText(event.details);
 
         DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm");
-        holder.mEventStartTime.setText(dateFormat.format(event.startTimeStamp));
-        holder.mEventEndTime.setText(dateFormat.format(event.endTimeStamp));
+        holder.mEventStartTime.setText(event.startTimeStamp != 0 ? dateFormat.format(event.startTimeStamp) : "");
+        holder.mEventEndTime.setText(event.endTimeStamp != 0 ? dateFormat.format(event.endTimeStamp) : "");
 
         if (TextUtils.isEmpty(event.pictureUri)) {
             Glide.with(holder.mEventImage.getContext()).load(R.drawable.party_image).into(holder.mEventImage);

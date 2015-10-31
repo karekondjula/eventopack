@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,22 +78,32 @@ public class FragmentCalendar extends Fragment {
         t.replace(R.id.caldroidCalendar, caldroidFragment);
         t.commit();
 
-//        eventsList = EventsDatabase.getInstance().getEvents(null);
-        eventsList = Utils.Helpers.createEvents();
-//        Collections.sort(eventsList); // TODO events list must be sorted by date
+        //  TODO this is the agliest approach for back threading EVER!
+        new Thread() {
+            @Override
+            public void run() {
+                eventsList = EventsDatabase.getInstance().getEvents(null);
+                Collections.sort(eventsList);
 
-        // TODO daniel take this of main thread
-        Date eventDate;
-        for (Event event : eventsList) {
-            eventDate = new Date(event.startDate);
-            caldroidFragment.setBackgroundResourceForDate(R.color.colorPrimaryDark, eventDate);
-            cal.setTimeInMillis(eventDate.getTime());
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.MILLISECOND, 0);
-            eventDates.add(cal.getTime().getTime());
-        }
+                Date eventDate;
+                for (Event event : eventsList) {
+                    eventDate = new Date(event.startDate);
+                    final Date date = eventDate;
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            caldroidFragment.setBackgroundResourceForDate(R.color.colorPrimaryDark, date);
+                        }
+                    });
+                    cal.setTimeInMillis(eventDate.getTime());
+                    cal.set(Calendar.HOUR_OF_DAY, 0);
+                    cal.set(Calendar.MINUTE, 0);
+                    cal.set(Calendar.SECOND, 0);
+                    cal.set(Calendar.MILLISECOND, 0);
+                    eventDates.add(cal.getTime().getTime());
+                }
+            }
+        }.start();
 
         return view;
     }

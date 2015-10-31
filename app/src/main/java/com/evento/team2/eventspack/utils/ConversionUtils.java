@@ -15,8 +15,8 @@ public class ConversionUtils {
         Event event = new Event(jsonEvent.title, jsonEvent.teaser);
 
         event.id = jsonEvent.id;
-        event.startTimeStamp = jsonEvent.startTime;
-        event.endTimeStamp = jsonEvent.endTime;
+        event.startTimeStamp = jsonEvent.startTime * 1000; // in ms
+        event.endTimeStamp = jsonEvent.endTime * 1000; // in ms
 //        event.pictureUri = jsonEvent.imageUrl;
         event.locationString = jsonEvent.location.concat(", " + jsonEvent.city);
         event.location = new LatLng(jsonEvent.lat, jsonEvent.lng);

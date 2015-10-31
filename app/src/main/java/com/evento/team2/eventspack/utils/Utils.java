@@ -1,5 +1,7 @@
 package com.evento.team2.eventspack.utils;
 
+import android.util.Log;
+
 import com.evento.team2.eventspack.model.Event;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -53,6 +55,7 @@ public class Utils {
 
                     dummyEvent.startTimeString = dateTime.split(" ")[0];
                     dummyEvent.startDateString = dateTime.split(" ")[1];
+                    Log.i(">>", dummyEvent.toString());
                     events.add(dummyEvent);
                 }
             }

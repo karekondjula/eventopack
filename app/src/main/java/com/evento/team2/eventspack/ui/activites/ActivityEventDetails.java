@@ -120,8 +120,8 @@ public class ActivityEventDetails extends AppCompatActivity {
         }
 
         DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm");
-        textViewEventStartDate.setText(dateFormat.format(event.startTimeStamp));
-        textViewEventEndDate.setText(dateFormat.format(event.endTimeStamp));
+        textViewEventStartDate.setText(event.startTimeStamp != 0 ? dateFormat.format(event.startTimeStamp) : "");
+        textViewEventEndDate.setText(event.endTimeStamp != 0 ? dateFormat.format(event.endTimeStamp) : "");
 
         textViewEventLocation.setText(event.locationString);
 
@@ -134,13 +134,14 @@ public class ActivityEventDetails extends AppCompatActivity {
             mapView.setMyLocationEnabled(true);
             mapView.getUiSettings().setAllGesturesEnabled(false);
             mapView.getUiSettings().setMyLocationButtonEnabled(false);
-            mapView.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(event.location.latitude, event.location.longitude), 15));
+            if (event.location.latitude != 0 && event.location.longitude != 0) {
+                mapView.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(event.location.latitude, event.location.longitude), 15));
+            }
             mapView.setOnMapClickListener(latLng -> {
                 // TODO daniel open ActivityMap with my location, events location, and a path connecting
             });
             mapView.addMarker(new MarkerOptions().position(new LatLng(event.location.latitude, event.location.longitude)));
         });
-
     }
 
     @Override
