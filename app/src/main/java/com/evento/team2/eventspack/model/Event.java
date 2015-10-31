@@ -57,7 +57,12 @@ public class Event implements Comparable<Event> {
     @Override
     public boolean equals(Object o) {
         if (o instanceof Event) {
-            if (id == ((Event) o).id) {
+            Event otherEvent = (Event) o;
+            if (id == otherEvent.id
+                    && name.equals(otherEvent.name)
+                    && details.equals(otherEvent.details)
+                    && location.equals(otherEvent.location)
+                    && startTimeStamp == otherEvent.startTimeStamp) {
                 return true;
             }
             return false;

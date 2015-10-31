@@ -51,6 +51,7 @@ public class ServiceEvento {
     public static final String METHOD_SEARCH_EVENTS = "search_events";
     public static final String METHOD_DELETE_EVENTS = "delete_event";
     public static final String METHOD_GET_ALL_EVENTS = "get_all_events";
+    public static final String METHOD_GET_ALL_PLACES = "get_all_places";
     // end methods
 
     private static ServiceEvento instance;
@@ -185,18 +186,20 @@ public class ServiceEvento {
 //                        Boolean result = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), Boolean.class);
 //                        Log.i(TAG, "METHOD_GET_USER " + responseMap.get(RESPONSE_KEY));
                 } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_EVENTS)) {
-//                    ArrayList<JsonEvent> jsonEventArrayList = new ArrayList<JsonEvent>(LoganSquare.parseList((String) responseMap.get(RESPONSE_KEY), JsonEvent.class));
+                    ArrayList<JsonEvent> jsonEventArrayList = new ArrayList<JsonEvent>(LoganSquare.parseList((String) responseMap.get(RESPONSE_KEY), JsonEvent.class));
 //                    ArrayList<JsonEvent> jsonEventArrayList = new ArrayList<JsonEvent>(LoganSquare.parseList((String) Utils.Helpers.getEventsJson(), JsonEvent.class));
 
-//                    ArrayList<Event> eventArrayList = ConversionUtils.convertJsonEventsArrayListToEventArrayList(jsonEventArrayList);
+                    ArrayList<Event> eventArrayList = ConversionUtils.convertJsonEventsArrayListToEventArrayList(jsonEventArrayList);
 
-                    EventsDatabase.getInstance().persistEvents(Utils.Helpers.createEvents());
+//                    EventsDatabase.getInstance().persistEvents(Utils.Helpers.createEvents());
+                    EventsDatabase.getInstance().persistEvents(eventArrayList);
 
                     // TODO RxAndroid for announcing the result back
-
 //                        for (Event event : eventArrayList) {
 //                            Log.i(TAG, METHOD_GET_ALL_EVENTS + " " + event.toString());
 //                        }
+                } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_PLACES)) {
+
                 }
             } else {
 //                EventsDatabase.getInstance().persistEvents(Utils.Helpers.createEvents());

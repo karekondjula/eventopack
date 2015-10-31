@@ -43,8 +43,6 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
 
     private ArrayList<Event> events;
     private Context context;
-//    private final IconDrawable emptyHeart;
-//    private final IconDrawable filledHeart;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -78,9 +76,6 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
     public EventsRecyclerViewAdapter(Context context) {
         this.context = context;
         events = new ArrayList<>();
-
-//        emptyHeart = new IconDrawable(context, IoniconsIcons.ion_android_favorite_outline).colorRes(android.R.color.white).actionBarSize();
-//        filledHeart = new IconDrawable(context, IoniconsIcons.ion_android_favorite).colorRes(R.color.colorPrimary).actionBarSize();
     }
 
     public void addEvent(Event event) {
@@ -95,10 +90,6 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         } else {
 //            Log.i(">>", "same ol' events!!!");
         }
-    }
-
-    public ArrayList<Event> getEventsList() {
-        return events;
     }
 
     @Override
@@ -129,19 +120,7 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
             Glide.with(context).load(new File(event.pictureUri)).into(holder.mEventImage);
         }
 
-        // TODO daniel, fetch the location address from start in provider
-        try {
-            Geocoder gc = new Geocoder(context, Locale.getDefault());
-            List<Address> addresses = gc.getFromLocation(event.location.latitude, event.location.longitude, 1);
-            Address address = addresses.get(addresses.size() - 1);
-            StringBuilder stringBuilder = new StringBuilder();
-            for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-                stringBuilder.append(addresses.get(0).getAddressLine(i) + ", ");
-            }
-            holder.mEventLocation.setText(stringBuilder.toString().trim().substring(0, stringBuilder.length() - 2).replace("(FYROM)", ""));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        holder.mEventLocation.setText(event.locationString);
 
         if (event.isEventSaved) {
             holder.isEventSaved.setText(ICON_TEXT_VIEW_FILLED_HEART);

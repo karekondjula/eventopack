@@ -2,6 +2,7 @@ package com.evento.team2.eventspack.utils;
 
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.soapservice.model.JsonEvent;
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.ArrayList;
 
@@ -11,13 +12,14 @@ import java.util.ArrayList;
 public class ConversionUtils {
 
     public static Event convertJsonEventToEvent(JsonEvent jsonEvent) {
-        Event event = new Event(jsonEvent.title, jsonEvent.caption);
+        Event event = new Event(jsonEvent.title, jsonEvent.teaser);
 
         event.id = jsonEvent.id;
-        event.startDate = jsonEvent.startDate;
-        event.pictureUri = jsonEvent.imageUrl;
-        event.locationString = jsonEvent.location;
-
+        event.startTimeStamp = jsonEvent.startTime;
+        event.endTimeStamp = jsonEvent.endTime;
+//        event.pictureUri = jsonEvent.imageUrl;
+        event.locationString = jsonEvent.location.concat(", " + jsonEvent.city);
+        event.location = new LatLng(jsonEvent.lat, jsonEvent.lng);
         return event;
     }
 

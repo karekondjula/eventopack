@@ -3,20 +3,17 @@ package com.evento.team2.eventspack.ui.activites;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,13 +23,12 @@ import android.view.View;
 import com.astuetz.PagerSlidingTabStrip;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.provider.EventsDatabase;
-import com.evento.team2.eventspack.soapservice.ServiceEvento;
 import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
 import com.evento.team2.eventspack.ui.fragments.FragmentSavedEvents;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -53,6 +49,7 @@ public class ActivityMain extends AppCompatActivity {
         ButterKnife.bind(this);
 
         EventsDatabase.getInstance().openEventsDatabase(this);
+        EventsDatabase.getInstance().setGeocoder(new Geocoder(this, Locale.getDefault()));
 
         Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);

@@ -9,36 +9,38 @@ import com.bluelinelabs.logansquare.annotation.JsonObject;
 @JsonObject
 public class JsonEvent {
 
-    @JsonField
-    public String calendar;
+//    @JsonField
+//    public String calendar;
     @JsonField
     public long id;
     @JsonField
-    public long pid;
-    @JsonField
-    public long tstamp;
+    public long fb_id;
+//    @JsonField
+//    public long pid;
+//    @JsonField
+//    public long tstamp;
     @JsonField
     public String title;
-    @JsonField
-    public String alias;
-    @JsonField
-    public String author;
-    @JsonField
-    public long addTime;
+//    @JsonField
+//    public String alias;
+//    @JsonField
+//    public String author;
+//    @JsonField
+//    public long addTime;
     @JsonField
     public long startTime;
     @JsonField
     public long endTime;
-    @JsonField
-    public long startDate;
-    @JsonField
-    public long endDate;
+//    @JsonField
+//    public long startDate;
+//    @JsonField
+//    public long endDate;
     @JsonField
     public String location;
     @JsonField
     public String teaser;
-    @JsonField
-    public String addImage;
+//    @JsonField
+//    public String addImage;
 //    @JsonField
 //    public String singleSRC;
     @JsonField
@@ -47,22 +49,30 @@ public class JsonEvent {
     public String size;
 //    @JsonField
 //    public String imageMargin;
-    @JsonField
-    public String imageUrl;
-    @JsonField
-    public String fullsize;
+//    @JsonField
+//    public String imageUrl;
+//    @JsonField
+//    public String fullsize;
     @JsonField
     public String caption;
+    @JsonField
+    public Double lat;
+    @JsonField
+    public Double lng;
+    @JsonField
+    public String city;
+    @JsonField
+    public String fb_location_id;
 //    @JsonField
 //    public String floating;
-    @JsonField
-    public String recurring;
-    @JsonField
-    public int repeatEach;
-    @JsonField
-    public int repeatEnd;
-    @JsonField
-    public int recurrences;
+//    @JsonField
+//    public String recurring;
+//    @JsonField
+//    public int repeatEach;
+//    @JsonField
+//    public int repeatEnd;
+//    @JsonField
+//    public int recurrences;
 //    @JsonField
 //    public String addEnclosure;
 //    @JsonField
@@ -79,14 +89,14 @@ public class JsonEvent {
 //    public String target;
 //    @JsonField
 //    public String cssClass;
-    @JsonField
-    public String noComments;
-    @JsonField
-    public int published;
-    @JsonField
-    public String start;
-    @JsonField
-    public String stop;
+//    @JsonField
+//    public String noComments;
+//    @JsonField
+//    public int published;
+//    @JsonField
+//    public String start;
+//    @JsonField
+//    public String stop;
 
 //    @JsonField
 //    double lat;

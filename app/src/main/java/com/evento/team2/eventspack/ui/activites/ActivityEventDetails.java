@@ -18,8 +18,6 @@ package com.evento.team2.eventspack.ui.activites;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
-import android.location.Address;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -27,7 +25,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
@@ -40,20 +37,15 @@ import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.joanzapata.iconify.fonts.IoniconsModule;
 
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -62,8 +54,6 @@ import butterknife.OnClick;
 public class ActivityEventDetails extends AppCompatActivity {
 
     public static final String EXTRA_ID = "event_id";
-//    public static final String EXTRA_NAME = "event_name";
-//    public static final String EXTRA_PICTURE_URI = "picture_uri";
 
     @Bind(R.id.backdrop)
     ImageView backdropImage;
@@ -130,19 +120,7 @@ public class ActivityEventDetails extends AppCompatActivity {
                 dateFormat.format(event.startTimeStamp),
                 dateFormat.format(event.endTimeStamp)));
 
-        // TODO daniel, fetch the location address from start in provider (multiple files)
-        try {
-            Geocoder gc = new Geocoder(this, Locale.getDefault());
-            List<Address> addresses = gc.getFromLocation(event.location.latitude, event.location.longitude, 1);
-            Address address = addresses.get(addresses.size() - 1);
-            StringBuilder stringBuilder = new StringBuilder();
-            for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-                stringBuilder.append(addresses.get(0).getAddressLine(i) + ", ");
-            }
-            textViewEventLocation.setText(stringBuilder.toString().trim().substring(0, stringBuilder.length() - 2).replace("(FYROM)", ""));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        textViewEventLocation.setText(event.locationString);
 
         textViewEventDetails.setText(event.details);
 

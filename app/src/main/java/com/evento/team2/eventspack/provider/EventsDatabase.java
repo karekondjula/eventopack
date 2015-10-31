@@ -7,6 +7,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Geocoder;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.evento.team2.eventspack.model.Event;
@@ -29,6 +30,8 @@ public class EventsDatabase {
     private SQLiteDatabase database;
     private EventsSqliteHelper dbHelper;
 
+    private Geocoder geocoder;
+
     private String[] allColumns = {Event.Table.COLUMN_ID,
             Event.Table.COLUMN_NAME,
             Event.Table.COLUMN_DETAILS,
@@ -47,9 +50,7 @@ public class EventsDatabase {
         Event event = new Event(cursor.getString(1), cursor.getString(2));
         event.id = cursor.getLong(0);
         event.pictureUri = cursor.getString(3);
-
-//        event.locationString = cursor.getString(4);
-
+        event.locationString = cursor.getString(4);
         event.location = new LatLng(cursor.getDouble(5), cursor.getDouble(6));
         event.startTimeStamp = cursor.getLong(7);
         event.startTimeString = new SimpleDateFormat("HH:mm").format(new Date(event.startTimeStamp));
@@ -69,6 +70,10 @@ public class EventsDatabase {
         }
 
         return instance;
+    }
+
+    public void setGeocoder(Geocoder geocoder) {
+        this.geocoder = geocoder;
     }
 
     public void openEventsDatabase(Context context) throws SQLException {
@@ -109,6 +114,22 @@ public class EventsDatabase {
         if (event.location != null) {
             values.put(Event.Table.COLUMN_LATITUDE, event.location.latitude);
             values.put(Event.Table.COLUMN_LONGITUDE, event.location.longitude);
+
+            if (TextUtils.isEmpty(event.locationString)) {
+                List<Address> addresses = null;
+                try {
+                    addresses = geocoder.getFromLocation(event.location.latitude, event.location.longitude, 1);
+                    Address address = addresses.get(addresses.size() - 1);
+                    StringBuilder stringBuilder = new StringBuilder();
+                    for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
+                        stringBuilder.append(addresses.get(0).getAddressLine(i) + ", ");
+                    }
+                    event.locationString = stringBuilder.toString().trim().substring(0, stringBuilder.length() - 2).replace("(FYROM)", "");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            values.put(Event.Table.COLUMN_LOCATION_STRING, event.locationString);
         }
         values.put(Event.Table.COLUMN_START_TIME_STAMP, event.startTimeStamp);
         values.put(Event.Table.COLUMN_START_DATE_STRING, event.startDateString);
