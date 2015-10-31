@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">EventO</string>
+
+    <string name="action_search">Барај</string>
+    <string name="drawer_open">Отвори</string>
+    <string name="drawer_close">Исклучи</string>
+
+    <string name="s">Close</string>
+    <string name="event_is_saved">Настанот \'%s\' е зачуван</string>
+    <string name="event_is_removed">Настанот \'%s\' отсранет од зачувани настани</string>
+    <string name="calendar">Календар</string>
+    <string name="events">Настани</string>
+    <string name="places">Места</string>
+    <string name="saved">Зачувани</string>
+    <string name="no_internet_connection_cached_events">Нема интернет конекција. Прикажувам зачувани настани …</string>
+
+</resources>

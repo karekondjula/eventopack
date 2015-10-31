@@ -48,13 +48,14 @@
         android:id="@+id/event_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/item_event_text_padding"
         android:paddingLeft="@dimen/item_event_text_padding"
         android:paddingRight="@dimen/item_event_text_padding"
         android:singleLine="true"
         android:text="Details for the current event which can be loooooooooooooooooooooooooong" />
 
     <TextView
-        android:id="@+id/event_start"
+        android:id="@+id/event_start_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/item_event_text_padding"
@@ -63,13 +64,22 @@
         android:text="31.10.2015 20:00" />
 
     <TextView
-        android:id="@+id/event_end"
+        android:id="@+id/event_end_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/item_event_text_padding"
         android:paddingRight="@dimen/item_event_text_padding"
         android:singleLine="true"
-        android:text="31.10.2015 22:00" />
+        android:text="31.10.2015 20:00" />
+
+
+    <TextView
+        android:id="@+id/event_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/item_event_text_padding"
+        android:paddingRight="@dimen/item_event_text_padding"
+        android:singleLine="true" />
 
     <View
         android:layout_width="match_parent"

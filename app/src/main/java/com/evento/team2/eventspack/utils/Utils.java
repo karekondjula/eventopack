@@ -1,14 +1,19 @@
 package com.evento.team2.eventspack.utils;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.util.Log;
 
 import com.evento.team2.eventspack.model.Event;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 import java.util.Random;
 
 /**

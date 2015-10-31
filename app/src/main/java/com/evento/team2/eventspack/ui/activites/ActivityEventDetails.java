@@ -18,6 +18,8 @@ package com.evento.team2.eventspack.ui.activites;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -25,6 +27,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
@@ -46,8 +49,11 @@ import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.joanzapata.iconify.fonts.IoniconsModule;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -102,6 +108,7 @@ public class ActivityEventDetails extends AppCompatActivity {
         if (actionBare != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
+        // TODO make the toolbar disappear completely on top most scroll
 
         Intent intent = getIntent();
         final long eventId = intent.getLongExtra(EXTRA_ID, 0);
@@ -120,10 +127,22 @@ public class ActivityEventDetails extends AppCompatActivity {
 
         DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm");
         textViewEventDate.setText(String.format(getString(R.string.event_details_time),
-                                                          dateFormat.format(event.startTimeStamp),
-                                                          dateFormat.format(event.endTimeStamp)));
+                dateFormat.format(event.startTimeStamp),
+                dateFormat.format(event.endTimeStamp)));
 
-        textViewEventLocation.setText(event.locationString + "<fetch this address from google>");
+        // TODO daniel, fetch the location address from start in provider (multiple files)
+        try {
+            Geocoder gc = new Geocoder(this, Locale.getDefault());
+            List<Address> addresses = gc.getFromLocation(event.location.latitude, event.location.longitude, 1);
+            Address address = addresses.get(addresses.size() - 1);
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
+                stringBuilder.append(addresses.get(0).getAddressLine(i) + ", ");
+            }
+            textViewEventLocation.setText(stringBuilder.toString().trim().substring(0, stringBuilder.length() - 2).replace("(FYROM)", ""));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         textViewEventDetails.setText(event.details);
 

@@ -3,6 +3,8 @@ package com.evento.team2.eventspack.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -17,10 +19,16 @@ import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
+import com.evento.team2.eventspack.ui.fragments.FragmentMap;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -47,6 +55,12 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         public TextView mEventTitle;
         @Bind(R.id.event_details)
         public TextView mEventDetails;
+        @Bind(R.id.event_start_time)
+        public TextView mEventStartTime;
+        @Bind(R.id.event_end_time)
+        public TextView mEventEndTime;
+        @Bind(R.id.event_location)
+        public TextView mEventLocation;
         @Bind(R.id.btn_save_icon)
         public IconTextView isEventSaved;
 
@@ -101,11 +115,32 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         holder.mEventTitle.setText(event.name);
         holder.mEventDetails.setText(event.details);
 
+        DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm");
+        String startEndTimes[] = String.format(context.getString(R.string.event_details_time),
+                dateFormat.format(event.startTimeStamp),
+                dateFormat.format(event.endTimeStamp)).split(FragmentMap.DELIMITER);
+        holder.mEventStartTime.setText(startEndTimes[0]);
+        holder.mEventEndTime.setText(startEndTimes[1]);
+
         if (TextUtils.isEmpty(event.pictureUri)) {
             Glide.with(holder.mEventImage.getContext()).load(R.drawable.party_image).into(holder.mEventImage);
         } else {
             // TODO daniel implement picture uri as picture
             Glide.with(context).load(new File(event.pictureUri)).into(holder.mEventImage);
+        }
+
+        // TODO daniel, fetch the location address from start in provider
+        try {
+            Geocoder gc = new Geocoder(context, Locale.getDefault());
+            List<Address> addresses = gc.getFromLocation(event.location.latitude, event.location.longitude, 1);
+            Address address = addresses.get(addresses.size() - 1);
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
+                stringBuilder.append(addresses.get(0).getAddressLine(i) + ", ");
+            }
+            holder.mEventLocation.setText(stringBuilder.toString().trim().substring(0, stringBuilder.length() - 2).replace("(FYROM)", ""));
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         if (event.isEventSaved) {

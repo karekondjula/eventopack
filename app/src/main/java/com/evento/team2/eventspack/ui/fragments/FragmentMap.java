@@ -63,7 +63,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         GoogleMap.OnMapClickListener, GoogleMap.OnMyLocationChangeListener {
 
     public static final String TAG = "FragmentMap";
-    private static final String DELIMITER = "\n";
+    public static final String DELIMITER = "\n";
 
     private final Calendar calendar = Calendar.getInstance();
     private GoogleMap mapView;
