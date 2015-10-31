@@ -54,24 +54,40 @@
         android:singleLine="true"
         android:text="Details for the current event which can be loooooooooooooooooooooooooong" />
 
-    <TextView
-        android:id="@+id/event_start_time"
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="@dimen/item_event_text_padding"
         android:paddingRight="@dimen/item_event_text_padding"
-        android:singleLine="true"
-        android:text="31.10.2015 20:00" />
+        android:stretchColumns="1">
 
-    <TextView
-        android:id="@+id/event_end_time"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/item_event_text_padding"
-        android:paddingRight="@dimen/item_event_text_padding"
-        android:singleLine="true"
-        android:text="31.10.2015 20:00" />
+        <TableRow>
 
+            <TextView
+                android:paddingRight="5dp"
+                android:text="@string/start" />
+
+            <TextView
+                android:id="@+id/event_start_time"
+                android:singleLine="true"
+                android:text="31.10.2015 20:00" />
+
+        </TableRow>
+
+        <TableRow>
+
+            <TextView
+                android:paddingRight="5dp"
+                android:text="@string/end" />
+
+            <TextView
+                android:id="@+id/event_end_time"
+                android:singleLine="true"
+                android:text="31.10.2015 22:00" />
+
+        </TableRow>
+
+    </TableLayout>
 
     <TextView
         android:id="@+id/event_location"

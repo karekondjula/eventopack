@@ -36,8 +36,6 @@ public class FragmentSavedEvents extends ObserverFragment {
         ButterKnife.bind(this, view);
 
         savedEventsAdapter = new EventsRecyclerViewAdapter(getActivity());
-        // use this setting to improve performance if you know that changes
-        // in content do not change the layout size of the RecyclerView
         savedEventsRecyclerView.setHasFixedSize(true);
         savedEventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         savedEventsRecyclerView.setItemAnimator(new DefaultItemAnimator());

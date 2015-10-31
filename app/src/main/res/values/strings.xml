@@ -16,6 +16,9 @@
     <string name="date">DATE</string>
     <string name="location">LOCATION</string>
     <string name="event_details">EVENT DETAILS</string>
-    <string name="event_details_time">Start: %1$s \nEnd: %2$s</string>
+    <string name="promo_message">Find you favourite events</string>
+    <string name="start">Start:</string>
+    <string name="end">End:</string>
+    <!--<string name="event_details_time">Start: %1$s \nEnd: %2$s</string>-->
 
 </resources>

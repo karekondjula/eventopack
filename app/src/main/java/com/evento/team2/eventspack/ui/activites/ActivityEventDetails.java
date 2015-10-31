@@ -65,8 +65,11 @@ public class ActivityEventDetails extends AppCompatActivity {
     @Bind(R.id.collapsing_toolbar)
     CollapsingToolbarLayout collapsingToolbar;
 
-    @Bind(R.id.event_date)
-    TextView textViewEventDate;
+    @Bind(R.id.event_details_start_date)
+    TextView textViewEventStartDate;
+
+    @Bind(R.id.event_details_end_date)
+    TextView textViewEventEndDate;
 
     @Bind(R.id.event_location)
     TextView textViewEventLocation;
@@ -117,14 +120,13 @@ public class ActivityEventDetails extends AppCompatActivity {
         }
 
         DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm");
-        textViewEventDate.setText(String.format(getString(R.string.event_details_time),
-                dateFormat.format(event.startTimeStamp),
-                dateFormat.format(event.endTimeStamp)));
+        textViewEventStartDate.setText(dateFormat.format(event.startTimeStamp));
+        textViewEventEndDate.setText(dateFormat.format(event.endTimeStamp));
 
         textViewEventLocation.setText(event.locationString);
 
         textViewEventDetails.setText(event.details);
-        textViewEventDetails.setMovementMethod(LinkMovementMethod.getInstance());
+//        textViewEventDetails.setMovementMethod(LinkMovementMethod.getInstance());
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.event_detail_map);
         mapFragment.getMapAsync(googleMap -> {

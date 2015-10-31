@@ -20,7 +20,7 @@ public class Place {
     public String workDays;
 
     public final static class Table {
-        public static final String TABLE_PLACES = "Events";
+        public static final String TABLE_PLACES = "Places";
 
         public static final String COLUMN_ID = "id";
         public static final String COLUMN_NAME = "name";
