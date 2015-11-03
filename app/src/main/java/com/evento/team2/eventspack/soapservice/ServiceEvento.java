@@ -77,53 +77,6 @@ public class ServiceEvento {
         parseResponse(responseHashMap);
     }
 
-
-//    private final class AsyncCallWS extends AsyncTask<HashMap<String, Object>, Void, HashMap<String, Object>> {
-//        @Override
-//        protected HashMap<String, Object> doInBackground(HashMap<String, Object>... params) {
-//            return getResponse(params[0]);
-//        }
-//
-//        @Override
-//        protected void onPostExecute(HashMap<String, Object> responseMap) {
-//            try {
-//                if (responseMap != null) {
-//                    if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_ADD_USER)) {
-//                        Boolean result = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), Boolean.class);
-////                        Log.i(TAG, "METHOD_ADD_USER " + result.toString());
-//                    } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_USER)) {
-////                        Boolean result = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), Boolean.class);
-////                        Log.i(TAG, "METHOD_GET_USER " + responseMap.get(RESPONSE_KEY));
-//                    } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_EVENTS)) {
-//                        ArrayList<JsonEvent> jsonEventArrayList = new ArrayList(LoganSquare.parseList((String) responseMap.get(RESPONSE_KEY), JsonEvent.class));
-//
-//                        ArrayList<Event> eventArrayList = ConversionUtils.convertJsonEventsArrayListToEventArrayList(jsonEventArrayList);
-//
-//                        setChanged();
-//                        notifyObservers(eventArrayList);
-//
-//                        EventsDatabase.getInstance().persistEvents(eventArrayList);
-//
-                        // TODO daniel RxAndroid for announcing the result back
-//
-////                        for (Event event : eventArrayList) {
-////                            Log.i(TAG, METHOD_GET_ALL_EVENTS + " " + event.toString());
-////                        }
-//                    }
-//                } else {
-//                    Log.i(TAG, "no response ;( ");
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//
-//        @Override
-//        protected void onProgressUpdate(Void... values) {
-//            Log.i(TAG, "onProgressUpdate");
-//        }
-//    }
-
     private HashMap<String, Object> getResponse(HashMap<String, Object> inputParameters) {
         String methodNameParam = (String) inputParameters.get(METHOD_NAME_KEY);
         String soapActionParam = SOAP_ACTION.concat(methodNameParam);

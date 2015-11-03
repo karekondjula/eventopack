@@ -14,6 +14,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -131,11 +132,14 @@ public class ActivityMain extends AppCompatActivity {
         super.onDestroy();
     }
 
+    MenuItem searchMenuItem;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.menu_main, menu);
 
+        searchMenuItem = menu.findItem(R.id.action_search);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -160,6 +164,7 @@ public class ActivityMain extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
+        searchMenuItem.collapseActionView();
         if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
             drawerLayout.closeDrawers();
         } else {

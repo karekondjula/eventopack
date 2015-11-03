@@ -5,6 +5,7 @@ import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Context;
 import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -18,9 +19,8 @@ import java.util.Observer;
  */
 public abstract class ObserverFragment extends Fragment implements Observer {
 
-    private SearchView searchView = null;
+//    private SearchView searchView = null;
 
-    // TODO we can make this with inheritance and skip boyler plate menu code in all fragments
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         MenuItem searchItem = menu.findItem(R.id.action_search);
@@ -28,7 +28,7 @@ public abstract class ObserverFragment extends Fragment implements Observer {
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 
         if (searchItem != null) {
-            searchView = (SearchView) searchItem.getActionView();
+            final SearchView searchView = (SearchView) searchItem.getActionView();
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
@@ -42,18 +42,21 @@ public abstract class ObserverFragment extends Fragment implements Observer {
                     return true;
                 }
             });
-            // TODO daniel how to collapse the fucking search fucking bar!!!!!!!!!
             searchView.setOnQueryTextFocusChangeListener((view, queryTextFocused) -> {
                 if (!queryTextFocused) {
-//                    searchItem.collapseActionView();
-//                    MenuItemCompat.collapseActionView(searchItem);
+                    if (TextUtils.isEmpty(searchView.getQuery())) {
+                        searchItem.collapseActionView();
+                        searchView.setIconified(true);
+                        searchView.setQuery("", false);
+                    }
                 }
             });
-        }
-        if (searchView != null) {
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-            searchView.setQueryRefinementEnabled(true);
-            searchView.setSubmitButtonEnabled(false);
+
+            if (searchView != null) {
+                searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+                searchView.setQueryRefinementEnabled(true);
+                searchView.setSubmitButtonEnabled(false);
+            }
         }
 
         super.onCreateOptionsMenu(menu, menuInflater);
