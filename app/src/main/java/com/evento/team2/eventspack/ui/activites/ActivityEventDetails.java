@@ -77,7 +77,6 @@ public class ActivityEventDetails extends AppCompatActivity {
     @Bind(R.id.event_details)
     TextView textViewEventDetails;
 
-    private boolean isEventSaved = false;
     private Drawable emptyHeart;
     private Drawable filledHeart;
 
@@ -152,18 +151,12 @@ public class ActivityEventDetails extends AppCompatActivity {
 
     @OnClick(R.id.fab_add_to_saved)
     public void saveEvent(View view) {
-        if (!isEventSaved) {
-            isEventSaved = true;
-            EventsDatabase.getInstance().persistEvent(event);
-            ((FloatingActionButton) findViewById(R.id.fab_add_to_saved)).setImageDrawable(filledHeart);
-        } else {
-            isEventSaved = false;
-            EventsDatabase.getInstance().removeSavedEvent(event);
-            ((FloatingActionButton) findViewById(R.id.fab_add_to_saved)).setImageDrawable(emptyHeart);
-        }
+        event.isEventSaved = !event.isEventSaved;
+        ((FloatingActionButton) findViewById(R.id.fab_add_to_saved)).setImageDrawable(event.isEventSaved ? filledHeart : emptyHeart);
+        EventsDatabase.getInstance().changeSaveEvent(event);
 
         Snackbar.make(view,
-                isEventSaved ?
+                event.isEventSaved ?
                         String.format(getResources().getString(R.string.event_is_saved), event.name) :
                         String.format(getResources().getString(R.string.event_is_removed), event.name),
                 Snackbar.LENGTH_LONG)

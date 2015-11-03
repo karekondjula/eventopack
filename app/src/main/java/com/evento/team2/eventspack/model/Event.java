@@ -38,8 +38,8 @@ public class Event implements Comparable<Event> {
     public long startTimeStamp;
     public long startDate;
     public long endTimeStamp;
-    public String startDateString;
-    public String startTimeString;
+    public String startDateString; // TODO maybe no need to store it in database
+    public String startTimeString; // TODO maybe no need to store it in database
     public String endDateString;
     public boolean isEventSaved = false;
 
@@ -87,7 +87,8 @@ public class Event implements Comparable<Event> {
                     && name.equals(otherEvent.name)
                     && details.equals(otherEvent.details)
                     && location.equals(otherEvent.location)
-                    && startTimeStamp == otherEvent.startTimeStamp) {
+                    && startTimeStamp == otherEvent.startTimeStamp
+                    && isEventSaved == otherEvent.isEventSaved) {
                 return true;
             }
             return false;

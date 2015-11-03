@@ -195,7 +195,9 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         mapView.setOnMapClickListener(this);
         mapView.setOnMyLocationChangeListener(this);
 
-        new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute(dateFormat.format(calendar.getTimeInMillis()));
+        // TODO filter by date
+//        new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute(dateFormat.format(calendar.getTimeInMillis()));
+        new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute();
     }
 
     @Override
@@ -273,14 +275,16 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
                 MarkerOptions markerOptions;
                 hashMapLatLngEventId = new HashMap<>();
                 for (Event event : (ArrayList<Event>) eventArrayList) {
-                    markerOptions = new MarkerOptions()
-                            .position(new LatLng(event.location.latitude,
-                                    event.location.longitude))
-                            .title(event.name)
-                            .snippet(event.details + DELIMITER + event.startDateString + " " + event.startTimeString)
-                            .icon(BitmapDescriptorFactory.fromBitmap(bhalfsize));
-                    hashMapLatLngEventId.put(markerOptions.getPosition(), event.id);
-                    mapView.addMarker(markerOptions);
+                    if (event.location.latitude != 0 || event.location.longitude != 0) {
+                        markerOptions = new MarkerOptions()
+                                .position(new LatLng(event.location.latitude,
+                                        event.location.longitude))
+                                .title(event.name)
+                                .snippet(event.details + DELIMITER + event.startDateString + " " + event.startTimeString)
+                                .icon(BitmapDescriptorFactory.fromBitmap(bhalfsize));
+                        hashMapLatLngEventId.put(markerOptions.getPosition(), event.id);
+                        mapView.addMarker(markerOptions);
+                    }
                 }
             }
         }

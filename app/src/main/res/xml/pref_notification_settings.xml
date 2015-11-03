@@ -4,7 +4,7 @@
         android:key="send_email_reminder"
         android:title="Email reminder"
         android:summary="Receive(DO not receive) email notifications for saved events" />
-     <!--TODO show pop up always active email reminder-->
+     <!--show pop up always active email reminder-->
 
     <!--<EditTextPreference-->
         <!--android:key="example_text"-->

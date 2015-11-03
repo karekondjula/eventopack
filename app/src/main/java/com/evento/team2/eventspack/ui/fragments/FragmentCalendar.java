@@ -89,12 +89,7 @@ public class FragmentCalendar extends Fragment {
                 for (Event event : eventsList) {
                     eventDate = new Date(event.startDate);
                     final Date date = eventDate;
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            caldroidFragment.setBackgroundResourceForDate(R.color.colorPrimaryDark, date);
-                        }
-                    });
+                    getActivity().runOnUiThread(() -> caldroidFragment.setBackgroundResourceForDate(R.color.colorPrimaryDark, date));
                     cal.setTimeInMillis(eventDate.getTime());
                     cal.set(Calendar.HOUR_OF_DAY, 0);
                     cal.set(Calendar.MINUTE, 0);
@@ -102,6 +97,7 @@ public class FragmentCalendar extends Fragment {
                     cal.set(Calendar.MILLISECOND, 0);
                     eventDates.add(cal.getTime().getTime());
                 }
+                getActivity().runOnUiThread(() -> caldroidFragment.refreshView());
             }
         }.start();
 

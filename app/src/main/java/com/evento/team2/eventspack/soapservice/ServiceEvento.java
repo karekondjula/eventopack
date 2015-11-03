@@ -104,7 +104,7 @@ public class ServiceEvento {
 //
 //                        EventsDatabase.getInstance().persistEvents(eventArrayList);
 //
-//                        // TODO daniel RxAndroid for announcing the result back
+                        // TODO daniel RxAndroid for announcing the result back
 //
 ////                        for (Event event : eventArrayList) {
 ////                            Log.i(TAG, METHOD_GET_ALL_EVENTS + " " + event.toString());

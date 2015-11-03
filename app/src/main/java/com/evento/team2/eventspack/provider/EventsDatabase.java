@@ -62,7 +62,7 @@ public class EventsDatabase {
         cal.set(Calendar.MILLISECOND, 0);
         event.startDate = cal.getTimeInMillis();
 
-        event.startDateString = cursor.getString(8);
+        event.startDateString = new SimpleDateFormat("dd.MM.yyyy").format(new Date(event.startDate));//cursor.getString(8);
         event.endTimeStamp = cursor.getLong(9);
         event.endDateString = new SimpleDateFormat("HH:mm dd.MM.yyyy").format(new Date(event.endTimeStamp));
         event.isEventSaved = cursor.getInt(10) == Event.SAVED ? true : false;
@@ -154,10 +154,10 @@ public class EventsDatabase {
         }
     }
 
-    public void removeSavedEvent(Event event) {
-        long id = event.id;
-        database.delete(Event.Table.TABLE_EVENTS, Event.Table.COLUMN_ID + " = " + id, null);
-    }
+//    public void removeSavedEvent(Event event) {
+//        long id = event.id;
+//        database.delete(Event.Table.TABLE_EVENTS, Event.Table.COLUMN_ID + " = " + id, null);
+//    }
 
     // TODO convert to String... filterPairs[column, string]
     public ArrayList<Event> getEvents(String filter) {
