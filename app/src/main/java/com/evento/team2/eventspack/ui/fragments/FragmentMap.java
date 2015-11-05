@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -66,11 +65,12 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     public static final String DELIMITER = "\n";
 
     private final Calendar calendar = Calendar.getInstance();
+    private DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
     private GoogleMap mapView;
     private Location myLocation;
     private CaldroidFragment dialogCaldroidFragment;
-
-    private DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+    private String lastSelectedDate;
+    private TextView actionViewCalendar;
 
     @Bind(R.id.map_event_details)
     LinearLayout mapEventDetailsLinearLayout;
@@ -107,9 +107,22 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.i(">>", "i: " + i + "l: " + l);
 
-                // TODO daniel fetch all events for the current day
+                @FetchAsyncTask.Category int resultType = FetchAsyncTask.EVENTS;
+                switch (i) {
+                    case 0:
+                        resultType = FetchAsyncTask.EVENTS;
+                        break;
+                    case 1:
+                        resultType = FetchAsyncTask.PLACES;
+                        break;
+                    case 2:
+                        resultType = FetchAsyncTask.SAVED_EVENTS;
+                        break;
+                    default:
+                }
+                new FetchAsyncTask(FragmentMap.this, resultType, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER)
+                        .execute(FetchAsyncTask.FILTER_DATE, lastSelectedDate);
             }
 
             @Override
@@ -129,7 +142,10 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
             public void onSelectDate(Date date, View view) {
                 setCalendarDate(date);
 
-                new FetchAsyncTask(FragmentMap.this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute(dateFormat.format(date));
+                lastSelectedDate = dateFormat.format(date);
+
+                new FetchAsyncTask(FragmentMap.this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER)
+                        .execute(FetchAsyncTask.FILTER_DATE, lastSelectedDate);
 
                 dialogCaldroidFragment.dismiss();
             }
@@ -141,8 +157,6 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     private void setCalendarDate(Date date) {
         actionViewCalendar.setText(dateFormat.format(date));
     }
-
-    private TextView actionViewCalendar;
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -195,9 +209,10 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         mapView.setOnMapClickListener(this);
         mapView.setOnMyLocationChangeListener(this);
 
-        // TODO filter by date
-//        new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute(dateFormat.format(calendar.getTimeInMillis()));
-        new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute();
+        lastSelectedDate = dateFormat.format(calendar.getTimeInMillis());
+
+        new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER)
+                .execute(FetchAsyncTask.FILTER_DATE, lastSelectedDate);
     }
 
     @Override

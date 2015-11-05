@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Geocoder;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.evento.team2.eventspack.model.Event;
 import com.google.android.gms.maps.model.LatLng;
@@ -159,23 +160,22 @@ public class EventsDatabase {
 //        database.delete(Event.Table.TABLE_EVENTS, Event.Table.COLUMN_ID + " = " + id, null);
 //    }
 
-    // TODO convert to String... filterPairs[column, string]
-    public ArrayList<Event> getEvents(String filter) {
+    public ArrayList<Event> getEvents(String... filter) {
         ArrayList<Event> events = new ArrayList<Event>();
 
         Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
                 allColumns,
-                (filter != null ? Event.Table.COLUMN_NAME + " LIKE ? OR " +
+                (filter != null
+                        ? Event.Table.COLUMN_NAME + " LIKE ? OR " +
                         Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
                         Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
-                        Event.Table.COLUMN_START_TIME_STAMP + " LIKE ? OR " +
                         Event.Table.COLUMN_START_DATE_STRING + " LIKE ? "
                         : null),
-                (filter != null ? new String[]{"%" + filter + "%",
-                        "%" + filter + "%",
-                        "%" + filter + "%",
-                        "%" + filter + "%",
-                        "%" + filter + "%",}
+                (filter != null && filter.length > 0
+                        ? new String[]{"%" + filter[0] + "%",
+                        "%" + filter[0] + "%",
+                        "%" + filter[0] + "%",
+                        "%" + filter[0] + "%",}
                         : null),
                 null, null, null);
 
@@ -191,25 +191,24 @@ public class EventsDatabase {
     }
 
     // TODO refactor it in better times (no need for two differet get<>Events methods!!!
-    public ArrayList<Event> getSavedEvents(String filter) {
+    public ArrayList<Event> getSavedEvents(String... filter) {
         ArrayList<Event> events = new ArrayList<Event>();
 
         Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
                 allColumns,
                 Event.Table.COLUMN_IS_EVENT_SAVED + " = ? " +
-                (filter != null ? " AND (" +
-                        Event.Table.COLUMN_NAME + " LIKE ? OR " +
-                        Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
-                        Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
-                        Event.Table.COLUMN_START_TIME_STAMP + " LIKE ? OR " +
-                        Event.Table.COLUMN_START_DATE_STRING + " LIKE ? )"
-                        : ""),
-                (filter != null ? new String[]{String.valueOf(Event.SAVED),
-                        "%" + filter + "%",
-                        "%" + filter + "%",
-                        "%" + filter + "%",
-                        "%" + filter + "%",
-                        "%" + filter + "%",}
+                        (filter != null ? " AND (" +
+                                Event.Table.COLUMN_NAME + " LIKE ? OR " +
+                                Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
+                                Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
+                                Event.Table.COLUMN_START_DATE_STRING + " LIKE ? )"
+                                : ""),
+                (filter != null && filter.length > 0 ? new String[]{String.valueOf(Event.SAVED),
+                        "%" + filter[0] + "%",
+                        "%" + filter[0] + "%",
+                        "%" + filter[0] + "%",
+                        "%" + filter[0] + "%",
+                        "%" + filter[0] + "%",}
                         : new String[]{String.valueOf(Event.SAVED)}),
                 null, null, null);
 

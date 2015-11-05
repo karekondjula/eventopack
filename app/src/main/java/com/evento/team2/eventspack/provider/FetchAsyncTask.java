@@ -25,6 +25,9 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
     public static final int PLACES = 1;
     public static final int SAVED_EVENTS = 2;
 
+    public static final String FILTER_NAME = "0";
+    public static final String FILTER_DATE = "1";
+
     public static final int FETCH_FROM_SERVER = 3;
     public static final int DO_NOT_FETCH_FROM_SERVER = 4;
 
@@ -44,8 +47,12 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
     protected ArrayList doInBackground(String... filter) {
 
         if (what == EVENTS) {
-            if ((filter != null && filter.length == 1)) {
-                return EventsDatabase.getInstance().getEvents(filter[0]);
+            if (filter != null && filter.length > 0) {
+                if (filter[0].equals(FILTER_NAME)) {
+                    return EventsDatabase.getInstance().getEvents(filter[1]);
+                } else if (filter[0].equals(FILTER_DATE)) {
+                    return EventsDatabase.getInstance().getEvents(filter[1]);
+                }
             } else {
                 if (fetchFromServer == FETCH_FROM_SERVER &&
                         NetworkUtils.getInstance().isNetworkAvailable(observerFragment.getActivity())) {
@@ -54,10 +61,23 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
                 return EventsDatabase.getInstance().getEvents(null);
             }
         } else if (what == PLACES) {
+            if ((filter != null && filter.length > 0)) {
 
+            } else {
+                if (fetchFromServer == FETCH_FROM_SERVER &&
+                        NetworkUtils.getInstance().isNetworkAvailable(observerFragment.getActivity())) {
+                    fetchPlacesFromServer();
+                } else {
+
+                }
+            }
         } else if (what == SAVED_EVENTS) {
-            if ((filter != null && filter.length == 1)) {
-                return EventsDatabase.getInstance().getSavedEvents(filter[0]);
+            if (filter != null && filter.length > 0) {
+                if (filter[0].equals(FILTER_NAME)) {
+                    return EventsDatabase.getInstance().getSavedEvents(filter[1]);
+                } else if (filter[0].equals(FILTER_DATE)) {
+                    return EventsDatabase.getInstance().getSavedEvents(filter[1]);
+                }
             } else {
                 return EventsDatabase.getInstance().getSavedEvents(null);
             }

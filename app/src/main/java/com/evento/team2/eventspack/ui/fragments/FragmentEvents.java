@@ -110,8 +110,9 @@ public class FragmentEvents extends ObserverFragment {
         }
     }
 
+    @Override
     public void filterEvents(String filter) {
-        new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute(filter);
+        new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute(FetchAsyncTask.FILTER_NAME, filter);
     }
 }
 

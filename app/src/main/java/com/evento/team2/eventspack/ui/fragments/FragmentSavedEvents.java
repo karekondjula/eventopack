@@ -32,6 +32,8 @@ public class FragmentSavedEvents extends ObserverFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_saved_events, container, false);
         ButterKnife.bind(this, view);
 
@@ -69,7 +71,8 @@ public class FragmentSavedEvents extends ObserverFragment {
         }
     }
 
+    @Override
     public void filterEvents(String filter) {
-        new FetchAsyncTask(this, FetchAsyncTask.SAVED_EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute(filter);
+        new FetchAsyncTask(this, FetchAsyncTask.SAVED_EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute(FetchAsyncTask.FILTER_NAME, filter);
     }
 }
