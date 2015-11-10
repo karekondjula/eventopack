@@ -78,11 +78,11 @@ public class FragmentCalendar extends Fragment {
         t.replace(R.id.caldroidCalendar, caldroidFragment);
         t.commit();
 
-        //  TODO this is the agliest approach for back threading EVER!
+        //  TODO this is the ugliest approach for back threading EVER!
         new Thread() {
             @Override
             public void run() {
-                eventsList = EventsDatabase.getInstance().getEvents(null);
+                eventsList = EventsDatabase.getInstance().getEvents();
                 Collections.sort(eventsList);
 
                 Date eventDate;

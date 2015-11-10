@@ -63,7 +63,7 @@ public class EventsDatabase {
         cal.set(Calendar.MILLISECOND, 0);
         event.startDate = cal.getTimeInMillis();
 
-        event.startDateString = new SimpleDateFormat("dd.MM.yyyy").format(new Date(event.startDate));//cursor.getString(8);
+        event.startDateString = cursor.getString(8);//new SimpleDateFormat("dd.MM.yyyy").format(new Date(event.startDate));
         event.endTimeStamp = cursor.getLong(9);
         event.endDateString = new SimpleDateFormat("HH:mm dd.MM.yyyy").format(new Date(event.endTimeStamp));
         event.isEventSaved = cursor.getInt(10) == Event.SAVED ? true : false;
@@ -125,7 +125,7 @@ public class EventsDatabase {
             values.put(Event.Table.COLUMN_LONGITUDE, event.location.longitude);
 
             if (TextUtils.isEmpty(event.locationString)) {
-                List<Address> addresses = null;
+                List<Address> addresses;
                 try {
                     addresses = geocoder.getFromLocation(event.location.latitude, event.location.longitude, 1);
                     Address address = addresses.get(addresses.size() - 1);
@@ -148,8 +148,7 @@ public class EventsDatabase {
 
         if (updateRows == 0) {
             values.put(Event.Table.COLUMN_IS_EVENT_SAVED, Event.NOT_SAVED);
-            long insertId = database.insert(Event.Table.TABLE_EVENTS, null, values);
-            return insertId;
+            return database.insert(Event.Table.TABLE_EVENTS, null, values);
         } else {
             return updateRows;
         }
@@ -165,7 +164,7 @@ public class EventsDatabase {
 
         Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
                 allColumns,
-                (filter != null
+                (filter != null && filter.length > 0
                         ? Event.Table.COLUMN_NAME + " LIKE ? OR " +
                         Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
                         Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
@@ -197,7 +196,7 @@ public class EventsDatabase {
         Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
                 allColumns,
                 Event.Table.COLUMN_IS_EVENT_SAVED + " = ? " +
-                        (filter != null ? " AND (" +
+                        (filter != null  && filter.length > 0 ? " AND (" +
                                 Event.Table.COLUMN_NAME + " LIKE ? OR " +
                                 Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
                                 Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +

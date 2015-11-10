@@ -58,7 +58,7 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
                         NetworkUtils.getInstance().isNetworkAvailable(observerFragment.getActivity())) {
                     fetchEventsFromServer();
                 }
-                return EventsDatabase.getInstance().getEvents(null);
+                return EventsDatabase.getInstance().getEvents();
             }
         } else if (what == PLACES) {
             if ((filter != null && filter.length > 0)) {
@@ -79,7 +79,7 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
                     return EventsDatabase.getInstance().getSavedEvents(filter[1]);
                 }
             } else {
-                return EventsDatabase.getInstance().getSavedEvents(null);
+                return EventsDatabase.getInstance().getSavedEvents();
             }
         }
 

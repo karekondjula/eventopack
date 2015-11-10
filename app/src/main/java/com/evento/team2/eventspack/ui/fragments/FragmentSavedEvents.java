@@ -30,6 +30,7 @@ public class FragmentSavedEvents extends ObserverFragment {
 
     private EventsRecyclerViewAdapter savedEventsAdapter;
 
+    // TODO search was not functional
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 

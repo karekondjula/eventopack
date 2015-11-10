@@ -7,7 +7,6 @@ import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.soapservice.model.JsonEvent;
 import com.evento.team2.eventspack.utils.ConversionUtils;
-import com.evento.team2.eventspack.utils.Utils;
 
 import org.ksoap2.SoapEnvelope;
 import org.ksoap2.SoapFault;
