@@ -5,7 +5,7 @@ import com.google.android.gms.maps.model.LatLng;
 /**
  * Created by Daniel on 29-Oct-15.
  */
-public class Place {
+public class Place implements Comparable<Place> {
 
 //    public static final int NOT_SAVED = 0;
 //    public static final int SAVED = 1;
@@ -18,6 +18,38 @@ public class Place {
     public String locationString;
     public String workTime;
     public String workDays;
+
+    @Override
+    public int compareTo(Place place) {
+        if (name == place.name) {
+            return 0;
+        } else if (id > place.id) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Place) {
+            Place otherPlace = (Place) o;
+            if (name.equals(otherPlace.name)) {
+                return true;
+            }
+            return false;
+        }
+        return super.equals(o);
+    }
+
+    @Override
+    public String toString() {
+        return "name: " + name + "\n " +
+                "id: " + id + "\n " +
+                "location: " + location + "\n " +
+                "locationString " + locationString + "\n "
+                ;
+    }
 
     public final static class Table {
         public static final String TABLE_PLACES = "Places";

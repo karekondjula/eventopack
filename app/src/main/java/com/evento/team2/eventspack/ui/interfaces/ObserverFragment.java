@@ -11,8 +11,11 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.evento.team2.eventspack.R;
+import com.evento.team2.eventspack.provider.FetchAsyncTask;
 
 import java.util.Observer;
+
+import butterknife.ButterKnife;
 
 /**
  * Created by Daniel on 29-Oct-15.
@@ -20,6 +23,16 @@ import java.util.Observer;
 public abstract class ObserverFragment extends Fragment implements Observer {
 
 //    private SearchView searchView = null;
+    protected FetchAsyncTask fetchAsyncTask;
+
+    @Override
+    public void onDetach() {
+        ButterKnife.unbind(this);
+        if (fetchAsyncTask != null) {
+            fetchAsyncTask.cancel(true);
+        }
+        super.onDetach();
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {

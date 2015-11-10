@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.evento.team2.eventspack.model.Event;
+import com.evento.team2.eventspack.model.Place;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.soapservice.model.JsonEvent;
 import com.evento.team2.eventspack.utils.ConversionUtils;
@@ -146,10 +147,10 @@ public class ServiceEvento {
 //                    EventsDatabase.getInstance().persistEvents(Utils.Helpers.createEvents());
                     EventsDatabase.getInstance().persistEvents(eventArrayList);
 
+                    ArrayList<Place> placeArrayList = ConversionUtils.extractPlacesFromEvents(eventArrayList);
+                    EventsDatabase.getInstance().persistPlaces(placeArrayList);
+
                     // TODO RxAndroid for announcing the result back
-//                        for (Event event : eventArrayList) {
-//                            Log.i(TAG, METHOD_GET_ALL_EVENTS + " " + event.toString());
-//                        }
                 } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_PLACES)) {
 
                 }

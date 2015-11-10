@@ -30,7 +30,6 @@ public class FragmentSavedEvents extends ObserverFragment {
 
     private EventsRecyclerViewAdapter savedEventsAdapter;
 
-    // TODO search was not functional
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -50,7 +49,8 @@ public class FragmentSavedEvents extends ObserverFragment {
     @Override
     public void onResume() {
         super.onResume();
-        new FetchAsyncTask(this, FetchAsyncTask.SAVED_EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute();
+        fetchAsyncTask = new FetchAsyncTask(this, FetchAsyncTask.SAVED_EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER);
+        fetchAsyncTask.execute();
     }
 
     @Override
@@ -74,6 +74,7 @@ public class FragmentSavedEvents extends ObserverFragment {
 
     @Override
     public void filterEvents(String filter) {
-        new FetchAsyncTask(this, FetchAsyncTask.SAVED_EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute(FetchAsyncTask.FILTER_NAME, filter);
+        fetchAsyncTask = new FetchAsyncTask(this, FetchAsyncTask.SAVED_EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER);
+        fetchAsyncTask.execute(FetchAsyncTask.FILTER_NAME, filter);
     }
 }

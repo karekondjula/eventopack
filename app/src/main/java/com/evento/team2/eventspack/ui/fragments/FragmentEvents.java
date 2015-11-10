@@ -2,6 +2,7 @@ package com.evento.team2.eventspack.ui.fragments;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -57,7 +58,8 @@ public class FragmentEvents extends ObserverFragment {
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
         swipeRefreshLayout.setOnRefreshListener(() -> {
-            new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.FETCH_FROM_SERVER).execute();
+            fetchAsyncTask = new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.FETCH_FROM_SERVER);
+            fetchAsyncTask.execute();
         });
 
         eventsRecyclerView.setHasFixedSize(true);
@@ -73,14 +75,9 @@ public class FragmentEvents extends ObserverFragment {
     public void onResume() {
         super.onResume();
 
-        swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(true));
-        new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute();
-    }
-
-    @Override
-    public void onDetach() {
-        ButterKnife.unbind(this);
-        super.onDetach();
+//        swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(true));
+        fetchAsyncTask = new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER);
+        fetchAsyncTask.execute();
     }
 
     public static FragmentEvents newInstance() {
@@ -112,20 +109,7 @@ public class FragmentEvents extends ObserverFragment {
 
     @Override
     public void filterEvents(String filter) {
-        new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER).execute(FetchAsyncTask.FILTER_NAME, filter);
+        fetchAsyncTask = new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER);
+        fetchAsyncTask.execute(FetchAsyncTask.FILTER_NAME, filter);
     }
 }
-
-
-//    Subscription newEventsSubscription;
-//
-//    private Subscription subscribeOnEventsObservable() {
-//        Observable<Event> eventsObservable = EventsObservable.getObservableBackgroundThread();
-//
-//        return eventsObservable.subscribe(sub -> eventsAdapter.addEvent(sub),
-//                err -> {},
-//                () -> {
-//                    eventsAdapter = new EventsRecyclerViewAdapter(getActivity(), eventsAdapter.getEventsList());
-//                    eventsRecyclerView.setAdapter(eventsAdapter);
-//                });
-//    }

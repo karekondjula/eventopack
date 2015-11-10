@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    android:layout_marginTop="0dp"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp">
+
+        <ImageView
+            android:id="@+id/place_picture"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:cropToPadding="false"
+            android:scaleType="centerCrop"
+            android:src="@drawable/place_image" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/place_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/item_event_text_padding"
+        android:paddingRight="@dimen/item_event_text_padding"
+        android:text="Info"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+    <TextView
+        android:id="@+id/place_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/item_event_text_padding"
+        android:paddingRight="@dimen/item_event_text_padding"
+        android:singleLine="true" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        android:paddingTop="5dp" />
+
+</LinearLayout>

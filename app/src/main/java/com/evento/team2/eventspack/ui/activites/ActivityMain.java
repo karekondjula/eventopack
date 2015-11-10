@@ -26,6 +26,7 @@ import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.ui.fragments.DialogFragmentAbout;
 import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
+import com.evento.team2.eventspack.ui.fragments.FragmentPlaces;
 import com.evento.team2.eventspack.ui.fragments.FragmentSavedEvents;
 
 import java.util.ArrayList;
@@ -43,6 +44,8 @@ public class ActivityMain extends AppCompatActivity {
     DrawerLayout drawerLayout;
 
     private FragmentEvents fragmentEvents = FragmentEvents.newInstance();
+    private FragmentSavedEvents fragmentSavedEvents = FragmentSavedEvents.newInstance();
+    private FragmentPlaces fragmentPlaces = FragmentPlaces.newInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +125,18 @@ public class ActivityMain extends AppCompatActivity {
         Intent intent = getIntent();
         if (intent != null && Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
-            fragmentEvents.filterEvents(query);
+            switch (viewPager.getCurrentItem()) {
+                case 0:
+                    fragmentEvents.filterEvents(query);
+                    break;
+                case 1:
+                    fragmentPlaces.filterEvents(query);
+                    break;
+                case 2:
+                    fragmentSavedEvents.filterEvents(query);
+                    break;
+                default:
+            }
         }
     }
 
@@ -175,8 +189,8 @@ public class ActivityMain extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getFragmentManager());
         adapter.addFragment(fragmentEvents, getString(R.string.events));
-        adapter.addFragment(new Fragment(), getString(R.string.places));
-        adapter.addFragment(FragmentSavedEvents.newInstance(), getString(R.string.saved));
+        adapter.addFragment(fragmentPlaces, getString(R.string.places));
+        adapter.addFragment(fragmentSavedEvents, getString(R.string.saved));
         viewPager.setAdapter(adapter);
     }
 

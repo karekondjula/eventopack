@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -71,6 +72,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     private CaldroidFragment dialogCaldroidFragment;
     private String lastSelectedDate;
     private TextView actionViewCalendar;
+    private @FetchAsyncTask.Category int resultType = FetchAsyncTask.EVENTS;
 
     @Bind(R.id.map_event_details)
     LinearLayout mapEventDetailsLinearLayout;
@@ -92,7 +94,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         if (actionBar != null) {
             actionBar.setHomeAsUpIndicator(null);
             actionBar.setDisplayHomeAsUpEnabled(true);
-//            actionBar.setTitle("Events map");
+//            actionBar.setTitle("Events map"); // replaced by spinner selector
             actionBar.setDisplayShowTitleEnabled(false);
         }
 
@@ -108,7 +110,6 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
-                @FetchAsyncTask.Category int resultType = FetchAsyncTask.EVENTS;
                 switch (i) {
                     case 0:
                         resultType = FetchAsyncTask.EVENTS;
@@ -121,8 +122,8 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
                         break;
                     default:
                 }
-                new FetchAsyncTask(FragmentMap.this, resultType, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER)
-                        .execute(FetchAsyncTask.FILTER_DATE, lastSelectedDate);
+                fetchAsyncTask = new FetchAsyncTask(FragmentMap.this, resultType, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER);
+                fetchAsyncTask.execute(FetchAsyncTask.FILTER_DATE, lastSelectedDate);
             }
 
             @Override
@@ -144,8 +145,8 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
 
                 lastSelectedDate = dateFormat.format(date);
 
-                new FetchAsyncTask(FragmentMap.this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER)
-                        .execute(FetchAsyncTask.FILTER_DATE, lastSelectedDate);
+                fetchAsyncTask = new FetchAsyncTask(FragmentMap.this, resultType, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER);
+                fetchAsyncTask.execute(FetchAsyncTask.FILTER_DATE, lastSelectedDate);
 
                 dialogCaldroidFragment.dismiss();
             }
@@ -191,12 +192,6 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void onDetach() {
-        ButterKnife.unbind(this);
-        super.onDetach();
-    }
-
-    @Override
     public void onMapReady(GoogleMap googleMap) {
         mapView = googleMap;
         mapView.setMapType(GoogleMap.MAP_TYPE_HYBRID);
@@ -211,8 +206,8 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
 
         lastSelectedDate = dateFormat.format(calendar.getTimeInMillis());
 
-        new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER)
-                .execute(FetchAsyncTask.FILTER_DATE, lastSelectedDate);
+        fetchAsyncTask = new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER);
+        fetchAsyncTask.execute(FetchAsyncTask.FILTER_DATE, lastSelectedDate);
     }
 
     @Override
@@ -220,7 +215,8 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
 
         removeSelectedEventLayout();
 
-        mapView.setPadding(0, 0, 0, 140); // rise the zoom controls when an event is clicked
+        final float scale = getActivity().getResources().getDisplayMetrics().density;
+        mapView.setPadding(0, 0, 0, (int)(scale * 80)); // rise the zoom controls when an event is clicked
 
         final View mapEventItemView = LayoutInflater.from(getActivity()).inflate(R.layout.item_small_events, mapEventDetailsLinearLayout, false);
         ImageView mapEventImageView = ButterKnife.findById(mapEventItemView, R.id.small_event_picture);

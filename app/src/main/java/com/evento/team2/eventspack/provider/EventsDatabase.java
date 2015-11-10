@@ -11,6 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.evento.team2.eventspack.model.Event;
+import com.evento.team2.eventspack.model.Place;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
@@ -32,7 +33,7 @@ public class EventsDatabase {
 
     private Geocoder geocoder;
 
-    private String[] allColumns = {Event.Table.COLUMN_ID,
+    private String[] allColumnsEvent = {Event.Table.COLUMN_ID,
             Event.Table.COLUMN_NAME,
             Event.Table.COLUMN_DETAILS,
             Event.Table.COLUMN_PICTURE_URI,
@@ -70,6 +71,24 @@ public class EventsDatabase {
         return event;
     }
 
+
+    private String[] allColumnsPlace = {Place.Table.COLUMN_ID,
+            Place.Table.COLUMN_NAME,
+            Place.Table.COLUMN_LOCATION_STRING,
+            Place.Table.COLUMN_LATITUDE,
+            Place.Table.COLUMN_LONGITUDE,
+    };
+
+    private Place cursorToPlace(Cursor cursor) {
+        Place place = new Place();
+        place.id = cursor.getLong(0);
+        place.name = cursor.getString(1);
+        place.locationString = cursor.getString(2);
+        place.location = new LatLng(cursor.getDouble(3), cursor.getDouble(4));
+
+        return place;
+    }
+
     private EventsDatabase() {
     }
 
@@ -105,10 +124,77 @@ public class EventsDatabase {
         database.update(Event.Table.TABLE_EVENTS, values, Event.Table.COLUMN_ID + " = ?", new String[]{String.valueOf(event.id)});
     }
 
+    public void persistPlaces(ArrayList<Place> places) {
+        for (Place place : places) {
+            Log.i(">>", place.toString());
+            persistPlace(place);
+        }
+    }
+
+    private long persistPlace(Place place) {
+        ContentValues values = new ContentValues();
+        values.put(Event.Table.COLUMN_ID, place.id);
+        values.put(Event.Table.COLUMN_NAME, place.name);
+        values.put(Event.Table.COLUMN_LOCATION_STRING, place.locationString);
+        if (place.location != null) {
+            values.put(Event.Table.COLUMN_LATITUDE, place.location.latitude);
+            values.put(Event.Table.COLUMN_LONGITUDE, place.location.longitude);
+
+            if (TextUtils.isEmpty(place.locationString)) {
+                List<Address> addresses;
+                try {
+                    addresses = geocoder.getFromLocation(place.location.latitude, place.location.longitude, 1);
+                    Address address = addresses.get(addresses.size() - 1);
+                    StringBuilder stringBuilder = new StringBuilder();
+                    for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
+                        stringBuilder.append(addresses.get(0).getAddressLine(i) + ", ");
+                    }
+                    place.locationString = stringBuilder.toString().trim().substring(0, stringBuilder.length() - 2).replace("(FYROM)", "");
+
+                    values.put(Event.Table.COLUMN_LOCATION_STRING, place.locationString);
+                } catch (Exception e) {
+                }
+            }
+        }
+
+        long updateRows = database.update(Place.Table.TABLE_PLACES, values, Place.Table.COLUMN_ID + " = ?", new String[]{String.valueOf(place.id)});
+
+        if (updateRows == 0) {
+            return database.insert(Place.Table.TABLE_PLACES, null, values);
+        } else {
+            return updateRows;
+        }
+    }
+
     public void persistEvents(ArrayList<Event> events) {
         for (Event event : events) {
             persistEvent(event);
         }
+    }
+
+    public ArrayList<Place> getPlaces(String... filter) {
+        ArrayList<Place> placeArrayList = new ArrayList<Place>();
+
+        Cursor cursor = database.query(Place.Table.TABLE_PLACES,
+                allColumnsPlace,
+                (filter != null && filter.length > 0
+                        ? Event.Table.COLUMN_NAME + " LIKE ? "
+                        : null),
+                (filter != null && filter.length > 0
+                        ? new String[]{"%" + filter[0] + "%",}
+                        : null),
+                null, null, null);
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Place place = cursorToPlace(cursor);
+            placeArrayList.add(place);
+            cursor.moveToNext();
+        }
+        // make sure to close the cursor
+        cursor.close();
+
+        return placeArrayList;
     }
 
     public long persistEvent(Event event) {
@@ -159,11 +245,12 @@ public class EventsDatabase {
 //        database.delete(Event.Table.TABLE_EVENTS, Event.Table.COLUMN_ID + " = " + id, null);
 //    }
 
+    // TODO refactor it in better times (no need for two differet get<>Events methods!!!
     public ArrayList<Event> getEvents(String... filter) {
         ArrayList<Event> events = new ArrayList<Event>();
 
         Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
-                allColumns,
+                allColumnsEvent,
                 (filter != null && filter.length > 0
                         ? Event.Table.COLUMN_NAME + " LIKE ? OR " +
                         Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
@@ -194,16 +281,15 @@ public class EventsDatabase {
         ArrayList<Event> events = new ArrayList<Event>();
 
         Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
-                allColumns,
+                allColumnsEvent,
                 Event.Table.COLUMN_IS_EVENT_SAVED + " = ? " +
-                        (filter != null  && filter.length > 0 ? " AND (" +
+                        (filter != null && filter.length > 0 ? " AND (" +
                                 Event.Table.COLUMN_NAME + " LIKE ? OR " +
                                 Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
                                 Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
                                 Event.Table.COLUMN_START_DATE_STRING + " LIKE ? )"
                                 : ""),
                 (filter != null && filter.length > 0 ? new String[]{String.valueOf(Event.SAVED),
-                        "%" + filter[0] + "%",
                         "%" + filter[0] + "%",
                         "%" + filter[0] + "%",
                         "%" + filter[0] + "%",
@@ -224,7 +310,7 @@ public class EventsDatabase {
 
     public Event getEventById(long id) {
         Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
-                allColumns, Event.Table.COLUMN_ID + " = ? ", new String[]{String.valueOf(id)},
+                allColumnsEvent, Event.Table.COLUMN_ID + " = ? ", new String[]{String.valueOf(id)},
                 null, null, null);
         cursor.moveToFirst();
         Event event = cursorToEvent(cursor);

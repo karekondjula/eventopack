@@ -1,8 +1,13 @@
 package com.evento.team2.eventspack.utils;
 
+import android.text.TextUtils;
+
 import com.evento.team2.eventspack.model.Event;
+import com.evento.team2.eventspack.model.Place;
 import com.evento.team2.eventspack.soapservice.model.JsonEvent;
 import com.google.android.gms.maps.model.LatLng;
+
+import org.w3c.dom.Text;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -42,5 +47,24 @@ public class ConversionUtils {
         }
 
         return eventArrayList;
+    }
+
+    public static ArrayList<Place> extractPlacesFromEvents(ArrayList<Event> eventArrayList) {
+        ArrayList<Place> placeArrayList = new ArrayList<>();
+
+        Place place;
+        for (Event event : eventArrayList) {
+            if (!TextUtils.isEmpty(event.locationString) ){//&& !event.locationString.startsWith("TBA")) {
+                place = new Place();
+
+                place.id = event.id;
+                place.name = event.locationString;
+                place.location = event.location;
+
+                placeArrayList.add(place);
+            }
+        }
+
+        return placeArrayList;
     }
 }
