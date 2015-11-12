@@ -18,11 +18,12 @@ import java.util.HashMap;
  */
 public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
 
-    @IntDef({EVENTS, PLACES, SAVED_EVENTS})
+    @IntDef({NONE, EVENTS, PLACES, SAVED_EVENTS})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Category {
     }
 
+    public static final int NONE = -1;
     public static final int EVENTS = 0;
     public static final int PLACES = 1;
     public static final int SAVED_EVENTS = 2;
@@ -73,7 +74,7 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
             } else {
                 if (fetchFromServer == FETCH_FROM_SERVER &&
                         NetworkUtils.getInstance().isNetworkAvailable(observerFragment.getActivity())) {
-                    fetchPlacesFromServer();
+//                    fetchPlacesFromServer();
                 }
 
                 return EventsDatabase.getInstance().getPlaces();

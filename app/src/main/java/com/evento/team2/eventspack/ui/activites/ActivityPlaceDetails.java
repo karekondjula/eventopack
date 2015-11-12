@@ -16,6 +16,7 @@
 
 package com.evento.team2.eventspack.ui.activites;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -25,7 +26,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
@@ -34,6 +34,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
+import com.evento.team2.eventspack.model.Place;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
 import com.evento.team2.eventspack.ui.fragments.FragmentMap;
@@ -54,35 +55,20 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ActivityEventDetails extends AppCompatActivity {
+public class ActivityPlaceDetails extends AppCompatActivity {
 
-    public static final String EXTRA_ID = "event_id";
+    public static final String EXTRA_ID = "place_id";
 
     @Bind(R.id.backdrop)
     ImageView backdropImage;
 
-    @Bind(R.id.fab_add_to_saved)
-    FloatingActionButton saveEvent;
-
     @Bind(R.id.collapsing_toolbar)
     CollapsingToolbarLayout collapsingToolbar;
-
-    @Bind(R.id.event_details_start_date)
-    TextView textViewEventStartDate;
-
-    @Bind(R.id.event_details_end_date)
-    TextView textViewEventEndDate;
 
     @Bind(R.id.event_location)
     TextView textViewEventLocation;
 
-    @Bind(R.id.event_details)
-    TextView textViewEventDetails;
-
-    private Drawable emptyHeart;
-    private Drawable filledHeart;
-
-    private Event event;
+    private Place place;
 
     static {
         Iconify.with(new IoniconsModule());
@@ -91,11 +77,8 @@ public class ActivityEventDetails extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_event_details);
+        setContentView(R.layout.activity_place_details);
         ButterKnife.bind(this);
-
-        emptyHeart = new IconDrawable(this, IoniconsIcons.ion_android_favorite_outline).colorRes(android.R.color.white).actionBarSize();
-        filledHeart = new IconDrawable(this, IoniconsIcons.ion_android_favorite).colorRes(R.color.colorPrimary).actionBarSize();
 
         final Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -107,27 +90,14 @@ public class ActivityEventDetails extends AppCompatActivity {
 
         Intent intent = getIntent();
         final long eventId = intent.getLongExtra(EXTRA_ID, 0);
-        event = EventsDatabase.getInstance().getEventById(eventId);
+        place = EventsDatabase.getInstance().getPlaceById(eventId);
 
-        collapsingToolbar.setTitle(event.name);
+        collapsingToolbar.setTitle(place.name);
 
         // TODO daniel implement picture uri as picture
-        Glide.with(this).load(R.drawable.party_image).centerCrop().into(backdropImage);
+        Glide.with(this).load(R.drawable.place_image).centerCrop().into(backdropImage);
 
-        if (event.isEventSaved) {
-            saveEvent.setImageDrawable(filledHeart);
-        } else {
-            saveEvent.setImageDrawable(emptyHeart);
-        }
-
-        DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm");
-        textViewEventStartDate.setText(event.startTimeStamp != 0 ? dateFormat.format(event.startTimeStamp) : "");
-        textViewEventEndDate.setText(event.endTimeStamp != 0 ? dateFormat.format(event.endTimeStamp) : "");
-
-        textViewEventLocation.setText(event.locationString);
-
-        textViewEventDetails.setText(event.details);
-//        textViewEventDetails.setMovementMethod(LinkMovementMethod.getInstance());
+        textViewEventLocation.setText(place.locationString);
 
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.event_detail_map);
         mapFragment.getMapAsync(googleMap -> {
@@ -135,16 +105,17 @@ public class ActivityEventDetails extends AppCompatActivity {
             mapView.setMyLocationEnabled(true);
             mapView.getUiSettings().setAllGesturesEnabled(false);
             mapView.getUiSettings().setMyLocationButtonEnabled(false);
-            if (event.location.latitude != 0 || event.location.longitude != 0) {
-                mapView.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(event.location.latitude, event.location.longitude), 15));
+            if (place.location.latitude != 0 || place.location.longitude != 0) {
+                mapView.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(place.location.latitude, place.location.longitude), 15));
                 mapView.setOnMapClickListener(latLng -> {
-                    Intent newIntent = new Intent(ActivityEventDetails.this, ActivityMap.class);
-                    intent.putExtra(FragmentMap.EXTRA_WHAT, FetchAsyncTask.EVENTS);
-                    intent.putExtra(FragmentMap.EXTRA_ID, event.id);
+
+                    Intent newIntent = new Intent(ActivityPlaceDetails.this, ActivityMap.class);
+                    intent.putExtra(FragmentMap.EXTRA_WHAT, FetchAsyncTask.PLACES);
+                    intent.putExtra(FragmentMap.EXTRA_ID, place.id);
 
                     startActivity(newIntent);
                 });
-                mapView.addMarker(new MarkerOptions().position(new LatLng(event.location.latitude, event.location.longitude)));
+                mapView.addMarker(new MarkerOptions().position(new LatLng(place.location.latitude, place.location.longitude)));
             }
         });
     }
@@ -153,25 +124,5 @@ public class ActivityEventDetails extends AppCompatActivity {
     protected void onDestroy() {
         ButterKnife.unbind(this);
         super.onDestroy();
-    }
-
-    @OnClick(R.id.fab_add_to_saved)
-    public void saveEvent(View view) {
-        event.isEventSaved = !event.isEventSaved;
-        ((FloatingActionButton) findViewById(R.id.fab_add_to_saved)).setImageDrawable(event.isEventSaved ? filledHeart : emptyHeart);
-        EventsDatabase.getInstance().changeSaveEvent(event);
-
-        Snackbar.make(view,
-                event.isEventSaved ?
-                        String.format(getResources().getString(R.string.event_is_saved), event.name) :
-                        String.format(getResources().getString(R.string.event_is_removed), event.name),
-                Snackbar.LENGTH_LONG)
-                .show();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_event, menu);
-        return true;
     }
 }

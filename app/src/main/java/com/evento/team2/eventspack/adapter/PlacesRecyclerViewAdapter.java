@@ -2,6 +2,7 @@ package com.evento.team2.eventspack.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Place;
+import com.evento.team2.eventspack.ui.activites.ActivityPlaceDetails;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -41,19 +43,17 @@ public class PlacesRecyclerViewAdapter extends RecyclerView.Adapter<PlacesRecycl
         public ViewHolder(View view) {
             super(view);
             mView = view;
+            // TODO maybe we should not use BK because we can not unbind the view
+            // also in Events adapter
             ButterKnife.bind(this, view);
         }
     }
 
-    public void addEvents(ArrayList<Place> placesArrayList) {
+    public void addPlaces(ArrayList<Place> placesArrayList) {
         if (!places.equals(placesArrayList)) {
             places.clear();
             places.addAll(placesArrayList);
         }
-    }
-
-    public Place getValueAt(int position) {
-        return places.get(position);
     }
 
     public PlacesRecyclerViewAdapter(Context context) {
@@ -75,7 +75,7 @@ public class PlacesRecyclerViewAdapter extends RecyclerView.Adapter<PlacesRecycl
         holder.mPlaceTitle.setText(place.name);
 
         if (TextUtils.isEmpty(place.pictureUri)) {
-            Glide.with(holder.mPlacePicture.getContext()).load(R.drawable.party_image).into(holder.mPlacePicture);
+            Glide.with(holder.mPlacePicture.getContext()).load(R.drawable.place_image).into(holder.mPlacePicture);
         } else {
             // TODO daniel implement picture uri as picture
             Glide.with(context).load(new File(place.pictureUri)).into(holder.mPlacePicture);
@@ -83,20 +83,17 @@ public class PlacesRecyclerViewAdapter extends RecyclerView.Adapter<PlacesRecycl
 
         holder.mPlaceLocation.setText(place.locationString);
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.mView.setOnClickListener(v -> {
 
-                Activity activity = (Activity) v.getContext();
+            Activity activity = (Activity) v.getContext();
 
-//                Intent intent = new Intent(context, ActivityEventDetails.class);
-//                intent.putExtra(ActivityEventDetails.EXTRA_ID, place.id);
+            Intent intent = new Intent(context, ActivityPlaceDetails.class);
+            intent.putExtra(ActivityPlaceDetails.EXTRA_ID, place.id);
 
-//                activity.startActivity(intent);
+            activity.startActivity(intent);
 
-                // TODO fancy animation please ^_^
+            // TODO fancy animation please ^_^
 //                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-            }
         });
     }
 

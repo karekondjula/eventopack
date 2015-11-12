@@ -192,9 +192,36 @@ public class ActivityMain extends AppCompatActivity {
         adapter.addFragment(fragmentPlaces, getString(R.string.places));
         adapter.addFragment(fragmentSavedEvents, getString(R.string.saved));
         viewPager.setAdapter(adapter);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                switch (position) {
+                    case 0:
+                        fragmentEvents.onResume();
+                        break;
+                    case 1:
+                        fragmentPlaces.onResume();
+                        break;
+                    case 2:
+                        fragmentSavedEvents.onResume();
+                        break;
+                    default:
+                }
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
-    static class Adapter extends FragmentPagerAdapter {
+    private static class Adapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragments = new ArrayList<>();
         private final List<String> mFragmentTitles = new ArrayList<>();
 

@@ -126,7 +126,6 @@ public class EventsDatabase {
 
     public void persistPlaces(ArrayList<Place> places) {
         for (Place place : places) {
-            Log.i(">>", place.toString());
             persistPlace(place);
         }
     }
@@ -186,8 +185,9 @@ public class EventsDatabase {
                 null, null, null);
 
         cursor.moveToFirst();
+        Place place;
         while (!cursor.isAfterLast()) {
-            Place place = cursorToPlace(cursor);
+            place = cursorToPlace(cursor);
             placeArrayList.add(place);
             cursor.moveToNext();
         }
@@ -266,8 +266,9 @@ public class EventsDatabase {
                 null, null, null);
 
         cursor.moveToFirst();
+        Event event;
         while (!cursor.isAfterLast()) {
-            Event event = cursorToEvent(cursor);
+            event = cursorToEvent(cursor);
             events.add(event);
             cursor.moveToNext();
         }
@@ -308,14 +309,25 @@ public class EventsDatabase {
         return events;
     }
 
-    public Event getEventById(long id) {
+    public Event getEventById(long eventId) {
         Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
-                allColumnsEvent, Event.Table.COLUMN_ID + " = ? ", new String[]{String.valueOf(id)},
+                allColumnsEvent, Event.Table.COLUMN_ID + " = ? ", new String[]{String.valueOf(eventId)},
                 null, null, null);
         cursor.moveToFirst();
         Event event = cursorToEvent(cursor);
         cursor.close();
 
         return event;
+    }
+
+    public Place getPlaceById(long placeId) {
+        Cursor cursor = database.query(Place.Table.TABLE_PLACES,
+                allColumnsPlace, Place.Table.COLUMN_ID + " = ? ", new String[]{String.valueOf(placeId)},
+                null, null, null);
+        cursor.moveToFirst();
+        Place place = cursorToPlace(cursor);
+        cursor.close();
+
+        return place;
     }
 }

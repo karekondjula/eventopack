@@ -62,6 +62,8 @@ import butterknife.ButterKnife;
 public class FragmentMap extends ObserverFragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
         GoogleMap.OnMapClickListener, GoogleMap.OnMyLocationChangeListener {
 
+    public static final String EXTRA_WHAT = "extra_what";
+    public static final String EXTRA_ID = "extra_id";
     public static final String TAG = "FragmentMap";
     public static final String DELIMITER = "\n";
 
@@ -73,6 +75,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     private String lastSelectedDate;
     private TextView actionViewCalendar;
     private @FetchAsyncTask.Category int resultType = FetchAsyncTask.EVENTS;
+    private HashMap<LatLng, Long> hashMapLatLngEventId = new HashMap<>();
 
     @Bind(R.id.map_event_details)
     LinearLayout mapEventDetailsLinearLayout;
@@ -104,6 +107,8 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
             getFragmentManager().beginTransaction().replace(R.id.location_map, mapFragment).commit();
         }
         mapFragment.getMapAsync(this);
+
+        // get the two extras and set correct category and date
 
         Spinner spinner = ButterKnife.findById(getActivity(), R.id.spinner_navigation);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -265,12 +270,16 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         mapView.setPadding(0, 0, 0, 0);
     }
 
-    public static FragmentMap newInstance() {
+    public static FragmentMap newInstance(@FetchAsyncTask.Category int what, int id) {
         FragmentMap fragmentMap = new FragmentMap();
+        if (what != FetchAsyncTask.NONE) {
+            Bundle args = new Bundle();
+            args.putInt("what", what);
+            args.putInt("id", id);
+            fragmentMap.setArguments(args);
+        }
         return fragmentMap;
     }
-
-    HashMap<LatLng, Long> hashMapLatLngEventId = new HashMap<>();
 
     @Override
     public void update(Observable observable, Object eventArrayList) {

@@ -1,9 +1,11 @@
 package com.evento.team2.eventspack.ui.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,7 +69,7 @@ public class FragmentPlaces extends ObserverFragment {
     @Override
     public void update(Observable observable, Object placesArrayList) {
         if (placesArrayList instanceof ArrayList) {
-            placesRecyclerViewAdapter.addEvents((ArrayList<Place>) placesArrayList);
+            placesRecyclerViewAdapter.addPlaces((ArrayList<Place>) placesArrayList);
             placesRecyclerViewAdapter.notifyDataSetChanged();
         }
     }

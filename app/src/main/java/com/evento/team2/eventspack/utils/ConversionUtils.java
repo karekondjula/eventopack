@@ -54,7 +54,7 @@ public class ConversionUtils {
 
         Place place;
         for (Event event : eventArrayList) {
-            if (!TextUtils.isEmpty(event.locationString) ){//&& !event.locationString.startsWith("TBA")) {
+            if (!TextUtils.isEmpty(event.locationString) && !event.locationString.startsWith("TBA")) {
                 place = new Place();
 
                 place.id = event.id;
