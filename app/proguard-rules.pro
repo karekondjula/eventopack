@@ -27,17 +27,23 @@
 #-keep interface javax.** { *; }
 #-keep org.** { *; }
 
+
 -dontpreverify
 -repackageclasses ''
 -allowaccessmodification
 -optimizations !code/simplification/arithmetic
 -keepattributes *Annotation*
 
+-dontwarn butterknife.internal.**
+-dontwarn com.google.android.gms.**
+-dontwarn com.evento.team2.eventspack.**
+
 -keep public class * extends android.app.Activity
 -keep public class * extends android.app.Application
 -keep public class * extends android.app.Service # not used
 -keep public class * extends android.content.BroadcastReceiver # not used
 -keep public class * extends android.content.ContentProvider
+-keep class com.google.android.gms.** { *; }
 
 -keep class * extends java.util.ListResourceBundle {
     protected Object[][] getContents();

@@ -28,6 +28,8 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
     public static final int PLACES = 1;
     public static final int SAVED_EVENTS = 2;
 
+    public static final int NO_EVENT_ID = -1;
+
     public static final String FILTER_NAME = "0";
     public static final String FILTER_DATE = "1";
 
@@ -70,6 +72,8 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
             if ((filter != null && filter.length > 0)) {
                 if (filter[0].equals(FILTER_NAME)) {
                     return EventsDatabase.getInstance().getPlaces(filter[1]);
+                } else {
+                    return EventsDatabase.getInstance().getPlaces();
                 }
             } else {
                 if (fetchFromServer == FETCH_FROM_SERVER &&

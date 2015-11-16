@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Geocoder;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.model.Place;
@@ -269,6 +268,7 @@ public class EventsDatabase {
         Event event;
         while (!cursor.isAfterLast()) {
             event = cursorToEvent(cursor);
+//            Log.i(">>", event.toString());
             events.add(event);
             cursor.moveToNext();
         }

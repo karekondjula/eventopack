@@ -138,11 +138,11 @@ public class ActivityEventDetails extends AppCompatActivity {
             if (event.location.latitude != 0 || event.location.longitude != 0) {
                 mapView.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(event.location.latitude, event.location.longitude), 15));
                 mapView.setOnMapClickListener(latLng -> {
-                    Intent newIntent = new Intent(ActivityEventDetails.this, ActivityMap.class);
-                    intent.putExtra(FragmentMap.EXTRA_WHAT, FetchAsyncTask.EVENTS);
-                    intent.putExtra(FragmentMap.EXTRA_ID, event.id);
-
-                    startActivity(newIntent);
+                    Intent activityMapIntent = new Intent(ActivityEventDetails.this, ActivityMap.class);
+                    activityMapIntent.putExtra(FragmentMap.EXTRA_WHAT, FetchAsyncTask.EVENTS);
+                    activityMapIntent.putExtra(FragmentMap.EXTRA_ID, event.id);
+                    startActivity(activityMapIntent);
+                    finish();
                 });
                 mapView.addMarker(new MarkerOptions().position(new LatLng(event.location.latitude, event.location.longitude)));
             }

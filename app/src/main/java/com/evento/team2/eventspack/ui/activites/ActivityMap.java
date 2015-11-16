@@ -71,24 +71,29 @@ public class ActivityMap extends AppCompatActivity {
 //            actionbar.setTitle("Calendar");
 //        }
 
-        FragmentMap fragmentMap;
+        FragmentMap fragmentMap = null;
 
-        Intent intent = getIntent();
-        if (intent != null) {
-            int whatInt = intent.getIntExtra(FragmentMap.EXTRA_WHAT, -1) ;
-            FetchAsyncTask.Category what;
-            switch (whatInt){
-                case 0: fragmentMap = FragmentMap.newInstance(FetchAsyncTask.EVENTS,
-                        intent.getIntExtra(FragmentMap.EXTRA_ID, -1));
-                    break;
-                case 1: fragmentMap = FragmentMap.newInstance(FetchAsyncTask.PLACES,
-                        intent.getIntExtra(FragmentMap.EXTRA_ID, -1));
-                    break;
-                default:
-                    fragmentMap = FragmentMap.newInstance(FetchAsyncTask.NONE, 0);
+        if (getIntent() != null) {
+            Bundle bundle = getIntent().getExtras();
+            if (bundle != null) {
+                int what = bundle.getInt(FragmentMap.EXTRA_WHAT);
+                long eventId = bundle.getLong(FragmentMap.EXTRA_ID);
+                switch (what) {
+                    case FetchAsyncTask.SAVED_EVENTS:
+                        // TODO go to saved events in activity map
+                    case FetchAsyncTask.EVENTS:
+                        fragmentMap = FragmentMap.newInstance(FetchAsyncTask.EVENTS, eventId);
+                        break;
+                    case FetchAsyncTask.PLACES:
+                        fragmentMap = FragmentMap.newInstance(FetchAsyncTask.PLACES, eventId);
+                        break;
+
+                    default:
+                        fragmentMap = FragmentMap.newInstance(FetchAsyncTask.NONE, FetchAsyncTask.NO_EVENT_ID);
+                }
+            } else {
+                fragmentMap = FragmentMap.newInstance(FetchAsyncTask.NONE, FetchAsyncTask.NO_EVENT_ID);
             }
-        } else {
-            fragmentMap = FragmentMap.newInstance(FetchAsyncTask.NONE, 0);
         }
 
         getFragmentManager().beginTransaction()
