@@ -155,7 +155,19 @@ public class EventsDatabase {
             }
         }
 
-        long updateRows = database.update(Place.Table.TABLE_PLACES, values, Place.Table.COLUMN_ID + " = ?", new String[]{String.valueOf(place.id)});
+        long updateRows = database.update(Place.Table.TABLE_PLACES,
+                values,
+                Place.Table.COLUMN_ID + " = ? OR " +
+                    Place.Table.COLUMN_NAME + " LIKE ? OR " +
+                        "(" +
+                            Place.Table.COLUMN_LATITUDE + " = ? AND " +
+                            Place.Table.COLUMN_LONGITUDE + " = ? " +
+                        ")",
+                new String[]{String.valueOf(place.id),
+                        String.valueOf("%" + place.name + "%"),
+                        String.valueOf(place.location.latitude),
+                        String.valueOf(place.location.longitude),
+                });
 
         if (updateRows == 0) {
             return database.insert(Place.Table.TABLE_PLACES, null, values);
