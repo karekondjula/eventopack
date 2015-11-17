@@ -69,6 +69,9 @@ public class FragmentPlaces extends ObserverFragment {
     @Override
     public void update(Observable observable, Object placesArrayList) {
         if (placesArrayList instanceof ArrayList) {
+            if (placesRecyclerViewAdapter == null) {
+                placesRecyclerViewAdapter = new PlacesRecyclerViewAdapter(getActivity());
+            }
             placesRecyclerViewAdapter.addPlaces((ArrayList<Place>) placesArrayList);
             placesRecyclerViewAdapter.notifyDataSetChanged();
         }

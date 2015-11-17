@@ -89,6 +89,9 @@ public class FragmentEvents extends ObserverFragment {
     public void update(Observable observable, Object eventsArrayList) {
 
         if (eventsArrayList instanceof ArrayList) {
+            if (eventsAdapter == null) {
+                eventsAdapter = new EventsRecyclerViewAdapter(getActivity());
+            }
             eventsAdapter.addEvents((ArrayList<Event>) eventsArrayList);
             eventsAdapter.notifyDataSetChanged();
 
