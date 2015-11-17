@@ -262,7 +262,9 @@ public class EventsDatabase {
                         "%" + filter[0] + "%",
                         "%" + filter[0] + "%",}
                         : null),
-                null, null, null);
+                null,
+                null,
+                Event.Table.COLUMN_START_TIME_STAMP + " DESC");
 
         cursor.moveToFirst();
         Event event;
@@ -296,7 +298,9 @@ public class EventsDatabase {
                         "%" + filter[0] + "%",
                         "%" + filter[0] + "%",}
                         : new String[]{String.valueOf(Event.SAVED)}),
-                null, null, null);
+                null,
+                null,
+                Event.Table.COLUMN_START_TIME_STAMP + " DESC");
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {

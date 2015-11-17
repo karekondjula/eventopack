@@ -29,7 +29,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:text="TItleddddddddddddddddddddddddddddddddddddddddddddddd"
                 android:textAppearance="?android:attr/textAppearanceListItem" />
 
             <TextView
@@ -38,7 +37,6 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/event_title"
                 android:singleLine="true"
-                android:text="description longer"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -57,7 +55,6 @@
                 android:layout_alignParentBottom="true"
                 android:layout_toRightOf="@+id/event_color"
                 android:singleLine="true"
-                android:text="11:11"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
         </RelativeLayout>

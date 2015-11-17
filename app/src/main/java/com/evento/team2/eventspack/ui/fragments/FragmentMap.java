@@ -9,7 +9,6 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -315,7 +314,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         final float scale = getActivity().getResources().getDisplayMetrics().density;
         mapView.setPadding(0, 0, 0, (int) (scale * 80)); // rise the zoom controls when an event is clicked
 
-        final View mapEventItemView = LayoutInflater.from(getActivity()).inflate(R.layout.item_small_events, mapEventDetailsLinearLayout, false);
+        final View mapEventItemView = LayoutInflater.from(getActivity()).inflate(R.layout.item_small, mapEventDetailsLinearLayout, false);
         ImageView mapEventImageView = ButterKnife.findById(mapEventItemView, R.id.small_event_picture);
         mapEventImageView.setImageResource(R.drawable.party_image);
 //                Glide.with(getActivity()).load(R.drawable.party_image).into(calendarEventImageView);

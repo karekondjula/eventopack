@@ -61,7 +61,7 @@ public class SmallLayoutEventsRecyclerViewAdapter extends RecyclerView.Adapter<S
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_small_events, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_small, parent, false);
         return new ViewHolder(view);
     }
 

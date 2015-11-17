@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,17 +17,14 @@ import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.utils.ColorUtils;
-import com.evento.team2.eventspack.utils.Utils;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -162,13 +157,14 @@ public class FragmentCalendar extends Fragment {
         // fetch all events for the current startDate
         for (final Event event : eventsList) {
             if (selectedDates.contains(event.startDate)) {
-                final View calendarItemView = LayoutInflater.from(getActivity()).inflate(R.layout.item_small_events, calendarEventsLinearLayout, false);
+                final View calendarItemView = LayoutInflater.from(getActivity()).inflate(R.layout.item_small, calendarEventsLinearLayout, false);
                 ImageView calendarEventImageView = (ImageView) ButterKnife.findById(calendarItemView, R.id.small_event_picture);
                 ((CircleImageView) ButterKnife.findById(calendarItemView, R.id.event_color)).setImageResource(dateColorHashMap.get(event.startDate));
                 calendarEventImageView.setImageResource(R.drawable.party_image);
 //                Glide.with(getActivity()).load(R.drawable.party_image).into(calendarEventImageView);
                 ((TextView) ButterKnife.findById(calendarItemView, R.id.event_title)).setText(event.name);
                 ((TextView) ButterKnife.findById(calendarItemView, R.id.event_details)).setText(event.details);
+                ((TextView) ButterKnife.findById(calendarItemView, R.id.event_time)).setText(event.startTimeString);
                 calendarItemView.setClickable(true);
                 calendarItemView.setOnClickListener(v -> {
                     Intent intent = new Intent(getActivity(), ActivityEventDetails.class);

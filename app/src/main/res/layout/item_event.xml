@@ -69,8 +69,7 @@
 
             <TextView
                 android:id="@+id/event_start_time"
-                android:singleLine="true"
-                android:text="31.10.2015 20:00" />
+                android:singleLine="true" /> <!-- 31.10.2015 20:00-->
 
         </TableRow>
 
@@ -82,8 +81,7 @@
 
             <TextView
                 android:id="@+id/event_end_time"
-                android:singleLine="true"
-                android:text="31.10.2015 22:00" />
+                android:singleLine="true" /> <!-- 31.10.2015 20:00-->
 
         </TableRow>
 
