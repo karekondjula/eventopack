@@ -219,7 +219,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void filterEvents(String query) {
+    public void filterList(String query) {
         // NO op
     }
 

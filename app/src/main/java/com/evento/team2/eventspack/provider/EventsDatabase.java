@@ -167,7 +167,7 @@ public class EventsDatabase {
                         String.valueOf("%" + place.name + "%"),
                         String.valueOf(place.location.latitude),
                         String.valueOf(place.location.longitude),
-                });
+        });
 
         if (updateRows == 0) {
             return database.insert(Place.Table.TABLE_PLACES, null, values);

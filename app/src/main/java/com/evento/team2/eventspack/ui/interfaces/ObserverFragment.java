@@ -45,13 +45,13 @@ public abstract class ObserverFragment extends Fragment implements Observer {
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
-                    filterEvents(query);
+                    filterList(query);
                     return true;
                 }
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
-                    filterEvents(newText);
+                    filterList(newText);
                     return true;
                 }
             });
@@ -75,5 +75,5 @@ public abstract class ObserverFragment extends Fragment implements Observer {
         super.onCreateOptionsMenu(menu, menuInflater);
     }
 
-    public abstract void filterEvents(String query);
+    public abstract void filterList(String query);
 }

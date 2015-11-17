@@ -20,7 +20,7 @@ public class DialogFragmentAbout extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_about, container);
-        getDialog().setTitle("About Eventi");
+        getDialog().setTitle(getString(R.string.about_eventi));
         return view;
     }
 

@@ -14,7 +14,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -127,13 +126,13 @@ public class ActivityMain extends AppCompatActivity {
             String query = intent.getStringExtra(SearchManager.QUERY);
             switch (viewPager.getCurrentItem()) {
                 case 0:
-                    fragmentEvents.filterEvents(query);
+                    fragmentEvents.filterList(query);
                     break;
                 case 1:
-                    fragmentPlaces.filterEvents(query);
+                    fragmentPlaces.filterList(query);
                     break;
                 case 2:
-                    fragmentSavedEvents.filterEvents(query);
+                    fragmentSavedEvents.filterList(query);
                     break;
                 default:
             }
@@ -193,17 +192,19 @@ public class ActivityMain extends AppCompatActivity {
         adapter.addFragment(fragmentSavedEvents, getString(R.string.saved));
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
                 switch (position) {
                     case 0:
-                        fragmentEvents.onResume();
+                        fragmentEvents.filterList(null);
                         break;
                     case 1:
-                        fragmentPlaces.onResume();
+                        fragmentPlaces.filterList(null);
                         break;
                     case 2:
-                        fragmentSavedEvents.onResume();
+                        fragmentSavedEvents.filterList(null);
                         break;
                     default:
                 }

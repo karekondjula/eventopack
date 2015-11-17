@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,13 +50,6 @@ public class FragmentPlaces extends ObserverFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        fetchAsyncTask = new FetchAsyncTask(this, FetchAsyncTask.PLACES, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER);
-        fetchAsyncTask.execute();
-    }
-
-    @Override
     public void onDetach() {
         ButterKnife.unbind(this);
         super.onDetach();
@@ -78,8 +72,12 @@ public class FragmentPlaces extends ObserverFragment {
     }
 
     @Override
-    public void filterEvents(String filter) {
+    public void filterList(String filter) {
         fetchAsyncTask = new FetchAsyncTask(this, FetchAsyncTask.PLACES, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER);
-        fetchAsyncTask.execute(FetchAsyncTask.FILTER_NAME, filter);
+        if (TextUtils.isEmpty(filter)) {
+            fetchAsyncTask.execute();
+        } else {
+            fetchAsyncTask.execute(FetchAsyncTask.FILTER_NAME, filter);
+        }
     }
 }

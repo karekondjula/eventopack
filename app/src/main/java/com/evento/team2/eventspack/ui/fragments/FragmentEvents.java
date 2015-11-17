@@ -1,8 +1,5 @@
 package com.evento.team2.eventspack.ui.fragments;
 
-import android.app.SearchManager;
-import android.content.Context;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -10,13 +7,11 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapter.EventsRecyclerViewAdapter;
@@ -40,6 +35,8 @@ public class FragmentEvents extends ObserverFragment {
 
     @Bind(R.id.eventsRecyclerView)
     RecyclerView eventsRecyclerView;
+    @Bind(R.id.empty_view)
+    TextView emptyAdapterTextView;
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private EventsRecyclerViewAdapter eventsAdapter;
@@ -71,18 +68,15 @@ public class FragmentEvents extends ObserverFragment {
         return swipeRefreshLayout;
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-//        swipeRefreshLayout.post(() -> swipeRefreshLayout.setRefreshing(true));
-        fetchAsyncTask = new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER);
-        fetchAsyncTask.execute();
-    }
-
     public static FragmentEvents newInstance() {
         FragmentEvents fragmentEvents = new FragmentEvents();
         return fragmentEvents;
+    }
+
+    @Override
+    public void onDestroyView() {
+        ButterKnife.unbind(this);
+        super.onDestroyView();
     }
 
     @Override
@@ -91,9 +85,17 @@ public class FragmentEvents extends ObserverFragment {
         if (eventsArrayList instanceof ArrayList) {
             if (eventsAdapter == null) {
                 eventsAdapter = new EventsRecyclerViewAdapter(getActivity());
+                eventsRecyclerView.setAdapter(eventsAdapter);
             }
+
             eventsAdapter.addEvents((ArrayList<Event>) eventsArrayList);
-            eventsAdapter.notifyDataSetChanged();
+
+            if (eventsAdapter.getItemCount() == 0) {
+                emptyAdapterTextView.setVisibility(View.VISIBLE);
+            } else {
+                emptyAdapterTextView.setVisibility(View.GONE);
+                eventsAdapter.notifyDataSetChanged();
+            }
 
             if (!NetworkUtils.getInstance().isNetworkAvailable(getActivity())) {
                 getActivity().runOnUiThread(() -> {
@@ -111,8 +113,12 @@ public class FragmentEvents extends ObserverFragment {
     }
 
     @Override
-    public void filterEvents(String filter) {
+    public void filterList(String filter) {
         fetchAsyncTask = new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER);
-        fetchAsyncTask.execute(FetchAsyncTask.FILTER_NAME, filter);
+        if (TextUtils.isEmpty(filter)) {
+            fetchAsyncTask.execute();
+        } else {
+            fetchAsyncTask.execute(FetchAsyncTask.FILTER_NAME, filter);
+        }
     }
 }
