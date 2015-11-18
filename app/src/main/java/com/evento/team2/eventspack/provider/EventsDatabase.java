@@ -33,6 +33,7 @@ public class EventsDatabase {
     private Geocoder geocoder;
 
     private String[] allColumnsEvent = {Event.Table.COLUMN_ID,
+            Event.Table.COLUMN_ID,
             Event.Table.COLUMN_NAME,
             Event.Table.COLUMN_DETAILS,
             Event.Table.COLUMN_PICTURE_URI,
@@ -47,12 +48,13 @@ public class EventsDatabase {
 
 
     private Event cursorToEvent(Cursor cursor) {
-        Event event = new Event(cursor.getString(1), cursor.getString(2));
+        Event event = new Event(cursor.getString(2), cursor.getString(3));
         event.id = cursor.getLong(0);
-        event.pictureUri = cursor.getString(3);
-        event.locationString = cursor.getString(4);
-        event.location = new LatLng(cursor.getDouble(5), cursor.getDouble(6));
-        event.startTimeStamp = cursor.getLong(7);
+        event.facebookId = cursor.getLong(1);
+        event.pictureUri = cursor.getString(4);
+        event.locationString = cursor.getString(5);
+        event.location = new LatLng(cursor.getDouble(6), cursor.getDouble(7));
+        event.startTimeStamp = cursor.getLong(8);
         event.startTimeString = new SimpleDateFormat("HH:mm").format(new Date(event.startTimeStamp));
 
         Calendar cal = Calendar.getInstance();
@@ -63,10 +65,10 @@ public class EventsDatabase {
         cal.set(Calendar.MILLISECOND, 0);
         event.startDate = cal.getTimeInMillis();
 
-        event.startDateString = cursor.getString(8);//new SimpleDateFormat("dd.MM.yyyy").format(new Date(event.startDate));
-        event.endTimeStamp = cursor.getLong(9);
+        event.startDateString = cursor.getString(9);//new SimpleDateFormat("dd.MM.yyyy").format(new Date(event.startDate));
+        event.endTimeStamp = cursor.getLong(10);
         event.endDateString = new SimpleDateFormat("HH:mm dd.MM.yyyy").format(new Date(event.endTimeStamp));
-        event.isEventSaved = cursor.getInt(10) == Event.SAVED ? true : false;
+        event.isEventSaved = cursor.getInt(11) == Event.SAVED ? true : false;
         return event;
     }
 
@@ -158,16 +160,16 @@ public class EventsDatabase {
         long updateRows = database.update(Place.Table.TABLE_PLACES,
                 values,
                 Place.Table.COLUMN_ID + " = ? OR " +
-                    Place.Table.COLUMN_NAME + " LIKE ? OR " +
+                        Place.Table.COLUMN_NAME + " LIKE ? OR " +
                         "(" +
-                            Place.Table.COLUMN_LATITUDE + " = ? AND " +
-                            Place.Table.COLUMN_LONGITUDE + " = ? " +
+                        Place.Table.COLUMN_LATITUDE + " = ? AND " +
+                        Place.Table.COLUMN_LONGITUDE + " = ? " +
                         ")",
                 new String[]{String.valueOf(place.id),
                         String.valueOf("%" + place.name + "%"),
                         String.valueOf(place.location.latitude),
                         String.valueOf(place.location.longitude),
-        });
+                });
 
         if (updateRows == 0) {
             return database.insert(Place.Table.TABLE_PLACES, null, values);
@@ -241,7 +243,20 @@ public class EventsDatabase {
         values.put(Event.Table.COLUMN_START_DATE_STRING, event.startDateString);
         values.put(Event.Table.COLUMN_END_TIME_STAMP, event.endTimeStamp);
 
-        long updateRows = database.update(Event.Table.TABLE_EVENTS, values, Event.Table.COLUMN_ID + " = ?", new String[]{String.valueOf(event.id)});
+        long updateRows = database.update(Event.Table.TABLE_EVENTS,
+                values,
+                Event.Table.COLUMN_ID + " = ? OR " +
+                Event.Table.COLUMN_FACEBOOK_ID + " = ? OR " +
+                        "(" + Event.Table.COLUMN_START_TIME_STAMP + " = ? AND " +
+                        Event.Table.COLUMN_LATITUDE + " = ? AND " +
+                        Event.Table.COLUMN_LONGITUDE + " = ? )",
+                new String[]{String.valueOf(event.id),
+                        String.valueOf(event.facebookId),
+                        String.valueOf(event.startTimeStamp),
+                        String.valueOf(event.location.latitude),
+                        String.valueOf(event.location.longitude)
+                }
+        );
 
         if (updateRows == 0) {
             values.put(Event.Table.COLUMN_IS_EVENT_SAVED, Event.NOT_SAVED);

@@ -41,10 +41,6 @@ public class FragmentEvents extends ObserverFragment {
     private SwipeRefreshLayout swipeRefreshLayout;
     private EventsRecyclerViewAdapter eventsAdapter;
 
-    static {
-        Iconify.with(new IoniconsModule());
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

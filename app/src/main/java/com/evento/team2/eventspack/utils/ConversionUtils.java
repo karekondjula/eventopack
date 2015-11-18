@@ -22,6 +22,7 @@ public class ConversionUtils {
         Event event = new Event(jsonEvent.title, jsonEvent.teaser);
 
         event.id = jsonEvent.id;
+        event.facebookId = jsonEvent.fb_id;
         event.startTimeStamp = jsonEvent.startTime * 1000; // in ms
 
         String dateTime = new SimpleDateFormat("HH:mm dd.MM.yyyy").format(new Date(event.startTimeStamp));
@@ -58,7 +59,7 @@ public class ConversionUtils {
                 place = new Place();
 
                 place.id = event.id;
-                place.name = event.locationString;
+                place.name = event.locationString.trim();
                 place.location = event.location;
 
                 placeArrayList.add(place);

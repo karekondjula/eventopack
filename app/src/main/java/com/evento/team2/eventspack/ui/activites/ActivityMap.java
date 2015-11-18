@@ -40,6 +40,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.IoniconsModule;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
@@ -55,6 +57,10 @@ import butterknife.ButterKnife;
  * Created by Daniel on 01-Oct-15.
  */
 public class ActivityMap extends AppCompatActivity {
+
+    static {
+        Iconify.with(new IoniconsModule());
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

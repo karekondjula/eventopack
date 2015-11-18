@@ -27,6 +27,10 @@ import com.evento.team2.eventspack.ui.fragments.DialogFragmentAbout;
 import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
 import com.evento.team2.eventspack.ui.fragments.FragmentPlaces;
 import com.evento.team2.eventspack.ui.fragments.FragmentSavedEvents;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.IoniconsIcons;
+import com.joanzapata.iconify.fonts.IoniconsModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +49,10 @@ public class ActivityMain extends AppCompatActivity {
     private FragmentEvents fragmentEvents = FragmentEvents.newInstance();
     private FragmentSavedEvents fragmentSavedEvents = FragmentSavedEvents.newInstance();
     private FragmentPlaces fragmentPlaces = FragmentPlaces.newInstance();
+
+    static {
+        Iconify.with(new IoniconsModule());
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +161,17 @@ public class ActivityMain extends AppCompatActivity {
         menuInflater.inflate(R.menu.menu_main, menu);
 
         searchMenuItem = menu.findItem(R.id.action_search);
+
+        menu.findItem(R.id.action_calendar).setIcon(
+                new IconDrawable(this, IoniconsIcons.ion_calendar)
+                        .colorRes(android.R.color.white)
+                        .actionBarSize());
+
+        menu.findItem(R.id.action_map).setIcon(
+                new IconDrawable(this, IoniconsIcons.ion_map)
+                        .colorRes(android.R.color.white)
+                        .actionBarSize());
+
         return super.onCreateOptionsMenu(menu);
     }
 

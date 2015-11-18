@@ -12,6 +12,9 @@ import android.view.MenuItem;
 
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.joanzapata.iconify.fonts.IoniconsIcons;
 
 import java.util.Observer;
 
@@ -22,7 +25,7 @@ import butterknife.ButterKnife;
  */
 public abstract class ObserverFragment extends Fragment implements Observer {
 
-//    private SearchView searchView = null;
+    //    private SearchView searchView = null;
     protected FetchAsyncTask fetchAsyncTask;
 
     @Override

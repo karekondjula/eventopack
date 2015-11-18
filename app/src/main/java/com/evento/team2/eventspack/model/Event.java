@@ -30,6 +30,7 @@ public class Event implements Comparable<Event> {
      * Universal id for the event, same on all devices
      */
     public long id;
+    public long facebookId;
     public String name;
     public String details;
     public String pictureUri;
@@ -118,6 +119,7 @@ public class Event implements Comparable<Event> {
         public static final String TABLE_EVENTS = "Events";
 
         public static final String COLUMN_ID = "id";
+        public static final String COLUMN_FACEBOOK_ID = "facebookId";
         public static final String COLUMN_NAME = "name";
         public static final String COLUMN_DETAILS = "details";
         public static final String COLUMN_PICTURE_URI = "pictureUri";
@@ -132,6 +134,7 @@ public class Event implements Comparable<Event> {
         // Database creation sql statement
         public static final String TABLE_EVENTS_CREATE = "create table " + TABLE_EVENTS + "("
                 + COLUMN_ID + " integer primary key, "
+                + COLUMN_FACEBOOK_ID + " integer, "
                 + COLUMN_NAME + " text not null, "
                 + COLUMN_DETAILS + " text, "
                 + COLUMN_PICTURE_URI + " text, "

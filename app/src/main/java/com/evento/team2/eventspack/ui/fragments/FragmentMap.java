@@ -40,10 +40,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.Iconify;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
-import com.joanzapata.iconify.fonts.FontAwesomeModule;
 import com.roomorama.caldroid.CaldroidFragment;
 import com.roomorama.caldroid.CaldroidListener;
 
@@ -82,10 +78,6 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
 
     @Bind(R.id.map_event_details)
     LinearLayout mapEventDetailsLinearLayout;
-
-    static {
-        Iconify.with(new FontAwesomeModule());
-    }
 
     private Bitmap placeImageBitmap;
     private Bitmap eventImageBitmap;
@@ -204,10 +196,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
 
         inflater.inflate(R.menu.menu_map, menu);
         final MenuItem calendarMenuItem = menu.findItem(R.id.action_calendar);
-        calendarMenuItem.setIcon(new IconDrawable(getActivity(), FontAwesomeIcons.fa_calendar)
-                .colorRes(R.color.caldroid_black).actionBarSize());
-
-        actionViewCalendar = (TextView) MenuItemCompat.getActionView(calendarMenuItem);
+        actionViewCalendar = ButterKnife.findById(MenuItemCompat.getActionView(calendarMenuItem), R.id.menu_map_date);
         actionViewCalendar.setOnClickListener(v -> onOptionsItemSelected(calendarMenuItem));
 
         // set today's date in the action menu
