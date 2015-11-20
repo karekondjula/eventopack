@@ -18,6 +18,8 @@
             style="@style/Base.TextAppearance.AppCompat.Headline"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:drawableLeft="@drawable/arrow_down_pull_48dp"
+            android:drawableRight="@drawable/arrow_down_pull_48dp"
             android:gravity="center"
             android:text="@string/pull_to_refresh"
             android:visibility="gone" />

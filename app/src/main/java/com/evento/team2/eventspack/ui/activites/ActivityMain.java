@@ -49,6 +49,7 @@ public class ActivityMain extends AppCompatActivity {
     private FragmentEvents fragmentEvents = FragmentEvents.newInstance();
     private FragmentSavedEvents fragmentSavedEvents = FragmentSavedEvents.newInstance();
     private FragmentPlaces fragmentPlaces = FragmentPlaces.newInstance();
+    private MenuItem searchMenuItem;
 
     static {
         Iconify.with(new IoniconsModule());
@@ -153,8 +154,6 @@ public class ActivityMain extends AppCompatActivity {
         super.onDestroy();
     }
 
-    MenuItem searchMenuItem;
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -215,6 +214,10 @@ public class ActivityMain extends AppCompatActivity {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
+            }
+
+            @Override
+            public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
                         fragmentEvents.filterList(null);
@@ -227,11 +230,6 @@ public class ActivityMain extends AppCompatActivity {
                         break;
                     default:
                 }
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
             }
 
             @Override

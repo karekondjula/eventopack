@@ -59,15 +59,26 @@
 
         </RelativeLayout>
 
-        <ImageButton
+        <!--<ImageButton-->
+        <!--android:id="@+id/close_event"-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_margin="5dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:src="@android:drawable/arrow_down_float"-->
+        <!--android:visibility="gone" />-->
+
+        <com.joanzapata.iconify.widget.IconTextView
             android:id="@+id/close_event"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
             android:layout_margin="5dp"
             android:layout_weight="1"
-            android:src="@android:drawable/arrow_down_float"
+            android:text="{ion-chevron-down 22sp}"
             android:visibility="gone" />
-
+        <!--ion-chevron-down ion-android-arrow-dropdown-->
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

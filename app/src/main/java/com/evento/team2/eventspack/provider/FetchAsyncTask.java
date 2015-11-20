@@ -30,9 +30,6 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
 
     public static final int NO_EVENT_ID = -1;
 
-    public static final String FILTER_NAME = "0";
-    public static final String FILTER_DATE = "1";
-
     public static final int FETCH_FROM_SERVER = 3;
     public static final int DO_NOT_FETCH_FROM_SERVER = 4;
 
@@ -53,12 +50,11 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
 
         if (what == EVENTS) {
             if (filter != null && filter.length > 0) {
-                if (filter[0].equals(FILTER_NAME)) {
-
-                    return EventsDatabase.getInstance().getEvents(filter[1]);
-                } else if (filter[0].equals(FILTER_DATE)) {
-
-                    return EventsDatabase.getInstance().getEvents(filter[1]);
+                switch (filter.length) {
+                    case 1:
+                        return EventsDatabase.getInstance().getEvents(filter[0]);
+                    case 2:
+                        return EventsDatabase.getInstance().getEvents(filter[0], filter[1]);
                 }
             } else {
                 if (fetchFromServer == FETCH_FROM_SERVER &&
@@ -70,11 +66,7 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
             }
         } else if (what == PLACES) {
             if ((filter != null && filter.length > 0)) {
-                if (filter[0].equals(FILTER_NAME)) {
-                    return EventsDatabase.getInstance().getPlaces(filter[1]);
-                } else {
-                    return EventsDatabase.getInstance().getPlaces();
-                }
+                return EventsDatabase.getInstance().getPlaces(filter[0]);
             } else {
                 if (fetchFromServer == FETCH_FROM_SERVER &&
                         NetworkUtils.getInstance().isNetworkAvailable(observerFragment.getActivity())) {
@@ -85,15 +77,8 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
             }
         } else if (what == SAVED_EVENTS) {
             if (filter != null && filter.length > 0) {
-                if (filter[0].equals(FILTER_NAME)) {
-
-                    return EventsDatabase.getInstance().getSavedEvents(filter[1]);
-                } else if (filter[0].equals(FILTER_DATE)) {
-
-                    return EventsDatabase.getInstance().getSavedEvents(filter[1]);
-                }
+                return EventsDatabase.getInstance().getSavedEvents(filter[0]);
             } else {
-
                 return EventsDatabase.getInstance().getSavedEvents();
             }
         }

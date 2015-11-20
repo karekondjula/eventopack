@@ -140,7 +140,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
                     default:
                 }
                 fetchAsyncTask = new FetchAsyncTask(FragmentMap.this, what, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER);
-                fetchAsyncTask.execute(FetchAsyncTask.FILTER_DATE, lastSelectedDate);
+                fetchAsyncTask.execute(lastSelectedDate);
             }
 
             @Override
@@ -168,7 +168,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
                 lastSelectedDate = dateFormat.format(date);
 
                 fetchAsyncTask = new FetchAsyncTask(FragmentMap.this, what, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER);
-                fetchAsyncTask.execute(FetchAsyncTask.FILTER_DATE, lastSelectedDate);
+                fetchAsyncTask.execute(lastSelectedDate);
 
                 dialogCaldroidFragment.dismiss();
             }
@@ -253,7 +253,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         }
 
         fetchAsyncTask = new FetchAsyncTask(this, what, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER);
-        fetchAsyncTask.execute(FetchAsyncTask.FILTER_DATE, lastSelectedDate);
+        fetchAsyncTask.execute(lastSelectedDate);
     }
 
     @Override

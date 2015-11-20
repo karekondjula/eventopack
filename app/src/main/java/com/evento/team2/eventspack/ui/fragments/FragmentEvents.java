@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapter.EventsRecyclerViewAdapter;
 import com.evento.team2.eventspack.model.Event;
+import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
 import com.evento.team2.eventspack.ui.interfaces.ObserverFragment;
 import com.evento.team2.eventspack.utils.NetworkUtils;
@@ -23,6 +24,7 @@ import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.IoniconsModule;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Observable;
 
 import butterknife.Bind;
@@ -40,6 +42,14 @@ public class FragmentEvents extends ObserverFragment {
 
     private SwipeRefreshLayout swipeRefreshLayout;
     private EventsRecyclerViewAdapter eventsAdapter;
+    private String lastFilterInput;
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        filterList(null);
+    }
 
     @Nullable
     @Override
@@ -52,7 +62,11 @@ public class FragmentEvents extends ObserverFragment {
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             fetchAsyncTask = new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.FETCH_FROM_SERVER);
-            fetchAsyncTask.execute();
+            if (TextUtils.isEmpty(lastFilterInput)) {
+                fetchAsyncTask.execute("", String.valueOf(new Date().getTime()));
+            } else {
+                fetchAsyncTask.execute(lastFilterInput, String.valueOf(new Date().getTime()));
+            }
         });
 
         eventsRecyclerView.setHasFixedSize(true);
@@ -61,7 +75,29 @@ public class FragmentEvents extends ObserverFragment {
         eventsAdapter = new EventsRecyclerViewAdapter(getActivity());
         eventsRecyclerView.setAdapter(eventsAdapter);
 
+        new Thread() {
+            @Override
+            public void run() {
+                // empty database check
+                // TODO replace with count query
+                if(EventsDatabase.getInstance().getEvents().size() > 0) {
+                    getActivity().runOnUiThread(() -> emptyAdapterTextView.setVisibility(View.GONE));
+                }
+            }
+        }.start();
+
         return swipeRefreshLayout;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (eventsAdapter.getItemCount() == 0) {
+            emptyAdapterTextView.setVisibility(View.VISIBLE);
+        } else {
+            emptyAdapterTextView.setVisibility(View.GONE);
+        }
     }
 
     public static FragmentEvents newInstance() {
@@ -80,18 +116,13 @@ public class FragmentEvents extends ObserverFragment {
 
         if (eventsArrayList instanceof ArrayList) {
             if (eventsAdapter == null) {
+                eventsRecyclerView = ButterKnife.findById(getView(), R.id.eventsRecyclerView);
                 eventsAdapter = new EventsRecyclerViewAdapter(getActivity());
                 eventsRecyclerView.setAdapter(eventsAdapter);
             }
 
             eventsAdapter.addEvents((ArrayList<Event>) eventsArrayList);
-
-            if (eventsAdapter.getItemCount() == 0) {
-                emptyAdapterTextView.setVisibility(View.VISIBLE);
-            } else {
-                emptyAdapterTextView.setVisibility(View.GONE);
-                eventsAdapter.notifyDataSetChanged();
-            }
+            eventsAdapter.notifyDataSetChanged();
 
             if (!NetworkUtils.getInstance().isNetworkAvailable(getActivity())) {
                 getActivity().runOnUiThread(() -> {
@@ -110,11 +141,12 @@ public class FragmentEvents extends ObserverFragment {
 
     @Override
     public void filterList(String filter) {
+        lastFilterInput = filter;
         fetchAsyncTask = new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER);
         if (TextUtils.isEmpty(filter)) {
-            fetchAsyncTask.execute();
+            fetchAsyncTask.execute("", String.valueOf(new Date().getTime()));
         } else {
-            fetchAsyncTask.execute(FetchAsyncTask.FILTER_NAME, filter);
+            fetchAsyncTask.execute(filter, String.valueOf(new Date().getTime()));
         }
     }
 }

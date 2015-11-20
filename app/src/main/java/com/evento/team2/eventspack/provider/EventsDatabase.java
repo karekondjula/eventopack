@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Geocoder;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.model.Place;
@@ -33,7 +34,7 @@ public class EventsDatabase {
     private Geocoder geocoder;
 
     private String[] allColumnsEvent = {Event.Table.COLUMN_ID,
-            Event.Table.COLUMN_ID,
+            Event.Table.COLUMN_FACEBOOK_ID,
             Event.Table.COLUMN_NAME,
             Event.Table.COLUMN_DETAILS,
             Event.Table.COLUMN_PICTURE_URI,
@@ -246,7 +247,7 @@ public class EventsDatabase {
         long updateRows = database.update(Event.Table.TABLE_EVENTS,
                 values,
                 Event.Table.COLUMN_ID + " = ? OR " +
-                Event.Table.COLUMN_FACEBOOK_ID + " = ? OR " +
+                        Event.Table.COLUMN_FACEBOOK_ID + " = ? OR " +
                         "(" + Event.Table.COLUMN_START_TIME_STAMP + " = ? AND " +
                         Event.Table.COLUMN_LATITUDE + " = ? AND " +
                         Event.Table.COLUMN_LONGITUDE + " = ? )",
@@ -275,23 +276,39 @@ public class EventsDatabase {
     public ArrayList<Event> getEvents(String... filter) {
         ArrayList<Event> events = new ArrayList<Event>();
 
-        Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
-                allColumnsEvent,
-                (filter != null && filter.length > 0
-                        ? Event.Table.COLUMN_NAME + " LIKE ? OR " +
+        StringBuilder where = null;
+        String whereArgs[] = null;
+        ArrayList<String> whereArgsList = new ArrayList<String>();
+        if (filter != null) {
+            where = new StringBuilder();
+            if (filter.length > 0) {
+                where.append("(" + Event.Table.COLUMN_NAME + " LIKE ? OR " +
                         Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
                         Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
-                        Event.Table.COLUMN_START_DATE_STRING + " LIKE ? "
-                        : null),
-                (filter != null && filter.length > 0
-                        ? new String[]{"%" + filter[0] + "%",
-                        "%" + filter[0] + "%",
-                        "%" + filter[0] + "%",
-                        "%" + filter[0] + "%",}
-                        : null),
+                        Event.Table.COLUMN_START_DATE_STRING + " LIKE ? ) ");
+
+                whereArgsList.add("%" + filter[0] + "%");
+                whereArgsList.add("%" + filter[0] + "%");
+                whereArgsList.add("%" + filter[0] + "%");
+                whereArgsList.add("%" + filter[0] + "%");
+            }
+            if (filter.length > 1) {
+                where.append(" AND ( " +
+                        Event.Table.COLUMN_START_TIME_STAMP + " > ? )");
+                whereArgsList.add(filter[1]);
+            }
+
+            whereArgs = new String[whereArgsList.size()];
+            whereArgs = whereArgsList.toArray(whereArgs);
+        }
+
+        Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
+                allColumnsEvent,
+                (where != null ? where.toString() : null),
+                (where != null ? whereArgs : null),
                 null,
                 null,
-                Event.Table.COLUMN_START_TIME_STAMP + " DESC");
+                Event.Table.COLUMN_START_TIME_STAMP + " ASC");
 
         cursor.moveToFirst();
         Event event;

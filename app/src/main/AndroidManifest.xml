@@ -23,7 +23,8 @@
 
         <activity
             android:name=".ui.activites.ActivityMain"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -40,19 +41,22 @@
                 android:resource="@xml/searchable" />
         </activity>
 
-        <activity android:name=".ui.activites.ActivityEventDetails">
+        <activity android:name=".ui.activites.ActivityEventDetails"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activites.ActivityMain" />
         </activity>
 
-        <activity android:name=".ui.activites.ActivityPlaceDetails">
+        <activity android:name=".ui.activites.ActivityPlaceDetails"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activites.ActivityMain" />
         </activity>
 
-        <activity android:name=".ui.activites.ActivitySettings">
+        <activity android:name=".ui.activites.ActivitySettings"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activites.ActivityMain" />

@@ -75,7 +75,7 @@ public class FragmentSavedEvents extends ObserverFragment {
         if (TextUtils.isEmpty(filter)) {
             fetchAsyncTask.execute();
         } else {
-            fetchAsyncTask.execute(FetchAsyncTask.FILTER_NAME, filter);
+            fetchAsyncTask.execute(filter);
         }
     }
 }

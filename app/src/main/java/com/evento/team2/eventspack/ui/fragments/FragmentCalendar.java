@@ -67,6 +67,7 @@ public class FragmentCalendar extends Fragment {
         args.putInt(CaldroidFragment.START_DAY_OF_WEEK, CaldroidFragment.MONDAY);
         args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
         args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+//        args.putBoolean(CaldroidFragment.SQUARE_TEXT_VIEW_CELL, false); // maybe use it in smaller devices
         caldroidFragment.setArguments(args);
 
         FragmentTransaction t = getChildFragmentManager().beginTransaction();
@@ -111,24 +112,24 @@ public class FragmentCalendar extends Fragment {
         public void onSelectDate(Date date, View view) {
             long dateLong = date.getTime();
 
-            if (selectedDates.contains(dateLong)) {
-                if (eventDates.contains(dateLong)) { // a day with events
+            if (selectedDates.contains(dateLong)) { // remove from selected
+                if (eventDates.contains(dateLong)) { // a day with events returns to dark green
                     caldroidFragment.setBackgroundResourceForDate(R.color.colorPrimaryDark, date);
-                } else {
-                    if (date.getTime() == TODAY.getTime()) {
-                        caldroidFragment.setBackgroundResourceForDate(R.color.colorPrimary, date);
-                    } else { // not today and no events
-                        caldroidFragment.clearBackgroundResourceForDate(date);
-                    }
+                } else { // day with no events return to white background
+                    caldroidFragment.clearBackgroundResourceForDate(date);
                 }
                 selectedDates.remove(dateLong);
-            } else {
+            } else { // add to selected
                 int color;
                 if (dateColorHashMap.containsKey(dateLong)) {
                     color = dateColorHashMap.get(dateLong);
                 } else {
                     color = ColorUtils.getInstance().getRandomColor(getActivity());
                     dateColorHashMap.put(dateLong, color);
+
+                    if (Math.abs(date.getTime() - TODAY.getTime()) < 24 * 60 * 60 * 1000) {
+                        // this is today, add border on view
+                    }
                 }
 
                 caldroidFragment.setBackgroundResourceForDate(color, date);
