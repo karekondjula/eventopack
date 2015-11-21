@@ -154,9 +154,7 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
 
                 Activity activity = (Activity) v.getContext();
 
-                Intent intent = new Intent(context, ActivityEventDetails.class);
-                intent.putExtra(ActivityEventDetails.EXTRA_ID, event.id);
-
+                Intent intent = ActivityEventDetails.createIntent(context, event.id);
                 activity.startActivity(intent);
                 // TODO fancy animation please ^_^
 //                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

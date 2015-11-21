@@ -1,6 +1,7 @@
 package com.evento.team2.eventspack.ui.activites;
 
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -105,5 +106,13 @@ public class ActivityMap extends AppCompatActivity {
         getFragmentManager().beginTransaction()
                 .add(R.id.fragment_map_frame, fragmentMap, FragmentMap.TAG)
                 .commit();
+    }
+
+    public static Intent createIntent(Context context, int what, long id) {
+        Intent intent = new Intent(context, ActivityMap.class);
+        intent.putExtra(FragmentMap.EXTRA_WHAT, what);
+        intent.putExtra(FragmentMap.EXTRA_ID, id);
+
+        return intent;
     }
 }

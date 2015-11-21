@@ -79,7 +79,7 @@ public class FragmentEvents extends ObserverFragment {
             @Override
             public void run() {
                 // empty database check
-                // TODO replace with count query
+                // TODO replace with count query (might be obsolete with the check in update() method)?!
                 if(EventsDatabase.getInstance().getEvents().size() > 0) {
                     getActivity().runOnUiThread(() -> emptyAdapterTextView.setVisibility(View.GONE));
                 }
@@ -136,6 +136,10 @@ public class FragmentEvents extends ObserverFragment {
 
         if (swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(false);
+
+            if(eventsAdapter.getItemCount() > 0) {
+                getActivity().runOnUiThread(() -> emptyAdapterTextView.setVisibility(View.GONE));
+            }
         }
     }
 

@@ -16,6 +16,7 @@
 
 package com.evento.team2.eventspack.ui.activites;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -138,9 +139,7 @@ public class ActivityEventDetails extends AppCompatActivity {
             if (event.location.latitude != 0 || event.location.longitude != 0) {
                 mapView.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(event.location.latitude, event.location.longitude), 15));
                 mapView.setOnMapClickListener(latLng -> {
-                    Intent activityMapIntent = new Intent(ActivityEventDetails.this, ActivityMap.class);
-                    activityMapIntent.putExtra(FragmentMap.EXTRA_WHAT, FetchAsyncTask.EVENTS);
-                    activityMapIntent.putExtra(FragmentMap.EXTRA_ID, event.id);
+                    Intent activityMapIntent = ActivityMap.createIntent(ActivityEventDetails.this, FetchAsyncTask.EVENTS, event.id);
                     startActivity(activityMapIntent);
                     finish();
                 });
@@ -173,5 +172,12 @@ public class ActivityEventDetails extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_event, menu);
         return true;
+    }
+
+    public static Intent createIntent(Context context, long id) {
+        Intent intent = new Intent(context, ActivityEventDetails.class);
+        intent.putExtra(ActivityEventDetails.EXTRA_ID, id);
+
+        return intent;
     }
 }

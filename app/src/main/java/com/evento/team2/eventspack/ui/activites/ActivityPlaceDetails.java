@@ -17,6 +17,7 @@
 package com.evento.team2.eventspack.ui.activites;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -108,9 +109,7 @@ public class ActivityPlaceDetails extends AppCompatActivity {
             if (place.location.latitude != 0 || place.location.longitude != 0) {
                 mapView.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(place.location.latitude, place.location.longitude), 15));
                 mapView.setOnMapClickListener(latLng -> {
-                    Intent intentActivityMap = new Intent(ActivityPlaceDetails.this, ActivityMap.class);
-                    intentActivityMap.putExtra(FragmentMap.EXTRA_WHAT, FetchAsyncTask.PLACES);
-                    intentActivityMap.putExtra(FragmentMap.EXTRA_ID, place.id);
+                    Intent intentActivityMap = ActivityMap.createIntent(ActivityPlaceDetails.this, FetchAsyncTask.PLACES, place.id);
                     startActivity(intentActivityMap);
                     finish();
                 });
@@ -123,5 +122,12 @@ public class ActivityPlaceDetails extends AppCompatActivity {
     protected void onDestroy() {
         ButterKnife.unbind(this);
         super.onDestroy();
+    }
+
+    public static Intent createIntent(Context context, long id) {
+        Intent intent = new Intent(context, ActivityPlaceDetails.class);
+        intent.putExtra(ActivityPlaceDetails.EXTRA_ID, id);
+
+        return intent;
     }
 }

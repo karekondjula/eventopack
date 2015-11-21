@@ -21,6 +21,5 @@
     <string name="about_eventi">About EvEnti</string>
     <string name="developed_by_team2">Developed by Team2</string>
     <string name="pull_to_refresh">Pull to fetch data</string>
-    <!--<string name="event_details_time">Start: %1$s \nEnd: %2$s</string>-->
 
 </resources>

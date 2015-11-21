@@ -1,5 +1,7 @@
 package com.evento.team2.eventspack.ui.activites;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -31,5 +33,10 @@ public class ActivityCalendar extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_calendar_frame, FragmentCalendar.newInstance(), FragmentCalendar.TAG)
                 .commit();
+    }
+
+    public static Intent createIntent(Context context) {
+        Intent intent = new Intent(context, ActivityCalendar.class);
+        return intent;
     }
 }

@@ -87,9 +87,7 @@ public class PlacesRecyclerViewAdapter extends RecyclerView.Adapter<PlacesRecycl
 
             Activity activity = (Activity) v.getContext();
 
-            Intent intent = new Intent(context, ActivityPlaceDetails.class);
-            intent.putExtra(ActivityPlaceDetails.EXTRA_ID, place.id);
-
+            Intent intent = ActivityPlaceDetails.createIntent(context, place.id);
             activity.startActivity(intent);
 
             // TODO fancy animation please ^_^

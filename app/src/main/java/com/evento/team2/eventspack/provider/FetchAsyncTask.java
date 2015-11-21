@@ -49,6 +49,10 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
     protected ArrayList doInBackground(String... filter) {
 
         if (what == EVENTS) {
+            if (fetchFromServer == FETCH_FROM_SERVER &&
+                    NetworkUtils.getInstance().isNetworkAvailable(observerFragment.getActivity())) {
+                fetchEventsFromServer();
+            }
             if (filter != null && filter.length > 0) {
                 switch (filter.length) {
                     case 1:
@@ -57,22 +61,16 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
                         return EventsDatabase.getInstance().getEvents(filter[0], filter[1]);
                 }
             } else {
-                if (fetchFromServer == FETCH_FROM_SERVER &&
-                        NetworkUtils.getInstance().isNetworkAvailable(observerFragment.getActivity())) {
-                    fetchEventsFromServer();
-                }
-
                 return EventsDatabase.getInstance().getEvents();
             }
         } else if (what == PLACES) {
+//            if (fetchFromServer == FETCH_FROM_SERVER &&
+//                    NetworkUtils.getInstance().isNetworkAvailable(observerFragment.getActivity())) {
+//                    fetchPlacesFromServer();
+//            }
             if ((filter != null && filter.length > 0)) {
                 return EventsDatabase.getInstance().getPlaces(filter[0]);
             } else {
-                if (fetchFromServer == FETCH_FROM_SERVER &&
-                        NetworkUtils.getInstance().isNetworkAvailable(observerFragment.getActivity())) {
-//                    fetchPlacesFromServer();
-                }
-
                 return EventsDatabase.getInstance().getPlaces();
             }
         } else if (what == SAVED_EVENTS) {

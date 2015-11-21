@@ -23,6 +23,7 @@ import android.view.View;
 import com.astuetz.PagerSlidingTabStrip;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.provider.EventsDatabase;
+import com.evento.team2.eventspack.provider.FetchAsyncTask;
 import com.evento.team2.eventspack.ui.fragments.DialogFragmentAbout;
 import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
 import com.evento.team2.eventspack.ui.fragments.FragmentPlaces;
@@ -181,13 +182,13 @@ public class ActivityMain extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
+        Intent intent = null;
         if (id == R.id.action_map) {
-            Intent intent = new Intent(ActivityMain.this, ActivityMap.class);
-            startActivity(intent);
+            intent = ActivityMap.createIntent(ActivityMain.this, FetchAsyncTask.EVENTS, FetchAsyncTask.NO_EVENT_ID);
         } else if (id == R.id.action_calendar) {
-            Intent intentCalendar = new Intent(ActivityMain.this, ActivityCalendar.class);
-            startActivity(intentCalendar);
+            intent = ActivityCalendar.createIntent(ActivityMain.this);
         }
+        startActivity(intent);
 
         return super.onOptionsItemSelected(item);
     }

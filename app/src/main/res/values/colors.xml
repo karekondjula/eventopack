@@ -27,12 +27,9 @@
     <color name="ColorOrange">#FFA500</color>
     <color name="ColorHotPink">#FF69B4</color>
     <color name="ColorTomato">#FF6347</color>
-    <color name="ColorFuchsia">#FF00FF</color>
     <color name="ColorMagenta">#FF00FF</color>
     <color name="ColorSalmon">#FA8072</color>
-    <color name="ColorWhiteSmoke">#F5F5F5</color>
     <color name="ColorWheat">#F5DEB3</color>
-    <color name="ColorSandyBrown">#F4A460</color>
     <color name="ColorKhaki">#F0E68C</color>
     <color name="ColorDarkSalmon">#E9967A</color>
     <color name="ColorLightCyan">#E0FFFF</color>
@@ -44,7 +41,6 @@
     <color name="ColorGoldenrod">#DAA520</color>
     <color name="ColorOrchid">#DA70D6</color>
     <color name="ColorThistle">#D8BFD8</color>
-    <color name="ColorLightGrey">#D3D3D3</color>
     <color name="ColorTan">#D2B48C</color>
     <color name="ColorChocolate">#D2691E</color>
     <color name="ColorPeru">#CD853F</color>
@@ -65,16 +61,10 @@
     <color name="ColorYellowGreen">#9ACD32</color>
     <color name="ColorDarkOrchid">#9932CC</color>
     <color name="ColorPaleGreen">#98FB98</color>
-    <color name="ColorDarkViolet">#9400D3</color>
     <color name="ColorMediumPurple">#9370DB</color>
     <color name="ColorLightGreen">#90EE90</color>
-    <color name="ColorSaddleBrown">#8B4513</color>
     <color name="ColorDarkMagenta">#8B008B</color>
-    <color name="ColorDarkRed">#8B0000</color>
-    <color name="ColorBlueViolet">#8A2BE2</color>
     <color name="ColorLightSkyBlue">#87CEFA</color>
-    <color name="ColorSkyBlue">#87CEEB</color>
-    <color name="ColorMaroon">#800000</color>
     <color name="ColorAquamarine">#7FFFD4</color>
     <color name="ColorChartreuse">#7FFF00</color>
     <color name="ColorLawnGreen">#7CFC00</color>
@@ -83,7 +73,6 @@
     <color name="ColorMediumAquamarine">#66CDAA</color>
     <color name="ColorCornflowerBlue">#6495ED</color>
     <color name="ColorCadetBlue">#5F9EA0</color>
-    <color name="ColorMediumTurquoise">#48D1CC</color>
     <color name="ColorSteelBlue">#4682B4</color>
     <color name="ColorRoyalBlue">#4169E1</color>
     <color name="ColorTurquoise">#40E0D0</color>

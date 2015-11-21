@@ -140,7 +140,12 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
                     default:
                 }
                 fetchAsyncTask = new FetchAsyncTask(FragmentMap.this, what, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER);
-                fetchAsyncTask.execute(lastSelectedDate);
+                if (what == FetchAsyncTask.PLACES) {
+                    // places do not have time acknowlegment
+                    fetchAsyncTask.execute();
+                } else {
+                    fetchAsyncTask.execute(lastSelectedDate);
+                }
             }
 
             @Override
@@ -168,7 +173,12 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
                 lastSelectedDate = dateFormat.format(date);
 
                 fetchAsyncTask = new FetchAsyncTask(FragmentMap.this, what, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER);
-                fetchAsyncTask.execute(lastSelectedDate);
+                if (what == FetchAsyncTask.PLACES) {
+                    // places do not have time acknowlegment
+                    fetchAsyncTask.execute();
+                } else {
+                    fetchAsyncTask.execute(lastSelectedDate);
+                }
 
                 dialogCaldroidFragment.dismiss();
             }
@@ -326,8 +336,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
 
         ButterKnife.findById(mapEventItemView, R.id.close_event).setOnClickListener(view -> removeSelectedEventLayout());
         mapEventItemView.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), ActivityEventDetails.class);
-            intent.putExtra(ActivityEventDetails.EXTRA_ID, hashMapLatLngEventId.get(marker.getPosition()));
+            Intent intent = ActivityEventDetails.createIntent(getActivity(), hashMapLatLngEventId.get(marker.getPosition()));
             startActivity(intent);
         });
         mapEventDetailsLinearLayout.addView(mapEventItemView);

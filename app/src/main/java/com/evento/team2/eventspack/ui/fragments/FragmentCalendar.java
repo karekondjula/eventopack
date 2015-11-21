@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +23,6 @@ import com.roomorama.caldroid.CaldroidListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -79,13 +79,16 @@ public class FragmentCalendar extends Fragment {
             @Override
             public void run() {
                 eventsList = EventsDatabase.getInstance().getEvents();
-                Collections.sort(eventsList);
 
                 Date eventDate;
+
+                caldroidFragment.setTextColorForDate(R.color.ColorCrimson, TODAY);
+
+                // TODO optimize, we just need one color per day, no need to color a day 5 times!!!
                 for (Event event : eventsList) {
                     eventDate = new Date(event.startDate);
                     final Date date = eventDate;
-                    getActivity().runOnUiThread(() -> caldroidFragment.setBackgroundResourceForDate(R.color.colorPrimaryDark, date));
+                    caldroidFragment.setBackgroundResourceForDate(R.color.colorPrimaryDark, date);
                     cal.setTimeInMillis(eventDate.getTime());
                     cal.set(Calendar.HOUR_OF_DAY, 0);
                     cal.set(Calendar.MINUTE, 0);
@@ -126,18 +129,20 @@ public class FragmentCalendar extends Fragment {
                 } else {
                     color = ColorUtils.getInstance().getRandomColor(getActivity());
                     dateColorHashMap.put(dateLong, color);
-
-                    if (Math.abs(date.getTime() - TODAY.getTime()) < 24 * 60 * 60 * 1000) {
-                        // this is today, add border on view
-                    }
                 }
 
                 caldroidFragment.setBackgroundResourceForDate(color, date);
                 selectedDates.add(dateLong);
             }
-            fetchEventsOnSelectedDates(selectedDates);
 
-            caldroidFragment.refreshView();
+            calendarEventsLinearLayout.removeAllViews();
+
+            new Thread() {
+                @Override
+                public void run() {
+                    fetchEventsOnSelectedDates(selectedDates);
+                }
+            }.start();
         }
 
         @Override
@@ -154,7 +159,6 @@ public class FragmentCalendar extends Fragment {
     };
 
     private void fetchEventsOnSelectedDates(ArrayList<Long> selectedDates) {
-        calendarEventsLinearLayout.removeAllViews();
         // fetch all events for the current startDate
         for (final Event event : eventsList) {
             if (selectedDates.contains(event.startDate)) {
@@ -168,13 +172,16 @@ public class FragmentCalendar extends Fragment {
                 ((TextView) ButterKnife.findById(calendarItemView, R.id.event_time)).setText(event.startTimeString);
                 calendarItemView.setClickable(true);
                 calendarItemView.setOnClickListener(v -> {
-                    Intent intent = new Intent(getActivity(), ActivityEventDetails.class);
-                    intent.putExtra(ActivityEventDetails.EXTRA_ID, event.id);
+                    Intent intent = ActivityEventDetails.createIntent(getActivity(), event.id);
                     getActivity().startActivity(intent);
+
                 });
-                calendarEventsLinearLayout.addView(calendarItemView);
+
+                getActivity().runOnUiThread(() -> calendarEventsLinearLayout.addView(calendarItemView));
             }
         }
+
+        getActivity().runOnUiThread(() -> caldroidFragment.refreshView());
     }
 
     public static FragmentCalendar newInstance() {
