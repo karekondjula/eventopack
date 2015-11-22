@@ -115,7 +115,7 @@ public class ServiceEvento {
 
         try {
             androidHttpTransport.call(soapActionParam, envelope);
-            Log.i(TAG, envelope.getResponse().toString());
+//            Log.i(TAG, envelope.getResponse().toString());
 
             responseMap.put(RESPONSE_KEY, envelope.getResponse().toString());
 

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
@@ -192,12 +193,13 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         return view;
     }
 
-    private void setCalendarDate(Date date) {
-        actionViewCalendar.setText(dateFormat.format(date));
-    }
-
-    private void setCalendarDate(String dateString) {
-        actionViewCalendar.setText(dateString);
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        ButterKnife.unbind(this);
+        if (fetchAsyncTask != null && fetchAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
+            fetchAsyncTask.cancel(true);
+        }
     }
 
     @Override
@@ -236,7 +238,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mapView = googleMap;
-        mapView.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mapView.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         mapView.setMyLocationEnabled(true);
         mapView.getUiSettings().setCompassEnabled(true);
         mapView.getUiSettings().setRotateGesturesEnabled(true);
@@ -378,5 +380,13 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
             fragmentMap.setArguments(args);
         }
         return fragmentMap;
+    }
+
+    private void setCalendarDate(Date date) {
+        actionViewCalendar.setText(dateFormat.format(date));
+    }
+
+    private void setCalendarDate(String dateString) {
+        actionViewCalendar.setText(dateString);
     }
 }

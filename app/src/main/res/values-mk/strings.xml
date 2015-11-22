@@ -1,13 +1,11 @@
 <resources>
-    <string name="app_name">EvEnti</string>
-
     <string name="action_search">Барај</string>
     <string name="drawer_open">Отвори</string>
     <string name="drawer_close">Исклучи</string>
 
     <string name="event_is_saved">Настанот \'%s\' е зачуван</string>
     <string name="event_is_removed">Настанот \'%s\' отсранет од зачувани настани</string>
-    <string name="calendar">Календар</string>
+    <string name="calendar">Избери датуми</string>
     <string name="events">Настани</string>
     <string name="places">Места</string>
     <string name="saved">Зачувани</string>
@@ -15,11 +13,15 @@
     <string name="date">ДАТУМ</string>
     <string name="location">ЛОКАЦИЈА</string>
     <string name="event_details">ДЕТАЛИ</string>
-    <string name="promo_message">Најди го твојот омилен настан</string>
+    <string name="promo_message">Најди нешто привлечно</string>
     <string name="start">Почеток:</string>
     <string name="end">Крај:</string>
-    <string name="about_eventi">За EvEnti</string>
+    <string name="about_eventi">За EVENTI</string>
     <string name="developed_by_team2">Развиена од Team2</string>
     <string name="pull_to_refresh">Повлечи за повеќе настани</string>
+    <string name="about">Во врска со EVENTI</string>
+
+    <string name="showcase_welcome_message">Добредојде на EVENTI\nНастаните се прикажуваат во ова поле</string>
+    <string name="showcase_toolbar_message">Филтрирање, календар и мапа на настани се наоѓаат во менито од алатникот</string>
 
 </resources>

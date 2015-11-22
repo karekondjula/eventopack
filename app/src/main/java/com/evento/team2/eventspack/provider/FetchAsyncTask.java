@@ -33,6 +33,8 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
     public static final int FETCH_FROM_SERVER = 3;
     public static final int DO_NOT_FETCH_FROM_SERVER = 4;
 
+    public static final String NO_FILTER_STRING = "";
+
     private ObserverFragment observerFragment;
 
     @Category

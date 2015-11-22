@@ -29,7 +29,7 @@
             android:shadowColor="#22000000"
             android:shadowDx="3"
             android:shadowDy="3"
-            android:shadowRadius="1"
+            android:shadowRadius="5"
             android:text="{ion-android-favorite-outline @color/colorPrimary}"
             android:textSize="50sp" />
 

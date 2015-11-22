@@ -47,6 +47,7 @@
 #-keep public class * extends android.app.Service # not used
 #-keep public class * extends android.content.BroadcastReceiver # not used
 -keep public class * extends android.content.ContentProvider
+-keep class org.xmlpull.v1.** { *; }
 
 -keep class * extends java.util.ListResourceBundle {
     protected Object[][] getContents();

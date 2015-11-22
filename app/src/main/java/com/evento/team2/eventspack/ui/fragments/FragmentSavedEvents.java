@@ -1,5 +1,6 @@
 package com.evento.team2.eventspack.ui.fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,11 +33,8 @@ public class FragmentSavedEvents extends ObserverFragment {
     private EventsRecyclerViewAdapter savedEventsAdapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        setHasOptionsMenu(true);
-        View view = inflater.inflate(R.layout.fragment_saved_events, container, false);
-        ButterKnife.bind(this, view);
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
         savedEventsAdapter = new EventsRecyclerViewAdapter(getActivity());
         savedEventsRecyclerView.setHasFixedSize(true);
@@ -44,13 +42,26 @@ public class FragmentSavedEvents extends ObserverFragment {
         savedEventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
         savedEventsRecyclerView.setAdapter(savedEventsAdapter);
 
+        filterList(FetchAsyncTask.NO_FILTER_STRING);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        setHasOptionsMenu(true);
+        View view = inflater.inflate(R.layout.fragment_saved_events, container, false);
+        ButterKnife.bind(this, view);
+
         return view;
     }
 
     @Override
-    public void onDetach() {
+    public void onDestroyView() {
+        super.onDestroyView();
         ButterKnife.unbind(this);
-        super.onDetach();
+        if (fetchAsyncTask != null && fetchAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
+            fetchAsyncTask.cancel(true);
+        }
     }
 
     public static FragmentSavedEvents newInstance() {
@@ -61,11 +72,12 @@ public class FragmentSavedEvents extends ObserverFragment {
     @Override
     public void update(Observable observable, Object eventsArrayList) {
         if (eventsArrayList instanceof ArrayList) {
-            if (savedEventsAdapter == null) {
-                savedEventsAdapter = new EventsRecyclerViewAdapter(getActivity());
+            if (savedEventsAdapter != null) {
+                // TODO ugly solution for a problem which is caused because I use
+                // TODO one fetchasync task for all data fetching
+                savedEventsAdapter.addEvents((ArrayList<Event>) eventsArrayList);
+                savedEventsAdapter.notifyDataSetChanged();
             }
-            savedEventsAdapter.addEvents((ArrayList<Event>) eventsArrayList);
-            savedEventsAdapter.notifyDataSetChanged();
         }
     }
 

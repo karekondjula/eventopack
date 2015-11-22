@@ -1,5 +1,6 @@
 package com.evento.team2.eventspack.ui.fragments;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -48,7 +49,29 @@ public class FragmentEvents extends ObserverFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        filterList(null);
+        eventsRecyclerView.setHasFixedSize(true);
+        eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        eventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        eventsAdapter = new EventsRecyclerViewAdapter(getActivity());
+        eventsRecyclerView.setAdapter(eventsAdapter);
+
+        new Thread() {
+            @Override
+            public void run() {
+                // empty database check
+                // TODO replace with count query (might be obsolete with the check in update() method)?!
+                if (EventsDatabase.getInstance().getEvents().size() > 0) {
+                    getActivity().runOnUiThread(() -> {
+                        if (emptyAdapterTextView == null) {
+                            emptyAdapterTextView = ButterKnife.findById(view, R.id.empty_view);
+                        }
+                        emptyAdapterTextView.setVisibility(View.GONE);
+                    });
+                }
+            }
+        }.start();
+
+        filterList(FetchAsyncTask.NO_FILTER_STRING);
     }
 
     @Nullable
@@ -68,23 +91,6 @@ public class FragmentEvents extends ObserverFragment {
                 fetchAsyncTask.execute(lastFilterInput, String.valueOf(new Date().getTime()));
             }
         });
-
-        eventsRecyclerView.setHasFixedSize(true);
-        eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        eventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        eventsAdapter = new EventsRecyclerViewAdapter(getActivity());
-        eventsRecyclerView.setAdapter(eventsAdapter);
-
-        new Thread() {
-            @Override
-            public void run() {
-                // empty database check
-                // TODO replace with count query (might be obsolete with the check in update() method)?!
-                if(EventsDatabase.getInstance().getEvents().size() > 0) {
-                    getActivity().runOnUiThread(() -> emptyAdapterTextView.setVisibility(View.GONE));
-                }
-            }
-        }.start();
 
         return swipeRefreshLayout;
     }
@@ -107,37 +113,38 @@ public class FragmentEvents extends ObserverFragment {
 
     @Override
     public void onDestroyView() {
-        ButterKnife.unbind(this);
         super.onDestroyView();
+        ButterKnife.unbind(this);
+        if (fetchAsyncTask != null && fetchAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
+            fetchAsyncTask.cancel(true);
+        }
     }
 
     @Override
     public void update(Observable observable, Object eventsArrayList) {
 
         if (eventsArrayList instanceof ArrayList) {
-            if (eventsAdapter == null) {
-                eventsRecyclerView = ButterKnife.findById(getView(), R.id.eventsRecyclerView);
-                eventsAdapter = new EventsRecyclerViewAdapter(getActivity());
-                eventsRecyclerView.setAdapter(eventsAdapter);
-            }
+            if (eventsAdapter != null) {
+                // TODO ugly solution for a problem which is caused because I use
+                // TODO one fetchasync task for all data fetching
+                eventsAdapter.addEvents((ArrayList<Event>) eventsArrayList);
+                eventsAdapter.notifyDataSetChanged();
 
-            eventsAdapter.addEvents((ArrayList<Event>) eventsArrayList);
-            eventsAdapter.notifyDataSetChanged();
-
-            if (!NetworkUtils.getInstance().isNetworkAvailable(getActivity())) {
-                getActivity().runOnUiThread(() -> {
-                    Snackbar.make(eventsRecyclerView,
-                            R.string.no_internet_connection_cached_events,
-                            Snackbar.LENGTH_LONG)
-                            .show();
-                });
+                if (!NetworkUtils.getInstance().isNetworkAvailable(getActivity())) {
+                    getActivity().runOnUiThread(() -> {
+                        Snackbar.make(eventsRecyclerView,
+                                R.string.no_internet_connection_cached_events,
+                                Snackbar.LENGTH_LONG)
+                                .show();
+                    });
+                }
             }
         }
 
-        if (swipeRefreshLayout.isRefreshing()) {
+        if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(false);
 
-            if(eventsAdapter.getItemCount() > 0) {
+            if (eventsAdapter.getItemCount() > 0) {
                 getActivity().runOnUiThread(() -> emptyAdapterTextView.setVisibility(View.GONE));
             }
         }

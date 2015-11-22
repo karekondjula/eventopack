@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">EvEnti</string>
+    <string name="app_name">EVENTI</string>
 
     <string name="action_search">Search</string>
     <string name="drawer_open">Open</string>
@@ -7,7 +7,7 @@
 
     <string name="event_is_saved">Event \'%s\' is saved</string>
     <string name="event_is_removed">"Event \'%s\' is removed from saved events</string>
-    <string name="calendar">Calendar</string>
+    <string name="calendar">Choose dates</string>
     <string name="events">Events</string>
     <string name="places">Places</string>
     <string name="saved">Saved</string>
@@ -15,11 +15,15 @@
     <string name="date">DATE</string>
     <string name="location">LOCATION</string>
     <string name="event_details">EVENT DETAILS</string>
-    <string name="promo_message">Find you favourite events</string>
+    <string name="promo_message">Find something attractive</string>
     <string name="start">Start:</string>
     <string name="end">End:</string>
-    <string name="about_eventi">About EvEnti</string>
+    <string name="about_eventi">About EVENTI</string>
     <string name="developed_by_team2">Developed by Team2</string>
     <string name="pull_to_refresh">Pull to fetch data</string>
+    <string name="about">About</string>
+
+    <string name="showcase_welcome_message">Welcome to EVENTI\nCurrent events are shown here</string>
+    <string name="showcase_toolbar_message">Filter, calendar and map options are in the toolbar menu</string>
 
 </resources>

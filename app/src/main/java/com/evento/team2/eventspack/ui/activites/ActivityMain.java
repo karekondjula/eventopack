@@ -28,6 +28,7 @@ import com.evento.team2.eventspack.ui.fragments.DialogFragmentAbout;
 import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
 import com.evento.team2.eventspack.ui.fragments.FragmentPlaces;
 import com.evento.team2.eventspack.ui.fragments.FragmentSavedEvents;
+import com.evento.team2.eventspack.utils.MaterialShowCase;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
@@ -39,13 +40,20 @@ import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
+import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
+import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 public class ActivityMain extends AppCompatActivity {
+
+    private static final String SHOWCASE_ID = "0";
 
     @Bind(R.id.navigation_view)
     NavigationView navigationView;
     @Bind(R.id.drawer)
     DrawerLayout drawerLayout;
+    @Bind(R.id.viewpager)
+    ViewPager viewPager;
 
     private FragmentEvents fragmentEvents = FragmentEvents.newInstance();
     private FragmentSavedEvents fragmentSavedEvents = FragmentSavedEvents.newInstance();
@@ -59,6 +67,9 @@ public class ActivityMain extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        LeakCanary.install(getApplication());
+
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
@@ -90,7 +101,7 @@ public class ActivityMain extends AppCompatActivity {
 //                        break;
                 case R.id.about:
                     DialogFragmentAbout editNameDialog = new DialogFragmentAbout();
-                    editNameDialog.show(getFragmentManager(), "about");
+                    editNameDialog.show(getFragmentManager(), getString(R.string.about));
                     break;
                 default:
                     break;
@@ -116,13 +127,9 @@ public class ActivityMain extends AppCompatActivity {
 
         //calling sync state is necessay or else your hamburger icon wont show up
         actionBarDrawerToggle.syncState();
+        setupViewPager(viewPager);
 
-        ViewPager viewPager = ButterKnife.findById(this, R.id.viewpager);
-        if (viewPager != null) {
-            setupViewPager(viewPager);
-        }
-
-        PagerSlidingTabStrip pagerSlidingTabStrip = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        PagerSlidingTabStrip pagerSlidingTabStrip = ButterKnife.findById(this, R.id.tabs);
         pagerSlidingTabStrip.setTextColor(getResources().getColor(android.R.color.white));
         pagerSlidingTabStrip.setShouldExpand(true);
         pagerSlidingTabStrip.setViewPager(viewPager);
@@ -147,12 +154,14 @@ public class ActivityMain extends AppCompatActivity {
                 default:
             }
         }
+
+        presentShowcaseSequence();
     }
 
     @Override
     protected void onDestroy() {
-        ButterKnife.unbind(this);
         super.onDestroy();
+        ButterKnife.unbind(this);
     }
 
     @Override
@@ -204,6 +213,30 @@ public class ActivityMain extends AppCompatActivity {
         }
     }
 
+    private void presentShowcaseSequence() {
+
+        ShowcaseConfig config = new ShowcaseConfig();
+        config.setDelay(2000); // half second between each showcase view
+
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
+
+        sequence.setConfig(config);
+
+        MaterialShowcaseView.Builder baseView;
+
+        baseView = MaterialShowCase.createBaseShowCase(this);
+        baseView.setTarget(viewPager);
+        baseView.setContentText(R.string.showcase_welcome_message);
+        sequence.addSequenceItem(baseView.build());
+
+        baseView = MaterialShowCase.createBaseShowCase(this);
+        baseView.setTarget(ButterKnife.findById(this, R.id.appbar));
+        baseView.setContentText(R.string.showcase_toolbar_message);
+        sequence.addSequenceItem(baseView.build());
+
+        sequence.start();
+    }
+
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getFragmentManager());
         adapter.addFragment(fragmentEvents, getString(R.string.events));
@@ -221,13 +254,13 @@ public class ActivityMain extends AppCompatActivity {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-                        fragmentEvents.filterList(null);
+                        fragmentEvents.filterList(FetchAsyncTask.NO_FILTER_STRING);
                         break;
                     case 1:
-                        fragmentPlaces.filterList(null);
+                        fragmentPlaces.filterList(FetchAsyncTask.NO_FILTER_STRING);
                         break;
                     case 2:
-                        fragmentSavedEvents.filterList(null);
+                        fragmentSavedEvents.filterList(FetchAsyncTask.NO_FILTER_STRING);
                         break;
                     default:
                 }

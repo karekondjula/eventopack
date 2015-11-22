@@ -161,13 +161,11 @@ public class EventsDatabase {
         long updateRows = database.update(Place.Table.TABLE_PLACES,
                 values,
                 Place.Table.COLUMN_ID + " = ? OR " +
-                        Place.Table.COLUMN_NAME + " LIKE ? OR " +
                         "(" +
                         Place.Table.COLUMN_LATITUDE + " = ? AND " +
                         Place.Table.COLUMN_LONGITUDE + " = ? " +
                         ")",
                 new String[]{String.valueOf(place.id),
-                        String.valueOf("%" + place.name + "%"),
                         String.valueOf(place.location.latitude),
                         String.valueOf(place.location.longitude),
                 });
@@ -238,7 +236,8 @@ public class EventsDatabase {
                     e.printStackTrace();
                 }
             }
-            values.put(Event.Table.COLUMN_LOCATION_STRING, event.locationString);
+            // remove trailing commas
+            values.put(Event.Table.COLUMN_LOCATION_STRING, event.locationString.replaceAll(", (?!\\p{L})", ""));
         }
         values.put(Event.Table.COLUMN_START_TIME_STAMP, event.startTimeStamp);
         values.put(Event.Table.COLUMN_START_DATE_STRING, event.startDateString);

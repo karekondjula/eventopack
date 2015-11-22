@@ -3,8 +3,6 @@ package com.evento.team2.eventspack.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Address;
-import android.location.Geocoder;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -19,16 +17,12 @@ import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
-import com.evento.team2.eventspack.ui.fragments.FragmentMap;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

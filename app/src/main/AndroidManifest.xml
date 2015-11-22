@@ -17,9 +17,12 @@
         android:theme="@style/MyMaterialTheme"
         tools:replace="android:icon">
 
+        <!--DEBUG KEY AIzaSyDlpVs0imkm5GvwRlXfYO2QshwHh_IJf_g -->
+        <!--RELEASE KEY AIzaSyAGShMlMuhHdDy7jXghXn0M8vHK_T1yYDA-->
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDlpVs0imkm5GvwRlXfYO2QshwHh_IJf_g" />
+            android:value="AIzaSyAGShMlMuhHdDy7jXghXn0M8vHK_T1yYDA" />
 
         <activity
             android:name=".ui.activites.ActivityMain"

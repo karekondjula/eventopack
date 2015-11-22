@@ -1,6 +1,7 @@
 package com.evento.team2.eventspack.ui.fragments;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,7 +32,20 @@ public class FragmentPlaces extends ObserverFragment {
     @Bind(R.id.placesRecyclerView)
     RecyclerView placesRecyclerView;
 
-    private PlacesRecyclerViewAdapter placesRecyclerViewAdapter;
+    private volatile PlacesRecyclerViewAdapter placesRecyclerViewAdapter;
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        placesRecyclerViewAdapter = new PlacesRecyclerViewAdapter(getActivity());
+        placesRecyclerView.setHasFixedSize(true);
+        placesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        placesRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        placesRecyclerView.setAdapter(placesRecyclerViewAdapter);
+
+        filterList(FetchAsyncTask.NO_FILTER_STRING);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,19 +54,16 @@ public class FragmentPlaces extends ObserverFragment {
         View view = inflater.inflate(R.layout.fragment_places, container, false);
         ButterKnife.bind(this, view);
 
-        placesRecyclerViewAdapter = new PlacesRecyclerViewAdapter(getActivity());
-        placesRecyclerView.setHasFixedSize(true);
-        placesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        placesRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        placesRecyclerView.setAdapter(placesRecyclerViewAdapter);
-
         return view;
     }
 
     @Override
-    public void onDetach() {
+    public void onDestroyView() {
+        super.onDestroyView();
         ButterKnife.unbind(this);
-        super.onDetach();
+        if (fetchAsyncTask != null && fetchAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
+            fetchAsyncTask.cancel(true);
+        }
     }
 
     public static FragmentPlaces newInstance() {
@@ -63,11 +74,12 @@ public class FragmentPlaces extends ObserverFragment {
     @Override
     public void update(Observable observable, Object placesArrayList) {
         if (placesArrayList instanceof ArrayList) {
-            if (placesRecyclerViewAdapter == null) {
-                placesRecyclerViewAdapter = new PlacesRecyclerViewAdapter(getActivity());
+            if (placesRecyclerViewAdapter != null) {
+                // TODO ugly solution for a problem which is caused because I use
+                // TODO one fetchasync task for all data fetching
+                placesRecyclerViewAdapter.addPlaces((ArrayList<Place>) placesArrayList);
+                placesRecyclerViewAdapter.notifyDataSetChanged();
             }
-            placesRecyclerViewAdapter.addPlaces((ArrayList<Place>) placesArrayList);
-            placesRecyclerViewAdapter.notifyDataSetChanged();
         }
     }
 
