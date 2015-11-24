@@ -205,7 +205,6 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
 //        super.onCreateOptionsMenu(menu, inflater); we might need this?!
-
         inflater.inflate(R.menu.menu_map, menu);
         final MenuItem calendarMenuItem = menu.findItem(R.id.action_calendar);
         actionViewCalendar = ButterKnife.findById(MenuItemCompat.getActionView(calendarMenuItem), R.id.menu_map_date);

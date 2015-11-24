@@ -22,7 +22,7 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAGShMlMuhHdDy7jXghXn0M8vHK_T1yYDA" />
+            android:value="AIzaSyDlpVs0imkm5GvwRlXfYO2QshwHh_IJf_g" />
 
         <activity
             android:name=".ui.activites.ActivityMain"
@@ -58,18 +58,18 @@
                 android:value=".ui.activites.ActivityMain" />
         </activity>
 
-        <activity android:name=".ui.activites.ActivitySettings"
-            android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activites.ActivityMain" />
-        </activity>
+        <!--<activity android:name=".ui.activites.ActivitySettings"-->
+            <!--android:screenOrientation="portrait">-->
+            <!--<meta-data-->
+                <!--android:name="android.support.PARENT_ACTIVITY"-->
+                <!--android:value=".ui.activites.ActivityMain" />-->
+        <!--</activity>-->
 
-        <activity android:name=".ui.activites.ActivitySocial">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.activites.ActivityMain" />
-        </activity>
+        <!--<activity android:name=".ui.activites.ActivitySocial">-->
+            <!--<meta-data-->
+                <!--android:name="android.support.PARENT_ACTIVITY"-->
+                <!--android:value=".ui.activites.ActivityMain" />-->
+        <!--</activity>-->
 
         <!--<activity-->
         <!--android:name=".ui.activites.ActivityLogin"-->

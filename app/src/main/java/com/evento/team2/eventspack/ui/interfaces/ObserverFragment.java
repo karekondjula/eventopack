@@ -12,9 +12,6 @@ import android.view.MenuItem;
 
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
-import com.joanzapata.iconify.IconDrawable;
-import com.joanzapata.iconify.fonts.FontAwesomeIcons;
-import com.joanzapata.iconify.fonts.IoniconsIcons;
 
 import java.util.Observer;
 
@@ -67,7 +64,12 @@ public abstract class ObserverFragment extends Fragment implements Observer {
                     }
                 }
             });
-
+            // Get the search close button image view
+            ButterKnife.findById(searchView, R.id.search_close_btn).setOnClickListener(v -> {
+                searchView.setQuery("", false);
+                searchView.onActionViewCollapsed();
+                searchItem.collapseActionView();
+            });
             if (searchView != null) {
                 searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
                 searchView.setQueryRefinementEnabled(true);

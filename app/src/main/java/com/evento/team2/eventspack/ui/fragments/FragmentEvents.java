@@ -118,6 +118,10 @@ public class FragmentEvents extends ObserverFragment {
         if (fetchAsyncTask != null && fetchAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
             fetchAsyncTask.cancel(true);
         }
+
+        if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     @Override

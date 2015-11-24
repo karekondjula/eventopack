@@ -2,6 +2,7 @@ package com.evento.team2.eventspack.model;
 
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -39,8 +40,8 @@ public class Event implements Comparable<Event> {
     public long startTimeStamp;
     public long startDate;
     public long endTimeStamp;
-    public String startDateString; // TODO maybe no need to store it in database
-    public String startTimeString; // TODO maybe no need to store it in database
+    public String startDateString;
+    public String startTimeString;
     public String endDateString;
     public boolean isEventSaved = false;
 
@@ -51,8 +52,8 @@ public class Event implements Comparable<Event> {
     }
 
     public Event(String name, @Nullable String description) {
-        this.name = name;
-        this.details = description;
+        this.name = (!TextUtils.isEmpty(name) && !name.equals("NULL")) ? name : "";
+        this.details = (!TextUtils.isEmpty(description) && !description.equals("NULL")) ? name : "";
     }
 
     public Event(String name, String description, @Nullable String pictureUri) {
