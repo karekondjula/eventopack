@@ -25,5 +25,7 @@
 
     <string name="showcase_welcome_message">Welcome to EVENTI\nCurrent events are shown here</string>
     <string name="showcase_toolbar_message">Filter, calendar and map options are in the toolbar menu</string>
+    <string name="filter">Filter...</string>
+    <string name="today">Today </string>
 
 </resources>

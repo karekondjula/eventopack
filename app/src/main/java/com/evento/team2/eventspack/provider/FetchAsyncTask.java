@@ -3,6 +3,7 @@ package com.evento.team2.eventspack.provider;
 import android.os.AsyncTask;
 import android.support.annotation.IntDef;
 
+import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.ui.interfaces.ObserverFragment;
 import com.evento.team2.eventspack.soapservice.ServiceEvento;
@@ -52,7 +53,7 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
 
         if (what == EVENTS) {
             if (fetchFromServer == FETCH_FROM_SERVER &&
-                    NetworkUtils.getInstance().isNetworkAvailable(observerFragment.getActivity())) {
+                    NetworkUtils.getInstance().isNetworkAvailable(EventiApplication.applicationContext)) {
                 fetchEventsFromServer();
             }
             if (filter != null && filter.length > 0) {

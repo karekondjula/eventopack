@@ -40,6 +40,9 @@ public class Event implements Comparable<Event> {
     public long startTimeStamp;
     public long startDate;
     public long endTimeStamp;
+    /**
+     * Format dd.MM.yyyy
+     */
     public String startDateString;
     public String startTimeString;
     public String endDateString;
@@ -53,7 +56,7 @@ public class Event implements Comparable<Event> {
 
     public Event(String name, @Nullable String description) {
         this.name = (!TextUtils.isEmpty(name) && !name.equals("NULL")) ? name : "";
-        this.details = (!TextUtils.isEmpty(description) && !description.equals("NULL")) ? name : "";
+        this.details = (!TextUtils.isEmpty(description) && !description.equals("NULL")) ? description : "";
     }
 
     public Event(String name, String description, @Nullable String pictureUri) {

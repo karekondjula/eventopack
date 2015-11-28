@@ -213,7 +213,7 @@ public class EventsDatabase {
         ContentValues values = new ContentValues();
         values.put(Event.Table.COLUMN_ID, event.id);
         values.put(Event.Table.COLUMN_NAME, event.name);
-        if (event.details != null) {
+        if (!TextUtils.isEmpty(event.details)) {
             values.put(Event.Table.COLUMN_DETAILS, event.details);
         }
         values.put(Event.Table.COLUMN_PICTURE_URI, event.pictureUri);

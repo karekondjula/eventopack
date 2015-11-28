@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapter.PlacesRecyclerViewAdapter;
 import com.evento.team2.eventspack.model.Place;
@@ -38,7 +39,7 @@ public class FragmentPlaces extends ObserverFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        placesRecyclerViewAdapter = new PlacesRecyclerViewAdapter(getActivity());
+        placesRecyclerViewAdapter = new PlacesRecyclerViewAdapter(EventiApplication.applicationContext);
         placesRecyclerView.setHasFixedSize(true);
         placesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         placesRecyclerView.setItemAnimator(new DefaultItemAnimator());

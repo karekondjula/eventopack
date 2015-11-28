@@ -15,10 +15,8 @@
         android:icon="@mipmap/eventi_launcher"
         android:label="@string/app_name"
         android:theme="@style/MyMaterialTheme"
-        tools:replace="android:icon">
-
-        <!--DEBUG KEY AIzaSyDlpVs0imkm5GvwRlXfYO2QshwHh_IJf_g -->
-        <!--RELEASE KEY AIzaSyAGShMlMuhHdDy7jXghXn0M8vHK_T1yYDA-->
+        tools:replace="android:icon"
+        android:name=".EventiApplication">
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -38,10 +36,9 @@
             <!--<intent-filter>-->
                 <!--<action android:name="android.intent.action.SEARCH" />-->
             <!--</intent-filter>-->
-
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable" />
+            <!--<meta-data-->
+                <!--android:name="android.app.searchable"-->
+                <!--android:resource="@xml/searchable" />-->
         </activity>
 
         <activity android:name=".ui.activites.ActivityEventDetails"

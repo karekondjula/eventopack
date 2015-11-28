@@ -5,9 +5,10 @@
     android:orientation="vertical"
     tools:context="com.evento.team2.eventspack.ui.fragments.FragmentSavedEvents">
 
-    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/savedEventsRecyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:scrollbars="vertical" />
 
 </RelativeLayout>

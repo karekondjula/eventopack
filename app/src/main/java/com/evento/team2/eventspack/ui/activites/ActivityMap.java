@@ -31,6 +31,7 @@ import com.evento.team2.eventspack.provider.FetchAsyncTask;
 import com.evento.team2.eventspack.ui.fragments.FragmentCalendar;
 import com.evento.team2.eventspack.ui.fragments.FragmentMap;
 import com.evento.team2.eventspack.utils.Utils;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -84,15 +85,15 @@ public class ActivityMap extends AppCompatActivity {
             Bundle bundle = getIntent().getExtras();
             if (bundle != null) {
                 int what = bundle.getInt(FragmentMap.EXTRA_WHAT);
-                long eventId = bundle.getLong(FragmentMap.EXTRA_ID);
+                long id = bundle.getLong(FragmentMap.EXTRA_ID);
                 switch (what) {
                     case FetchAsyncTask.SAVED_EVENTS:
                         // TODO go to saved events in activity map
                     case FetchAsyncTask.EVENTS:
-                        fragmentMap = FragmentMap.newInstance(FetchAsyncTask.EVENTS, eventId);
+                        fragmentMap = FragmentMap.newInstance(FetchAsyncTask.EVENTS, id);
                         break;
                     case FetchAsyncTask.PLACES:
-                        fragmentMap = FragmentMap.newInstance(FetchAsyncTask.PLACES, eventId);
+                        fragmentMap = FragmentMap.newInstance(FetchAsyncTask.PLACES, id);
                         break;
 
                     default:
@@ -114,5 +115,11 @@ public class ActivityMap extends AppCompatActivity {
         intent.putExtra(FragmentMap.EXTRA_ID, id);
 
         return intent;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ButterKnife.unbind(this);
     }
 }

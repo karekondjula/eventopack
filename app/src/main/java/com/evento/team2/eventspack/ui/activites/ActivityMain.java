@@ -68,13 +68,8 @@ public class ActivityMain extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        LeakCanary.install(getApplication());
-
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
-        EventsDatabase.getInstance().openEventsDatabase(this);
-        EventsDatabase.getInstance().setGeocoder(new Geocoder(this, Locale.getDefault()));
 
         Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -125,7 +120,6 @@ public class ActivityMain extends AppCompatActivity {
 
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
-        //calling sync state is necessay or else your hamburger icon wont show up
         actionBarDrawerToggle.syncState();
         setupViewPager(viewPager);
 
@@ -214,9 +208,8 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     private void presentShowcaseSequence() {
-
         ShowcaseConfig config = new ShowcaseConfig();
-        config.setDelay(2000); // half second between each showcase view
+        config.setDelay(2000);
 
         MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
 

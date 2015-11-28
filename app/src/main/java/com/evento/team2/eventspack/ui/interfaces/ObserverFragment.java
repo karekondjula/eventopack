@@ -4,14 +4,17 @@ package com.evento.team2.eventspack.ui.interfaces;
 import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
+import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
+import com.squareup.leakcanary.RefWatcher;
 
 import java.util.Observer;
 
@@ -22,26 +25,30 @@ import butterknife.ButterKnife;
  */
 public abstract class ObserverFragment extends Fragment implements Observer {
 
-    //    private SearchView searchView = null;
     protected FetchAsyncTask fetchAsyncTask;
 
     @Override
-    public void onDetach() {
+    public void onDestroyView() {
+        super.onDestroyView();
         ButterKnife.unbind(this);
         if (fetchAsyncTask != null) {
             fetchAsyncTask.cancel(true);
+            fetchAsyncTask = null;
         }
-        super.onDetach();
+
+//        RefWatcher refWatcher = EventiApplication.getRefWatcher(getActivity());
+//        refWatcher.watch(this);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         MenuItem searchItem = menu.findItem(R.id.action_search);
 
-        SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+        SearchManager searchManager = (SearchManager) EventiApplication.applicationContext.getSystemService(Context.SEARCH_SERVICE);
 
         if (searchItem != null) {
             final SearchView searchView = (SearchView) searchItem.getActionView();
+            searchView.setQueryHint(EventiApplication.applicationContext.getString(R.string.filter));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {

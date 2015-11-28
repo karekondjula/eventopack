@@ -26,7 +26,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
@@ -37,7 +36,7 @@ import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
-import com.evento.team2.eventspack.ui.fragments.FragmentMap;
+import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -82,7 +81,9 @@ public class ActivityEventDetails extends AppCompatActivity {
 
     private Drawable emptyHeart;
     private Drawable filledHeart;
-
+    private GoogleMap mapView;
+    private MapFragment mapFragment;
+    private MarkerOptions markerOptions;
     private Event event;
 
     static {
@@ -92,6 +93,7 @@ public class ActivityEventDetails extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_event_details);
         ButterKnife.bind(this);
 
@@ -121,18 +123,16 @@ public class ActivityEventDetails extends AppCompatActivity {
             saveEvent.setImageDrawable(emptyHeart);
         }
 
-        DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm");
-        textViewEventStartDate.setText(event.startTimeStamp != 0 ? dateFormat.format(event.startTimeStamp) : "");
-        textViewEventEndDate.setText(event.endTimeStamp != 0 ? dateFormat.format(event.endTimeStamp) : "");
+        textViewEventStartDate.setText(event.startTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(event.startTimeStamp) : "");
+        textViewEventEndDate.setText(event.endTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(event.endTimeStamp) : "");
 
         textViewEventLocation.setText(event.locationString);
 
         textViewEventDetails.setText(event.details);
-//        textViewEventDetails.setMovementMethod(LinkMovementMethod.getInstance());
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.event_detail_map);
+        mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.event_detail_map);
         mapFragment.getMapAsync(googleMap -> {
-            GoogleMap mapView = googleMap;
+            mapView = googleMap;
             mapView.setMyLocationEnabled(true);
             mapView.getUiSettings().setAllGesturesEnabled(false);
             mapView.getUiSettings().setMyLocationButtonEnabled(false);
@@ -143,15 +143,25 @@ public class ActivityEventDetails extends AppCompatActivity {
                     startActivity(activityMapIntent);
                     finish();
                 });
-                mapView.addMarker(new MarkerOptions().position(new LatLng(event.location.latitude, event.location.longitude)));
+                markerOptions = new MarkerOptions().position(new LatLng(event.location.latitude, event.location.longitude));
+                mapView.addMarker(markerOptions);
             }
         });
     }
 
     @Override
     protected void onDestroy() {
-        ButterKnife.unbind(this);
         super.onDestroy();
+        ButterKnife.unbind(this);
+        mapFragment = null;
+        if (mapView != null) {
+            mapView.clear();
+            mapView.stopAnimation();
+            mapView = null;
+        }
+        markerOptions = null;
+        emptyHeart = null;
+        filledHeart = null;
     }
 
     @OnClick(R.id.fab_add_to_saved)

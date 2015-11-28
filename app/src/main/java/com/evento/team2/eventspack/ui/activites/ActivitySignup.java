@@ -52,8 +52,8 @@ public class ActivitySignup extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        ButterKnife.unbind(this);
         super.onDestroy();
+        ButterKnife.unbind(this);
     }
 
     @OnClick(R.id.btn_signup)

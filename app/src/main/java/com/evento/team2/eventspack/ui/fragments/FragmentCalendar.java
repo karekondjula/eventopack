@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.provider.EventsDatabase;
@@ -105,8 +106,8 @@ public class FragmentCalendar extends Fragment {
 
     @Override
     public void onDestroy() {
-        ButterKnife.unbind(this);
         super.onDestroy();
+        ButterKnife.unbind(this);
     }
 
     final CaldroidListener listener = new CaldroidListener() {
@@ -127,7 +128,7 @@ public class FragmentCalendar extends Fragment {
                 if (dateColorHashMap.containsKey(dateLong)) {
                     color = dateColorHashMap.get(dateLong);
                 } else {
-                    color = ColorUtils.getInstance().getRandomColor(getActivity());
+                    color = ColorUtils.getInstance().getRandomColor(EventiApplication.applicationContext);
                     dateColorHashMap.put(dateLong, color);
                 }
 

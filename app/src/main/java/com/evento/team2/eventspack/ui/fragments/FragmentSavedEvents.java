@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapter.EventsRecyclerViewAdapter;
 import com.evento.team2.eventspack.model.Event;
@@ -36,7 +37,7 @@ public class FragmentSavedEvents extends ObserverFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        savedEventsAdapter = new EventsRecyclerViewAdapter(getActivity());
+        savedEventsAdapter = new EventsRecyclerViewAdapter(EventiApplication.applicationContext);
         savedEventsRecyclerView.setHasFixedSize(true);
         savedEventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         savedEventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -59,9 +60,6 @@ public class FragmentSavedEvents extends ObserverFragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        if (fetchAsyncTask != null && fetchAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
-            fetchAsyncTask.cancel(true);
-        }
     }
 
     public static FragmentSavedEvents newInstance() {

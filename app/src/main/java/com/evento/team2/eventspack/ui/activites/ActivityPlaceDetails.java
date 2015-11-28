@@ -17,6 +17,7 @@
 package com.evento.team2.eventspack.ui.activites;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -120,8 +121,12 @@ public class ActivityPlaceDetails extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        ButterKnife.unbind(this);
         super.onDestroy();
+        ButterKnife.unbind(this);
+        Fragment fragment = getFragmentManager().findFragmentById(R.id.event_detail_map);
+        if (fragment != null) {
+            fragment.onDestroyView();
+        }
     }
 
     public static Intent createIntent(Context context, long id) {

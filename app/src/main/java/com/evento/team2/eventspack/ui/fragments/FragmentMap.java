@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
@@ -31,6 +30,7 @@ import com.evento.team2.eventspack.provider.FetchAsyncTask;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.ui.activites.ActivityMap;
 import com.evento.team2.eventspack.ui.interfaces.ObserverFragment;
+import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -67,7 +67,6 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     public static final String DELIMITER = "\n";
 
     private final Calendar calendar = Calendar.getInstance();
-    private DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
     private GoogleMap mapView;
     private Location myLocation;
     private CaldroidFragment dialogCaldroidFragment;
@@ -171,7 +170,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
             public void onSelectDate(Date date, View view) {
                 setCalendarDate(date);
 
-                lastSelectedDate = dateFormat.format(date);
+                lastSelectedDate = DateFormatterUtils.compareDateFormat.format(date);
 
                 fetchAsyncTask = new FetchAsyncTask(FragmentMap.this, what, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER);
                 if (what == FetchAsyncTask.PLACES) {
@@ -190,6 +189,8 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         b = BitmapFactory.decodeResource(getResources(), R.drawable.place_image);
         placeImageBitmap = Bitmap.createScaledBitmap(b, b.getWidth() / 8, b.getHeight() / 8, false);
 
+        b.recycle();
+
         return view;
     }
 
@@ -197,9 +198,16 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        if (fetchAsyncTask != null && fetchAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
-            fetchAsyncTask.cancel(true);
+        if (mapView != null) {
+            mapView.clear();
+            mapView.stopAnimation();
+            mapView = null;
         }
+
+        eventImageBitmap.recycle();
+        eventImageBitmap = null;
+        placeImageBitmap.recycle();
+        placeImageBitmap = null;
     }
 
     @Override
@@ -249,17 +257,19 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
 
         if (id == FetchAsyncTask.NO_EVENT_ID) {
             // regular opening of fragment map
-            lastSelectedDate = dateFormat.format(calendar.getTimeInMillis());
+            lastSelectedDate = DateFormatterUtils.compareDateFormat.format(calendar.getTimeInMillis());
         } else {
             if (what == FetchAsyncTask.PLACES) {
                 // the user came here by clicking a Place map
-                lastSelectedDate = dateFormat.format(calendar.getTimeInMillis());
+
+                // at the moment no places are connected with dates
+                lastSelectedDate = "";//searchDateFormat.format(calendar.getTimeInMillis());
                 Place place = EventsDatabase.getInstance().getPlaceById(id);
                 moveCamera(place.location.latitude, place.location.longitude);
             } else if (what == FetchAsyncTask.EVENTS) {
                 // the user came here by clicking an Event map
                 Event event = EventsDatabase.getInstance().getEventById(id);
-                lastSelectedDate = dateFormat.format(event.startTimeStamp);
+                lastSelectedDate = DateFormatterUtils.compareDateFormat.format(event.startTimeStamp);
             }
         }
 
@@ -283,7 +293,8 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
                                     .position(new LatLng(event.location.latitude,
                                             event.location.longitude))
                                     .title(event.name)
-                                    .snippet(event.details + DELIMITER + event.startDateString + " " + event.startTimeString)
+//                                    .snippet(event.details + DELIMITER + event.startDateString + " " + event.startTimeString)
+                                    .snippet(event.details + DELIMITER + DateFormatterUtils.fullDateFormat.format(new Date(event.startTimeStamp)))
                                     .icon(BitmapDescriptorFactory.fromBitmap(eventImageBitmap));
                             hashMapLatLngEventId.put(markerOptions.getPosition(), event.id);
                             mapView.addMarker(markerOptions);
@@ -359,8 +370,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     }
 
     private void moveCamera(double latitude, double longitude) {
-        LatLngBounds radius = new LatLngBounds(new LatLng(latitude, longitude),
-                new LatLng(latitude, longitude));
+        LatLngBounds radius = new LatLngBounds(new LatLng(latitude, longitude), new LatLng(latitude, longitude));
         CameraUpdate center = CameraUpdateFactory.newLatLngZoom(radius.getCenter(), 14);
         mapView.animateCamera(center, 1000, null);
     }
@@ -382,7 +392,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     }
 
     private void setCalendarDate(Date date) {
-        actionViewCalendar.setText(dateFormat.format(date));
+        actionViewCalendar.setText(DateFormatterUtils.compareDateFormat.format(date));
     }
 
     private void setCalendarDate(String dateString) {

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,12 +18,14 @@ import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
+import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -34,9 +37,10 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
 
     private static final String ICON_TEXT_VIEW_FILLED_HEART = "{ion-android-favorite @color/colorPrimary}";
     private static final String ICON_TEXT_VIEW_EMPTY_HEART = "{ion-android-favorite-outline @color/colorPrimary}";
+    private final static Date TODAY = new Date();
 
-    private ArrayList<Event> events;
     private Context context;
+    private ArrayList<Event> events;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -100,9 +104,33 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         holder.mEventTitle.setText(event.name);
         holder.mEventDetails.setText(event.details);
 
-        DateFormat dateFormat = new SimpleDateFormat("EEE, d MMM yyyy HH:mm");
-        holder.mEventStartTime.setText(event.startTimeStamp != 0 ? dateFormat.format(event.startTimeStamp) : "");
-        holder.mEventEndTime.setText(event.endTimeStamp != 0 ? dateFormat.format(event.endTimeStamp) : "");
+        Date dateEvent = null;
+        Calendar calendar = null;
+        try {
+            dateEvent = DateFormatterUtils.compareDateFormat.parse(event.startDateString);
+            calendar = Calendar.getInstance();
+            calendar.setTime(TODAY);
+            calendar.set(Calendar.HOUR_OF_DAY, 0);
+            calendar.set(Calendar.MINUTE, 0);
+            calendar.set(Calendar.SECOND, 0);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        if (Math.abs(dateEvent.getTime() - calendar.getTimeInMillis()) < 1000) {
+            // today (or close enough)
+            holder.mEventStartTime.setText(event.startTimeStamp != 0 ? context.getString(R.string.today)
+                    + " " + DateFormatterUtils.hoursMinutesDateFormat.format(event.startTimeStamp) : "");
+            holder.mEventStartTime.setTextColor(context.getResources().getColor(R.color.colorAccent));
+            holder.mEventEndTime.setTextColor(context.getResources().getColor(R.color.colorAccent));
+        } else {
+            // event is on a day != from today
+            holder.mEventStartTime.setText(event.startTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(event.startTimeStamp)
+                    : "");
+            holder.mEventStartTime.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+            holder.mEventEndTime.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+        }
+        holder.mEventEndTime.setText(event.endTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(event.endTimeStamp) : "");
 
         if (TextUtils.isEmpty(event.pictureUri)) {
             Glide.with(holder.mEventImage.getContext()).load(R.drawable.party_image).into(holder.mEventImage);

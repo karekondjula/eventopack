@@ -1,6 +1,5 @@
 package com.evento.team2.eventspack.ui.fragments;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -14,15 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapter.EventsRecyclerViewAdapter;
 import com.evento.team2.eventspack.model.Event;
-import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
 import com.evento.team2.eventspack.ui.interfaces.ObserverFragment;
 import com.evento.team2.eventspack.utils.NetworkUtils;
-import com.joanzapata.iconify.Iconify;
-import com.joanzapata.iconify.fonts.IoniconsModule;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -52,24 +49,10 @@ public class FragmentEvents extends ObserverFragment {
         eventsRecyclerView.setHasFixedSize(true);
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         eventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        eventsAdapter = new EventsRecyclerViewAdapter(getActivity());
+        if (eventsAdapter == null) {
+            eventsAdapter = new EventsRecyclerViewAdapter(EventiApplication.applicationContext);
+        }
         eventsRecyclerView.setAdapter(eventsAdapter);
-
-        new Thread() {
-            @Override
-            public void run() {
-                // empty database check
-                // TODO replace with count query (might be obsolete with the check in update() method)?!
-                if (EventsDatabase.getInstance().getEvents().size() > 0) {
-                    getActivity().runOnUiThread(() -> {
-                        if (emptyAdapterTextView == null) {
-                            emptyAdapterTextView = ButterKnife.findById(view, R.id.empty_view);
-                        }
-                        emptyAdapterTextView.setVisibility(View.GONE);
-                    });
-                }
-            }
-        }.start();
 
         filterList(FetchAsyncTask.NO_FILTER_STRING);
     }
@@ -79,18 +62,21 @@ public class FragmentEvents extends ObserverFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         setHasOptionsMenu(true);
-        swipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_events_list, container, false);
-        ButterKnife.bind(this, swipeRefreshLayout);
+        if (swipeRefreshLayout == null) {
+            swipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_events_list, container, false);
 
-        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            fetchAsyncTask = new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.FETCH_FROM_SERVER);
-            if (TextUtils.isEmpty(lastFilterInput)) {
-                fetchAsyncTask.execute("", String.valueOf(new Date().getTime()));
-            } else {
-                fetchAsyncTask.execute(lastFilterInput, String.valueOf(new Date().getTime()));
-            }
-        });
+            ButterKnife.bind(this, swipeRefreshLayout);
+
+            swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
+            swipeRefreshLayout.setOnRefreshListener(() -> {
+                fetchAsyncTask = new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.FETCH_FROM_SERVER);
+                if (TextUtils.isEmpty(lastFilterInput)) {
+                    fetchAsyncTask.execute("", String.valueOf(new Date().getTime()));
+                } else {
+                    fetchAsyncTask.execute(lastFilterInput, String.valueOf(new Date().getTime()));
+                }
+            });
+        }
 
         return swipeRefreshLayout;
     }
@@ -99,10 +85,12 @@ public class FragmentEvents extends ObserverFragment {
     public void onResume() {
         super.onResume();
 
-        if (eventsAdapter.getItemCount() == 0) {
-            emptyAdapterTextView.setVisibility(View.VISIBLE);
-        } else {
-            emptyAdapterTextView.setVisibility(View.GONE);
+        if (eventsAdapter != null) {
+            if (eventsAdapter.getItemCount() == 0) {
+                emptyAdapterTextView.setVisibility(View.VISIBLE);
+            } else {
+                emptyAdapterTextView.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -114,13 +102,12 @@ public class FragmentEvents extends ObserverFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
-        if (fetchAsyncTask != null && fetchAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
-            fetchAsyncTask.cancel(true);
-        }
-
-        if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
-            swipeRefreshLayout.setRefreshing(false);
+        if (swipeRefreshLayout != null) {
+            if (swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
+            swipeRefreshLayout.removeAllViews();
+            swipeRefreshLayout = null;
         }
     }
 
@@ -134,7 +121,7 @@ public class FragmentEvents extends ObserverFragment {
                 eventsAdapter.addEvents((ArrayList<Event>) eventsArrayList);
                 eventsAdapter.notifyDataSetChanged();
 
-                if (!NetworkUtils.getInstance().isNetworkAvailable(getActivity())) {
+                if (!NetworkUtils.getInstance().isNetworkAvailable(EventiApplication.applicationContext)) {
                     getActivity().runOnUiThread(() -> {
                         Snackbar.make(eventsRecyclerView,
                                 R.string.no_internet_connection_cached_events,
@@ -142,15 +129,19 @@ public class FragmentEvents extends ObserverFragment {
                                 .show();
                     });
                 }
+
+                if (eventsAdapter.getItemCount() > 0) {
+                    getActivity().runOnUiThread(() -> {
+                        if (emptyAdapterTextView != null) {
+                            emptyAdapterTextView.setVisibility(View.GONE);
+                        }
+                    });
+                }
             }
         }
 
         if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(false);
-
-            if (eventsAdapter.getItemCount() > 0) {
-                getActivity().runOnUiThread(() -> emptyAdapterTextView.setVisibility(View.GONE));
-            }
         }
     }
 

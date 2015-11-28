@@ -23,5 +23,7 @@
 
     <string name="showcase_welcome_message">Добредојде на EVENTI\nНастаните се прикажуваат во ова поле</string>
     <string name="showcase_toolbar_message">Филтрирање, календар и мапа на настани се наоѓаат во менито од алатникот</string>
+    <string name="filter">Филтрирај...</string>
+    <string name="today">Денес </string>
 
 </resources>
