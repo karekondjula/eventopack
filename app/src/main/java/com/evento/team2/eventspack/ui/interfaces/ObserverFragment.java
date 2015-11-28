@@ -4,7 +4,6 @@ package com.evento.team2.eventspack.ui.interfaces;
 import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Context;
-import android.os.AsyncTask;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -14,7 +13,6 @@ import android.view.MenuItem;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
-import com.squareup.leakcanary.RefWatcher;
 
 import java.util.Observer;
 

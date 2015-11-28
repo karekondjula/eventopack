@@ -67,18 +67,18 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         }
     }
 
-    public Event getValueAt(int position) {
-        return events.get(position);
-    }
+//    public Event getValueAt(int position) {
+//        return events.get(position);
+//    }
 
     public EventsRecyclerViewAdapter(Context context) {
         this.context = context;
         events = new ArrayList<>();
     }
 
-    public void addEvent(Event event) {
-        events.add(0, event);
-    }
+//    public void addEvent(Event event) {
+//        events.add(0, event);
+//    }
 
     public void addEvents(ArrayList<Event> eventArrayList) {
         if (!events.equals(eventArrayList)) {

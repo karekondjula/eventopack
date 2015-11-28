@@ -48,6 +48,11 @@
 #-keep public class * extends android.content.BroadcastReceiver # not used
 -keep public class * extends android.content.ContentProvider
 -keep class org.xmlpull.v1.** { *; }
+#-keep public class * implements com.bumptech.glide.module.GlideModule
+#-keep public enum com.bumptech.glide.load.resource.bitmap.ImageHeaderParser$** {
+#    **[] $VALUES;
+#    public *;
+#}
 
 -keep class * extends java.util.ListResourceBundle {
     protected Object[][] getContents();
