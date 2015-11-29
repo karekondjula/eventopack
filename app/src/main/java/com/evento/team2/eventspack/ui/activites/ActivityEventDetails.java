@@ -26,6 +26,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
@@ -115,9 +116,11 @@ public class ActivityEventDetails extends AppCompatActivity {
         collapsingToolbar.setTitle(event.name);
 
         // TODO daniel implement picture uri as picture
-//        Glide.with(this).load(R.drawable.party_image).centerCrop().into(backdropImage);
-        String s = "https://scontent-vie1-1.xx.fbcdn.net/hphotos-xpa1/v/t1.0-9/1917456_1141163577474_5839557_n.jpg?oh=c1fab1c5f6146fdf60d4e0b975438db3&oe=56F5562B";
-        Glide.with(this).load(s).centerCrop().into(backdropImage);
+        if (TextUtils.isEmpty(event.pictureUri)) {
+            Glide.with(this).load(R.drawable.party_image).centerCrop().into(backdropImage);
+        } else {
+            Glide.with(this).load(event.pictureUri).centerCrop().into(backdropImage);
+        }
 
         if (event.isEventSaved) {
             saveEvent.setImageDrawable(filledHeart);

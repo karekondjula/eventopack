@@ -1,13 +1,10 @@
 package com.evento.team2.eventspack.ui.fragments;
 
-import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +13,11 @@ import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapter.PlacesRecyclerViewAdapter;
 import com.evento.team2.eventspack.model.Place;
+import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
 import com.evento.team2.eventspack.ui.interfaces.ObserverFragment;
 
 import java.util.ArrayList;
-import java.util.Observable;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -73,24 +70,23 @@ public class FragmentPlaces extends ObserverFragment {
     }
 
     @Override
-    public void update(Observable observable, Object placesArrayList) {
-        if (placesArrayList instanceof ArrayList) {
-            if (placesRecyclerViewAdapter != null) {
-                // TODO ugly solution for a problem which is caused because I use
-                // TODO one fetchasync task for all data fetching
-                placesRecyclerViewAdapter.addPlaces((ArrayList<Place>) placesArrayList);
-                placesRecyclerViewAdapter.notifyDataSetChanged();
-            }
-        }
-    }
+    public void filterList(final String filter) {
+        new Thread() {
+            @Override
+            public void run() {
 
-    @Override
-    public void filterList(String filter) {
-        fetchAsyncTask = new FetchAsyncTask(this, FetchAsyncTask.PLACES, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER);
-        if (TextUtils.isEmpty(filter)) {
-            fetchAsyncTask.execute();
-        } else {
-            fetchAsyncTask.execute(filter);
-        }
+                ArrayList<Place> eventsArrayList;
+                if (filter != null) {
+                    eventsArrayList = EventsDatabase.getInstance().getPlaces(filter);
+                } else {
+                    eventsArrayList = EventsDatabase.getInstance().getPlaces();
+                }
+
+                if (placesRecyclerViewAdapter != null) {
+                    placesRecyclerViewAdapter.addPlaces(eventsArrayList);
+                    getActivity().runOnUiThread(() -> placesRecyclerViewAdapter.notifyDataSetChanged());
+                }
+            }
+        }.start();
     }
 }

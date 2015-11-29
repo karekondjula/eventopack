@@ -24,7 +24,7 @@ import java.util.HashMap;
  * Created by Daniel on 18-Aug-15.
  */
 public class ServiceEvento {
-    private static final String TAG = "ServiceEvento";
+    private static final String TAG = ">> ServiceEvento";
 
     private static final String NAMESPACE = "urn:eventservice";
     private static final String URL = "http://ap.mk/evento/server.php";

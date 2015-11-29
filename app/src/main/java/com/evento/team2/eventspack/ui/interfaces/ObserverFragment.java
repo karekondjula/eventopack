@@ -1,6 +1,5 @@
 package com.evento.team2.eventspack.ui.interfaces;
 
-
 import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Context;
@@ -13,7 +12,9 @@ import android.view.MenuItem;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
+import com.squareup.leakcanary.RefWatcher;
 
+import java.util.Observable;
 import java.util.Observer;
 
 import butterknife.ButterKnife;
@@ -86,4 +87,43 @@ public abstract class ObserverFragment extends Fragment implements Observer {
     }
 
     public abstract void filterList(String query);
+
+    @Override
+    public void update(Observable observable, Object eventsArrayList) {
+        // reminescence from the stupid days o.O
+
+//        if (eventsArrayList instanceof ArrayList) {
+//            if (eventsAdapter != null) {
+//                // TODO ugly solution for a problem which is caused because I use
+//                // TODO one fetchasync task for all data fetching
+//                eventsAdapter.addEvents((ArrayList<Event>) eventsArrayList);
+//                eventsAdapter.notifyDataSetChanged();
+//
+//                if (!NetworkUtils.getInstance().isNetworkAvailable(EventiApplication.applicationContext)) {
+//                    if(getActivity() != null) {
+//                        getActivity().runOnUiThread(() -> {
+//                            Snackbar.make(eventsRecyclerView,
+//                                    R.string.no_internet_connection_cached_events,
+//                                    Snackbar.LENGTH_LONG)
+//                                    .show();
+//                        });
+//                    }
+//                }
+//
+//                if (eventsAdapter.getItemCount() > 0) {
+//                    if(getActivity() != null) {
+//                        getActivity().runOnUiThread(() -> {
+//                            if (emptyAdapterTextView != null) {
+//                                emptyAdapterTextView.setVisibility(View.GONE);
+//                            }
+//                        });
+//                    }
+//                }
+//            }
+//        }
+//
+//        if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
+//            swipeRefreshLayout.setRefreshing(false);
+//        }
+    }
 }

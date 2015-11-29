@@ -31,7 +31,7 @@ public class ConversionUtils {
         event.startDateString = dateTime.split(" ")[1];
 
         event.endTimeStamp = jsonEvent.endTime * 1000; // in ms
-//        event.pictureUri = jsonEvent.imageUrl;
+        event.pictureUri = jsonEvent.image_url;
         event.locationString = jsonEvent.location.concat(", " + jsonEvent.city);
         event.location = new LatLng(jsonEvent.lat, jsonEvent.lng);
 

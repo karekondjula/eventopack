@@ -17,13 +17,15 @@ import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapter.EventsRecyclerViewAdapter;
 import com.evento.team2.eventspack.model.Event;
+import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
+import com.evento.team2.eventspack.soapservice.ServiceEvento;
 import com.evento.team2.eventspack.ui.interfaces.ObserverFragment;
 import com.evento.team2.eventspack.utils.NetworkUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Observable;
+import java.util.HashMap;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -69,12 +71,7 @@ public class FragmentEvents extends ObserverFragment {
 
             swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
             swipeRefreshLayout.setOnRefreshListener(() -> {
-                fetchAsyncTask = new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.FETCH_FROM_SERVER);
-                if (TextUtils.isEmpty(lastFilterInput)) {
-                    fetchAsyncTask.execute("", String.valueOf(new Date().getTime()));
-                } else {
-                    fetchAsyncTask.execute(lastFilterInput, String.valueOf(new Date().getTime()));
-                }
+                fetchEventsFromServer();
             });
         }
 
@@ -92,11 +89,10 @@ public class FragmentEvents extends ObserverFragment {
                 emptyAdapterTextView.setVisibility(View.GONE);
             }
         }
-    }
 
-    public static FragmentEvents newInstance() {
-        FragmentEvents fragmentEvents = new FragmentEvents();
-        return fragmentEvents;
+        if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
     }
 
     @Override
@@ -112,47 +108,73 @@ public class FragmentEvents extends ObserverFragment {
     }
 
     @Override
-    public void update(Observable observable, Object eventsArrayList) {
+    public void filterList(final String filter) {
+        lastFilterInput = filter;
 
-        if (eventsArrayList instanceof ArrayList) {
-            if (eventsAdapter != null) {
-                // TODO ugly solution for a problem which is caused because I use
-                // TODO one fetchasync task for all data fetching
-                eventsAdapter.addEvents((ArrayList<Event>) eventsArrayList);
-                eventsAdapter.notifyDataSetChanged();
+        new Thread() {
+            @Override
+            public void run() {
+                ArrayList<Event> eventsArrayList = null;
 
-                if (!NetworkUtils.getInstance().isNetworkAvailable(EventiApplication.applicationContext)) {
-                    getActivity().runOnUiThread(() -> {
-                        Snackbar.make(eventsRecyclerView,
-                                R.string.no_internet_connection_cached_events,
-                                Snackbar.LENGTH_LONG)
-                                .show();
-                    });
+                if (!TextUtils.isEmpty(filter)) {
+                    eventsArrayList = EventsDatabase.getInstance().getEvents(filter, String.valueOf(new Date().getTime()));
+                } else {
+                    eventsArrayList = EventsDatabase.getInstance().getEvents("", String.valueOf(new Date().getTime()));
                 }
 
-                if (eventsAdapter.getItemCount() > 0) {
+                if (eventsAdapter != null) {
+                    eventsAdapter.addEvents(eventsArrayList);
+
+                    if(getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
+                            eventsAdapter.notifyDataSetChanged();
+
+                            if (eventsAdapter.getItemCount() > 0) {
+                                if (emptyAdapterTextView != null) {
+                                    emptyAdapterTextView.setVisibility(View.GONE);
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        }.start();
+    }
+
+    public static FragmentEvents newInstance() {
+        FragmentEvents fragmentEvents = new FragmentEvents();
+        return fragmentEvents;
+    }
+
+    private void fetchEventsFromServer() {
+        new Thread() {
+            @Override
+            public void run() {
+                if (NetworkUtils.getInstance().isNetworkAvailable(EventiApplication.applicationContext)) {
+                    HashMap<String, Object> params = new HashMap();
+                    params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
+                    ServiceEvento.getInstance().callServiceMethod(params);
+
+                    filterList(lastFilterInput);
+                } else {
+                    if(getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
+                            Snackbar.make(eventsRecyclerView,
+                                    R.string.no_internet_connection_cached_events,
+                                    Snackbar.LENGTH_LONG)
+                                    .show();
+                        });
+                    }
+                }
+
+                if(getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        if (emptyAdapterTextView != null) {
-                            emptyAdapterTextView.setVisibility(View.GONE);
+                        if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
+                            swipeRefreshLayout.setRefreshing(false);
                         }
                     });
                 }
             }
-        }
-
-        if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
-            swipeRefreshLayout.setRefreshing(false);
-        }
-    }
-
-    @Override
-    public void filterList(String filter) {
-        lastFilterInput = filter;
-        fetchAsyncTask = new FetchAsyncTask(this, FetchAsyncTask.EVENTS, FetchAsyncTask.DO_NOT_FETCH_FROM_SERVER);
-        if (TextUtils.isEmpty(filter)) {
-            fetchAsyncTask.execute("", String.valueOf(new Date().getTime()));
-        } else {
-            fetchAsyncTask.execute(filter, String.valueOf(new Date().getTime()));
-        }
+        }.start();
     }
 }

@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.model.Event;
@@ -164,10 +165,8 @@ public class FragmentCalendar extends Fragment {
         for (final Event event : eventsList) {
             if (selectedDates.contains(event.startDate)) {
                 final View calendarItemView = LayoutInflater.from(getActivity()).inflate(R.layout.item_small, calendarEventsLinearLayout, false);
-                ImageView calendarEventImageView = (ImageView) ButterKnife.findById(calendarItemView, R.id.small_event_picture);
+                ImageView calendarEventImageView = ButterKnife.findById(calendarItemView, R.id.small_event_picture);
                 ((CircleImageView) ButterKnife.findById(calendarItemView, R.id.event_color)).setImageResource(dateColorHashMap.get(event.startDate));
-                calendarEventImageView.setImageResource(R.drawable.party_image);
-//                Glide.with(getActivity()).load(R.drawable.party_image).into(calendarEventImageView);
                 ((TextView) ButterKnife.findById(calendarItemView, R.id.event_title)).setText(event.name);
                 ((TextView) ButterKnife.findById(calendarItemView, R.id.event_details)).setText(event.details);
                 ((TextView) ButterKnife.findById(calendarItemView, R.id.event_time)).setText(event.startTimeString);
@@ -178,7 +177,14 @@ public class FragmentCalendar extends Fragment {
 
                 });
 
-                getActivity().runOnUiThread(() -> calendarEventsLinearLayout.addView(calendarItemView));
+                getActivity().runOnUiThread(() -> {
+                    if (TextUtils.isEmpty(event.pictureUri)) {
+                        Glide.with(getActivity()).load(R.drawable.party_image).into(calendarEventImageView);
+                    } else {
+                        Glide.with(getActivity()).load(event.pictureUri).into(calendarEventImageView);
+                    }
+                    calendarEventsLinearLayout.addView(calendarItemView);
+                });
             }
         }
 

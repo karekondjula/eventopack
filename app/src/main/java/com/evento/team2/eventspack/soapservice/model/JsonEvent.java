@@ -49,8 +49,8 @@ public class JsonEvent {
     public String size;
 //    @JsonField
 //    public String imageMargin;
-//    @JsonField
-//    public String imageUrl;
+    @JsonField
+    public String image_url;
 //    @JsonField
 //    public String fullsize;
     @JsonField

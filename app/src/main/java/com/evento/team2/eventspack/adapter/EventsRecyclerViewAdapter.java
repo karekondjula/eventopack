@@ -135,8 +135,7 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         if (TextUtils.isEmpty(event.pictureUri)) {
             Glide.with(holder.mEventImage.getContext()).load(R.drawable.party_image).into(holder.mEventImage);
         } else {
-            // TODO daniel implement picture uri as picture
-            Glide.with(context).load(new File(event.pictureUri)).into(holder.mEventImage);
+            Glide.with(context).load(event.pictureUri).into(holder.mEventImage);
         }
 
         holder.mEventLocation.setText(event.locationString);

@@ -73,8 +73,7 @@ public class SmallLayoutEventsRecyclerViewAdapter extends RecyclerView.Adapter<S
         if (TextUtils.isEmpty(events.get(position).pictureUri)) {
             Glide.with(holder.mEventImage.getContext()).load(R.drawable.party_image).into(holder.mEventImage);
         } else {
-            // TODO daniel implement picture uri as picture
-            Glide.with(context).load(new File(events.get(position).pictureUri)).into(holder.mEventImage);
+            Glide.with(context).load(events.get(position).pictureUri).into(holder.mEventImage);
         }
 
         holder.mView.setOnClickListener(v -> {

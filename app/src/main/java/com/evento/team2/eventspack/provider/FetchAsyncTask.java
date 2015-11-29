@@ -2,6 +2,7 @@ package com.evento.team2.eventspack.provider;
 
 import android.os.AsyncTask;
 import android.support.annotation.IntDef;
+import android.util.Log;
 
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.model.Event;
@@ -40,22 +41,16 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
 
     @Category
     private int what;
-    private int fetchFromServer;
 
-    public FetchAsyncTask(ObserverFragment observerFragment, @Category int what, int fetchFromServer) {
+    public FetchAsyncTask(ObserverFragment observerFragment, @Category int what) {
         this.observerFragment = observerFragment;
         this.what = what;
-        this.fetchFromServer = fetchFromServer;
     }
 
     @Override
     protected ArrayList doInBackground(String... filter) {
 
         if (what == EVENTS) {
-            if (fetchFromServer == FETCH_FROM_SERVER &&
-                    NetworkUtils.getInstance().isNetworkAvailable(EventiApplication.applicationContext)) {
-                fetchEventsFromServer();
-            }
             if (filter != null && filter.length > 0) {
                 switch (filter.length) {
                     case 1:
@@ -89,15 +84,5 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
 
     protected void onPostExecute(ArrayList result) {
         observerFragment.update(null, result);
-    }
-
-    private void fetchEventsFromServer() {
-        HashMap<String, Object> params = new HashMap();
-        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
-        ServiceEvento.getInstance().callServiceMethod(params);
-    }
-
-    private void fetchPlacesFromServer() {
-        // TODO exactly!
     }
 }

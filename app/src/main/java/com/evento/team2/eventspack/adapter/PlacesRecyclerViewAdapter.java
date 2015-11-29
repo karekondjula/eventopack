@@ -77,8 +77,7 @@ public class PlacesRecyclerViewAdapter extends RecyclerView.Adapter<PlacesRecycl
         if (TextUtils.isEmpty(place.pictureUri)) {
             Glide.with(holder.mPlacePicture.getContext()).load(R.drawable.place_image).into(holder.mPlacePicture);
         } else {
-            // TODO daniel implement picture uri as picture
-            Glide.with(context).load(new File(place.pictureUri)).into(holder.mPlacePicture);
+            Glide.with(context).load(place.pictureUri).into(holder.mPlacePicture);
         }
 
         holder.mPlaceLocation.setText(place.locationString);
