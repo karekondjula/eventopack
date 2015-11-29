@@ -63,6 +63,7 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         public ViewHolder(View view) {
             super(view);
             mView = view;
+            // TODO maybe we should not use BK because we can not unbind the view
             ButterKnife.bind(this, view);
         }
     }

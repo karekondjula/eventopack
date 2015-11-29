@@ -96,7 +96,6 @@ public class ActivityPlaceDetails extends AppCompatActivity {
 
         collapsingToolbar.setTitle(place.name);
 
-        // TODO daniel implement picture uri as picture
         Glide.with(this).load(R.drawable.place_image).centerCrop().into(backdropImage);
 
         textViewEventLocation.setText(place.locationString);

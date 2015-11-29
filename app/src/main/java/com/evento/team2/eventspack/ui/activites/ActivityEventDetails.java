@@ -115,7 +115,6 @@ public class ActivityEventDetails extends AppCompatActivity {
 
         collapsingToolbar.setTitle(event.name);
 
-        // TODO daniel implement picture uri as picture
         if (TextUtils.isEmpty(event.pictureUri)) {
             Glide.with(this).load(R.drawable.party_image).centerCrop().into(backdropImage);
         } else {
