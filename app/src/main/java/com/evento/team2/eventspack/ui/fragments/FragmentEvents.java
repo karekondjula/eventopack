@@ -55,8 +55,6 @@ public class FragmentEvents extends ObserverFragment {
             eventsAdapter = new EventsRecyclerViewAdapter(EventiApplication.applicationContext);
         }
         eventsRecyclerView.setAdapter(eventsAdapter);
-
-        filterList(FetchAsyncTask.NO_FILTER_STRING);
     }
 
     @Nullable
@@ -93,6 +91,8 @@ public class FragmentEvents extends ObserverFragment {
         if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(false);
         }
+
+        filterList(FetchAsyncTask.NO_FILTER_STRING);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class FragmentEvents extends ObserverFragment {
                 if (!TextUtils.isEmpty(filter)) {
                     eventsArrayList = EventsDatabase.getInstance().getEvents(filter, String.valueOf(new Date().getTime()));
                 } else {
-                    eventsArrayList = EventsDatabase.getInstance().getEvents("", String.valueOf(new Date().getTime()));
+                    eventsArrayList = EventsDatabase.getInstance().getEvents(FetchAsyncTask.NO_FILTER_STRING, String.valueOf(new Date().getTime()));
                 }
 
                 if (eventsAdapter != null) {

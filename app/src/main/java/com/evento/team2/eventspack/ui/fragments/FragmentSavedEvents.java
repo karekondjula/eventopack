@@ -31,6 +31,8 @@ public class FragmentSavedEvents extends ObserverFragment {
 
     private EventsRecyclerViewAdapter savedEventsAdapter;
 
+    private boolean isViewUpdated = false;
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -40,8 +42,6 @@ public class FragmentSavedEvents extends ObserverFragment {
         savedEventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         savedEventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
         savedEventsRecyclerView.setAdapter(savedEventsAdapter);
-
-        filterList(FetchAsyncTask.NO_FILTER_STRING);
     }
 
     @Override
@@ -52,6 +52,21 @@ public class FragmentSavedEvents extends ObserverFragment {
         ButterKnife.bind(this, view);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (!isViewUpdated) {
+            filterList(FetchAsyncTask.NO_FILTER_STRING);
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        isViewUpdated = false;
     }
 
     @Override
@@ -67,22 +82,27 @@ public class FragmentSavedEvents extends ObserverFragment {
 
     @Override
     public void filterList(final String filter) {
-        new Thread() {
-            @Override
-            public void run() {
+        if (!isViewUpdated) {
+            new Thread() {
+                @Override
+                public void run() {
 
-                ArrayList<Event> eventsArrayList;
-                if (filter != null) {
-                    eventsArrayList = EventsDatabase.getInstance().getSavedEvents(filter);
-                } else {
-                    eventsArrayList = EventsDatabase.getInstance().getSavedEvents();
-                }
+                    ArrayList<Event> eventsArrayList;
+                    if (filter != null) {
+                        eventsArrayList = EventsDatabase.getInstance().getSavedEvents(filter);
+                    } else {
+                        eventsArrayList = EventsDatabase.getInstance().getSavedEvents(FetchAsyncTask.NO_FILTER_STRING);
+                    }
 
-                if (savedEventsAdapter != null) {
-                    savedEventsAdapter.addEvents((ArrayList<Event>) eventsArrayList);
-                    getActivity().runOnUiThread(() -> savedEventsAdapter.notifyDataSetChanged());
+                    if (savedEventsAdapter != null) {
+                        savedEventsAdapter.addEvents((ArrayList<Event>) eventsArrayList);
+                        if(getActivity() != null) {
+                            getActivity().runOnUiThread(() -> savedEventsAdapter.notifyDataSetChanged());
+                        }
+                    }
                 }
-            }
-        }.start();
+            }.start();
+            isViewUpdated = true;
+        }
     }
 }

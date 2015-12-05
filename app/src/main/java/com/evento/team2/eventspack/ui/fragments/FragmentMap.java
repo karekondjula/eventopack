@@ -340,14 +340,15 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
                         }
                     }
 
-                    getActivity().runOnUiThread(() -> {
-                        for (MarkerOptions markerOptions : markerOptionsArrayList) {
-                            mapView.addMarker(markerOptions);
-                        }
-                    });
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(() -> {
+                            for (MarkerOptions markerOptions : markerOptionsArrayList) {
+                                mapView.addMarker(markerOptions);
+                            }
+                        });
+                    }
                 }
             }.start();
-
         }
     }
 
@@ -362,54 +363,55 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         final View mapEventItemView = LayoutInflater.from(getActivity()).inflate(R.layout.item_small, mapEventDetailsLinearLayout, false);
         ImageView mapEventImageView = ButterKnife.findById(mapEventItemView, R.id.small_event_picture);
 
-        getActivity().runOnUiThread(() -> {
-            ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_title)).setText(marker.getTitle());
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(() -> {
+                ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_title)).setText(marker.getTitle());
 
-            if (what == FetchAsyncTask.EVENTS || what == FetchAsyncTask.SAVED_EVENTS) {
-                // no snippets for PLACES
-                String eventDetails[] = marker.getSnippet().split(DELIMITER);
-                ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_details)).setText(eventDetails[0]);
-                ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_time)).setText(eventDetails[1]);
-
-                Event event = (Event) hashMapLatLngEventId.get(marker.getPosition());
-
-                if (TextUtils.isEmpty(event.pictureUri)) {
-                    Glide.with(getActivity()).load(R.drawable.party_image).into(mapEventImageView);
-                } else {
-                    Glide.with(getActivity()).load(event.pictureUri).into(mapEventImageView);
-                }
-            } else if (what == FetchAsyncTask.PLACES) {
-                ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_details)).setText("");
-                ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_time)).setText("");
-
-                Place place = (Place) hashMapLatLngEventId.get(marker.getPosition());
-                if (TextUtils.isEmpty(place.pictureUri)) {
-                    Glide.with(getActivity()).load(R.drawable.place_image).into(mapEventImageView);
-                } else {
-                    Glide.with(getActivity()).load(place.pictureUri).into(mapEventImageView);
-                }
-            }
-
-            ButterKnife.findById(mapEventItemView, R.id.event_color).setVisibility(View.GONE);
-            ButterKnife.findById(mapEventItemView, R.id.close_event).setVisibility(View.VISIBLE);
-
-            mapEventItemView.setClickable(true);
-
-            ButterKnife.findById(mapEventItemView, R.id.close_event).setOnClickListener(view -> removeSelectedEventLayout());
-            mapEventItemView.setOnClickListener(v -> {
-
-                Intent intent = null;
                 if (what == FetchAsyncTask.EVENTS || what == FetchAsyncTask.SAVED_EVENTS) {
-                    intent = ActivityEventDetails.createIntent(getActivity(), ((Event) hashMapLatLngEventId.get(marker.getPosition())).id);
+                    // no snippets for PLACES
+                    String eventDetails[] = marker.getSnippet().split(DELIMITER);
+                    ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_details)).setText(eventDetails[0]);
+                    ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_time)).setText(eventDetails[1]);
+
+                    Event event = (Event) hashMapLatLngEventId.get(marker.getPosition());
+
+                    if (TextUtils.isEmpty(event.pictureUri)) {
+                        Glide.with(getActivity()).load(R.drawable.party_image).into(mapEventImageView);
+                    } else {
+                        Glide.with(getActivity()).load(event.pictureUri).into(mapEventImageView);
+                    }
                 } else if (what == FetchAsyncTask.PLACES) {
-                    intent = ActivityPlaceDetails.createIntent(getActivity(), ((Place) hashMapLatLngEventId.get(marker.getPosition())).id);
+                    ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_details)).setText("");
+                    ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_time)).setText("");
+
+                    Place place = (Place) hashMapLatLngEventId.get(marker.getPosition());
+                    if (TextUtils.isEmpty(place.pictureUri)) {
+                        Glide.with(getActivity()).load(R.drawable.place_image).into(mapEventImageView);
+                    } else {
+                        Glide.with(getActivity()).load(place.pictureUri).into(mapEventImageView);
+                    }
                 }
-                startActivity(intent);
+
+                ButterKnife.findById(mapEventItemView, R.id.event_color).setVisibility(View.GONE);
+                ButterKnife.findById(mapEventItemView, R.id.close_event).setVisibility(View.VISIBLE);
+
+                mapEventItemView.setClickable(true);
+
+                ButterKnife.findById(mapEventItemView, R.id.close_event).setOnClickListener(view -> removeSelectedEventLayout());
+                mapEventItemView.setOnClickListener(v -> {
+
+                    Intent intent = null;
+                    if (what == FetchAsyncTask.EVENTS || what == FetchAsyncTask.SAVED_EVENTS) {
+                        intent = ActivityEventDetails.createIntent(getActivity(), ((Event) hashMapLatLngEventId.get(marker.getPosition())).id);
+                    } else if (what == FetchAsyncTask.PLACES) {
+                        intent = ActivityPlaceDetails.createIntent(getActivity(), ((Place) hashMapLatLngEventId.get(marker.getPosition())).id);
+                    }
+                    startActivity(intent);
+                });
+
+                mapEventDetailsLinearLayout.addView(mapEventItemView);
             });
-
-            mapEventDetailsLinearLayout.addView(mapEventItemView);
-        });
-
+        }
 
         return false;
     }

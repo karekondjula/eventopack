@@ -334,7 +334,7 @@ public class EventsDatabase {
                                 Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
                                 Event.Table.COLUMN_START_DATE_STRING + " LIKE ? )"
                                 : ""),
-                (filter != null && filter.length > 0 ? new String[]{String.valueOf(Event.SAVED),
+                (filter.length > 0 ? new String[]{String.valueOf(Event.SAVED),
                         "%" + filter[0] + "%",
                         "%" + filter[0] + "%",
                         "%" + filter[0] + "%",
@@ -342,11 +342,12 @@ public class EventsDatabase {
                         : new String[]{String.valueOf(Event.SAVED)}),
                 null,
                 null,
-                Event.Table.COLUMN_START_TIME_STAMP + " DESC");
+                Event.Table.COLUMN_START_TIME_STAMP + " ASC");
 
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             Event event = cursorToEvent(cursor);
+//            Log.i(">>", event.toString());
             events.add(event);
             cursor.moveToNext();
         }

@@ -98,7 +98,9 @@ public class FragmentCalendar extends Fragment {
                     cal.set(Calendar.MILLISECOND, 0);
                     eventDates.add(cal.getTime().getTime());
                 }
-                getActivity().runOnUiThread(() -> caldroidFragment.refreshView());
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> caldroidFragment.refreshView());
+                }
             }
         }.start();
 
@@ -177,18 +179,22 @@ public class FragmentCalendar extends Fragment {
 
                 });
 
-                getActivity().runOnUiThread(() -> {
-                    if (TextUtils.isEmpty(event.pictureUri)) {
-                        Glide.with(getActivity()).load(R.drawable.party_image).into(calendarEventImageView);
-                    } else {
-                        Glide.with(getActivity()).load(event.pictureUri).into(calendarEventImageView);
-                    }
-                    calendarEventsLinearLayout.addView(calendarItemView);
-                });
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        if (TextUtils.isEmpty(event.pictureUri)) {
+                            Glide.with(getActivity()).load(R.drawable.party_image).into(calendarEventImageView);
+                        } else {
+                            Glide.with(getActivity()).load(event.pictureUri).into(calendarEventImageView);
+                        }
+                        calendarEventsLinearLayout.addView(calendarItemView);
+                    });
+                }
             }
         }
 
-        getActivity().runOnUiThread(() -> caldroidFragment.refreshView());
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(() -> caldroidFragment.refreshView());
+        }
     }
 
     public static FragmentCalendar newInstance() {

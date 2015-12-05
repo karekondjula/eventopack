@@ -250,10 +250,10 @@ public class ActivityMain extends AppCompatActivity {
 //                        fragmentEvents.filterList(FetchAsyncTask.NO_FILTER_STRING);
                         break;
                     case 1:
-//                        fragmentPlaces.filterList(FetchAsyncTask.NO_FILTER_STRING);
+                        fragmentPlaces.filterList(FetchAsyncTask.NO_FILTER_STRING);
                         break;
                     case 2:
-//                        fragmentSavedEvents.filterList(FetchAsyncTask.NO_FILTER_STRING);
+                        fragmentSavedEvents.filterList(FetchAsyncTask.NO_FILTER_STRING);
                         break;
                     default:
                 }

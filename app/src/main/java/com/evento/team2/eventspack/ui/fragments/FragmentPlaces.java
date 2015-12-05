@@ -42,7 +42,7 @@ public class FragmentPlaces extends ObserverFragment {
         placesRecyclerView.setItemAnimator(new DefaultItemAnimator());
         placesRecyclerView.setAdapter(placesRecyclerViewAdapter);
 
-        filterList(FetchAsyncTask.NO_FILTER_STRING);
+//        filterList(FetchAsyncTask.NO_FILTER_STRING);
     }
 
     @Override
@@ -84,7 +84,9 @@ public class FragmentPlaces extends ObserverFragment {
 
                 if (placesRecyclerViewAdapter != null) {
                     placesRecyclerViewAdapter.addPlaces(eventsArrayList);
-                    getActivity().runOnUiThread(() -> placesRecyclerViewAdapter.notifyDataSetChanged());
+                    if(getActivity() != null) {
+                        getActivity().runOnUiThread(() -> placesRecyclerViewAdapter.notifyDataSetChanged());
+                    }
                 }
             }
         }.start();
