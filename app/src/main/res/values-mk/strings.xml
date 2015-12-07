@@ -25,5 +25,6 @@
     <string name="showcase_toolbar_message">Филтрирање, календар и мапа на настани се наоѓаат во менито од алатникот</string>
     <string name="filter">Филтрирај...</string>
     <string name="today">Денес </string>
+    <string name="attending">Присуствуваат:</string>
 
 </resources>

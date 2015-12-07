@@ -39,21 +39,42 @@
         android:id="@+id/event_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:maxLines="2"
         android:paddingLeft="@dimen/item_event_text_padding"
         android:paddingRight="@dimen/item_event_text_padding"
         android:text="Info"
-        android:maxLines="2"
         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
     <TextView
         android:id="@+id/event_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:maxLines="1"
         android:paddingBottom="@dimen/item_event_text_padding"
         android:paddingLeft="@dimen/item_event_text_padding"
         android:paddingRight="@dimen/item_event_text_padding"
-        android:maxLines="1"
         android:text="Details for the current event which can be loooooooooooooooooooooooooong" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/item_event_text_padding"
+        android:paddingLeft="@dimen/item_event_text_padding"
+        android:paddingRight="@dimen/item_event_text_padding">
+
+        <TextView
+            android:id="@+id/eventAttending"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/attending"
+            android:layout_marginRight="@dimen/card_margin"/>
+
+        <TextView
+            android:id="@+id/eventAttendingCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
 
     <TableLayout
         android:layout_width="match_parent"
@@ -70,7 +91,8 @@
 
             <TextView
                 android:id="@+id/event_start_time"
-                android:singleLine="true" /> <!-- 31.10.2015 20:00-->
+                android:singleLine="true" />
+            <!-- 31.10.2015 20:00-->
 
         </TableRow>
 
@@ -82,7 +104,8 @@
 
             <TextView
                 android:id="@+id/event_end_time"
-                android:singleLine="true" /> <!-- 31.10.2015 20:00-->
+                android:singleLine="true" />
+            <!-- 31.10.2015 20:00-->
 
         </TableRow>
 

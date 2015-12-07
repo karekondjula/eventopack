@@ -27,5 +27,6 @@
     <string name="showcase_toolbar_message">Filter, calendar and map options are in the toolbar menu</string>
     <string name="filter">Filter...</string>
     <string name="today">Today </string>
+    <string name="attending">Attending:</string>
 
 </resources>

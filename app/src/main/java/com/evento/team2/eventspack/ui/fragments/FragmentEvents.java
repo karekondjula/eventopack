@@ -8,6 +8,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,19 +45,6 @@ public class FragmentEvents extends ObserverFragment {
     private EventsRecyclerViewAdapter eventsAdapter;
     private String lastFilterInput;
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        eventsRecyclerView.setHasFixedSize(true);
-        eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        eventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        if (eventsAdapter == null) {
-            eventsAdapter = new EventsRecyclerViewAdapter(EventiApplication.applicationContext);
-        }
-        eventsRecyclerView.setAdapter(eventsAdapter);
-    }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -77,6 +65,19 @@ public class FragmentEvents extends ObserverFragment {
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        eventsRecyclerView.setHasFixedSize(true);
+        eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        eventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        if (eventsAdapter == null) {
+            eventsAdapter = new EventsRecyclerViewAdapter(EventiApplication.applicationContext);
+        }
+        eventsRecyclerView.setAdapter(eventsAdapter);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
 
@@ -91,6 +92,9 @@ public class FragmentEvents extends ObserverFragment {
         if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
             swipeRefreshLayout.setRefreshing(false);
         }
+
+        // TODO safe in preferences the date of last update, if it is > 24 hours do update
+        Log.i(">>", "vlegov");
 
         filterList(FetchAsyncTask.NO_FILTER_STRING);
     }

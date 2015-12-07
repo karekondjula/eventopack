@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Geocoder;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.model.Place;
@@ -44,6 +45,8 @@ public class EventsDatabase {
             Event.Table.COLUMN_START_DATE_STRING,
             Event.Table.COLUMN_END_TIME_STAMP,
             Event.Table.COLUMN_IS_EVENT_SAVED,
+            Event.Table.COLUMN_ATTENDING_COUNT,
+            Event.Table.COLUMN_CATEGORY_STRING,
     };
 
 
@@ -68,7 +71,11 @@ public class EventsDatabase {
         event.startDateString = cursor.getString(9);//new SimpleDateFormat("dd.MM.yyyy").format(new Date(event.startDate));
         event.endTimeStamp = cursor.getLong(10);
         event.endDateString = new SimpleDateFormat("HH:mm dd.MM.yyyy").format(new Date(event.endTimeStamp));
-        event.isEventSaved = cursor.getInt(11) == Event.SAVED ? true : false;
+        event.isEventSaved = cursor.getInt(11) == Event.SAVED;
+
+        event.attendingCount = cursor.getString(12);
+        event.categoryString = cursor.getString(13);
+
         return event;
     }
 
@@ -238,9 +245,13 @@ public class EventsDatabase {
             // remove trailing commas
             values.put(Event.Table.COLUMN_LOCATION_STRING, event.locationString.replaceAll(", (?!\\p{L})", ""));
         }
+
         values.put(Event.Table.COLUMN_START_TIME_STAMP, event.startTimeStamp);
         values.put(Event.Table.COLUMN_START_DATE_STRING, event.startDateString);
         values.put(Event.Table.COLUMN_END_TIME_STAMP, event.endTimeStamp);
+
+        values.put(Event.Table.COLUMN_ATTENDING_COUNT, event.attendingCount);
+        values.put(Event.Table.COLUMN_CATEGORY_STRING, event.categoryString);
 
         long updateRows = database.update(Event.Table.TABLE_EVENTS,
                 values,
@@ -312,7 +323,7 @@ public class EventsDatabase {
         Event event;
         while (!cursor.isAfterLast()) {
             event = cursorToEvent(cursor);
-//            Log.i(">>", event.toString());
+            Log.i(">>", event.toString());
             events.add(event);
             cursor.moveToNext();
         }

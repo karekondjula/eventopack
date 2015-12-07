@@ -47,6 +47,8 @@ public class Event implements Comparable<Event> {
     public String startTimeString;
     public String endDateString;
     public boolean isEventSaved = false;
+    public String attendingCount;
+    public String categoryString;
 
     @Category
     public int category;
@@ -116,7 +118,9 @@ public class Event implements Comparable<Event> {
                 "startDateString " + startDateString + "\n " +
 //                "startTimeString " + startTimeString + "\n " +
 //                "endDateString " + endDateString + "\n " +
-                "isEventSaved: " + isEventSaved
+                "isEventSaved: " + isEventSaved + "\n" +
+                "attendingCount: " + attendingCount + "\n" +
+                "categoryString: " + categoryString
                 ;
     }
 
@@ -135,6 +139,8 @@ public class Event implements Comparable<Event> {
         public static final String COLUMN_START_DATE_STRING = "startDateString";
         public static final String COLUMN_END_TIME_STAMP = "endTimeStamp";
         public static final String COLUMN_IS_EVENT_SAVED = "isEventSaved";
+        public static final String COLUMN_ATTENDING_COUNT = "attendingCount";
+        public static final String COLUMN_CATEGORY_STRING = "categoryString";
 
         // Database creation sql statement
         public static final String TABLE_EVENTS_CREATE = "create table " + TABLE_EVENTS + "("

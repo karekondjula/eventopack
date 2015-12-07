@@ -164,6 +164,25 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Title"
                         android:theme="@style/Widget.CardContent.EventDetails.Title" />
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/eventAttending"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/attending"
+                            android:theme="@style/Widget.CardContent.EventDetails.Content" />
+
+                        <TextView
+                            android:id="@+id/eventAttendingCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:theme="@style/Widget.CardContent.EventDetails.Content" />
+                    </LinearLayout>
+
                     <TextView
                         android:id="@+id/event_details"
                         android:layout_width="match_parent"

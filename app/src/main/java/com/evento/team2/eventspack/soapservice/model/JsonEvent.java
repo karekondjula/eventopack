@@ -56,13 +56,15 @@ public class JsonEvent {
     @JsonField
     public String caption;
     @JsonField
-    public Double lat;
+    public double lat;
     @JsonField
-    public Double lng;
+    public double lng;
     @JsonField
     public String city;
     @JsonField
     public String fb_location_id;
+    @JsonField
+    public String attending_count;
 //    @JsonField
 //    public String floating;
 //    @JsonField

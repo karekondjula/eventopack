@@ -7,8 +7,6 @@ import com.evento.team2.eventspack.model.Place;
 import com.evento.team2.eventspack.soapservice.model.JsonEvent;
 import com.google.android.gms.maps.model.LatLng;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -35,6 +33,8 @@ public class ConversionUtils {
         event.locationString = jsonEvent.location.concat(", " + jsonEvent.city);
         event.location = new LatLng(jsonEvent.lat, jsonEvent.lng);
 
+        event.attendingCount = jsonEvent.attending_count;
+        event.categoryString = "";
 
         return event;
     }

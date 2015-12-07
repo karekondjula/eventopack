@@ -48,9 +48,6 @@ import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.joanzapata.iconify.fonts.IoniconsModule;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -79,6 +76,12 @@ public class ActivityEventDetails extends AppCompatActivity {
 
     @Bind(R.id.event_details)
     TextView textViewEventDetails;
+
+    @Bind(R.id.eventAttending)
+    TextView textViewEventAttending;
+
+    @Bind(R.id.eventAttendingCount)
+    TextView textViewEventAttendingCount;
 
     private Drawable emptyHeart;
     private Drawable filledHeart;
@@ -133,6 +136,13 @@ public class ActivityEventDetails extends AppCompatActivity {
         textViewEventLocation.setText(event.locationString);
 
         textViewEventDetails.setText(event.details);
+
+        if (!TextUtils.isEmpty(event.attendingCount)) {
+            textViewEventAttendingCount.setText(event.attendingCount);
+        } else {
+            textViewEventAttending.setVisibility(View.GONE);
+            textViewEventAttendingCount.setVisibility(View.GONE);
+        }
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.event_detail_map);
         mapFragment.getMapAsync(googleMap -> {

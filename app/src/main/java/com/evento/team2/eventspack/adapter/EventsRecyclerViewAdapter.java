@@ -59,6 +59,10 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         public TextView mEventLocation;
         @Bind(R.id.btn_save_icon)
         public IconTextView isEventSaved;
+        @Bind(R.id.eventAttending)
+        TextView mEventAttending;
+        @Bind(R.id.eventAttendingCount)
+        TextView mEventAttendingCount;
 
         public ViewHolder(View view) {
             super(view);
@@ -157,6 +161,13 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
             holder.isEventSaved.setText(ICON_TEXT_VIEW_FILLED_HEART);
         } else {
             holder.isEventSaved.setText(ICON_TEXT_VIEW_EMPTY_HEART);
+        }
+
+        if (!TextUtils.isEmpty(event.attendingCount)) {
+            holder.mEventAttendingCount.setText(event.attendingCount);
+        } else {
+            holder.mEventAttending.setVisibility(View.GONE);
+            holder.mEventAttendingCount.setVisibility(View.GONE);
         }
 
         holder.isEventSaved.setOnClickListener(v -> {
