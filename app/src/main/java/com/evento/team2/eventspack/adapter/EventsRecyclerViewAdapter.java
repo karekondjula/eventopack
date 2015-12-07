@@ -60,7 +60,7 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         @Bind(R.id.btn_save_icon)
         public IconTextView isEventSaved;
         @Bind(R.id.eventAttending)
-        TextView mEventAttending;
+        View mEventAttending;
         @Bind(R.id.eventAttendingCount)
         TextView mEventAttendingCount;
 
@@ -167,7 +167,6 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
             holder.mEventAttendingCount.setText(event.attendingCount);
         } else {
             holder.mEventAttending.setVisibility(View.GONE);
-            holder.mEventAttendingCount.setVisibility(View.GONE);
         }
 
         holder.isEventSaved.setOnClickListener(v -> {

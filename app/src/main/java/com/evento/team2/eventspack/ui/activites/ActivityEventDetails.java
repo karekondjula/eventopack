@@ -78,7 +78,7 @@ public class ActivityEventDetails extends AppCompatActivity {
     TextView textViewEventDetails;
 
     @Bind(R.id.eventAttending)
-    TextView textViewEventAttending;
+    View textViewEventAttending;
 
     @Bind(R.id.eventAttendingCount)
     TextView textViewEventAttendingCount;
@@ -141,7 +141,6 @@ public class ActivityEventDetails extends AppCompatActivity {
             textViewEventAttendingCount.setText(event.attendingCount);
         } else {
             textViewEventAttending.setVisibility(View.GONE);
-            textViewEventAttendingCount.setVisibility(View.GONE);
         }
 
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.event_detail_map);

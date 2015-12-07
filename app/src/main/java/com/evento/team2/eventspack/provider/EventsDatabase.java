@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Geocoder;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.evento.team2.eventspack.model.Event;
 import com.evento.team2.eventspack.model.Place;
@@ -218,6 +217,7 @@ public class EventsDatabase {
     public long persistEvent(Event event) {
         ContentValues values = new ContentValues();
         values.put(Event.Table.COLUMN_ID, event.id);
+        values.put(Event.Table.COLUMN_FACEBOOK_ID, event.facebookId);
         values.put(Event.Table.COLUMN_NAME, event.name);
         if (!TextUtils.isEmpty(event.details)) {
             values.put(Event.Table.COLUMN_DETAILS, event.details);
@@ -256,15 +256,9 @@ public class EventsDatabase {
         long updateRows = database.update(Event.Table.TABLE_EVENTS,
                 values,
                 Event.Table.COLUMN_ID + " = ? OR " +
-                        Event.Table.COLUMN_FACEBOOK_ID + " = ? OR " +
-                        "(" + Event.Table.COLUMN_START_TIME_STAMP + " = ? AND " +
-                        Event.Table.COLUMN_LATITUDE + " = ? AND " +
-                        Event.Table.COLUMN_LONGITUDE + " = ? )",
+                        Event.Table.COLUMN_FACEBOOK_ID + " = ? ",
                 new String[]{String.valueOf(event.id),
                         String.valueOf(event.facebookId),
-                        String.valueOf(event.startTimeStamp),
-                        String.valueOf(event.location.latitude),
-                        String.valueOf(event.location.longitude)
                 }
         );
 
@@ -323,7 +317,7 @@ public class EventsDatabase {
         Event event;
         while (!cursor.isAfterLast()) {
             event = cursorToEvent(cursor);
-            Log.i(">>", event.toString());
+//            Log.i(">>", event.toString());
             events.add(event);
             cursor.moveToNext();
         }

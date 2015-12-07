@@ -23,7 +23,7 @@ public class EventsSqliteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase database) {
-        upgradeDatabase(database, 1, DATABASE_VERSION);
+        upgradeDatabase(database, currentVersion, DATABASE_VERSION);
     }
 
     @Override
@@ -38,7 +38,6 @@ public class EventsSqliteHelper extends SQLiteOpenHelper {
                 database.execSQL(Event.Table.TABLE_EVENTS_CREATE);
                 database.execSQL(Place.Table.TABLE_PLACES_CREATE);
             } else if (fromVersion == 2) {
-                // add category and attending_count columnds
                 database.execSQL("ALTER TABLE " + Event.Table.TABLE_EVENTS + " ADD " + Event.Table.COLUMN_ATTENDING_COUNT + " TEXT" + ";");
                 database.execSQL("ALTER TABLE " + Event.Table.TABLE_EVENTS + " ADD " + Event.Table.COLUMN_CATEGORY_STRING + " TEXT" + ";");
             }
