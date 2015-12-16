@@ -297,7 +297,12 @@ public class EventsDatabase {
             }
             if (filter.length > 1) {
                 where.append(" AND ( " +
-                        Event.Table.COLUMN_START_TIME_STAMP + " > ? )");
+                        Event.Table.COLUMN_START_TIME_STAMP + " > ? " +
+                        " OR " +
+                        "( " + Event.Table.COLUMN_START_TIME_STAMP + " < ? AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? ) " +
+                        ")");
+                whereArgsList.add(filter[1]);
+                whereArgsList.add(filter[1]);
                 whereArgsList.add(filter[1]);
             }
 
@@ -308,7 +313,7 @@ public class EventsDatabase {
         Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
                 allColumnsEvent,
                 (where != null ? where.toString() : null),
-                (where != null ? whereArgs : null),
+                (whereArgs != null ? whereArgs : null),
                 null,
                 null,
                 Event.Table.COLUMN_START_TIME_STAMP + " ASC");

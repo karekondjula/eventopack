@@ -1,5 +1,7 @@
 package com.evento.team2.eventspack.ui.fragments;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -22,6 +24,7 @@ import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
 import com.evento.team2.eventspack.soapservice.ServiceEvento;
 import com.evento.team2.eventspack.ui.interfaces.ObserverFragment;
+import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.evento.team2.eventspack.utils.NetworkUtils;
 
 import java.util.ArrayList;
@@ -35,6 +38,10 @@ import butterknife.ButterKnife;
  * Created by Daniel on 31-Jul-15.
  */
 public class FragmentEvents extends ObserverFragment {
+
+    // TODO refactor ... hopefully dagger ^_^
+    private static String SHARED_PREFERENCE_NAME = "eventi_preference";
+    private static String SHARED_PREFERENCE_LAST_UPDATE_OF_EVENTS = "last_update_of_events";
 
     @Bind(R.id.eventsRecyclerView)
     RecyclerView eventsRecyclerView;
@@ -93,8 +100,14 @@ public class FragmentEvents extends ObserverFragment {
             swipeRefreshLayout.setRefreshing(false);
         }
 
-        // TODO safe in preferences the date of last update, if it is > 24 hours do update
-        Log.i(">>", "vlegov");
+        SharedPreferences preferences = this.getActivity().getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE);
+        String lastUpdateDate = preferences.getString(SHARED_PREFERENCE_LAST_UPDATE_OF_EVENTS, "");
+        Date today = new Date();
+        String todayDate = DateFormatterUtils.compareDateFormat.format(today);
+        if (!todayDate.equals(lastUpdateDate)) {
+            fetchEventsFromServer();
+            preferences.edit().putString(SHARED_PREFERENCE_LAST_UPDATE_OF_EVENTS, todayDate).apply();
+        }
 
         filterList(FetchAsyncTask.NO_FILTER_STRING);
     }
@@ -129,7 +142,7 @@ public class FragmentEvents extends ObserverFragment {
                 if (eventsAdapter != null) {
                     eventsAdapter.addEvents(eventsArrayList);
 
-                    if(getActivity() != null) {
+                    if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
                             eventsAdapter.notifyDataSetChanged();
 
@@ -161,7 +174,7 @@ public class FragmentEvents extends ObserverFragment {
 
                     filterList(lastFilterInput);
                 } else {
-                    if(getActivity() != null) {
+                    if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
                             Snackbar.make(eventsRecyclerView,
                                     R.string.no_internet_connection_cached_events,
@@ -171,7 +184,7 @@ public class FragmentEvents extends ObserverFragment {
                     }
                 }
 
-                if(getActivity() != null) {
+                if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
                             swipeRefreshLayout.setRefreshing(false);

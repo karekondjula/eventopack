@@ -48,6 +48,7 @@ import com.roomorama.caldroid.CaldroidListener;
 
 import java.io.IOException;
 import java.net.URL;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -371,6 +372,16 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
                     // no snippets for PLACES
                     String eventDetails[] = marker.getSnippet().split(DELIMITER);
                     ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_details)).setText(eventDetails[0]);
+
+                    try {
+                        if (DateFormatterUtils.fullDateFormat.parse(eventDetails[1]).getTime() - calendar.getTimeInMillis() < 0) {
+                            ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_time))
+                                    .setTextColor(getActivity().getResources().getColor(android.R.color.holo_red_dark));
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
                     ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_time)).setText(eventDetails[1]);
 
                     Event event = (Event) hashMapLatLngEventId.get(marker.getPosition());
