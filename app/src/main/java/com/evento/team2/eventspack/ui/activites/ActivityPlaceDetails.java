@@ -27,10 +27,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -40,6 +44,7 @@ import com.evento.team2.eventspack.model.Place;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
 import com.evento.team2.eventspack.ui.fragments.FragmentMap;
+import com.evento.team2.eventspack.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -52,10 +57,13 @@ import com.joanzapata.iconify.fonts.IoniconsModule;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ActivityPlaceDetails extends AppCompatActivity {
 
@@ -69,6 +77,12 @@ public class ActivityPlaceDetails extends AppCompatActivity {
 
     @Bind(R.id.event_location)
     TextView textViewEventLocation;
+
+    @Bind(R.id.events_card_view)
+    CardView eventsCardView;
+
+    @Bind(R.id.place_details_events_linear_layout)
+    LinearLayout placeDetailsEventsLinearLayout;
 
     private Place place;
 
@@ -116,6 +130,42 @@ public class ActivityPlaceDetails extends AppCompatActivity {
                 mapView.addMarker(new MarkerOptions().position(new LatLng(place.location.latitude, place.location.longitude)));
             }
         });
+
+        new Thread() {
+            @Override
+            public void run() {
+                ArrayList<Event> eventArrayList = EventsDatabase.getInstance().getEventsByLocation(String.valueOf(place.location.latitude),
+                        String.valueOf(place.location.longitude), place.locationString, String.valueOf(new Date().getTime()));
+
+                if (eventArrayList != null && eventArrayList.size() > 0) {
+                    for (final Event event : eventArrayList) {
+                        final View eventItemView = LayoutInflater.from(ActivityPlaceDetails.this).inflate(R.layout.item_small, placeDetailsEventsLinearLayout, false);
+                        ImageView calendarEventImageView = ButterKnife.findById(eventItemView, R.id.small_event_picture);
+                        ButterKnife.findById(eventItemView, R.id.event_color).setVisibility(View.GONE);
+                        ((TextView) ButterKnife.findById(eventItemView, R.id.event_title)).setText(event.name);
+                        ((TextView) ButterKnife.findById(eventItemView, R.id.event_details)).setText(event.details);
+                        ((TextView) ButterKnife.findById(eventItemView, R.id.event_time)).setText(event.startTimeString);
+                        eventItemView.setClickable(true);
+                        eventItemView.setOnClickListener(v -> {
+                            Intent eventIntent = ActivityEventDetails.createIntent(ActivityPlaceDetails.this, event.id);
+                            startActivity(eventIntent);
+                            finish();
+                        });
+
+                        runOnUiThread(() -> {
+                            if (TextUtils.isEmpty(event.pictureUri)) {
+                                Glide.with(ActivityPlaceDetails.this).load(R.drawable.party_image).into(calendarEventImageView);
+                            } else {
+                                Glide.with(ActivityPlaceDetails.this).load(event.pictureUri).into(calendarEventImageView);
+                            }
+                            placeDetailsEventsLinearLayout.addView(eventItemView);
+                        });
+                    }
+                } else {
+                    eventsCardView.setVisibility(View.GONE);
+                }
+            }
+        }.start();
     }
 
     @Override

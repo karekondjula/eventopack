@@ -331,6 +331,60 @@ public class EventsDatabase {
         return events;
     }
 
+    public ArrayList<Event> getEventsByLocation(String... filter) {
+        ArrayList<Event> events = new ArrayList<Event>();
+
+        StringBuilder where = null;
+        String whereArgs[] = null;
+        ArrayList<String> whereArgsList = new ArrayList<String>();
+        if (filter != null) {
+            where = new StringBuilder();
+            if (filter.length > 0) {
+                where.append("( " +
+                                "(" + Event.Table.COLUMN_LATITUDE + " LIKE ? AND " +
+                                Event.Table.COLUMN_LONGITUDE + " LIKE ? ) OR " +
+                                Event.Table.COLUMN_LOCATION_STRING + " LIKE ? ) " +
+                            " AND ( " +
+                                Event.Table.COLUMN_START_TIME_STAMP + " > ? " +
+                                " OR " +
+                                "( " + Event.Table.COLUMN_START_TIME_STAMP + " < ? AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? ) " +
+                            ")"
+                );
+
+                whereArgsList.add("%" + filter[0] + "%");
+                whereArgsList.add("%" + filter[1] + "%");
+                whereArgsList.add("%" + filter[2] + "%");
+                whereArgsList.add(filter[3]);
+                whereArgsList.add(filter[3]);
+                whereArgsList.add(filter[3]);
+            }
+
+            whereArgs = new String[whereArgsList.size()];
+            whereArgs = whereArgsList.toArray(whereArgs);
+        }
+
+        Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
+                allColumnsEvent,
+                (where != null ? where.toString() : null),
+                (whereArgs != null ? whereArgs : null),
+                null,
+                null,
+                Event.Table.COLUMN_START_TIME_STAMP + " ASC");
+
+        cursor.moveToFirst();
+        Event event;
+        while (!cursor.isAfterLast()) {
+            event = cursorToEvent(cursor);
+//            Log.i(">>", event.toString());
+            events.add(event);
+            cursor.moveToNext();
+        }
+        // make sure to close the cursor
+        cursor.close();
+        return events;
+    }
+
+
     // TODO refactor it in better times (no need for two differet get<>Events methods!!!
     public ArrayList<Event> getSavedEvents(String... filter) {
         ArrayList<Event> events = new ArrayList<Event>();

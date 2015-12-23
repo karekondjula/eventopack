@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="@dimen/activity_horizontal_margin"
+    android:padding="@dimen/card_margin"
     android:orientation="vertical">
 
     <TextView
@@ -25,7 +26,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:autoLink="web"
-        android:text="Web: http://eventi.mk/skopje"
+        android:text="Web: http://eventi.mk"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
