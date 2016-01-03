@@ -10,7 +10,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +26,7 @@ import com.evento.team2.eventspack.ui.interfaces.ObserverFragment;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.evento.team2.eventspack.utils.NetworkUtils;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -82,6 +82,8 @@ public class FragmentEvents extends ObserverFragment {
             eventsAdapter = new EventsRecyclerViewAdapter(EventiApplication.applicationContext);
         }
         eventsRecyclerView.setAdapter(eventsAdapter);
+
+        showLastUpdatedInfo();
     }
 
     @Override
@@ -100,16 +102,18 @@ public class FragmentEvents extends ObserverFragment {
             swipeRefreshLayout.setRefreshing(false);
         }
 
-        SharedPreferences preferences = this.getActivity().getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE);
+        SharedPreferences preferences = getActivity().getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE);
         String lastUpdateDate = preferences.getString(SHARED_PREFERENCE_LAST_UPDATE_OF_EVENTS, "");
         Date today = new Date();
         String todayDate = DateFormatterUtils.compareDateFormat.format(today);
         if (!todayDate.equals(lastUpdateDate)) {
+            // get new events from server
             fetchEventsFromServer();
             preferences.edit().putString(SHARED_PREFERENCE_LAST_UPDATE_OF_EVENTS, todayDate).apply();
+        } else {
+            // just load current events from database
+            filterList(FetchAsyncTask.NO_FILTER_STRING);
         }
-
-        filterList(FetchAsyncTask.NO_FILTER_STRING);
     }
 
     @Override
@@ -131,7 +135,7 @@ public class FragmentEvents extends ObserverFragment {
         new Thread() {
             @Override
             public void run() {
-                ArrayList<Event> eventsArrayList = null;
+                ArrayList<Event> eventsArrayList;
 
                 if (!TextUtils.isEmpty(filter)) {
                     eventsArrayList = EventsDatabase.getInstance().getEvents(filter, String.valueOf(new Date().getTime()));
@@ -193,5 +197,23 @@ public class FragmentEvents extends ObserverFragment {
                 }
             }
         }.start();
+    }
+
+    public void showLastUpdatedInfo() {
+
+        SharedPreferences preferences = getActivity().getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE);
+        String lastUpdateDate = preferences.getString(SHARED_PREFERENCE_LAST_UPDATE_OF_EVENTS, "");
+
+        try {
+            long lastUpdateTimestamp = DateFormatterUtils.compareDateFormat.parse(lastUpdateDate).getTime();
+            lastUpdateDate = DateFormatterUtils.fullDateFormat.format(new Date(lastUpdateTimestamp));
+
+            Snackbar.make(eventsRecyclerView,
+                    "Last updated: " + lastUpdateDate,
+                    Snackbar.LENGTH_SHORT)
+                    .show();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }

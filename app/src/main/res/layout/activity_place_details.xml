@@ -90,18 +90,11 @@
 
             </android.support.v7.widget.CardView>
 
-            <android.support.v7.widget.CardView
-                android:id="@+id/events_card_view"
+            <LinearLayout
+                android:id="@+id/place_details_events_linear_layout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/card_margin">
-
-                <LinearLayout
-                    android:id="@+id/place_details_events_linear_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical" />
-            </android.support.v7.widget.CardView>
+                android:layout_height="match_parent"
+                android:orientation="vertical" />
 
         </LinearLayout>
 

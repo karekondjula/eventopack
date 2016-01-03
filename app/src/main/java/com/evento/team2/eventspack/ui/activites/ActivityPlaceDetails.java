@@ -78,9 +78,6 @@ public class ActivityPlaceDetails extends AppCompatActivity {
     @Bind(R.id.event_location)
     TextView textViewEventLocation;
 
-    @Bind(R.id.events_card_view)
-    CardView eventsCardView;
-
     @Bind(R.id.place_details_events_linear_layout)
     LinearLayout placeDetailsEventsLinearLayout;
 
@@ -161,8 +158,6 @@ public class ActivityPlaceDetails extends AppCompatActivity {
                             placeDetailsEventsLinearLayout.addView(eventItemView);
                         });
                     }
-                } else {
-                    eventsCardView.setVisibility(View.GONE);
                 }
             }
         }.start();

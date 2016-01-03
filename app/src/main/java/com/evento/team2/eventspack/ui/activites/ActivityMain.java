@@ -248,6 +248,7 @@ public class ActivityMain extends AppCompatActivity {
                 switch (position) {
                     case 0:
 //                        fragmentEvents.filterList(FetchAsyncTask.NO_FILTER_STRING);
+                        fragmentEvents.showLastUpdatedInfo();
                         break;
                     case 1:
                         fragmentPlaces.filterList(FetchAsyncTask.NO_FILTER_STRING);

@@ -69,7 +69,7 @@ public class EventsDatabase {
 
         event.startDateString = cursor.getString(9);//new SimpleDateFormat("dd.MM.yyyy").format(new Date(event.startDate));
         event.endTimeStamp = cursor.getLong(10);
-        event.endDateString = new SimpleDateFormat("HH:mm dd.MM.yyyy").format(new Date(event.endTimeStamp));
+        event.endDateString = new SimpleDateFormat("dd.MM.yyyy").format(new Date(event.endTimeStamp));
         event.isEventSaved = cursor.getInt(11) == Event.SAVED;
 
         event.attendingCount = cursor.getString(12);
