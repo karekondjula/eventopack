@@ -9,8 +9,8 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.text.TextUtils;
 
-import com.evento.team2.eventspack.model.Event;
-import com.evento.team2.eventspack.model.Place;
+import com.evento.team2.eventspack.models.Event;
+import com.evento.team2.eventspack.models.Place;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
@@ -424,9 +424,13 @@ public class EventsDatabase {
         Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
                 allColumnsEvent, Event.Table.COLUMN_ID + " = ? ", new String[]{String.valueOf(eventId)},
                 null, null, null);
-        cursor.moveToFirst();
-        Event event = cursorToEvent(cursor);
-        cursor.close();
+
+        Event event = null;
+        if (cursor != null && cursor.getCount() == 1) {
+            cursor.moveToFirst();
+            event = cursorToEvent(cursor);
+            cursor.close();
+        }
 
         return event;
     }

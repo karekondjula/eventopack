@@ -1,4 +1,4 @@
-package com.evento.team2.eventspack.model;
+package com.evento.team2.eventspack.models;
 
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;

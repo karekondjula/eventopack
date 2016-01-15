@@ -1,4 +1,4 @@
-package com.evento.team2.eventspack.model;
+package com.evento.team2.eventspack.models;
 
 import com.google.android.gms.maps.model.LatLng;
 

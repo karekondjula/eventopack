@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
-import com.evento.team2.eventspack.model.Event;
+import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.utils.ColorUtils;

@@ -10,11 +10,11 @@ import android.view.ViewGroup;
 
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
-import com.evento.team2.eventspack.adapter.EventsRecyclerViewAdapter;
-import com.evento.team2.eventspack.model.Event;
+import com.evento.team2.eventspack.adapters.EventsRecyclerViewAdapter;
+import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
-import com.evento.team2.eventspack.ui.interfaces.ObserverFragment;
+import com.evento.team2.eventspack.ui.fragments.interfaces.ObserverFragment;
 
 import java.util.ArrayList;
 

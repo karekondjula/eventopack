@@ -57,6 +57,11 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.android.support:cardview-v7:23.1.1' // card view za fino formatirani karticki
 
+    compile 'com.google.dagger:dagger:2.0.2'
+    provided 'com.google.dagger:dagger-compiler:2.0.2'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
+    apt 'com.google.dagger:dagger-compiler:2.0.2'
+
     compile 'com.roomorama:caldroid:2.1.0' // calendar
     compile 'com.jakewharton:butterknife:7.0.1' // happy layouts
     compile 'com.github.deano2390:MaterialShowcaseView:1.0.5' // introduction to layouts

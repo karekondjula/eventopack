@@ -1,4 +1,4 @@
-package com.evento.team2.eventspack.ui.interfaces;
+package com.evento.team2.eventspack.ui.fragments.interfaces;
 
 import android.app.Fragment;
 import android.app.SearchManager;
@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
-import com.squareup.leakcanary.RefWatcher;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -76,11 +75,9 @@ public abstract class ObserverFragment extends Fragment implements Observer {
                 searchView.onActionViewCollapsed();
                 searchItem.collapseActionView();
             });
-            if (searchView != null) {
-                searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-                searchView.setQueryRefinementEnabled(true);
-                searchView.setSubmitButtonEnabled(false);
-            }
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+            searchView.setQueryRefinementEnabled(true);
+            searchView.setSubmitButtonEnabled(false);
         }
 
         super.onCreateOptionsMenu(menu, menuInflater);

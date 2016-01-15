@@ -1,4 +1,4 @@
-package com.evento.team2.eventspack.adapter;
+package com.evento.team2.eventspack.adapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,10 +13,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.R;
-import com.evento.team2.eventspack.model.Event;
+import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.Bind;

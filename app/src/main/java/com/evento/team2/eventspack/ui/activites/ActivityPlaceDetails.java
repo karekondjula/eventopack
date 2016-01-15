@@ -16,22 +16,16 @@
 
 package com.evento.team2.eventspack.ui.activites;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,31 +33,23 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.R;
-import com.evento.team2.eventspack.model.Event;
-import com.evento.team2.eventspack.model.Place;
+import com.evento.team2.eventspack.models.Event;
+import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
-import com.evento.team2.eventspack.ui.fragments.FragmentMap;
-import com.evento.team2.eventspack.utils.Utils;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.Iconify;
-import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.joanzapata.iconify.fonts.IoniconsModule;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ActivityPlaceDetails extends AppCompatActivity {
 

@@ -4,7 +4,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.SearchManager;
 import android.content.Intent;
-import android.location.Geocoder;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v13.app.FragmentPagerAdapter;
@@ -21,8 +20,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
-import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
 import com.evento.team2.eventspack.ui.fragments.DialogFragmentAbout;
 import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
@@ -36,7 +35,6 @@ import com.joanzapata.iconify.fonts.IoniconsModule;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -70,6 +68,8 @@ public class ActivityMain extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
+        ((EventiApplication) getApplication()).getPresentersComponent().inject(fragmentEvents);
 
         Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -207,7 +207,7 @@ public class ActivityMain extends AppCompatActivity {
         }
     }
 
-    private void presentShowcaseSequence() {
+    public void presentShowcaseSequence() {
         ShowcaseConfig config = new ShowcaseConfig();
         config.setDelay(2000);
 
@@ -248,7 +248,7 @@ public class ActivityMain extends AppCompatActivity {
                 switch (position) {
                     case 0:
 //                        fragmentEvents.filterList(FetchAsyncTask.NO_FILTER_STRING);
-                        fragmentEvents.showLastUpdatedInfo();
+//                        fragmentEvents.showLastUpdatedInfo();
                         break;
                     case 1:
                         fragmentPlaces.filterList(FetchAsyncTask.NO_FILTER_STRING);

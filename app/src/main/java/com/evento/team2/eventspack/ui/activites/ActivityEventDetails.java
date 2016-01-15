@@ -34,7 +34,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.R;
-import com.evento.team2.eventspack.model.Event;
+import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
@@ -115,6 +115,12 @@ public class ActivityEventDetails extends AppCompatActivity {
         Intent intent = getIntent();
         final long eventId = intent.getLongExtra(EXTRA_ID, 0);
         event = EventsDatabase.getInstance().getEventById(eventId);
+
+        if (event == null) {
+            // it happened once ... just to be safe
+            // TODO show 'Something went wrong ... please try again'
+            finish();
+        }
 
         collapsingToolbar.setTitle(event.name);
 

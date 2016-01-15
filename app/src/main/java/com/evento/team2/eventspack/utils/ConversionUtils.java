@@ -2,8 +2,8 @@ package com.evento.team2.eventspack.utils;
 
 import android.text.TextUtils;
 
-import com.evento.team2.eventspack.model.Event;
-import com.evento.team2.eventspack.model.Place;
+import com.evento.team2.eventspack.models.Event;
+import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.soapservice.model.JsonEvent;
 import com.google.android.gms.maps.model.LatLng;
 

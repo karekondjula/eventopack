@@ -24,14 +24,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.R;
-import com.evento.team2.eventspack.model.Event;
-import com.evento.team2.eventspack.model.Place;
+import com.evento.team2.eventspack.models.Event;
+import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.ui.activites.ActivityMap;
 import com.evento.team2.eventspack.ui.activites.ActivityPlaceDetails;
-import com.evento.team2.eventspack.ui.interfaces.ObserverFragment;
+import com.evento.team2.eventspack.ui.fragments.interfaces.ObserverFragment;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;

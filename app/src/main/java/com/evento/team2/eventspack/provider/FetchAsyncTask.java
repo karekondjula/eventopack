@@ -2,18 +2,12 @@ package com.evento.team2.eventspack.provider;
 
 import android.os.AsyncTask;
 import android.support.annotation.IntDef;
-import android.util.Log;
 
-import com.evento.team2.eventspack.EventiApplication;
-import com.evento.team2.eventspack.model.Event;
-import com.evento.team2.eventspack.ui.interfaces.ObserverFragment;
-import com.evento.team2.eventspack.soapservice.ServiceEvento;
-import com.evento.team2.eventspack.utils.NetworkUtils;
+import com.evento.team2.eventspack.ui.fragments.interfaces.ObserverFragment;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by Daniel on 29-Oct-15.

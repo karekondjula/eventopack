@@ -3,8 +3,8 @@ package com.evento.team2.eventspack.soapservice;
 import android.util.Log;
 
 import com.bluelinelabs.logansquare.LoganSquare;
-import com.evento.team2.eventspack.model.Event;
-import com.evento.team2.eventspack.model.Place;
+import com.evento.team2.eventspack.models.Event;
+import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.soapservice.model.JsonEvent;
 import com.evento.team2.eventspack.utils.ConversionUtils;

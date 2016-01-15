@@ -2,7 +2,7 @@ package com.evento.team2.eventspack.utils;
 
 import android.util.Log;
 
-import com.evento.team2.eventspack.model.Event;
+import com.evento.team2.eventspack.models.Event;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.text.SimpleDateFormat;
