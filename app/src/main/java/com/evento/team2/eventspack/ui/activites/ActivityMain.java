@@ -69,7 +69,7 @@ public class ActivityMain extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        ((EventiApplication) getApplication()).getPresentersComponent().inject(fragmentEvents);
+        ((EventiApplication) getApplication()).getAppComponent().inject(fragmentEvents);
 
         Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);

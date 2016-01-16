@@ -10,18 +10,18 @@ import dagger.Provides;
 /**
  * Created by Daniel on 10-Jan-16.
  */
-@Module(includes = InteractorsModule.class)
+@Module(includes = {PresentersModule.class, InteractorsModule.class, ThreadsModule.class})
 public class AppModule {
 
-    EventiApplication mApplication;
+    EventiApplication eventiApplication;
 
     public AppModule(EventiApplication application) {
-        mApplication = application;
+        eventiApplication = application;
     }
 
     @Provides
     @Singleton
     EventiApplication providesApplication() {
-        return mApplication;
+        return eventiApplication;
     }
 }

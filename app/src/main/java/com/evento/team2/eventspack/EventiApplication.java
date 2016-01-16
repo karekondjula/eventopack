@@ -4,10 +4,9 @@ import android.app.Application;
 import android.content.Context;
 import android.location.Geocoder;
 
-import com.evento.team2.eventspack.components.DaggerPresentersComponent;
-import com.evento.team2.eventspack.components.PresentersComponent;
+import com.evento.team2.eventspack.components.AppComponent;
+import com.evento.team2.eventspack.components.DaggerAppComponent;
 import com.evento.team2.eventspack.modules.AppModule;
-import com.evento.team2.eventspack.modules.PresentersModule;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 
 import java.util.Locale;
@@ -19,8 +18,7 @@ public class EventiApplication extends Application {
 
     public static Context applicationContext;
 
-    private PresentersComponent presentersComponent;
-
+    private AppComponent appComponent;
 //    private RefWatcher refWatcher;
 
     @Override
@@ -30,9 +28,8 @@ public class EventiApplication extends Application {
         applicationContext = getBaseContext();
         initSingletons();
 
-        presentersComponent = DaggerPresentersComponent.builder()
+        appComponent = DaggerAppComponent.builder()
                 .appModule(new AppModule(this))
-                .presentersModule(new PresentersModule()) // TODO maybe it is better to make scope addition or with includes like interactorsmodule
                 .build();
 
 //        refWatcher = LeakCanary.install(this);
@@ -45,8 +42,8 @@ public class EventiApplication extends Application {
         EventsDatabase.getInstance().setGeocoder(new Geocoder(this, Locale.getDefault()));
     }
 
-    public PresentersComponent getPresentersComponent() {
-        return presentersComponent;
+    public AppComponent getAppComponent() {
+        return appComponent;
     }
 
 //    public static RefWatcher getRefWatcher(Context context) {

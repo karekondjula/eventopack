@@ -14,7 +14,7 @@ import dagger.Provides;
 /**
  * Created by Daniel on 10-Jan-16.
  */
-@Module(includes = ThreadsModule.class)
+@Module
 public class PresentersModule {
 
     @Provides
