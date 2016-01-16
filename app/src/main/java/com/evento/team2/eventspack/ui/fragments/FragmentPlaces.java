@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapters.PlacesRecyclerViewAdapter;
+import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.ui.fragments.interfaces.ObserverFragment;
@@ -89,5 +90,10 @@ public class FragmentPlaces extends ObserverFragment {
                 }
             }
         }.start();
+    }
+
+    @Override
+    protected void injectComponent(AppComponent component) {
+
     }
 }

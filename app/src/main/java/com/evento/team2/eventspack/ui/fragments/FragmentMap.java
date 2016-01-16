@@ -24,6 +24,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.R;
+import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.provider.EventsDatabase;
@@ -233,6 +234,11 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     @Override
     public void filterList(String query) {
         // NO op
+    }
+
+    @Override
+    protected void injectComponent(AppComponent component) {
+
     }
 
     @Override

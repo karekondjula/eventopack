@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapters.EventsRecyclerViewAdapter;
+import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
@@ -104,5 +105,10 @@ public class FragmentSavedEvents extends ObserverFragment {
             }.start();
             isViewUpdated = true;
         }
+    }
+
+    @Override
+    protected void injectComponent(AppComponent component) {
+
     }
 }

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapters.EventsRecyclerViewAdapter;
+import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
 import com.evento.team2.eventspack.ui.fragments.interfaces.ObserverFragment;
@@ -129,6 +130,11 @@ public class FragmentEvents extends ObserverFragment implements FragmentEventsVi
     @Override
     public void filterList(final String filter) {
         fragmentEventsPresenter.filterEvents(filter);
+    }
+
+    @Override
+    protected void injectComponent(AppComponent component) {
+        component.inject(this);
     }
 
     @Override

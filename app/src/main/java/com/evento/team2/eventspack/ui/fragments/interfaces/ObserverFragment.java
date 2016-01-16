@@ -3,6 +3,7 @@ package com.evento.team2.eventspack.ui.fragments.interfaces;
 import android.app.Fragment;
 import android.app.SearchManager;
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
+import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
 
 import java.util.Observable;
@@ -36,6 +38,12 @@ public abstract class ObserverFragment extends Fragment implements Observer {
 
 //        RefWatcher refWatcher = EventiApplication.getRefWatcher(getActivity());
 //        refWatcher.watch(this);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        injectComponent(((EventiApplication) getActivity().getApplication()).getAppComponent());
     }
 
     @Override
@@ -84,6 +92,8 @@ public abstract class ObserverFragment extends Fragment implements Observer {
     }
 
     public abstract void filterList(String query);
+
+    protected abstract void injectComponent(AppComponent component);
 
     @Override
     public void update(Observable observable, Object eventsArrayList) {
