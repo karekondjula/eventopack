@@ -16,6 +16,7 @@ import java.util.Locale;
  */
 public class EventiApplication extends Application {
 
+    // TODO remove this, use the dagger
     public static Context applicationContext;
 
     private AppComponent appComponent;

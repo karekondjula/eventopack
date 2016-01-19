@@ -107,20 +107,21 @@ public class Event implements Comparable<Event> {
     public String toString() {
         return "name: " + name + "\n " +
                 "id: " + id + "\n " +
-                "facebook id: " + facebookId + "\n " +
-                "details:" + details + "\n " +
+//                "facebook id: " + facebookId + "\n " +
+//                "details:" + details + "\n " +
 //                "pictureUri: " + pictureUri + "\n " +
-                "location: " + location + "\n " +
-                "locationString " + locationString + "\n " +
+//                "location: " + location + "\n " +
+//                "locationString " + locationString + "\n " +
                 "startTimeStamp " + startTimeStamp + "\n " +
                 "startDate " + startDate + "\n " +
                 "endTimeStamp " + endTimeStamp + "\n " +
                 "startDateString " + startDateString + "\n " +
 //                "startTimeString " + startTimeString + "\n " +
 //                "endDateString " + endDateString + "\n " +
-                "isEventSaved: " + isEventSaved + "\n" +
-                "attendingCount: " + attendingCount + "\n" +
-                "categoryString: " + categoryString
+//                "isEventSaved: " + isEventSaved + "\n" +
+//                "attendingCount: " + attendingCount + "\n" +
+//                "categoryString: " + categoryString +
+                "\n"
                 ;
     }
 

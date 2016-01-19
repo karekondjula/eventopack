@@ -16,8 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:cropToPadding="false"
-            android:scaleType="centerCrop"
-            android:src="@drawable/party_image" />
+            android:scaleType="centerCrop" />
+        <!--android:src="@drawable/party_image"-->
 
         <com.joanzapata.iconify.widget.IconTextView
             android:id="@+id/btn_save_icon"

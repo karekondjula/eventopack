@@ -107,9 +107,10 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         holder.mEventTitle.setText(event.name);
         holder.mEventDetails.setText(event.details);
 
-        Date startDateEvent = null, endDateEvent = null;
-        Calendar calendar = null;
         try {
+            Date startDateEvent, endDateEvent;
+            Calendar calendar;
+
             startDateEvent = DateFormatterUtils.compareDateFormat.parse(event.startDateString);
             calendar = Calendar.getInstance();
             calendar.setTime(TODAY);
@@ -118,45 +119,45 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
             calendar.set(Calendar.SECOND, 0);
 
             endDateEvent = DateFormatterUtils.compareDateFormat.parse(event.endDateString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
-        if (Math.abs(startDateEvent.getTime() - calendar.getTimeInMillis()) < 1000) {
-            // today (or close enough)
-            holder.mEventStartTime.setText(event.startTimeStamp != 0 ? context.getString(R.string.today)
-                    + " " + DateFormatterUtils.hoursMinutesDateFormat.format(event.startTimeStamp) : "");
-            holder.mEventStartTime.setTextColor(context.getResources().getColor(R.color.colorAccent));
+            if (Math.abs(startDateEvent.getTime() - calendar.getTimeInMillis()) < 1000) {
+                // today (or close enough)
+                holder.mEventStartTime.setText(event.startTimeStamp != 0 ? context.getString(R.string.today)
+                        + " " + DateFormatterUtils.hoursMinutesDateFormat.format(event.startTimeStamp) : "");
+                holder.mEventStartTime.setTextColor(context.getResources().getColor(R.color.colorAccent));
 //            holder.mEventEndTime.setTextColor(context.getResources().getColor(R.color.colorAccent));
-        } else if (startDateEvent.getTime() - calendar.getTimeInMillis() < 0) {
-            // event has expired
-            holder.mEventStartTime.setText(event.startTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(event.startTimeStamp)
-                    : "");
-            holder.mEventStartTime.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
-        } else {
-            // event is on a day != from today
-            holder.mEventStartTime.setText(event.startTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(event.startTimeStamp)
-                    : "");
-            holder.mEventStartTime.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+            } else if (startDateEvent.getTime() - calendar.getTimeInMillis() < 0) {
+                // event has expired
+                holder.mEventStartTime.setText(event.startTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(event.startTimeStamp)
+                        : "");
+                holder.mEventStartTime.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
+            } else {
+                // event is on a day != from today
+                holder.mEventStartTime.setText(event.startTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(event.startTimeStamp)
+                        : "");
+                holder.mEventStartTime.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
 //            holder.mEventEndTime.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
-        }
+            }
 
-        // TODO refactor
-        if (event.endTimeStamp - calendar.getTimeInMillis() < 0) {
-            // end time has also expired
-            holder.mEventEndTime.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
-        } else {
-            if (endDateEvent != null) {
-                if(Math.abs(endDateEvent.getTime() - calendar.getTimeInMillis()) < 1000) {
-                    // end time is today
-                    holder.mEventEndTime.setText(context.getString(R.string.today) + " " + DateFormatterUtils.hoursMinutesDateFormat.format(event.endTimeStamp));
-                    holder.mEventEndTime.setTextColor(context.getResources().getColor(R.color.colorAccent));
-                } else {
-                    // end time is still active
-                    holder.mEventEndTime.setText(DateFormatterUtils.fullDateFormat.format(event.endTimeStamp));
-                    holder.mEventEndTime.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+            // TODO refactor
+            if (event.endTimeStamp - calendar.getTimeInMillis() < 0) {
+                // end time has also expired
+                holder.mEventEndTime.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
+            } else {
+                if (endDateEvent != null) {
+                    if (Math.abs(endDateEvent.getTime() - calendar.getTimeInMillis()) < 1000) {
+                        // end time is today
+                        holder.mEventEndTime.setText(context.getString(R.string.today) + " " + DateFormatterUtils.hoursMinutesDateFormat.format(event.endTimeStamp));
+                        holder.mEventEndTime.setTextColor(context.getResources().getColor(R.color.colorAccent));
+                    } else {
+                        // end time is still active
+                        holder.mEventEndTime.setText(DateFormatterUtils.fullDateFormat.format(event.endTimeStamp));
+                        holder.mEventEndTime.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+                    }
                 }
             }
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
         if (TextUtils.isEmpty(event.pictureUri)) {

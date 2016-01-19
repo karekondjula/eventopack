@@ -4,9 +4,7 @@ package com.evento.team2.eventspack.components;
  * Created by Daniel on 16-Jan-16.
  */
 
-import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.modules.AppModule;
-import com.evento.team2.eventspack.modules.PresentersModule;
 import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
 
 import javax.inject.Singleton;

@@ -25,8 +25,9 @@
 
     <string name="showcase_welcome_message">Welcome to EVENTI\nCurrent events are shown here</string>
     <string name="showcase_toolbar_message">Filter, calendar and map options are in the toolbar menu</string>
-    <string name="filter">Filter...</string>
+    <string name="filter">Filter…</string>
     <string name="today">Today </string>
     <string name="attending">Attending:</string>
+    <string name="fetching_events">Fetching events …</string>
 
 </resources>

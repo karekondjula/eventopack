@@ -101,7 +101,7 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
 
                     filterEvents(lastQuery);
                 } else {
-                    mainThread.post(() -> fragmentEventsView.showNoInternetConnectionMessage());
+                    mainThread.post(fragmentEventsView::showNoInternetConnectionMessage);
                 }
             }
         }.start();

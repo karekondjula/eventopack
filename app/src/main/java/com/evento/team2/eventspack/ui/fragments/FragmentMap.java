@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -70,7 +71,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     public static final String TAG = "FragmentMap";
     public static final String DELIMITER = "\n";
 
-    private final Calendar calendar = Calendar.getInstance();
+    private Calendar calendar;
     private GoogleMap mapView;
     private Location myLocation;
     private CaldroidFragment dialogCaldroidFragment;
@@ -79,9 +80,12 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     private HashMap<LatLng, Object> hashMapLatLngEventId = new HashMap<>();
     private long id = FetchAsyncTask.NONE;
     private int what = FetchAsyncTask.EVENTS;
+    private ArrayList<MarkerOptions> markerOptionsArrayList;
+    private Location eventLocation;
 
     @Bind(R.id.map_event_details)
     LinearLayout mapEventDetailsLinearLayout;
+    private Snackbar fetchingEventsSnackBar;
 
     private Bitmap placeImageBitmap;
     private Bitmap eventImageBitmap;
@@ -127,6 +131,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
                 if (annoyingFirstEnter) {
+                    // FIXME find the reason behind this
                     annoyingFirstEnter = false;
                     return;
                 }
@@ -157,6 +162,12 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
             }
         });
 
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.spinner_navigation_labes, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
@@ -174,7 +185,15 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
             public void onSelectDate(Date date, View view) {
                 setCalendarDate(date);
 
-                lastSelectedDate = DateFormatterUtils.compareDateFormat.format(date);
+//                lastSelectedDate = DateFormatterUtils.compareDateFormat.format(date);
+
+                calendar.setTimeInMillis(date.getTime());
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+
+                lastSelectedDate = String.valueOf(calendar.getTimeInMillis());
 
                 fetchAsyncTask = new FetchAsyncTask(FragmentMap.this, what);
                 if (what == FetchAsyncTask.PLACES) {
@@ -197,6 +216,18 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         b.recycle();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+
+        // fetch events with updated DATE NOW
     }
 
     @Override
@@ -223,12 +254,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         actionViewCalendar = ButterKnife.findById(MenuItemCompat.getActionView(calendarMenuItem), R.id.menu_map_date);
         actionViewCalendar.setOnClickListener(v -> onOptionsItemSelected(calendarMenuItem));
 
-        // set today's date in the action menu
-        if (!TextUtils.isEmpty(lastSelectedDate)) {
-            setCalendarDate(lastSelectedDate);
-        } else {
-            setCalendarDate(calendar.getTime());
-        }
+        setCalendarDate(calendar.getTime());
     }
 
     @Override
@@ -267,7 +293,8 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
 
         if (id == FetchAsyncTask.NO_EVENT_ID) {
             // regular opening of fragment map
-            lastSelectedDate = DateFormatterUtils.compareDateFormat.format(calendar.getTimeInMillis());
+//            lastSelectedDate = DateFormatterUtils.compareDateFormat.format(calendar.getTimeInMillis());
+            lastSelectedDate = String.valueOf(calendar.getTimeInMillis());
         } else {
             if (what == FetchAsyncTask.PLACES) {
                 // the user came here by clicking a Place map
@@ -279,7 +306,11 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
             } else if (what == FetchAsyncTask.EVENTS) {
                 // the user came here by clicking an Event map
                 Event event = EventsDatabase.getInstance().getEventById(id);
-                lastSelectedDate = DateFormatterUtils.compareDateFormat.format(event.startTimeStamp);
+//                lastSelectedDate = DateFormatterUtils.compareDateFormat.format(event.startTimeStamp);
+                lastSelectedDate = String.valueOf(event.startTimeStamp);
+                eventLocation = new Location("");
+                eventLocation.setLongitude(event.location.longitude);
+                eventLocation.setLatitude(event.location.latitude);
             }
         }
 
@@ -287,12 +318,15 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         fetchAsyncTask.execute(lastSelectedDate);
     }
 
-    private ArrayList<MarkerOptions> markerOptionsArrayList;
-
     @Override
     public void update(Observable observable, Object eventArrayList) {
         if (mapView != null) {
             mapView.clear();
+
+            fetchingEventsSnackBar = Snackbar.make(getView(),
+                    R.string.fetching_events,
+                    Snackbar.LENGTH_INDEFINITE);
+            fetchingEventsSnackBar.show();
 
             new Thread() {
                 @Override
@@ -352,6 +386,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
                             for (MarkerOptions markerOptions : markerOptionsArrayList) {
                                 mapView.addMarker(markerOptions);
                             }
+                            fetchingEventsSnackBar.dismiss();
                         });
                     }
                 }
@@ -441,7 +476,13 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     @Override
     public void onMyLocationChange(Location location) {
         if (myLocation == null && what != FetchAsyncTask.PLACES) {
-            moveCamera(location.getLatitude(), location.getLongitude());
+            if (eventLocation != null) {
+                // we came here from event details
+                moveCamera(eventLocation.getLatitude(), eventLocation.getLongitude());
+            } else {
+                // my location is centered
+                moveCamera(location.getLatitude(), location.getLongitude());
+            }
             myLocation = location;
         }
     }
@@ -469,10 +510,11 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     }
 
     private void setCalendarDate(Date date) {
+//        DateFormatterUtils.compareDateFormat.format(
         actionViewCalendar.setText(DateFormatterUtils.compareDateFormat.format(date));
     }
 
-    private void setCalendarDate(String dateString) {
-        actionViewCalendar.setText(dateString);
-    }
+//    private void setCalendarDate(String dateString) {
+//        actionViewCalendar.setText(dateString);
+//    }
 }

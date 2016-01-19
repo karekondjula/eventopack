@@ -16,6 +16,32 @@ import java.util.Date;
  */
 public class ConversionUtils {
 
+    private static String[] listLat = null;
+    private static String[] listCyr = null;
+
+    static {
+        // TODO sooon >)
+//        String lat = "DZ LJ NJ A B C CH D E F G H I J K L M N O P R S SH T U V Z ZH";
+//        String lat = "LJ NJ A B CH D E F G H I J K L M N O P R S SH T U V ZH";
+//        lat += " " + lat.toLowerCase();
+//        lat += " Lj Nj";
+//
+//        listLat = lat.split(" ");
+//        listCyr = cyr.split(" ");
+    }
+
+//    public static String convertTextToCyrilic(String line){
+//
+//        int i = 0;
+//
+//        for (String item : listLat) {
+//            line = line.replaceAll(item, listCyr[i]);
+//            i++;
+//        }
+//
+//        return line;
+//    }
+
     public static Event convertJsonEventToEvent(JsonEvent jsonEvent) {
         Event event = new Event(jsonEvent.title, jsonEvent.teaser);
 

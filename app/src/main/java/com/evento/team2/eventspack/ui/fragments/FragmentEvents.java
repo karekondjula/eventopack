@@ -49,16 +49,12 @@ public class FragmentEvents extends ObserverFragment implements FragmentEventsVi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         setHasOptionsMenu(true);
-        if (swipeRefreshLayout == null) {
-            swipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_events_list, container, false);
+        swipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_events_list, container, false);
 
-            ButterKnife.bind(this, swipeRefreshLayout);
+        ButterKnife.bind(this, swipeRefreshLayout);
 
-            swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
-            swipeRefreshLayout.setOnRefreshListener(fragmentEventsPresenter::fetchEventsFromServer);
-        }
-
-//        preferences = getActivity().getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
+        swipeRefreshLayout.setOnRefreshListener(fragmentEventsPresenter::fetchEventsFromServer);
 
         return swipeRefreshLayout;
     }
@@ -70,9 +66,7 @@ public class FragmentEvents extends ObserverFragment implements FragmentEventsVi
         eventsRecyclerView.setHasFixedSize(true);
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         eventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        if (eventsAdapter == null) {
-            eventsAdapter = new EventsRecyclerViewAdapter(EventiApplication.applicationContext);
-        }
+        eventsAdapter = new EventsRecyclerViewAdapter(getActivity());
         eventsRecyclerView.setAdapter(eventsAdapter);
 
         fragmentEventsPresenter.setView(this);
@@ -90,23 +84,6 @@ public class FragmentEvents extends ObserverFragment implements FragmentEventsVi
                 emptyAdapterTextView.setVisibility(View.GONE);
             }
         }
-
-        // TODO check this on telephone
-//        if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
-//            swipeRefreshLayout.setRefreshing(false);
-//        }
-
-//        String lastUpdateDate = preferences.getString(SHARED_PREFERENCE_LAST_UPDATE_OF_EVENTS, "");
-//        Date today = new Date();
-//        String todayDate = DateFormatterUtils.compareDateFormat.format(today);
-//        if (!todayDate.equals(lastUpdateDate)) {
-//            // get new events from server
-//            fragmentEventsPresenter.fetchEventsFromServer();
-//            preferences.edit().putString(SHARED_PREFERENCE_LAST_UPDATE_OF_EVENTS, todayDate).apply();
-//        } else {
-//            // just load current events from database
-//            fragmentEventsPresenter.fetchEvents();
-//        }
 
         fragmentEventsPresenter.fetchEvents();
     }

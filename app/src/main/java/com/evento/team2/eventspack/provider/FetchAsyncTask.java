@@ -8,6 +8,7 @@ import com.evento.team2.eventspack.ui.fragments.interfaces.ObserverFragment;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Daniel on 29-Oct-15.
@@ -48,8 +49,11 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
             if (filter != null && filter.length > 0) {
                 switch (filter.length) {
                     case 1:
-                        return EventsDatabase.getInstance().getEvents(filter[0]);
+                        // used in maps only for date "19.01.2016" -> actually now it is a timestamp ^_^
+//                        return EventsDatabase.getInstance().getEvents(filter[0]);
+                        return EventsDatabase.getInstance().getActiveEventsOnDate(filter[0]);
                     case 2:
+                        // not used at the moment probably
                         return EventsDatabase.getInstance().getEvents(filter[0], filter[1]);
                 }
             } else {

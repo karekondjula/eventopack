@@ -195,9 +195,12 @@ public class EventsDatabase {
                 allColumnsPlace,
                 (filter != null && filter.length > 0
                         ? Event.Table.COLUMN_NAME + " LIKE ? "
+//                        Event.Table.COLUMN_NAME + " LIKE ? "
                         : null),
                 (filter != null && filter.length > 0
-                        ? new String[]{"%" + filter[0] + "%",}
+                        ? new String[]{"%" + filter[0] + "%",
+//                        "%" + ConversionUtils.convertTextToCyrilic(filter[0]) + "%",
+                }
                         : null),
                 null, null, null);
 
@@ -286,11 +289,13 @@ public class EventsDatabase {
             where = new StringBuilder();
             if (filter.length > 0) {
                 where.append("(" + Event.Table.COLUMN_NAME + " LIKE ? OR " +
+//                        Event.Table.COLUMN_NAME + " LIKE ? OR " +
                         Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
                         Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
                         Event.Table.COLUMN_START_DATE_STRING + " LIKE ? ) ");
 
                 whereArgsList.add("%" + filter[0] + "%");
+//                whereArgsList.add("%" + ConversionUtils.convertTextToCyrilic(filter[0]) + "%");
                 whereArgsList.add("%" + filter[0] + "%");
                 whereArgsList.add("%" + filter[0] + "%");
                 whereArgsList.add("%" + filter[0] + "%");
@@ -331,6 +336,49 @@ public class EventsDatabase {
         return events;
     }
 
+    public ArrayList<Event> getActiveEventsOnDate(String timestamp) {
+        ArrayList<Event> events = new ArrayList<Event>();
+
+        StringBuilder where;
+        String whereArgs[];
+        ArrayList<String> whereArgsList = new ArrayList<String>();
+
+        where = new StringBuilder();
+        where.append(" ( " +
+                        "( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? < 86400000 AND " + Event.Table.COLUMN_START_TIME_STAMP + " - ? > 0 " + ") " +
+                        " OR " +
+                        "( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? <= 0 AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? ) " +
+                     " ) "
+        );
+        whereArgsList.add(String.valueOf(timestamp));
+        whereArgsList.add(String.valueOf(timestamp));
+        whereArgsList.add(String.valueOf(timestamp));
+        whereArgsList.add(String.valueOf(timestamp));
+
+        whereArgs = new String[whereArgsList.size()];
+        whereArgs = whereArgsList.toArray(whereArgs);
+
+        Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
+                allColumnsEvent,
+                where.toString(),
+                whereArgs,
+                null,
+                null,
+                null);
+
+        cursor.moveToFirst();
+        Event event;
+        while (!cursor.isAfterLast()) {
+            event = cursorToEvent(cursor);
+            events.add(event);
+            cursor.moveToNext();
+        }
+        // make sure to close the cursor
+        cursor.close();
+        return events;
+    }
+
+
     public ArrayList<Event> getEventsByLocation(String... filter) {
         ArrayList<Event> events = new ArrayList<Event>();
 
@@ -344,11 +392,11 @@ public class EventsDatabase {
                                 "(" + Event.Table.COLUMN_LATITUDE + " LIKE ? AND " +
                                 Event.Table.COLUMN_LONGITUDE + " LIKE ? ) OR " +
                                 Event.Table.COLUMN_LOCATION_STRING + " LIKE ? ) " +
-                            " AND ( " +
+                                " AND ( " +
                                 Event.Table.COLUMN_START_TIME_STAMP + " > ? " +
                                 " OR " +
                                 "( " + Event.Table.COLUMN_START_TIME_STAMP + " < ? AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? ) " +
-                            ")"
+                                ")"
                 );
 
                 whereArgsList.add("%" + filter[0] + "%");
@@ -394,12 +442,14 @@ public class EventsDatabase {
                 Event.Table.COLUMN_IS_EVENT_SAVED + " = ? " +
                         (filter != null && filter.length > 0 ? " AND (" +
                                 Event.Table.COLUMN_NAME + " LIKE ? OR " +
+//                                Event.Table.COLUMN_NAME + " LIKE ? OR " +
                                 Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
                                 Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
                                 Event.Table.COLUMN_START_DATE_STRING + " LIKE ? )"
                                 : ""),
                 (filter.length > 0 ? new String[]{String.valueOf(Event.SAVED),
                         "%" + filter[0] + "%",
+//                        "%" + ConversionUtils.convertTextToCyrilic(filter[0]) + "%",
                         "%" + filter[0] + "%",
                         "%" + filter[0] + "%",
                         "%" + filter[0] + "%",}

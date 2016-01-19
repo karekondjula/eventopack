@@ -18,7 +18,10 @@ package com.evento.team2.eventspack.ui.activites;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -27,6 +30,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
@@ -47,6 +51,13 @@ import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.joanzapata.iconify.fonts.IoniconsModule;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -195,6 +206,53 @@ public class ActivityEventDetails extends AppCompatActivity {
                         String.format(getResources().getString(R.string.event_is_removed), event.name),
                 Snackbar.LENGTH_LONG)
                 .show();
+    }
+
+    File file;
+    @OnClick(R.id.backdrop)
+    public void openImage(View view) {
+
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                try {
+//                    String filename = Uri.parse(event.pictureUri).getLastPathSegment();
+//
+//                    file = new File(getFilesDir(), filename);
+//                    file.createNewFile();
+//
+//                    URL url = new URL(event.pictureUri);
+//                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//                    connection.setDoInput(true);
+//                    connection.connect();
+//                    InputStream input = connection.getInputStream();
+//                    Bitmap myBitmap = BitmapFactory.decodeStream(input);
+//
+//                    FileOutputStream outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
+//
+//                    myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream); // bmp is your Bitmap instance
+//                    outputStream.close();
+//
+//                    Intent intent = new Intent(Intent.ACTION_VIEW);
+//                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                    intent.setDataAndType(Uri.parse("file://" + file.getAbsoluteFile()),  "image/*");
+////                    intent.setType("image/*");
+//                    runOnUiThread(() -> startActivityForResult(new Intent(intent), 0));
+//
+//                } catch (IOException ioe) {
+//                    // Error while creating file
+//                }
+//            }
+//        }.start();
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(file != null) {
+            file.delete();
+            file = null;
+        }
     }
 
     @Override
