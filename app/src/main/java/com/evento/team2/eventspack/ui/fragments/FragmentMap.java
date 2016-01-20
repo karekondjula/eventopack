@@ -69,14 +69,14 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     public static final String EXTRA_WHAT = "extra_what";
     public static final String EXTRA_ID = "extra_id";
     public static final String TAG = "FragmentMap";
-    public static final String DELIMITER = "\n";
+    public static final String DELIMITER = "\b";
 
     private Calendar calendar;
     private GoogleMap mapView;
     private Location myLocation;
     private CaldroidFragment dialogCaldroidFragment;
     private String lastSelectedDate;
-    private TextView actionViewCalendar;
+    private LinearLayout actionViewCalendar;
     private HashMap<LatLng, Object> hashMapLatLngEventId = new HashMap<>();
     private long id = FetchAsyncTask.NONE;
     private int what = FetchAsyncTask.EVENTS;
@@ -323,10 +323,12 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         if (mapView != null) {
             mapView.clear();
 
-            fetchingEventsSnackBar = Snackbar.make(getView(),
-                    R.string.fetching_events,
-                    Snackbar.LENGTH_INDEFINITE);
-            fetchingEventsSnackBar.show();
+            if (getView() != null) {
+                fetchingEventsSnackBar = Snackbar.make(getView(),
+                        R.string.fetching_events,
+                        Snackbar.LENGTH_INDEFINITE);
+                fetchingEventsSnackBar.show();
+            }
 
             new Thread() {
                 @Override
@@ -415,7 +417,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
                     ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_details)).setText(eventDetails[0]);
 
                     try {
-                        if (DateFormatterUtils.fullDateFormat.parse(eventDetails[1]).getTime() - calendar.getTimeInMillis() < 0) {
+                        if (DateFormatterUtils.fullDateFormat.parse(eventDetails[1]).getTime() - new Date().getTime() < 0) {
                             ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_time))
                                     .setTextColor(getActivity().getResources().getColor(android.R.color.holo_red_dark));
                         }
@@ -510,11 +512,6 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     }
 
     private void setCalendarDate(Date date) {
-//        DateFormatterUtils.compareDateFormat.format(
-        actionViewCalendar.setText(DateFormatterUtils.compareDateFormat.format(date));
+        ((TextView) actionViewCalendar.findViewById(R.id.menu_text_date)).setText(DateFormatterUtils.compareDateFormat.format(date));
     }
-
-//    private void setCalendarDate(String dateString) {
-//        actionViewCalendar.setText(dateString);
-//    }
 }
