@@ -54,7 +54,7 @@ public class FragmentEvents extends ObserverFragment implements FragmentEventsVi
         ButterKnife.bind(this, swipeRefreshLayout);
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
-        swipeRefreshLayout.setOnRefreshListener(fragmentEventsPresenter::fetchEventsFromServer);
+        swipeRefreshLayout.setOnRefreshListener(() -> fragmentEventsPresenter.fetchEvents(true));
 
         return swipeRefreshLayout;
     }
@@ -85,7 +85,8 @@ public class FragmentEvents extends ObserverFragment implements FragmentEventsVi
             }
         }
 
-        fragmentEventsPresenter.fetchEvents();
+        // TODO magic false !
+        fragmentEventsPresenter.fetchEvents(false);
     }
 
     @Override
@@ -117,15 +118,20 @@ public class FragmentEvents extends ObserverFragment implements FragmentEventsVi
     @Override
     public void showEvents(ArrayList<Event> eventArrayList) {
         if (eventsAdapter != null) {
-            eventsAdapter.addEvents(eventArrayList);
 
-            eventsAdapter.notifyDataSetChanged();
-
-            if (eventsAdapter.getItemCount() > 0) {
+            if (eventArrayList == null) {
+                // empty database
+                if (emptyAdapterTextView != null) {
+                    emptyAdapterTextView.setVisibility(View.VISIBLE);
+                }
+            } else {
                 if (emptyAdapterTextView != null) {
                     emptyAdapterTextView.setVisibility(View.GONE);
                 }
             }
+
+            eventsAdapter.addEvents(eventArrayList);
+            eventsAdapter.notifyDataSetChanged();
 
             if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(false);
@@ -134,15 +140,16 @@ public class FragmentEvents extends ObserverFragment implements FragmentEventsVi
     }
 
     @Override
-    public void showNoEventsView() {
-        emptyAdapterTextView.setVisibility(View.VISIBLE);
-
+    public void startRefreshAnimation() {
+        if (swipeRefreshLayout != null && !swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(true);
+        }
     }
 
     @Override
-    public void hideNoEventsView() {
-        if (emptyAdapterTextView.getVisibility() == View.VISIBLE) {
-            getActivity().runOnUiThread(() -> emptyAdapterTextView.setVisibility(View.GONE));
+    public void stopRefreshAnimation() {
+        if (swipeRefreshLayout != null && !swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(true);
         }
     }
 

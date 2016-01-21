@@ -11,9 +11,9 @@ public interface FragmentEventsView {
 
     void showEvents(ArrayList<Event> eventArrayList);
 
-    void showNoEventsView();
+    void startRefreshAnimation();
 
-    void hideNoEventsView();
+    void stopRefreshAnimation();
 
     void showLastUpdatedTimestampMessage(String lastUpdateTimestamp);
 

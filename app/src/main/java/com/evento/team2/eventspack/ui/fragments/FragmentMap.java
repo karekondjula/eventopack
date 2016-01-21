@@ -311,6 +311,15 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
                 eventLocation = new Location("");
                 eventLocation.setLongitude(event.location.longitude);
                 eventLocation.setLatitude(event.location.latitude);
+
+                calendar = Calendar.getInstance();
+                calendar.setTimeInMillis(event.startTimeStamp);
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
+                calendar.set(Calendar.MILLISECOND, 0);
+
+                setCalendarDate(calendar.getTime());
             }
         }
 
@@ -349,7 +358,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
                                             .position(new LatLng(event.location.latitude,
                                                     event.location.longitude))
                                             .title(event.name)
-                                            .snippet(event.details + DELIMITER + DateFormatterUtils.fullDateFormat.format(new Date(event.startTimeStamp)));
+                                            .snippet(event.details + DELIMITER + DateFormatterUtils.fullDateFormat.format(event.startTimeStamp));
 
                                     if (TextUtils.isEmpty(event.pictureUri)) {
                                         markerOptions.icon(BitmapDescriptorFactory.fromBitmap(eventImageBitmap));
@@ -512,6 +521,9 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     }
 
     private void setCalendarDate(Date date) {
-        ((TextView) actionViewCalendar.findViewById(R.id.menu_text_date)).setText(DateFormatterUtils.compareDateFormat.format(date));
+        if (actionViewCalendar != null) {
+            // probably too early but calendar is already set to the correct date
+            ((TextView) actionViewCalendar.findViewById(R.id.menu_text_date)).setText(DateFormatterUtils.compareDateFormat.format(date));
+        }
     }
 }

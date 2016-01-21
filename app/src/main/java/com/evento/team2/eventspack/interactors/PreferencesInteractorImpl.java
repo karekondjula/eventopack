@@ -1,6 +1,5 @@
 package com.evento.team2.eventspack.interactors;
 
-import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -13,7 +12,7 @@ import com.evento.team2.eventspack.interactors.interfaces.PreferencesInteractor;
 public class PreferencesInteractorImpl implements PreferencesInteractor {
 
     private static String SHARED_PREFERENCE_NAME = "eventi_preferences";
-    private static String SHARED_PREFERENCE_LAST_UPDATE_OF_EVENTS = "last_update_of_events";
+    private static String SHARED_PREFERENCE_LAST_UPDATE_OF_EVENTS = "last_updated_events";
 
     private SharedPreferences preferences;
 
@@ -22,12 +21,12 @@ public class PreferencesInteractorImpl implements PreferencesInteractor {
     }
 
     @Override
-    public String getLastUpdateOfEvents() {
-        return preferences.getString(SHARED_PREFERENCE_LAST_UPDATE_OF_EVENTS, "");
+    public long getLastUpdateOfEvents() {
+        return preferences.getLong(SHARED_PREFERENCE_LAST_UPDATE_OF_EVENTS, 0);
     }
 
     @Override
-    public void setLastUpdateOfEvents(String todayDate) {
-        preferences.edit().putString(SHARED_PREFERENCE_LAST_UPDATE_OF_EVENTS, todayDate).apply();
+    public void setLastUpdateOfEvents(long todayDate) {
+        preferences.edit().putLong(SHARED_PREFERENCE_LAST_UPDATE_OF_EVENTS, todayDate).apply();
     }
 }

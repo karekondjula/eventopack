@@ -51,7 +51,7 @@ public class Utils {
 
                     dummyEvent.startDate = cal.getTimeInMillis();
 
-                    String dateTime = new SimpleDateFormat("HH:mm dd.MM.yyyy").format(new Date(dummyEvent.startTimeStamp));
+                    String dateTime = new SimpleDateFormat("HH:mm dd.MM.yyyy").format(dummyEvent.startTimeStamp);
 
                     dummyEvent.startTimeString = dateTime.split(" ")[0];
                     dummyEvent.startDateString = dateTime.split(" ")[1];

@@ -11,6 +11,7 @@ import android.text.TextUtils;
 
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.models.Place;
+import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.io.IOException;
@@ -57,7 +58,7 @@ public class EventsDatabase {
         event.locationString = cursor.getString(5);
         event.location = new LatLng(cursor.getDouble(6), cursor.getDouble(7));
         event.startTimeStamp = cursor.getLong(8);
-        event.startTimeString = new SimpleDateFormat("HH:mm").format(new Date(event.startTimeStamp));
+        event.startTimeString = new SimpleDateFormat("HH:mm").format(event.startTimeStamp);
 
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(event.startTimeStamp);
@@ -69,7 +70,7 @@ public class EventsDatabase {
 
         event.startDateString = cursor.getString(9);//new SimpleDateFormat("dd.MM.yyyy").format(new Date(event.startDate));
         event.endTimeStamp = cursor.getLong(10);
-        event.endDateString = new SimpleDateFormat("dd.MM.yyyy").format(new Date(event.endTimeStamp));
+        event.endDateString = event.endTimeStamp != 0 ? DateFormatterUtils.compareDateFormat.format(event.endTimeStamp) : "";
         event.isEventSaved = cursor.getInt(11) == Event.SAVED;
 
         event.attendingCount = cursor.getString(12);
@@ -333,6 +334,12 @@ public class EventsDatabase {
         }
         // make sure to close the cursor
         cursor.close();
+
+        if (events.size() == 0 && filter != null && TextUtils.isEmpty(filter[0])) {
+            // no events are fetched from server -> empty database
+            return null;
+        }
+
         return events;
     }
 
@@ -345,9 +352,9 @@ public class EventsDatabase {
 
         where = new StringBuilder();
         where.append(" ( " +
-                        "( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? < 86400000 AND " + Event.Table.COLUMN_START_TIME_STAMP + " - ? > 0 " + ") " +
+                        "( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? < 86400000 AND " + Event.Table.COLUMN_START_TIME_STAMP + " - ? >= 0 " + ") " +
                         " OR " +
-                        "( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? <= 0 AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? ) " +
+                        "( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? < 0 AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? ) " +
                      " ) "
         );
         whereArgsList.add(String.valueOf(timestamp));

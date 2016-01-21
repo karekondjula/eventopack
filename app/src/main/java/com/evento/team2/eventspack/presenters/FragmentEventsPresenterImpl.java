@@ -14,6 +14,7 @@ import com.evento.team2.eventspack.utils.interfaces.MainThread;
 import com.evento.team2.eventspack.views.FragmentEventsView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -42,31 +43,34 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
     }
 
     @Override
-    public void fetchEvents() {
+    public void fetchEvents(boolean forceUpdate) {
         new Thread() {
             @Override
             public void run() {
 
-                String lastUpdateDate = preferencesInteractor.getLastUpdateOfEvents();
-                Date today = new Date();
-                String todayDate = DateFormatterUtils.compareDateFormat.format(today);
+                long lastUpdateDate = preferencesInteractor.getLastUpdateOfEvents();
+                Calendar today, lastUpdateOfEvents;
+                today = Calendar.getInstance();
+                today.set(Calendar.HOUR_OF_DAY, 0);
+                today.set(Calendar.MINUTE, 0);
+                today.set(Calendar.SECOND, 0);
+                today.set(Calendar.MILLISECOND, 0);
 
-                if (!todayDate.equals(lastUpdateDate)) {
+                lastUpdateOfEvents = Calendar.getInstance();
+                lastUpdateOfEvents.setTimeInMillis(lastUpdateDate);
+                lastUpdateOfEvents.set(Calendar.HOUR_OF_DAY, 0);
+                lastUpdateOfEvents.set(Calendar.MINUTE, 0);
+                lastUpdateOfEvents.set(Calendar.SECOND, 0);
+                lastUpdateOfEvents.set(Calendar.MILLISECOND, 0);
+
+                if (forceUpdate || today.getTimeInMillis() != lastUpdateOfEvents.getTimeInMillis()) {
                     // get new events from server
                     fetchEventsFromServer();
-                    preferencesInteractor.setLastUpdateOfEvents(todayDate);
                 }
 
-                final ArrayList<Event> eventArrayList = EventsDatabase.getInstance().getEvents(FetchAsyncTask.NO_FILTER_STRING, String.valueOf(new Date().getTime()));
+                final ArrayList<Event> eventArrayList = EventsDatabase.getInstance().getEvents(lastQuery, String.valueOf(new Date().getTime()));
 
-                mainThread.post(() -> {
-                    if (eventArrayList.size() != 0) {
-                        fragmentEventsView.hideNoEventsView();
-                        fragmentEventsView.showEvents(eventArrayList);
-                    } else {
-                        fragmentEventsView.showNoEventsView();
-                    }
-                });
+                mainThread.post(() -> fragmentEventsView.showEvents(eventArrayList));
             }
         }.start();
     }
@@ -79,39 +83,33 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
                 final ArrayList<Event> eventArrayList = EventsDatabase.getInstance().getEvents(query, String.valueOf(new Date().getTime()));
 
                 mainThread.post(() -> fragmentEventsView.showEvents(eventArrayList));
-
             }
         }.start();
         lastQuery = query;
     }
 
-    @Override
-    public void fetchEventsFromServer() {
-        new Thread() {
-            @Override
-            public void run() {
-                if (NetworkUtils.getInstance().isNetworkAvailable(EventiApplication.applicationContext)) {
-                    HashMap<String, Object> params = new HashMap();
-                    params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
-                    ServiceEvento.getInstance().callServiceMethod(params);
+    private void fetchEventsFromServer() {
+        if (NetworkUtils.getInstance().isNetworkAvailable(EventiApplication.applicationContext)) {
 
-                    Date today = new Date();
-                    String todayDate = DateFormatterUtils.fullDateFormat.format(today);
-                    preferencesInteractor.setLastUpdateOfEvents(todayDate);
+            mainThread.post(fragmentEventsView::startRefreshAnimation);
 
-                    filterEvents(lastQuery);
-                } else {
-                    mainThread.post(fragmentEventsView::showNoInternetConnectionMessage);
-                }
-            }
-        }.start();
+            HashMap<String, Object> params = new HashMap();
+            params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
+            ServiceEvento.getInstance().callServiceMethod(params);
+
+            preferencesInteractor.setLastUpdateOfEvents(new Date().getTime());
+
+            mainThread.post(fragmentEventsView::stopRefreshAnimation);
+        } else {
+            mainThread.post(fragmentEventsView::showNoInternetConnectionMessage);
+        }
     }
 
     @Override
     public void fetchLastUpdatedTimestamp() {
 //        String lastUpdateDate = "NOW";
         // TODO make it more human friendly
-        String lastUpdateDate = preferencesInteractor.getLastUpdateOfEvents();
+        String lastUpdateDate = DateFormatterUtils.fullDateFormat.format(preferencesInteractor.getLastUpdateOfEvents());
 
         fragmentEventsView.showLastUpdatedTimestampMessage(lastUpdateDate);
     }

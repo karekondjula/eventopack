@@ -49,7 +49,7 @@ public class ConversionUtils {
         event.facebookId = jsonEvent.fb_id;
         event.startTimeStamp = jsonEvent.startTime * 1000; // in ms
 
-        String dateTime = new SimpleDateFormat("HH:mm dd.MM.yyyy").format(new Date(event.startTimeStamp));
+        String dateTime = new SimpleDateFormat("HH:mm dd.MM.yyyy").format(event.startTimeStamp);
 
         event.startTimeString = dateTime.split(" ")[0];
         event.startDateString = dateTime.split(" ")[1];

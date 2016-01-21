@@ -8,11 +8,9 @@ import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
 public interface FragmentEventsPresenter {
     void setView(FragmentEvents fragmentEventsView);
 
-    void fetchEvents();
+    void fetchEvents(boolean forceUpdate);
 
     void filterEvents(String query);
-
-    void fetchEventsFromServer();
 
     void fetchLastUpdatedTimestamp();
 }

@@ -39,6 +39,7 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
 
     private Context context;
     private ArrayList<Event> events;
+    private Calendar calendar;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -77,6 +78,12 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
     public EventsRecyclerViewAdapter(Context context) {
         this.context = context;
         events = new ArrayList<>();
+
+        calendar = Calendar.getInstance();
+        calendar.setTime(TODAY);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
     }
 
 //    public void addEvent(Event event) {
@@ -109,16 +116,7 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
 
         try {
             Date startDateEvent, endDateEvent;
-            Calendar calendar;
-
             startDateEvent = DateFormatterUtils.compareDateFormat.parse(event.startDateString);
-            calendar = Calendar.getInstance();
-            calendar.setTime(TODAY);
-            calendar.set(Calendar.HOUR_OF_DAY, 0);
-            calendar.set(Calendar.MINUTE, 0);
-            calendar.set(Calendar.SECOND, 0);
-
-            endDateEvent = DateFormatterUtils.compareDateFormat.parse(event.endDateString);
 
             if (Math.abs(startDateEvent.getTime() - calendar.getTimeInMillis()) < 1000) {
                 // today (or close enough)
@@ -140,11 +138,12 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
             }
 
             // TODO refactor
-            if (event.endTimeStamp - calendar.getTimeInMillis() < 0) {
-                // end time has also expired
-                holder.mEventEndTime.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
-            } else {
-                if (endDateEvent != null) {
+            if (event.endTimeStamp != 0) {
+                endDateEvent = DateFormatterUtils.compareDateFormat.parse(event.endDateString);
+                if (event.endTimeStamp - calendar.getTimeInMillis() < 0) {
+                    // end time has also expired
+                    holder.mEventEndTime.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
+                } else {
                     if (Math.abs(endDateEvent.getTime() - calendar.getTimeInMillis()) < 1000) {
                         // end time is today
                         holder.mEventEndTime.setText(context.getString(R.string.today) + " " + DateFormatterUtils.hoursMinutesDateFormat.format(event.endTimeStamp));
@@ -155,6 +154,8 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
                         holder.mEventEndTime.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
                     }
                 }
+            } else {
+                holder.mEventEndTime.setText("");
             }
         } catch (ParseException e) {
             e.printStackTrace();
