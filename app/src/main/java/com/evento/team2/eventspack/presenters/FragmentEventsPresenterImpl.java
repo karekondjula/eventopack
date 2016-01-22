@@ -43,11 +43,24 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
     }
 
     @Override
-    public void fetchEvents(boolean forceUpdate) {
+    public void fetchEvents(String query) {
         new Thread() {
             @Override
             public void run() {
 
+                final ArrayList<Event> eventArrayList = EventsDatabase.getInstance().getEvents(lastQuery, String.valueOf(new Date().getTime()));
+
+                mainThread.post(() -> fragmentEventsView.showEvents(eventArrayList));
+            }
+        }.start();
+        lastQuery = query;
+    }
+
+    @Override
+    public void fetchEventsFromServer(boolean forceUpdate) {
+        new Thread() {
+            @Override
+            public void run() {
                 long lastUpdateDate = preferencesInteractor.getLastUpdateOfEvents();
                 Calendar today, lastUpdateOfEvents;
                 today = Calendar.getInstance();
@@ -64,45 +77,25 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
                 lastUpdateOfEvents.set(Calendar.MILLISECOND, 0);
 
                 if (forceUpdate || today.getTimeInMillis() != lastUpdateOfEvents.getTimeInMillis()) {
-                    // get new events from server
-                    fetchEventsFromServer();
+                    if (NetworkUtils.getInstance().isNetworkAvailable(EventiApplication.applicationContext)) {
+
+                        mainThread.post(fragmentEventsView::startRefreshAnimation);
+
+                        HashMap<String, Object> params = new HashMap();
+                        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
+                        ServiceEvento.getInstance().callServiceMethod(params);
+
+                        preferencesInteractor.setLastUpdateOfEvents(new Date().getTime());
+
+                        fetchEvents(lastQuery);
+
+                        mainThread.post(fragmentEventsView::stopRefreshAnimation);
+                    } else {
+                        mainThread.post(fragmentEventsView::showNoInternetConnectionMessage);
+                    }
                 }
-
-                final ArrayList<Event> eventArrayList = EventsDatabase.getInstance().getEvents(lastQuery, String.valueOf(new Date().getTime()));
-
-                mainThread.post(() -> fragmentEventsView.showEvents(eventArrayList));
             }
         }.start();
-    }
-
-    @Override
-    public void filterEvents(String query) {
-        new Thread() {
-            @Override
-            public void run() {
-                final ArrayList<Event> eventArrayList = EventsDatabase.getInstance().getEvents(query, String.valueOf(new Date().getTime()));
-
-                mainThread.post(() -> fragmentEventsView.showEvents(eventArrayList));
-            }
-        }.start();
-        lastQuery = query;
-    }
-
-    private void fetchEventsFromServer() {
-        if (NetworkUtils.getInstance().isNetworkAvailable(EventiApplication.applicationContext)) {
-
-            mainThread.post(fragmentEventsView::startRefreshAnimation);
-
-            HashMap<String, Object> params = new HashMap();
-            params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
-            ServiceEvento.getInstance().callServiceMethod(params);
-
-            preferencesInteractor.setLastUpdateOfEvents(new Date().getTime());
-
-            mainThread.post(fragmentEventsView::stopRefreshAnimation);
-        } else {
-            mainThread.post(fragmentEventsView::showNoInternetConnectionMessage);
-        }
     }
 
     @Override

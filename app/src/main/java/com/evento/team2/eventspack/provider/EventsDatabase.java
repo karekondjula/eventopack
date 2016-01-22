@@ -351,10 +351,10 @@ public class EventsDatabase {
         ArrayList<String> whereArgsList = new ArrayList<String>();
 
         where = new StringBuilder();
-        where.append(" ( " +
+        where.append(" ( " + // TODO first condition is wrong!!!!!!!!!
                         "( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? < 86400000 AND " + Event.Table.COLUMN_START_TIME_STAMP + " - ? >= 0 " + ") " +
                         " OR " +
-                        "( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? < 0 AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? ) " +
+                        "( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? <= 0 AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? ) " +
                      " ) "
         );
         whereArgsList.add(String.valueOf(timestamp));

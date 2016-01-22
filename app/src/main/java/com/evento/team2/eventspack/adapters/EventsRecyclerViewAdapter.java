@@ -222,4 +222,14 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
     public int getItemCount() {
         return events.size();
     }
+
+    @Override
+    public long getItemId(int position) {
+        return events.get(position).id;
+    }
+
+    @Override
+    public void setHasStableIds(boolean hasStableIds) {
+        super.setHasStableIds(true);
+    }
 }

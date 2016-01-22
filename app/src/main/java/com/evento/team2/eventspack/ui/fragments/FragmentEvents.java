@@ -54,7 +54,7 @@ public class FragmentEvents extends ObserverFragment implements FragmentEventsVi
         ButterKnife.bind(this, swipeRefreshLayout);
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
-        swipeRefreshLayout.setOnRefreshListener(() -> fragmentEventsPresenter.fetchEvents(true));
+        swipeRefreshLayout.setOnRefreshListener(() -> fragmentEventsPresenter.fetchEventsFromServer(true));
 
         return swipeRefreshLayout;
     }
@@ -66,6 +66,7 @@ public class FragmentEvents extends ObserverFragment implements FragmentEventsVi
         eventsRecyclerView.setHasFixedSize(true);
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         eventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
         eventsAdapter = new EventsRecyclerViewAdapter(getActivity());
         eventsRecyclerView.setAdapter(eventsAdapter);
 
@@ -77,16 +78,9 @@ public class FragmentEvents extends ObserverFragment implements FragmentEventsVi
     public void onResume() {
         super.onResume();
 
-        if (eventsAdapter != null) {
-            if (eventsAdapter.getItemCount() == 0) {
-                emptyAdapterTextView.setVisibility(View.VISIBLE);
-            } else {
-                emptyAdapterTextView.setVisibility(View.GONE);
-            }
-        }
-
         // TODO magic false !
-        fragmentEventsPresenter.fetchEvents(false);
+        fragmentEventsPresenter.fetchEventsFromServer(false);
+        fragmentEventsPresenter.fetchEvents("");
     }
 
     @Override
@@ -107,7 +101,7 @@ public class FragmentEvents extends ObserverFragment implements FragmentEventsVi
 
     @Override
     public void filterList(final String filter) {
-        fragmentEventsPresenter.filterEvents(filter);
+        fragmentEventsPresenter.fetchEvents(filter);
     }
 
     @Override
@@ -130,7 +124,10 @@ public class FragmentEvents extends ObserverFragment implements FragmentEventsVi
                 }
             }
 
+            // some kind of optimization ... further read is required
+//            eventsAdapter = new EventsRecyclerViewAdapter(getActivity());
             eventsAdapter.addEvents(eventArrayList);
+//            eventsRecyclerView.swapAdapter(eventsAdapter, false);
             eventsAdapter.notifyDataSetChanged();
 
             if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {

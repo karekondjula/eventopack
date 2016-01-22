@@ -115,6 +115,7 @@
         android:id="@+id/event_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="7dp"
         android:paddingLeft="@dimen/item_event_text_padding"
         android:paddingRight="@dimen/item_event_text_padding"
         android:singleLine="true" />
@@ -122,7 +123,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
-        android:paddingTop="5dp" />
+        android:background="@android:color/darker_gray" />
 
 </LinearLayout>

@@ -313,6 +313,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
                 eventLocation.setLatitude(event.location.latitude);
 
                 calendar = Calendar.getInstance();
+                // TODO if startTimeStamp != today, go to TODAY else go to startTimeStamp
                 calendar.setTimeInMillis(event.startTimeStamp);
                 calendar.set(Calendar.HOUR_OF_DAY, 0);
                 calendar.set(Calendar.MINUTE, 0);
