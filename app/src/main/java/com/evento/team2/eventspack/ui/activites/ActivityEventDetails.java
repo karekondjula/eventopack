@@ -117,8 +117,8 @@ public class ActivityEventDetails extends AppCompatActivity {
 
         final Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
-        final ActionBar actionBare = getSupportActionBar();
-        if (actionBare != null) {
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
         // TODO make the toolbar disappear completely on top most scroll
@@ -127,7 +127,7 @@ public class ActivityEventDetails extends AppCompatActivity {
         final long eventId = intent.getLongExtra(EXTRA_ID, 0);
         event = EventsDatabase.getInstance().getEventById(eventId);
 
-        if (event == null) {
+        if (event == null || collapsingToolbar == null) {
             // it happened once ... just to be safe
             // TODO show 'Something went wrong ... please try again'
             finish();
@@ -208,51 +208,12 @@ public class ActivityEventDetails extends AppCompatActivity {
                 .show();
     }
 
-    File file;
     @OnClick(R.id.backdrop)
     public void openImage(View view) {
 
-//        new Thread() {
-//            @Override
-//            public void run() {
-//                try {
-//                    String filename = Uri.parse(event.pictureUri).getLastPathSegment();
-//
-//                    file = new File(getFilesDir(), filename);
-//                    file.createNewFile();
-//
-//                    URL url = new URL(event.pictureUri);
-//                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-//                    connection.setDoInput(true);
-//                    connection.connect();
-//                    InputStream input = connection.getInputStream();
-//                    Bitmap myBitmap = BitmapFactory.decodeStream(input);
-//
-//                    FileOutputStream outputStream = openFileOutput(filename, Context.MODE_PRIVATE);
-//
-//                    myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream); // bmp is your Bitmap instance
-//                    outputStream.close();
-//
-//                    Intent intent = new Intent(Intent.ACTION_VIEW);
-//                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//                    intent.setDataAndType(Uri.parse("file://" + file.getAbsoluteFile()),  "image/*");
-////                    intent.setType("image/*");
-//                    runOnUiThread(() -> startActivityForResult(new Intent(intent), 0));
-//
-//                } catch (IOException ioe) {
-//                    // Error while creating file
-//                }
-//            }
-//        }.start();
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(file != null) {
-            file.delete();
-            file = null;
-        }
+        Intent fullScreenImage = ActivityFullScreenImage.createIntent(this, ActivityFullScreenImage.EVENT_IMAGE,
+                event.pictureUri, event.name);
+        startActivity(fullScreenImage);
     }
 
     @Override

@@ -50,6 +50,7 @@ import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class ActivityPlaceDetails extends AppCompatActivity {
 
@@ -147,6 +148,14 @@ public class ActivityPlaceDetails extends AppCompatActivity {
                 }
             }
         }.start();
+    }
+
+    @OnClick(R.id.backdrop)
+    public void openImage(View view) {
+
+        Intent fullScreenImage = ActivityFullScreenImage.createIntent(this, ActivityFullScreenImage.PLACE_IMAGE,
+                place.pictureUri, place.name);
+        startActivity(fullScreenImage);
     }
 
     @Override
