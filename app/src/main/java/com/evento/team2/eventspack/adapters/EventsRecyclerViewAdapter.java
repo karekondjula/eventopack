@@ -71,10 +71,6 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         }
     }
 
-//    public Event getValueAt(int position) {
-//        return events.get(position);
-//    }
-
     public EventsRecyclerViewAdapter(Context context) {
         this.context = context;
         events = new ArrayList<>();
@@ -86,13 +82,8 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         calendar.set(Calendar.SECOND, 0);
     }
 
-//    public void addEvent(Event event) {
-//        events.add(0, event);
-//    }
-
     public void addEvents(ArrayList<Event> eventArrayList) {
         if (!events.equals(eventArrayList)) {
-//            Log.i(">>", "time to clear list, new events!!!");
             events.clear();
             events.addAll(eventArrayList);
         } else {

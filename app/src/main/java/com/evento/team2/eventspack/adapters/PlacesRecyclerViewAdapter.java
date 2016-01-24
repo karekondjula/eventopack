@@ -97,4 +97,14 @@ public class PlacesRecyclerViewAdapter extends RecyclerView.Adapter<PlacesRecycl
     public int getItemCount() {
         return places.size();
     }
+
+    @Override
+    public long getItemId(int position) {
+        return places.get(position).id;
+    }
+
+    @Override
+    public void setHasStableIds(boolean hasStableIds) {
+        super.setHasStableIds(true);
+    }
 }

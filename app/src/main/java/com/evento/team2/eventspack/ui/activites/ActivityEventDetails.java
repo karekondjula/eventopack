@@ -16,6 +16,8 @@
 
 package com.evento.team2.eventspack.ui.activites;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -62,7 +64,14 @@ import java.net.URL;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
+@RuntimePermissions
 public class ActivityEventDetails extends AppCompatActivity {
 
     public static final String EXTRA_ID = "event_id";
@@ -160,23 +169,7 @@ public class ActivityEventDetails extends AppCompatActivity {
             textViewEventAttending.setVisibility(View.GONE);
         }
 
-        mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.event_detail_map);
-        mapFragment.getMapAsync(googleMap -> {
-            mapView = googleMap;
-            mapView.setMyLocationEnabled(true);
-            mapView.getUiSettings().setAllGesturesEnabled(false);
-            mapView.getUiSettings().setMyLocationButtonEnabled(false);
-            if (event.location.latitude != 0 || event.location.longitude != 0) {
-                mapView.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(event.location.latitude, event.location.longitude), 15));
-                mapView.setOnMapClickListener(latLng -> {
-                    Intent activityMapIntent = ActivityMap.createIntent(ActivityEventDetails.this, FetchAsyncTask.EVENTS, event.id);
-                    startActivity(activityMapIntent);
-                    finish();
-                });
-                markerOptions = new MarkerOptions().position(new LatLng(event.location.latitude, event.location.longitude));
-                mapView.addMarker(markerOptions);
-            }
-        });
+        initMap();
     }
 
     @Override
@@ -220,6 +213,48 @@ public class ActivityEventDetails extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_event, menu);
         return true;
+    }
+
+    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    protected void initMap() {
+        mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.event_detail_map);
+        mapFragment.getMapAsync(googleMap -> {
+            mapView = googleMap;
+            mapView.setMyLocationEnabled(true);
+            mapView.getUiSettings().setAllGesturesEnabled(false);
+            mapView.getUiSettings().setMyLocationButtonEnabled(false);
+            if (event.location.latitude != 0 || event.location.longitude != 0) {
+                mapView.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(event.location.latitude, event.location.longitude), 15));
+                mapView.setOnMapClickListener(latLng -> {
+                    Intent activityMapIntent = ActivityMap.createIntent(ActivityEventDetails.this, FetchAsyncTask.EVENTS, event.id);
+                    startActivity(activityMapIntent);
+                    finish();
+                });
+                markerOptions = new MarkerOptions().position(new LatLng(event.location.latitude, event.location.longitude));
+                mapView.addMarker(markerOptions);
+            }
+        });
+    }
+
+    @OnShowRationale({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    protected void showMapsRationale(final PermissionRequest request) {
+        // E.g. show a dialog explaining why you need the permission.
+        // Call proceed() or cancel() on the incoming request to continue or abort the current permissions process
+        new AlertDialog.Builder(this)
+                .setMessage("Map needs your permission. Allow it?")
+                .setPositiveButton("OK", (dialog, which) -> request.proceed())
+                .setNegativeButton("Abort", (dialog, which) -> request.cancel())
+                .show();
+    }
+
+    @OnPermissionDenied({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    protected void mapsDenied() {
+        // maybe close map activity or just don't show maps?
+    }
+
+    @OnNeverAskAgain({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    protected void showNeverAskForMap() {
+//        Toast.makeText(this, R.string.permission_camera_neverask, Toast.LENGTH_SHORT).show();
     }
 
     public static Intent createIntent(Context context, long id) {

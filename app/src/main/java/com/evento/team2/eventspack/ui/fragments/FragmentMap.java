@@ -1,5 +1,7 @@
 package com.evento.team2.eventspack.ui.fragments;
 
+import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -59,10 +61,17 @@ import java.util.Observable;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.OnNeverAskAgain;
+import permissions.dispatcher.OnPermissionDenied;
+import permissions.dispatcher.OnShowRationale;
+import permissions.dispatcher.PermissionRequest;
+import permissions.dispatcher.RuntimePermissions;
 
 /**
  * Created by Daniel on 29-Oct-15.
  */
+@RuntimePermissions
 public class FragmentMap extends ObserverFragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
         GoogleMap.OnMapClickListener, GoogleMap.OnMyLocationChangeListener {
 
@@ -278,6 +287,7 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         return super.onOptionsItemSelected(item);
     }
 
+    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mapView = googleMap;
@@ -326,6 +336,27 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
 
         fetchAsyncTask = new FetchAsyncTask(this, what);
         fetchAsyncTask.execute(lastSelectedDate);
+    }
+
+    @OnShowRationale({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    protected void showMapsRationale(final PermissionRequest request) {
+        // E.g. show a dialog explaining why you need the permission.
+        // Call proceed() or cancel() on the incoming request to continue or abort the current permissions process
+        new AlertDialog.Builder(getActivity())
+                .setMessage("Map needs your permission. Allow it?")
+                .setPositiveButton("OK", (dialog, which) -> request.proceed())
+                .setNegativeButton("Abort", (dialog, which) -> request.cancel())
+                .show();
+    }
+
+    @OnPermissionDenied({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    protected void mapsDenied() {
+        // maybe close map activity or just don't show maps?
+    }
+
+    @OnNeverAskAgain({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    protected void showNeverAskForMap() {
+//        Toast.makeText(this, R.string.permission_camera_neverask, Toast.LENGTH_SHORT).show();
     }
 
     @Override

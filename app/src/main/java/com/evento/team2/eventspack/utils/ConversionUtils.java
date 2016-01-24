@@ -30,17 +30,18 @@ public class ConversionUtils {
 //        listCyr = cyr.split(" ");
     }
 
-//    public static String convertTextToCyrilic(String line){
-//
-//        int i = 0;
-//
+    public static String convertTextToCyrilic(String line){
+
+        int i = 0;
+
+        return line.replaceAll("c|ch|g|gj|s|sh", "%");
 //        for (String item : listLat) {
 //            line = line.replaceAll(item, listCyr[i]);
 //            i++;
 //        }
 //
 //        return line;
-//    }
+    }
 
     public static Event convertJsonEventToEvent(JsonEvent jsonEvent) {
         Event event = new Event(jsonEvent.title, jsonEvent.teaser);
