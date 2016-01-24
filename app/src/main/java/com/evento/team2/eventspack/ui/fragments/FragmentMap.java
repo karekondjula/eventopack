@@ -194,8 +194,6 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
             public void onSelectDate(Date date, View view) {
                 setCalendarDate(date);
 
-//                lastSelectedDate = DateFormatterUtils.compareDateFormat.format(date);
-
                 calendar.setTimeInMillis(date.getTime());
                 calendar.set(Calendar.HOUR_OF_DAY, 0);
                 calendar.set(Calendar.MINUTE, 0);
@@ -235,8 +233,6 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MILLISECOND, 0);
-
-        // fetch events with updated DATE NOW
     }
 
     @Override
@@ -303,28 +299,29 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
 
         if (id == FetchAsyncTask.NO_EVENT_ID) {
             // regular opening of fragment map
-//            lastSelectedDate = DateFormatterUtils.compareDateFormat.format(calendar.getTimeInMillis());
             lastSelectedDate = String.valueOf(calendar.getTimeInMillis());
         } else {
             if (what == FetchAsyncTask.PLACES) {
                 // the user came here by clicking a Place map
 
                 // at the moment no places are connected with dates
-                lastSelectedDate = "";//searchDateFormat.format(calendar.getTimeInMillis());
+                lastSelectedDate = "";
                 Place place = EventsDatabase.getInstance().getPlaceById(id);
                 moveCamera(place.location.latitude, place.location.longitude);
             } else if (what == FetchAsyncTask.EVENTS) {
                 // the user came here by clicking an Event map
                 Event event = EventsDatabase.getInstance().getEventById(id);
-//                lastSelectedDate = DateFormatterUtils.compareDateFormat.format(event.startTimeStamp);
                 lastSelectedDate = String.valueOf(event.startTimeStamp);
                 eventLocation = new Location("");
                 eventLocation.setLongitude(event.location.longitude);
                 eventLocation.setLatitude(event.location.latitude);
 
                 calendar = Calendar.getInstance();
-                // TODO if startTimeStamp != today, go to TODAY else go to startTimeStamp
-                calendar.setTimeInMillis(event.startTimeStamp);
+                if (event.startTimeStamp < calendar.getTimeInMillis()) {
+                    // the event has started in the past so no point to set calendar to past, going to today
+                } else {
+                    calendar.setTimeInMillis(event.startTimeStamp);
+                }
                 calendar.set(Calendar.HOUR_OF_DAY, 0);
                 calendar.set(Calendar.MINUTE, 0);
                 calendar.set(Calendar.SECOND, 0);
@@ -437,75 +434,88 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         }
     }
 
+    private Marker lastMarkerClicked;
+
     @Override
     public boolean onMarkerClick(final Marker marker) {
 
-        removeSelectedEventLayout();
+        if (lastMarkerClicked != null && lastMarkerClicked.equals(marker)) {
+            Intent intent = null;
+            if (what == FetchAsyncTask.EVENTS || what == FetchAsyncTask.SAVED_EVENTS) {
+                intent = ActivityEventDetails.createIntent(getActivity(), ((Event) hashMapLatLngEventId.get(marker.getPosition())).id);
+            } else if (what == FetchAsyncTask.PLACES) {
+                intent = ActivityPlaceDetails.createIntent(getActivity(), ((Place) hashMapLatLngEventId.get(marker.getPosition())).id);
+            }
+            startActivity(intent);
+        } else {
+            lastMarkerClicked = marker;
+            removeSelectedEventLayout();
 
-        final float scale = getActivity().getResources().getDisplayMetrics().density;
-        mapView.setPadding(0, 0, 0, (int) (scale * 80)); // rise the zoom controls when an event is clicked
+            final float scale = getActivity().getResources().getDisplayMetrics().density;
+            mapView.setPadding(0, 0, 0, (int) (scale * 80)); // rise the zoom controls when an event is clicked
 
-        final View mapEventItemView = LayoutInflater.from(getActivity()).inflate(R.layout.item_small, mapEventDetailsLinearLayout, false);
-        ImageView mapEventImageView = ButterKnife.findById(mapEventItemView, R.id.small_event_picture);
+            final View mapEventItemView = LayoutInflater.from(getActivity()).inflate(R.layout.item_small, mapEventDetailsLinearLayout, false);
+            ImageView mapEventImageView = ButterKnife.findById(mapEventItemView, R.id.small_event_picture);
 
-        if (getActivity() != null) {
-            getActivity().runOnUiThread(() -> {
-                ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_title)).setText(marker.getTitle());
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(() -> {
+                    ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_title)).setText(marker.getTitle());
 
-                if (what == FetchAsyncTask.EVENTS || what == FetchAsyncTask.SAVED_EVENTS) {
-                    // no snippets for PLACES
-                    String eventDetails[] = marker.getSnippet().split(DELIMITER);
-                    ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_details)).setText(eventDetails[0]);
-
-                    try {
-                        if (DateFormatterUtils.fullDateFormat.parse(eventDetails[1]).getTime() - new Date().getTime() < 0) {
-                            ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_time))
-                                    .setTextColor(getActivity().getResources().getColor(android.R.color.holo_red_dark));
-                        }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
-                    }
-
-                    ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_time)).setText(eventDetails[1]);
-
-                    Event event = (Event) hashMapLatLngEventId.get(marker.getPosition());
-
-                    if (TextUtils.isEmpty(event.pictureUri)) {
-                        Glide.with(getActivity()).load(R.drawable.party_image).into(mapEventImageView);
-                    } else {
-                        Glide.with(getActivity()).load(event.pictureUri).into(mapEventImageView);
-                    }
-                } else if (what == FetchAsyncTask.PLACES) {
-                    ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_details)).setText("");
-                    ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_time)).setText("");
-
-                    Place place = (Place) hashMapLatLngEventId.get(marker.getPosition());
-                    if (TextUtils.isEmpty(place.pictureUri)) {
-                        Glide.with(getActivity()).load(R.drawable.place_image).into(mapEventImageView);
-                    } else {
-                        Glide.with(getActivity()).load(place.pictureUri).into(mapEventImageView);
-                    }
-                }
-
-                ButterKnife.findById(mapEventItemView, R.id.event_color).setVisibility(View.GONE);
-                ButterKnife.findById(mapEventItemView, R.id.close_event).setVisibility(View.VISIBLE);
-
-                mapEventItemView.setClickable(true);
-
-                ButterKnife.findById(mapEventItemView, R.id.close_event).setOnClickListener(view -> removeSelectedEventLayout());
-                mapEventItemView.setOnClickListener(v -> {
-
-                    Intent intent = null;
                     if (what == FetchAsyncTask.EVENTS || what == FetchAsyncTask.SAVED_EVENTS) {
-                        intent = ActivityEventDetails.createIntent(getActivity(), ((Event) hashMapLatLngEventId.get(marker.getPosition())).id);
-                    } else if (what == FetchAsyncTask.PLACES) {
-                        intent = ActivityPlaceDetails.createIntent(getActivity(), ((Place) hashMapLatLngEventId.get(marker.getPosition())).id);
-                    }
-                    startActivity(intent);
-                });
+                        // no snippets for PLACES
+                        String eventDetails[] = marker.getSnippet().split(DELIMITER);
+                        ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_details)).setText(eventDetails[0]);
 
-                mapEventDetailsLinearLayout.addView(mapEventItemView);
-            });
+                        try {
+                            if (DateFormatterUtils.fullDateFormat.parse(eventDetails[1]).getTime() - new Date().getTime() < 0) {
+                                ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_time))
+                                        .setTextColor(getActivity().getResources().getColor(android.R.color.holo_red_dark));
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+                        ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_time)).setText(eventDetails[1]);
+
+                        Event event = (Event) hashMapLatLngEventId.get(marker.getPosition());
+
+                        if (TextUtils.isEmpty(event.pictureUri)) {
+                            Glide.with(getActivity()).load(R.drawable.party_image).into(mapEventImageView);
+                        } else {
+                            Glide.with(getActivity()).load(event.pictureUri).into(mapEventImageView);
+                        }
+                    } else if (what == FetchAsyncTask.PLACES) {
+                        ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_details)).setText("");
+                        ((TextView) ButterKnife.findById(mapEventItemView, R.id.event_time)).setText("");
+
+                        Place place = (Place) hashMapLatLngEventId.get(marker.getPosition());
+                        if (TextUtils.isEmpty(place.pictureUri)) {
+                            Glide.with(getActivity()).load(R.drawable.place_image).into(mapEventImageView);
+                        } else {
+                            Glide.with(getActivity()).load(place.pictureUri).into(mapEventImageView);
+                        }
+                    }
+
+                    ButterKnife.findById(mapEventItemView, R.id.event_color).setVisibility(View.GONE);
+                    ButterKnife.findById(mapEventItemView, R.id.close_event).setVisibility(View.VISIBLE);
+
+                    mapEventItemView.setClickable(true);
+
+                    ButterKnife.findById(mapEventItemView, R.id.close_event).setOnClickListener(view -> removeSelectedEventLayout());
+                    mapEventItemView.setOnClickListener(v -> {
+
+                        Intent intent = null;
+                        if (what == FetchAsyncTask.EVENTS || what == FetchAsyncTask.SAVED_EVENTS) {
+                            intent = ActivityEventDetails.createIntent(getActivity(), ((Event) hashMapLatLngEventId.get(marker.getPosition())).id);
+                        } else if (what == FetchAsyncTask.PLACES) {
+                            intent = ActivityPlaceDetails.createIntent(getActivity(), ((Place) hashMapLatLngEventId.get(marker.getPosition())).id);
+                        }
+                        startActivity(intent);
+                    });
+
+                    mapEventDetailsLinearLayout.addView(mapEventItemView);
+                });
+            }
         }
 
         return false;
@@ -514,6 +524,8 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     @Override
     public void onMapClick(LatLng latLng) {
         removeSelectedEventLayout();
+
+        lastMarkerClicked = null;
     }
 
     @Override

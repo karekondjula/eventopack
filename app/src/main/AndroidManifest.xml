@@ -98,7 +98,9 @@
                 android:value=".ui.activites.ActivityMain" />
         </activity>
 
-        <activity android:name=".ui.activites.ActivityMap">
+        <activity
+            android:name=".ui.activites.ActivityMap"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activites.ActivityMain" />

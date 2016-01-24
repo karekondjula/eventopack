@@ -357,10 +357,10 @@ public class EventsDatabase {
                         "( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? <= 0 AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? ) " +
                      " ) "
         );
-        whereArgsList.add(String.valueOf(timestamp));
-        whereArgsList.add(String.valueOf(timestamp));
-        whereArgsList.add(String.valueOf(timestamp));
-        whereArgsList.add(String.valueOf(timestamp));
+        whereArgsList.add(timestamp);
+        whereArgsList.add(timestamp);
+        whereArgsList.add(timestamp);
+        whereArgsList.add(timestamp);
 
         whereArgs = new String[whereArgsList.size()];
         whereArgs = whereArgsList.toArray(whereArgs);
