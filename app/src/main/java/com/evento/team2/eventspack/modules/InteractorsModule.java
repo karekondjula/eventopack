@@ -1,7 +1,9 @@
 package com.evento.team2.eventspack.modules;
 
 import com.evento.team2.eventspack.EventiApplication;
+import com.evento.team2.eventspack.interactors.DatabaseInteractorImpl;
 import com.evento.team2.eventspack.interactors.PreferencesInteractorImpl;
+import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.PreferencesInteractor;
 
 import javax.inject.Singleton;
@@ -19,5 +21,11 @@ public class InteractorsModule {
     @Singleton
     PreferencesInteractor providePreferencesInteractor(EventiApplication eventiApplication) {
         return new PreferencesInteractorImpl(eventiApplication);
+    }
+
+    @Provides
+    @Singleton
+    DatabaseInteractor provideDatabaseInteractor(EventiApplication eventiApplication) {
+        return new DatabaseInteractorImpl(eventiApplication);
     }
 }

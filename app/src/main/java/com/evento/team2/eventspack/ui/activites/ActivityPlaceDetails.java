@@ -27,7 +27,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,7 +34,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.R;
-import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
@@ -46,9 +44,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.IoniconsModule;
-
-import java.util.ArrayList;
-import java.util.Date;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -104,45 +99,49 @@ public class ActivityPlaceDetails extends AppCompatActivity {
 
         collapsingToolbar.setTitle(place.name);
 
-        Glide.with(this).load(R.drawable.place_image).centerCrop().into(backdropImage);
+        if (TextUtils.isEmpty(place.pictureUri)) {
+            Glide.with(this).load(R.drawable.place_image).into(backdropImage);
+        } else {
+            Glide.with(this).load(place.pictureUri).into(backdropImage);
+        }
 
         textViewEventLocation.setText(place.locationString);
 
         initMap();
 
-        new Thread() {
-            @Override
-            public void run() {
-                ArrayList<Event> eventArrayList = EventsDatabase.getInstance().getEventsByLocation(String.valueOf(place.location.latitude),
-                        String.valueOf(place.location.longitude), place.locationString, String.valueOf(new Date().getTime()));
-
-                if (eventArrayList != null && eventArrayList.size() > 0) {
-                    for (final Event event : eventArrayList) {
-                        final View eventItemView = LayoutInflater.from(ActivityPlaceDetails.this).inflate(R.layout.item_small, placeDetailsEventsLinearLayout, false);
-                        ImageView calendarEventImageView = ButterKnife.findById(eventItemView, R.id.small_event_picture);
-                        ButterKnife.findById(eventItemView, R.id.event_color).setVisibility(View.GONE);
-                        ((TextView) ButterKnife.findById(eventItemView, R.id.event_title)).setText(event.name);
-                        ((TextView) ButterKnife.findById(eventItemView, R.id.event_details)).setText(event.details);
-                        ((TextView) ButterKnife.findById(eventItemView, R.id.event_time)).setText(event.startTimeString);
-                        eventItemView.setClickable(true);
-                        eventItemView.setOnClickListener(v -> {
-                            Intent eventIntent = ActivityEventDetails.createIntent(ActivityPlaceDetails.this, event.id);
-                            startActivity(eventIntent);
-                            finish();
-                        });
-
-                        runOnUiThread(() -> {
-                            if (TextUtils.isEmpty(event.pictureUri)) {
-                                Glide.with(ActivityPlaceDetails.this).load(R.drawable.party_image).into(calendarEventImageView);
-                            } else {
-                                Glide.with(ActivityPlaceDetails.this).load(event.pictureUri).into(calendarEventImageView);
-                            }
-                            placeDetailsEventsLinearLayout.addView(eventItemView);
-                        });
-                    }
-                }
-            }
-        }.start();
+//        new Thread() {
+//            @Override
+//            public void run() {
+//                ArrayList<Event> eventArrayList = EventsDatabase.getInstance().getActiveEventsByLocation(String.valueOf(place.location.latitude),
+//                        String.valueOf(place.location.longitude), place.locationString, String.valueOf(new Date().getTime()));
+//
+//                if (eventArrayList != null && eventArrayList.size() > 0) {
+//                    for (final Event event : eventArrayList) {
+//                        final View eventItemView = LayoutInflater.from(ActivityPlaceDetails.this).inflate(R.layout.item_small, placeDetailsEventsLinearLayout, false);
+//                        ImageView calendarEventImageView = ButterKnife.findById(eventItemView, R.id.small_event_picture);
+//                        ButterKnife.findById(eventItemView, R.id.event_color).setVisibility(View.GONE);
+//                        ((TextView) ButterKnife.findById(eventItemView, R.id.event_title)).setText(event.name);
+//                        ((TextView) ButterKnife.findById(eventItemView, R.id.event_details)).setText(event.details);
+//                        ((TextView) ButterKnife.findById(eventItemView, R.id.event_time)).setText(event.startTimeString);
+//                        eventItemView.setClickable(true);
+//                        eventItemView.setOnClickListener(v -> {
+//                            Intent eventIntent = ActivityEventDetails.createIntent(ActivityPlaceDetails.this, event.id);
+//                            startActivity(eventIntent);
+//                            finish();
+//                        });
+//
+//                        runOnUiThread(() -> {
+//                            if (TextUtils.isEmpty(event.pictureUri)) {
+//                                Glide.with(ActivityPlaceDetails.this).load(R.drawable.party_image).into(calendarEventImageView);
+//                            } else {
+//                                Glide.with(ActivityPlaceDetails.this).load(event.pictureUri).into(calendarEventImageView);
+//                            }
+//                            placeDetailsEventsLinearLayout.addView(eventItemView);
+//                        });
+//                    }
+//                }
+//            }
+//        }.start();
     }
 
     @OnClick(R.id.backdrop)

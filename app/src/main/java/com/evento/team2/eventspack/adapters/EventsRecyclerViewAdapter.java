@@ -181,7 +181,7 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
             } else {
                 holder.isEventSaved.setText(ICON_TEXT_VIEW_EMPTY_HEART);
             }
-            EventsDatabase.getInstance().changeSaveEvent(event);
+            EventsDatabase.getInstance().changeSaveEvent(event, event.isEventSaved);
 
             Snackbar.make(v,
                     event.isEventSaved ?

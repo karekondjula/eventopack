@@ -29,5 +29,7 @@
     <string name="today">Today </string>
     <string name="attending">Attending:</string>
     <string name="fetching_events">Fetching events …</string>
+    <string name="fetching_places">Fetching places …</string>
+    <string name="updating_now">Updating now</string>
 
 </resources>

@@ -36,8 +36,8 @@ public class PlacesRecyclerViewAdapter extends RecyclerView.Adapter<PlacesRecycl
         public ImageView mPlacePicture;
         @Bind(R.id.place_title)
         public TextView mPlaceTitle;
-        @Bind(R.id.place_location)
-        public TextView mPlaceLocation;
+//        @Bind(R.id.place_location) TODO maybe number of events in the place?!
+//        public TextView mPlaceLocation;
 
         public ViewHolder(View view) {
             super(view);
@@ -78,8 +78,6 @@ public class PlacesRecyclerViewAdapter extends RecyclerView.Adapter<PlacesRecycl
         } else {
             Glide.with(context).load(place.pictureUri).into(holder.mPlacePicture);
         }
-
-        holder.mPlaceLocation.setText(place.locationString);
 
         holder.mView.setOnClickListener(v -> {
 

@@ -66,33 +66,43 @@ public class ConversionUtils {
         return event;
     }
 
-    public static ArrayList<Event> convertJsonEventsArrayListToEventArrayList(ArrayList<JsonEvent> jsonEventArrayList) {
+    // TODO remove this if RxAndroid is OK in ServiceEvento
+//    public static ArrayList<Event> convertJsonEventsArrayListToEventArrayList(ArrayList<JsonEvent> jsonEventArrayList) {
+//
+//        ArrayList<Event> eventArrayList = new ArrayList();
+//
+//        for (JsonEvent jsonEvent : jsonEventArrayList) {
+//            eventArrayList.add(convertJsonEventToEvent(jsonEvent));
+//        }
+//
+//        return eventArrayList;
+//    }
 
-        ArrayList<Event> eventArrayList = new ArrayList();
+//    public static ArrayList<Place> extractPlacesFromEvents(ArrayList<Event> eventArrayList) {
+//        ArrayList<Place> placeArrayList = new ArrayList<>();
+//
+//        Place place;
+//        for (Event event : eventArrayList) {
+//            if (!TextUtils.isEmpty(event.locationString) && !event.locationString.startsWith("TBA")) {
+//
+//                place = extractPlaceFromEvent(event);
+//                if (!placeArrayList.contains(place)) {
+//                    placeArrayList.add(place);
+//                }
+//            }
+//        }
+//
+//        return placeArrayList;
+//    }
 
-        for (JsonEvent jsonEvent : jsonEventArrayList) {
-            eventArrayList.add(convertJsonEventToEvent(jsonEvent));
-        }
+    public static Place extractPlaceFromEvent(Event event) {
+        Place place= new Place();
 
-        return eventArrayList;
-    }
+        place.id = event.id;
+        place.name = event.locationString.trim().replace(", null", "").replace("\"", "");
+        place.location = event.location;
+        place.pictureUri = event.pictureUri;
 
-    public static ArrayList<Place> extractPlacesFromEvents(ArrayList<Event> eventArrayList) {
-        ArrayList<Place> placeArrayList = new ArrayList<>();
-
-        Place place;
-        for (Event event : eventArrayList) {
-            if (!TextUtils.isEmpty(event.locationString) && !event.locationString.startsWith("TBA")) {
-                place = new Place();
-
-                place.id = event.id;
-                place.name = event.locationString.trim();
-                place.location = event.location;
-
-                placeArrayList.add(place);
-            }
-        }
-
-        return placeArrayList;
+        return place;
     }
 }

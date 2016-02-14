@@ -1,12 +1,14 @@
 package com.evento.team2.eventspack.presenters;
 
 import com.evento.team2.eventspack.EventiApplication;
+import com.evento.team2.eventspack.R;
+import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.PreferencesInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
 import com.evento.team2.eventspack.provider.EventsDatabase;
-import com.evento.team2.eventspack.provider.FetchAsyncTask;
 import com.evento.team2.eventspack.soapservice.ServiceEvento;
+import com.evento.team2.eventspack.soapservice.model.JsonEvent;
 import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.evento.team2.eventspack.utils.NetworkUtils;
@@ -17,6 +19,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+
+import rx.Observable;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by Daniel on 10-Jan-16.
@@ -26,38 +35,64 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
     private EventiApplication application;
     private FragmentEventsView fragmentEventsView;
     private MainThread mainThread;
+    private DatabaseInteractor databaseInteractor;
+
     private String lastQuery = "";
 
     PreferencesInteractor preferencesInteractor;
 
     public FragmentEventsPresenterImpl(EventiApplication application, PreferencesInteractor preferencesInteractor,
-                                       MainThread mainThread) {
+                                       MainThread mainThread, DatabaseInteractor databaseInteractor) {
         this.application = application;
         this.preferencesInteractor = preferencesInteractor;
         this.mainThread = mainThread;
+        this.databaseInteractor = databaseInteractor;
     }
 
     @Override
-    public void setView(FragmentEvents fragmentEventsView) {
+    public void setView(FragmentEventsView fragmentEventsView) {
         this.fragmentEventsView = fragmentEventsView;
     }
 
     @Override
     public void fetchEvents(String query) {
-        new Thread() {
-            @Override
-            public void run() {
+//        new Thread() {
+//            @Override
+//            public void run() {
+//
+//                final ArrayList<Event> eventArrayList = EventsDatabase.getInstance().getEvents(lastQuery, String.valueOf(new Date().getTime()));
+//
+//                mainThread.post(() -> fragmentEventsView.showEvents(eventArrayList));
+//            }
+//        }.start();
 
-                final ArrayList<Event> eventArrayList = EventsDatabase.getInstance().getEvents(lastQuery, String.valueOf(new Date().getTime()));
+        Observable<String> eventsObservable = Observable.just(lastQuery);
+        eventsObservable
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+//                .flatMap(new Func1<List<Event>, Observable<Event>>() {
+//                    @Override
+//                    public Observable<Event> call(List<Event> events) {
+//                        return Observable.from(events);
+//                    }
+//                })
+                .subscribe(new Action1<String>() {
+                    @Override
+                    public void call(String lastQuery) {
+                        ArrayList<Event> eventArrayList = databaseInteractor.getActiveEvents(lastQuery);
+//                        ArrayList<Event> eventArrayList = EventsDatabase.getInstance().getEvents(lastQuery, String.valueOf(new Date().getTime()));
 
-                mainThread.post(() -> fragmentEventsView.showEvents(eventArrayList));
-            }
-        }.start();
+                        fragmentEventsView.showEvents(eventArrayList);
+                    }
+                });
+
+
         lastQuery = query;
     }
 
     @Override
     public void fetchEventsFromServer(boolean forceUpdate) {
+        //TODO Maybe better to call it from alarmmanager two times a day ?!
         new Thread() {
             @Override
             public void run() {
@@ -77,17 +112,37 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
                 lastUpdateOfEvents.set(Calendar.MILLISECOND, 0);
 
                 if (forceUpdate || today.getTimeInMillis() != lastUpdateOfEvents.getTimeInMillis()) {
-                    if (NetworkUtils.getInstance().isNetworkAvailable(EventiApplication.applicationContext)) {
+                    if (NetworkUtils.getInstance().isNetworkAvailable(application)) {
 
                         mainThread.post(fragmentEventsView::startRefreshAnimation);
+
+//                        Observable<String> fetchFromGoogle = Observable.create(new Observable.OnSubscribe<List<Event>>() {
+//                            @Override
+//                            public void call(Subscriber<? super List<Event>> subscriber) {
+//                                try {
+//                                    subscriber.onNext(data); // Emit the contents of the URL
+//                                    subscriber.onCompleted(); // Nothing more to emit
+//                                }catch(Exception e){
+//                                    subscriber.onError(e); // In case there are network errors
+//                                }
+//                            }
+//                        });
+//
+//                        fetchFromGoogle
+//                                .subscribeOn(Schedulers.newThread()) // Create a new Thread
+//                                .observeOn(AndroidSchedulers.mainThread()) // Use the UI thread
+//                                .subscribe(eventArrayList -> {
+//                                    fragmentEventsView.showEvents(eventArrayList);
+//                                });
+
 
                         HashMap<String, Object> params = new HashMap();
                         params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
                         ServiceEvento.getInstance().callServiceMethod(params);
 
-                        preferencesInteractor.setLastUpdateOfEvents(new Date().getTime());
-
                         fetchEvents(lastQuery);
+
+                        preferencesInteractor.setLastUpdateOfEvents(new Date().getTime());
 
                         mainThread.post(fragmentEventsView::stopRefreshAnimation);
                     } else {
@@ -102,7 +157,13 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
     public void fetchLastUpdatedTimestamp() {
 //        String lastUpdateDate = "NOW";
         // TODO make it more human friendly
-        String lastUpdateDate = DateFormatterUtils.fullDateFormat.format(preferencesInteractor.getLastUpdateOfEvents());
+        long timestamp = preferencesInteractor.getLastUpdateOfEvents();
+        String lastUpdateDate;
+        if (timestamp == 0) {
+            lastUpdateDate = application.getString(R.string.updating_now);
+        } else {
+            lastUpdateDate = DateFormatterUtils.fullDateFormat.format(timestamp);
+        }
 
         fragmentEventsView.showLastUpdatedTimestampMessage(lastUpdateDate);
     }

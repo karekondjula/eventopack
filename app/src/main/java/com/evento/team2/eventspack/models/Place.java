@@ -21,7 +21,7 @@ public class Place implements Comparable<Place> {
 
     @Override
     public int compareTo(Place place) {
-        if (name == place.name) {
+        if (name.equalsIgnoreCase(place.name)) {
             return 0;
         } else if (id > place.id) {
             return 1;
@@ -34,7 +34,7 @@ public class Place implements Comparable<Place> {
     public boolean equals(Object o) {
         if (o instanceof Place) {
             Place otherPlace = (Place) o;
-            if (name.equals(otherPlace.name)) {
+            if (name.equalsIgnoreCase(otherPlace.name)) {
                 return true;
             }
             return false;

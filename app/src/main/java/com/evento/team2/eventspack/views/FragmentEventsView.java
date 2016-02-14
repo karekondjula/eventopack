@@ -9,7 +9,7 @@ import java.util.ArrayList;
  */
 public interface FragmentEventsView {
 
-    void showEvents(ArrayList<Event> eventArrayList);
+    void showEvents(ArrayList<Event> eventsArrayList);
 
     void startRefreshAnimation();
 

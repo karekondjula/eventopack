@@ -20,6 +20,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import rx.Observable;
+import rx.Subscriber;
+import rx.functions.Action1;
+import rx.schedulers.Schedulers;
+
 /**
  * Created by Daniel on 18-Aug-15.
  */
@@ -139,18 +144,19 @@ public class ServiceEvento {
 //                        Boolean result = LoganSquare.parse((String) responseMap.get(RESPONSE_KEY), Boolean.class);
 //                        Log.i(TAG, "METHOD_GET_USER " + responseMap.get(RESPONSE_KEY));
                 } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_EVENTS)) {
-                    ArrayList<JsonEvent> jsonEventArrayList = new ArrayList<JsonEvent>(LoganSquare.parseList((String) responseMap.get(RESPONSE_KEY), JsonEvent.class));
-//                    ArrayList<JsonEvent> jsonEventArrayList = new ArrayList<JsonEvent>(LoganSquare.parseList((String) Utils.Helpers.getEventsJson(), JsonEvent.class));
+                    ArrayList<JsonEvent> jsonEventArrayList = new ArrayList<>(LoganSquare.parseList((String) responseMap.get(RESPONSE_KEY), JsonEvent.class));
 
-                    ArrayList<Event> eventArrayList = ConversionUtils.convertJsonEventsArrayListToEventArrayList(jsonEventArrayList);
+                    Observable<JsonEvent> jsonEventsObservable = Observable.from(jsonEventArrayList);
 
-//                    EventsDatabase.getInstance().persistEvents(Utils.Helpers.createEvents());
-                    EventsDatabase.getInstance().persistEvents(eventArrayList);
+                    jsonEventsObservable
+                            .subscribe(jsonEvent -> {
+                                Event event = ConversionUtils.convertJsonEventToEvent(jsonEvent);
+                                EventsDatabase.getInstance().persistEvent(event);
 
-                    ArrayList<Place> placeArrayList = ConversionUtils.extractPlacesFromEvents(eventArrayList);
-                    EventsDatabase.getInstance().persistPlaces(placeArrayList);
+                                Place place = ConversionUtils.extractPlaceFromEvent(event);
+                                EventsDatabase.getInstance().persistPlace(place);
+                            });
 
-                    // TODO RxAndroid for announcing the result back
                 } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_PLACES)) {
 
                 }

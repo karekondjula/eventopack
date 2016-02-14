@@ -28,6 +28,8 @@
     <string name="filter">Филтрирај…</string>
     <string name="today">Денес </string>
     <string name="attending">Присуствуваат:</string>
-    <string name="fetching_events">Пребарување на настани …</string>
+    <string name="fetching_events">Превземање на настани …</string>
+    <string name="fetching_places">Превземање на места …</string>
+    <string name="updating_now">Превземање…</string>
 
 </resources>

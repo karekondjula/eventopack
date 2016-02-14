@@ -18,6 +18,7 @@ import com.evento.team2.eventspack.adapters.EventsRecyclerViewAdapter;
 import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
+import com.evento.team2.eventspack.provider.FetchAsyncTask;
 import com.evento.team2.eventspack.ui.fragments.interfaces.ObserverFragment;
 import com.evento.team2.eventspack.views.FragmentEventsView;
 
@@ -77,10 +78,8 @@ public class FragmentEvents extends ObserverFragment implements FragmentEventsVi
     @Override
     public void onResume() {
         super.onResume();
-
-        // TODO magic false !
         fragmentEventsPresenter.fetchEventsFromServer(false);
-        fragmentEventsPresenter.fetchEvents("");
+        fragmentEventsPresenter.fetchEvents(FetchAsyncTask.NO_FILTER_STRING);
     }
 
     @Override
@@ -110,10 +109,10 @@ public class FragmentEvents extends ObserverFragment implements FragmentEventsVi
     }
 
     @Override
-    public void showEvents(ArrayList<Event> eventArrayList) {
+    public void showEvents(ArrayList<Event> eventsArrayList) {
         if (eventsAdapter != null) {
 
-            if (eventArrayList == null) {
+            if (eventsArrayList == null) {
                 // empty database
                 if (emptyAdapterTextView != null) {
                     emptyAdapterTextView.setVisibility(View.VISIBLE);
@@ -122,13 +121,13 @@ public class FragmentEvents extends ObserverFragment implements FragmentEventsVi
                 if (emptyAdapterTextView != null) {
                     emptyAdapterTextView.setVisibility(View.GONE);
                 }
-            }
 
-            // some kind of optimization ... further read is required
+                // some kind of optimization ... further read is required
 //            eventsAdapter = new EventsRecyclerViewAdapter(getActivity());
-            eventsAdapter.addEvents(eventArrayList);
+                eventsAdapter.addEvents(eventsArrayList);
 //            eventsRecyclerView.swapAdapter(eventsAdapter, false);
-            eventsAdapter.notifyDataSetChanged();
+                eventsAdapter.notifyDataSetChanged();
+            }
 
             if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
                 swipeRefreshLayout.setRefreshing(false);

@@ -39,8 +39,8 @@ public class EventiApplication extends Application {
     protected void initSingletons() {
         // Initialize the instance of MySingleton
 
-        EventsDatabase.getInstance().openEventsDatabase(this);
-        EventsDatabase.getInstance().setGeocoder(new Geocoder(this, Locale.getDefault()));
+//        EventsDatabase.getInstance().openEventsDatabase(this);
+//        EventsDatabase.getInstance().setGeocoder(new Geocoder(this, Locale.getDefault()));
     }
 
     public AppComponent getAppComponent() {

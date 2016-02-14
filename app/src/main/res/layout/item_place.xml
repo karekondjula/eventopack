@@ -25,17 +25,19 @@
         android:id="@+id/place_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="7dp"
         android:paddingLeft="@dimen/item_event_text_padding"
         android:paddingRight="@dimen/item_event_text_padding"
         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
-    <TextView
-        android:id="@+id/place_location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/item_event_text_padding"
-        android:paddingRight="@dimen/item_event_text_padding"
-        android:singleLine="true" />
+    <!--// TODO maybe number of events in this place?!-->
+    <!--<TextView-->
+    <!--android:id="@+id/place_location"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:paddingLeft="@dimen/item_event_text_padding"-->
+    <!--android:paddingRight="@dimen/item_event_text_padding"-->
+    <!--android:singleLine="true" />-->
 
     <View
         android:layout_width="match_parent"

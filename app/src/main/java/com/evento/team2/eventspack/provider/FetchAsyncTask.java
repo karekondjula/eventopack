@@ -54,10 +54,10 @@ public class FetchAsyncTask extends AsyncTask<String, Void, ArrayList> {
                         return EventsDatabase.getInstance().getActiveEventsOnDate(filter[0]);
                     case 2:
                         // not used at the moment probably
-                        return EventsDatabase.getInstance().getEvents(filter[0], filter[1]);
+//                        return EventsDatabase.getInstance().getEvents(filter[0], filter[1]);
                 }
             } else {
-                return EventsDatabase.getInstance().getEvents();
+//                return EventsDatabase.getInstance().getEvents();
             }
         } else if (what == PLACES) {
 //            if (fetchFromServer == FETCH_FROM_SERVER &&

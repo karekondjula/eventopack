@@ -8,16 +8,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapters.EventsRecyclerViewAdapter;
 import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.models.Event;
-import com.evento.team2.eventspack.provider.EventsDatabase;
+import com.evento.team2.eventspack.presenters.interfaces.FragmentSavedEventsPresenter;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
 import com.evento.team2.eventspack.ui.fragments.interfaces.ObserverFragment;
+import com.evento.team2.eventspack.views.FragmentSavedEventsView;
 
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -25,25 +27,15 @@ import butterknife.ButterKnife;
 /**
  * Created by Daniel on 31-Jul-15.
  */
-public class FragmentSavedEvents extends ObserverFragment {
+public class FragmentSavedEvents extends ObserverFragment implements FragmentSavedEventsView {
+
+    @Inject
+    FragmentSavedEventsPresenter fragmentSavedEventsPresenter;
 
     @Bind(R.id.savedEventsRecyclerView)
     RecyclerView savedEventsRecyclerView;
 
     private EventsRecyclerViewAdapter savedEventsAdapter;
-
-    private boolean isViewUpdated = false;
-
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        savedEventsAdapter = new EventsRecyclerViewAdapter(EventiApplication.applicationContext);
-        savedEventsRecyclerView.setHasFixedSize(true);
-        savedEventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        savedEventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        savedEventsRecyclerView.setAdapter(savedEventsAdapter);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,18 +48,23 @@ public class FragmentSavedEvents extends ObserverFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        if (!isViewUpdated) {
-            filterList(FetchAsyncTask.NO_FILTER_STRING);
-        }
+        savedEventsAdapter = new EventsRecyclerViewAdapter(getActivity());
+        savedEventsRecyclerView.setHasFixedSize(true);
+        savedEventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        savedEventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        savedEventsRecyclerView.setAdapter(savedEventsAdapter);
+
+        fragmentSavedEventsPresenter.setView(this);
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        isViewUpdated = false;
+    public void onResume() {
+        super.onResume();
+
+        fragmentSavedEventsPresenter.fetchSavedEvents(FetchAsyncTask.NO_FILTER_STRING);
     }
 
     @Override
@@ -77,38 +74,24 @@ public class FragmentSavedEvents extends ObserverFragment {
     }
 
     public static FragmentSavedEvents newInstance() {
-        FragmentSavedEvents f = new FragmentSavedEvents();
-        return f;
+        return new FragmentSavedEvents();
     }
 
     @Override
     public void filterList(final String filter) {
-        if (!isViewUpdated) {
-            new Thread() {
-                @Override
-                public void run() {
-
-                    ArrayList<Event> eventsArrayList;
-                    if (filter != null) {
-                        eventsArrayList = EventsDatabase.getInstance().getSavedEvents(filter);
-                    } else {
-                        eventsArrayList = EventsDatabase.getInstance().getSavedEvents(FetchAsyncTask.NO_FILTER_STRING);
-                    }
-
-                    if (savedEventsAdapter != null) {
-                        savedEventsAdapter.addEvents((ArrayList<Event>) eventsArrayList);
-                        if(getActivity() != null) {
-                            getActivity().runOnUiThread(() -> savedEventsAdapter.notifyDataSetChanged());
-                        }
-                    }
-                }
-            }.start();
-            isViewUpdated = true;
-        }
+        fragmentSavedEventsPresenter.fetchSavedEvents(filter);
     }
 
     @Override
     protected void injectComponent(AppComponent component) {
+        component.inject(this);
+    }
 
+    @Override
+    public void showSavedEvents(ArrayList<Event> eventsArrayList) {
+        if (savedEventsAdapter != null) {
+            savedEventsAdapter.addEvents((ArrayList<Event>) eventsArrayList);
+            savedEventsAdapter.notifyDataSetChanged();
+        }
     }
 }

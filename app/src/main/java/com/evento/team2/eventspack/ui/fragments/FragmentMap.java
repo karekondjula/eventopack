@@ -362,9 +362,11 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
             mapView.clear();
 
             if (getView() != null) {
-                fetchingEventsSnackBar = Snackbar.make(getView(),
-                        R.string.fetching_events,
-                        Snackbar.LENGTH_INDEFINITE);
+                if (what == FetchAsyncTask.EVENTS || what == FetchAsyncTask.SAVED_EVENTS) {
+                    fetchingEventsSnackBar = Snackbar.make(getView(), R.string.fetching_events, Snackbar.LENGTH_INDEFINITE);
+                } else if (what == FetchAsyncTask.PLACES) {
+                    fetchingEventsSnackBar = Snackbar.make(getView(), R.string.fetching_places, Snackbar.LENGTH_INDEFINITE);
+                }
                 fetchingEventsSnackBar.show();
             }
 
@@ -377,9 +379,9 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
                         MarkerOptions markerOptions;
                         hashMapLatLngEventId = new HashMap<>();
 
+                        Bitmap bitmap;
+                        URL url;
                         if (what == FetchAsyncTask.EVENTS || what == FetchAsyncTask.SAVED_EVENTS) {
-                            Bitmap bitmap;
-                            URL url;
 
                             for (Event event : (ArrayList<Event>) eventArrayList) {
                                 if (event.location.latitude != 0 || event.location.longitude != 0) {
@@ -414,6 +416,20 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
                                                     place.location.longitude))
                                             .title(place.name)
                                             .icon(BitmapDescriptorFactory.fromBitmap(placeImageBitmap));
+
+                                    if (TextUtils.isEmpty(place.pictureUri)) {
+                                        markerOptions.icon(BitmapDescriptorFactory.fromBitmap(placeImageBitmap));
+                                    } else {
+                                        try {
+                                            url = new URL(place.pictureUri);
+                                            bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                                            bitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth() / 3, bitmap.getHeight() / 3, false);
+                                            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(bitmap));
+                                        } catch (IOException e) {
+                                            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(placeImageBitmap));
+                                        }
+                                    }
+
                                     hashMapLatLngEventId.put(markerOptions.getPosition(), place);
                                     markerOptionsArrayList.add(markerOptions);
                                 }

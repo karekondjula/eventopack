@@ -49,7 +49,6 @@ public class EventsDatabase {
             Event.Table.COLUMN_CATEGORY_STRING,
     };
 
-
     private Event cursorToEvent(Cursor cursor) {
         Event event = new Event(cursor.getString(2), cursor.getString(3));
         event.id = cursor.getLong(0);
@@ -79,20 +78,26 @@ public class EventsDatabase {
         return event;
     }
 
-
     private String[] allColumnsPlace = {Place.Table.COLUMN_ID,
             Place.Table.COLUMN_NAME,
             Place.Table.COLUMN_LOCATION_STRING,
+            Place.Table.COLUMN_PICTURE_URI,
             Place.Table.COLUMN_LATITUDE,
             Place.Table.COLUMN_LONGITUDE,
     };
 
     private Place cursorToPlace(Cursor cursor) {
         Place place = new Place();
+
         place.id = cursor.getLong(0);
         place.name = cursor.getString(1);
-        place.locationString = cursor.getString(2);
-        place.location = new LatLng(cursor.getDouble(3), cursor.getDouble(4));
+        if (!TextUtils.isEmpty(cursor.getString(2))) {
+            place.locationString = cursor.getString(2);
+        }
+        if (!TextUtils.isEmpty(cursor.getString(3))) {
+            place.pictureUri = cursor.getString(3);
+        }
+        place.location = new LatLng(cursor.getDouble(4), cursor.getDouble(5));
 
         return place;
     }
@@ -126,9 +131,9 @@ public class EventsDatabase {
         dbHelper.close();
     }
 
-    public void changeSaveEvent(Event event) {
+    public void changeSaveEvent(Event event, boolean isSaved) {
         ContentValues values = new ContentValues();
-        values.put(Event.Table.COLUMN_IS_EVENT_SAVED, event.isEventSaved ? Event.SAVED : Event.NOT_SAVED);
+        values.put(Event.Table.COLUMN_IS_EVENT_SAVED, isSaved);
         database.update(Event.Table.TABLE_EVENTS, values, Event.Table.COLUMN_ID + " = ?", new String[]{String.valueOf(event.id)});
     }
 
@@ -138,31 +143,12 @@ public class EventsDatabase {
         }
     }
 
-    private long persistPlace(Place place) {
+    public long persistPlace(Place place) {
         ContentValues values = new ContentValues();
         values.put(Event.Table.COLUMN_ID, place.id);
         values.put(Event.Table.COLUMN_NAME, place.name);
         values.put(Event.Table.COLUMN_LOCATION_STRING, place.locationString);
-        if (place.location != null) {
-            values.put(Event.Table.COLUMN_LATITUDE, place.location.latitude);
-            values.put(Event.Table.COLUMN_LONGITUDE, place.location.longitude);
-
-            if (TextUtils.isEmpty(place.locationString)) {
-                List<Address> addresses;
-                try {
-                    addresses = geocoder.getFromLocation(place.location.latitude, place.location.longitude, 1);
-                    Address address = addresses.get(addresses.size() - 1);
-                    StringBuilder stringBuilder = new StringBuilder();
-                    for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-                        stringBuilder.append(addresses.get(0).getAddressLine(i) + ", ");
-                    }
-                    place.locationString = stringBuilder.toString().trim().substring(0, stringBuilder.length() - 2).replace("(FYROM)", "");
-
-                    values.put(Event.Table.COLUMN_LOCATION_STRING, place.locationString);
-                } catch (Exception e) {
-                }
-            }
-        }
+        values.put(Event.Table.COLUMN_PICTURE_URI, place.pictureUri);
 
         long updateRows = database.update(Place.Table.TABLE_PLACES,
                 values,
@@ -180,12 +166,6 @@ public class EventsDatabase {
             return database.insert(Place.Table.TABLE_PLACES, null, values);
         } else {
             return updateRows;
-        }
-    }
-
-    public void persistEvents(ArrayList<Event> events) {
-        for (Event event : events) {
-            persistEvent(event);
         }
     }
 
@@ -351,7 +331,7 @@ public class EventsDatabase {
         ArrayList<String> whereArgsList = new ArrayList<String>();
 
         where = new StringBuilder();
-        where.append(" ( " + // TODO first condition is wrong!!!!!!!!!
+        where.append(" ( " +
                         "( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? < 86400000 AND " + Event.Table.COLUMN_START_TIME_STAMP + " - ? >= 0 " + ") " +
                         " OR " +
                         "( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? <= 0 AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? ) " +
@@ -386,7 +366,7 @@ public class EventsDatabase {
     }
 
 
-    public ArrayList<Event> getEventsByLocation(String... filter) {
+    public ArrayList<Event> getActiveEventsByLocation(String... filter) {
         ArrayList<Event> events = new ArrayList<Event>();
 
         StringBuilder where = null;
@@ -438,7 +418,6 @@ public class EventsDatabase {
         cursor.close();
         return events;
     }
-
 
     // TODO refactor it in better times (no need for two differet get<>Events methods!!!
     public ArrayList<Event> getSavedEvents(String... filter) {
