@@ -6,6 +6,7 @@ import com.evento.team2.eventspack.R;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 /**
@@ -13,13 +14,15 @@ import java.util.Random;
  */
 public class ColorUtils {
 
-    private static ColorUtils instance;
-
     private ArrayList<Integer> colorsResources;
     private Random random = new Random();
 
-    private ColorUtils() {
+    public HashMap<Long, Integer> dateColorHashMap;
+
+    public ColorUtils() {
         colorsResources = new ArrayList<>();
+        dateColorHashMap = new HashMap();
+
         try {
             for (Field field : R.color.class.getDeclaredFields()) {
                 if (field.getName().startsWith("Color")) {
@@ -29,14 +32,6 @@ public class ColorUtils {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-    }
-
-    public static ColorUtils getInstance() {
-        if (instance == null) {
-            instance = new ColorUtils();
-        }
-
-        return instance;
     }
 
     public int getRandomColor(Context context) {

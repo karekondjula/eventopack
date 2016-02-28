@@ -80,7 +80,6 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
                     @Override
                     public void call(String lastQuery) {
                         ArrayList<Event> eventArrayList = databaseInteractor.getActiveEvents(lastQuery);
-//                        ArrayList<Event> eventArrayList = EventsDatabase.getInstance().getEvents(lastQuery, String.valueOf(new Date().getTime()));
 
                         fragmentEventsView.showEvents(eventArrayList);
                     }
