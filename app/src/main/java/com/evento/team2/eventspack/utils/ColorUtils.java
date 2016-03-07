@@ -34,7 +34,7 @@ public class ColorUtils {
         }
     }
 
-    public int getRandomColor(Context context) {
+    public int getRandomColor() {
         return colorsResources.get(random.nextInt(colorsResources.size()));
     }
 }

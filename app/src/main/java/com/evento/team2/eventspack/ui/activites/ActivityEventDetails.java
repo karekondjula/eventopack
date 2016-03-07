@@ -206,39 +206,6 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
 
         if (event.isEventSaved) {
             notificationsInteractor.scheduleNotification(event);
-//            NotificationCompat.Builder mBuilder =
-//                    new NotificationCompat.Builder(this)
-//                            .setColor(getResources().getColor(R.color.colorPrimary))
-//                            .setSmallIcon(R.drawable.eventi_notification_icon)
-//                            .setContentTitle(event.name)
-//                            .setContentText(DateFormatterUtils.fullDateFormat.format(new Date(event.startTimeStamp)));
-//
-//            mBuilder.setCategory(Notification.CATEGORY_EVENT);
-//            mBuilder.setAutoCancel(true);
-//
-////            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
-////            inboxStyle.setBigContentTitle("Event tracker details:");
-////
-////            String[] events = new String[6];
-////            Arrays.fill(events, "test");
-////            // Sets a title for the Inbox in expanded layout
-////
-////            // Moves events into the expanded layout
-////            for (String event1 : events) {
-////                inboxStyle.addLine(event1);
-////            }
-////
-////            // Moves the expanded layout object into the notification object.
-////            mBuilder.setStyle(inboxStyle);
-//
-//            Intent eventDetailsIntent = createIntent(this, eventId);
-//            eventDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//            PendingIntent resultPendingIntent = PendingIntent.getActivities(this, 0, new Intent[]{eventDetailsIntent}, PendingIntent.FLAG_UPDATE_CURRENT);
-//
-//            mBuilder.setContentIntent(resultPendingIntent);
-//            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-//
-//            mNotificationManager.notify(new Random().nextInt(10000), mBuilder.build());
         } else {
             notificationsInteractor.removeScheduleNotification(event);
         }

@@ -4,6 +4,7 @@ package com.evento.team2.eventspack.components;
  * Created by Daniel on 16-Jan-16.
  */
 
+import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
 import com.evento.team2.eventspack.modules.AppModule;
@@ -35,4 +36,5 @@ public interface AppComponent {
     MainThread mainThread();
     DatabaseInteractor databaseInteractor();
     NotificationsInteractor notificationsInteractor();
+    EventiApplication eventiApplication();
 }

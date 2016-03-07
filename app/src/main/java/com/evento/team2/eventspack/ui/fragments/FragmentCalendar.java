@@ -135,7 +135,7 @@ public class FragmentCalendar extends Fragment implements FragmentCalendarView {
                 if (colorUtils.dateColorHashMap.containsKey(dateLong)) {
                     color = colorUtils.dateColorHashMap.get(dateLong);
                 } else {
-                    color = colorUtils.getRandomColor(EventiApplication.applicationContext);
+                    color = colorUtils.getRandomColor();
                     colorUtils.dateColorHashMap.put(dateLong, color);
                 }
 
