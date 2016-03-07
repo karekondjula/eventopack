@@ -33,4 +33,11 @@ public interface DatabaseInteractor {
     ArrayList<Place> getPlaces(String filter);
 
     Place getPlaceById(long placeId);
+
+    /**
+     * Deletes all events older than two months, and all places
+     * */
+    void cleanUpEventsAndPlaces();
+
+    void changeSaveEvent(Event event, boolean isEventSaved);
 }

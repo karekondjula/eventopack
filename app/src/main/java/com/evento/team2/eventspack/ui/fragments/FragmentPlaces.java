@@ -37,7 +37,7 @@ public class FragmentPlaces extends ObserverFragment implements FragmentPlacesVi
     @Bind(R.id.placesRecyclerView)
     RecyclerView placesRecyclerView;
 
-    private volatile PlacesRecyclerViewAdapter placesRecyclerViewAdapter;
+    private PlacesRecyclerViewAdapter placesRecyclerViewAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

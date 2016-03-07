@@ -4,10 +4,12 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Geocoder;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.models.Place;
@@ -137,36 +139,47 @@ public class EventsDatabase {
         database.update(Event.Table.TABLE_EVENTS, values, Event.Table.COLUMN_ID + " = ?", new String[]{String.valueOf(event.id)});
     }
 
-    public void persistPlaces(ArrayList<Place> places) {
-        for (Place place : places) {
-            persistPlace(place);
-        }
-    }
+//    public void persistPlaces(ArrayList<Place> places) {
+//        for (Place place : places) {
+//            persistPlace(place);
+//        }
+//    }
 
     public long persistPlace(Place place) {
         ContentValues values = new ContentValues();
-        values.put(Event.Table.COLUMN_ID, place.id);
-        values.put(Event.Table.COLUMN_NAME, place.name);
-        values.put(Event.Table.COLUMN_LOCATION_STRING, place.locationString);
-        values.put(Event.Table.COLUMN_PICTURE_URI, place.pictureUri);
+        values.put(Place.Table.COLUMN_ID, place.id);
+        values.put(Place.Table.COLUMN_NAME, place.name);
+        values.put(Place.Table.COLUMN_LATITUDE, place.location.latitude);
+        values.put(Place.Table.COLUMN_LONGITUDE, place.location.longitude);
+        values.put(Place.Table.COLUMN_LOCATION_STRING, place.locationString);
+        values.put(Place.Table.COLUMN_PICTURE_URI, place.pictureUri);
 
-        long updateRows = database.update(Place.Table.TABLE_PLACES,
-                values,
-                Place.Table.COLUMN_ID + " = ? OR " +
-                        "(" +
-                        Place.Table.COLUMN_LATITUDE + " = ? AND " +
-                        Place.Table.COLUMN_LONGITUDE + " = ? " +
-                        ")",
-                new String[]{String.valueOf(place.id),
-                        String.valueOf(place.location.latitude),
-                        String.valueOf(place.location.longitude),
-                });
-
-        if (updateRows == 0) {
-            return database.insert(Place.Table.TABLE_PLACES, null, values);
-        } else {
-            return updateRows;
+        try {
+            // TODO faqu
+//            Log.i(">>", "place.id " + place.id);
+//            Log.i(">>", "place.longitude " + place.location.longitude);
+//            Log.i(">>", "place.latitude " + place.location.latitude);
+            long updateRows = database.update(Place.Table.TABLE_PLACES,
+                    values,
+                    Place.Table.COLUMN_ID + " = ? OR " +
+                            " ( " +
+                            Place.Table.COLUMN_LATITUDE + " = ? AND " +
+                            Place.Table.COLUMN_LONGITUDE + " = ? " +
+                            " ) ",
+                    new String[]{String.valueOf(place.id),
+                            String.valueOf(place.location.latitude),
+                            String.valueOf(place.location.longitude),
+                    });
+            if (updateRows == 0) {
+                return database.insert(Place.Table.TABLE_PLACES, null, values);
+            } else {
+                return updateRows;
+            }
+        } catch (SQLiteConstraintException sqlException) {
+            sqlException.printStackTrace();
         }
+
+        return -1;
     }
 
     public ArrayList<Place> getPlaces(String... filter) {
@@ -335,7 +348,7 @@ public class EventsDatabase {
                         "( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? < 86400000 AND " + Event.Table.COLUMN_START_TIME_STAMP + " - ? >= 0 " + ") " +
                         " OR " +
                         "( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? <= 0 AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? ) " +
-                     " ) "
+                        " ) "
         );
         whereArgsList.add(timestamp);
         whereArgsList.add(timestamp);
@@ -480,5 +493,15 @@ public class EventsDatabase {
         cursor.close();
 
         return place;
+    }
+
+    public void cleanUpEventsAndPlaces() {
+        database.execSQL("DELETE FROM " + Place.Table.TABLE_PLACES);
+
+        // delete events older than two months
+        database.execSQL("DELETE FROM " + Event.Table.TABLE_EVENTS +
+                        " WHERE " + Event.Table.COLUMN_START_TIME_STAMP + " < ?",
+                new String[]{String.valueOf((new Date().getTime() - 5184000000l))}
+        );
     }
 }

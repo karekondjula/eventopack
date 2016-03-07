@@ -11,8 +11,7 @@ import dagger.Provides;
  * Created by Daniel on 10-Jan-16.
  */
 
-// TODO make CalendarModule a scoped module
-@Module(includes = {PresentersModule.class, InteractorsModule.class, ThreadsModule.class})
+@Module(includes = {MainPresentersModule.class, InteractorsModule.class, ThreadsModule.class})
 public class AppModule {
 
     EventiApplication eventiApplication;

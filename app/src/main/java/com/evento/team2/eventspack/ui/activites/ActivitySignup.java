@@ -60,18 +60,18 @@ public class ActivitySignup extends AppCompatActivity {
     public void signup(View view) {
         Log.d(TAG, "Signup");
 
-        if (!NetworkUtils.getInstance().isNetworkAvailable(this)) {
-            Snackbar.make(view,
-                    "No internet connection. Please continue without login in",
-                    Snackbar.LENGTH_LONG)
-//                    .setAction("Undo", null)
-//                    .setActionTextColor(Color.RED)
-                    .show();
-
-            signupButton.setEnabled(true);
-
-            return;
-        }
+//        if (!NetworkUtils.getInstance().isNetworkAvailable(this)) {
+//            Snackbar.make(view,
+//                    "No internet connection. Please continue without login in",
+//                    Snackbar.LENGTH_LONG)
+////                    .setAction("Undo", null)
+////                    .setActionTextColor(Color.RED)
+//                    .show();
+//
+//            signupButton.setEnabled(true);
+//
+//            return;
+//        }
 
         if (!validate()) {
             signupButton.setEnabled(true);

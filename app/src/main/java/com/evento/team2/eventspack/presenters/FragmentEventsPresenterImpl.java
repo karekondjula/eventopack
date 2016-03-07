@@ -32,21 +32,22 @@ import rx.schedulers.Schedulers;
  */
 public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
 
+    private final NetworkUtils networkUtils;
     private EventiApplication application;
     private FragmentEventsView fragmentEventsView;
     private MainThread mainThread;
     private DatabaseInteractor databaseInteractor;
+    private PreferencesInteractor preferencesInteractor;
 
     private String lastQuery = "";
 
-    PreferencesInteractor preferencesInteractor;
-
     public FragmentEventsPresenterImpl(EventiApplication application, PreferencesInteractor preferencesInteractor,
-                                       MainThread mainThread, DatabaseInteractor databaseInteractor) {
+                                       MainThread mainThread, DatabaseInteractor databaseInteractor, NetworkUtils networkUtils) {
         this.application = application;
         this.preferencesInteractor = preferencesInteractor;
         this.mainThread = mainThread;
         this.databaseInteractor = databaseInteractor;
+        this.networkUtils = networkUtils;
     }
 
     @Override
@@ -56,34 +57,34 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
 
     @Override
     public void fetchEvents(String query) {
-//        new Thread() {
-//            @Override
-//            public void run() {
-//
-//                final ArrayList<Event> eventArrayList = EventsDatabase.getInstance().getEvents(lastQuery, String.valueOf(new Date().getTime()));
-//
-//                mainThread.post(() -> fragmentEventsView.showEvents(eventArrayList));
-//            }
-//        }.start();
 
-        Observable<String> eventsObservable = Observable.just(lastQuery);
-        eventsObservable
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-//                .flatMap(new Func1<List<Event>, Observable<Event>>() {
+        new Thread() {
+            @Override
+            public void run() {
+                final ArrayList<Event> eventArrayList = databaseInteractor.getActiveEvents(lastQuery);
+
+                mainThread.post(() -> fragmentEventsView.showEvents(eventArrayList));
+            }
+        }.start();
+
+//        Observable<String> eventsObservable = Observable.just(lastQuery);
+//        eventsObservable
+//                .subscribeOn(Schedulers.newThread())
+//                .observeOn(AndroidSchedulers.mainThread())
+////                .flatMap(new Func1<List<Event>, Observable<Event>>() {
+////                    @Override
+////                    public Observable<Event> call(List<Event> events) {
+////                        return Observable.from(events);
+////                    }
+////                })
+//                .subscribe(new Action1<String>() {
 //                    @Override
-//                    public Observable<Event> call(List<Event> events) {
-//                        return Observable.from(events);
+//                    public void call(String lastQuery) {
+//                        ArrayList<Event> eventArrayList = databaseInteractor.getActiveEvents(lastQuery);
+//
+//                        fragmentEventsView.showEvents(eventArrayList);
 //                    }
-//                })
-                .subscribe(new Action1<String>() {
-                    @Override
-                    public void call(String lastQuery) {
-                        ArrayList<Event> eventArrayList = databaseInteractor.getActiveEvents(lastQuery);
-
-                        fragmentEventsView.showEvents(eventArrayList);
-                    }
-                });
+//                });
 
 
         lastQuery = query;
@@ -111,7 +112,7 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
                 lastUpdateOfEvents.set(Calendar.MILLISECOND, 0);
 
                 if (forceUpdate || today.getTimeInMillis() != lastUpdateOfEvents.getTimeInMillis()) {
-                    if (NetworkUtils.getInstance().isNetworkAvailable(application)) {
+                    if (networkUtils.isNetworkAvailable()) {
 
                         mainThread.post(fragmentEventsView::startRefreshAnimation);
 

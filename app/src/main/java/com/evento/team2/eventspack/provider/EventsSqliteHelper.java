@@ -28,7 +28,6 @@ public class EventsSqliteHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase database, int oldVersion, int newVersion) {
-//        onCreate(database);
         upgradeDatabase(database, ++currentVersion, DATABASE_VERSION);
     }
 

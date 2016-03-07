@@ -44,6 +44,7 @@
 
         <activity
             android:name=".ui.activites.ActivityEventDetails"
+            android:parentActivityName=".ui.activites.ActivityMain"
             android:screenOrientation="portrait">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -106,6 +107,24 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activites.ActivityMain" />
         </activity>
+
+        <receiver android:name=".receivers.DownloadEventsReceiver">
+            <intent-filter>
+                <action android:name="ActionDownloadEventsReceiver" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".receivers.CleanUpEventsReceiver">
+            <intent-filter>
+                <action android:name="ActionCleanUpEventsReceiver" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".receivers.NotificationEventsReceiver">
+            <intent-filter>
+                <action android:name="ActionNotificationEventsReceiver" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

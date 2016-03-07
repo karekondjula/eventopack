@@ -83,4 +83,14 @@ public class DatabaseInteractorImpl implements DatabaseInteractor {
     public Place getPlaceById(long placeId) {
         return EventsDatabase.getInstance().getPlaceById(placeId);
     }
+
+    @Override
+    public void cleanUpEventsAndPlaces() {
+        EventsDatabase.getInstance().cleanUpEventsAndPlaces();
+    }
+
+    @Override
+    public void changeSaveEvent(Event event, boolean isEventSaved) {
+        EventsDatabase.getInstance().changeSaveEvent(event, event.isEventSaved);
+    }
 }

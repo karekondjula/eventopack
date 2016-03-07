@@ -18,13 +18,20 @@ package com.evento.team2.eventspack.ui.activites;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -35,11 +42,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
+import com.evento.team2.eventspack.components.DaggerEventDetailsComponent;
+import com.evento.team2.eventspack.components.EventDetailsComponent;
+import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
 import com.evento.team2.eventspack.models.Event;
+import com.evento.team2.eventspack.modules.EventDetailsModule;
+import com.evento.team2.eventspack.presenters.interfaces.FragmentEventDetailsPresenter;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
+import com.evento.team2.eventspack.views.FragmentEventDetailsView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -49,6 +63,12 @@ import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.joanzapata.iconify.fonts.IoniconsModule;
+
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Random;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -61,9 +81,15 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
-public class ActivityEventDetails extends AppCompatActivity {
+public class ActivityEventDetails extends AppCompatActivity implements FragmentEventDetailsView {
 
     public static final String EXTRA_ID = "event_id";
+
+    @Inject
+    FragmentEventDetailsPresenter fragmentEventDetailsPresenter;
+
+    @Inject
+    NotificationsInteractor notificationsInteractor;
 
     @Bind(R.id.backdrop)
     ImageView backdropImage;
@@ -99,6 +125,8 @@ public class ActivityEventDetails extends AppCompatActivity {
     private MarkerOptions markerOptions;
     private Event event;
 
+    long eventId;
+
     static {
         Iconify.with(new IoniconsModule());
     }
@@ -109,6 +137,12 @@ public class ActivityEventDetails extends AppCompatActivity {
 
         setContentView(R.layout.activity_event_details);
         ButterKnife.bind(this);
+
+        EventDetailsComponent eventDetailsComponent = DaggerEventDetailsComponent.builder()
+                        .appComponent(((EventiApplication) getApplication()).getAppComponent())
+                        .eventDetailsModule(new EventDetailsModule())
+                        .build();
+        eventDetailsComponent.inject(this);
 
         emptyHeart = new IconDrawable(this, IoniconsIcons.ion_android_favorite_outline).colorRes(android.R.color.white).actionBarSize();
         filledHeart = new IconDrawable(this, IoniconsIcons.ion_android_favorite).colorRes(R.color.colorPrimary).actionBarSize();
@@ -121,44 +155,23 @@ public class ActivityEventDetails extends AppCompatActivity {
         }
         // TODO make the toolbar disappear completely on top most scroll
 
-        Intent intent = getIntent();
-        final long eventId = intent.getLongExtra(EXTRA_ID, 0);
-        event = EventsDatabase.getInstance().getEventById(eventId);
-
-        if (event == null || collapsingToolbar == null) {
+        if (collapsingToolbar == null) {
             // it happened once ... just to be safe
             // TODO show 'Something went wrong ... please try again'
             finish();
         }
 
-        collapsingToolbar.setTitle(event.name);
+        fragmentEventDetailsPresenter.setView(this);
+    }
 
-        if (TextUtils.isEmpty(event.pictureUri)) {
-            Glide.with(this).load(R.drawable.party_image).centerCrop().into(backdropImage);
-        } else {
-            Glide.with(this).load(event.pictureUri).centerCrop().into(backdropImage);
-        }
+    @Override
+    protected void onResume() {
+        super.onResume();
 
-        if (event.isEventSaved) {
-            saveEvent.setImageDrawable(filledHeart);
-        } else {
-            saveEvent.setImageDrawable(emptyHeart);
-        }
+        Intent intent = getIntent();
+        eventId = intent.getLongExtra(EXTRA_ID, 0);
 
-        textViewEventStartDate.setText(event.startTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(event.startTimeStamp) : "");
-        textViewEventEndDate.setText(event.endTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(event.endTimeStamp) : "");
-
-        textViewEventLocation.setText(event.locationString);
-
-        textViewEventDetails.setText(event.details);
-
-        if (!TextUtils.isEmpty(event.attendingCount)) {
-            textViewEventAttendingCount.setText(event.attendingCount);
-        } else {
-            textViewEventAttending.setVisibility(View.GONE);
-        }
-
-        initMap();
+        fragmentEventDetailsPresenter.fetchEventDetails(eventId);
     }
 
     @Override
@@ -178,9 +191,11 @@ public class ActivityEventDetails extends AppCompatActivity {
 
     @OnClick(R.id.fab_add_to_saved)
     public void saveEvent(View view) {
+
         event.isEventSaved = !event.isEventSaved;
+        fragmentEventDetailsPresenter.updateSavedStateOfEvent(event, event.isEventSaved);
+
         ((FloatingActionButton) findViewById(R.id.fab_add_to_saved)).setImageDrawable(event.isEventSaved ? filledHeart : emptyHeart);
-        EventsDatabase.getInstance().changeSaveEvent(event, event.isEventSaved);
 
         Snackbar.make(view,
                 event.isEventSaved ?
@@ -188,6 +203,45 @@ public class ActivityEventDetails extends AppCompatActivity {
                         String.format(getResources().getString(R.string.event_is_removed), event.name),
                 Snackbar.LENGTH_LONG)
                 .show();
+
+        if (event.isEventSaved) {
+            notificationsInteractor.scheduleNotification(event);
+//            NotificationCompat.Builder mBuilder =
+//                    new NotificationCompat.Builder(this)
+//                            .setColor(getResources().getColor(R.color.colorPrimary))
+//                            .setSmallIcon(R.drawable.eventi_notification_icon)
+//                            .setContentTitle(event.name)
+//                            .setContentText(DateFormatterUtils.fullDateFormat.format(new Date(event.startTimeStamp)));
+//
+//            mBuilder.setCategory(Notification.CATEGORY_EVENT);
+//            mBuilder.setAutoCancel(true);
+//
+////            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
+////            inboxStyle.setBigContentTitle("Event tracker details:");
+////
+////            String[] events = new String[6];
+////            Arrays.fill(events, "test");
+////            // Sets a title for the Inbox in expanded layout
+////
+////            // Moves events into the expanded layout
+////            for (String event1 : events) {
+////                inboxStyle.addLine(event1);
+////            }
+////
+////            // Moves the expanded layout object into the notification object.
+////            mBuilder.setStyle(inboxStyle);
+//
+//            Intent eventDetailsIntent = createIntent(this, eventId);
+//            eventDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+//            PendingIntent resultPendingIntent = PendingIntent.getActivities(this, 0, new Intent[]{eventDetailsIntent}, PendingIntent.FLAG_UPDATE_CURRENT);
+//
+//            mBuilder.setContentIntent(resultPendingIntent);
+//            NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//
+//            mNotificationManager.notify(new Random().nextInt(10000), mBuilder.build());
+        } else {
+            notificationsInteractor.removeScheduleNotification(event);
+        }
     }
 
     @OnClick(R.id.backdrop)
@@ -251,5 +305,39 @@ public class ActivityEventDetails extends AppCompatActivity {
         intent.putExtra(ActivityEventDetails.EXTRA_ID, id);
 
         return intent;
+    }
+
+    @Override
+    public void showEvent(Event event) {
+        this.event = event;
+
+        collapsingToolbar.setTitle(event.name);
+
+        if (TextUtils.isEmpty(event.pictureUri)) {
+            Glide.with(this).load(R.drawable.party_image).centerCrop().into(backdropImage);
+        } else {
+            Glide.with(this).load(event.pictureUri).centerCrop().into(backdropImage);
+        }
+
+        if (event.isEventSaved) {
+            saveEvent.setImageDrawable(filledHeart);
+        } else {
+            saveEvent.setImageDrawable(emptyHeart);
+        }
+
+        textViewEventStartDate.setText(event.startTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(event.startTimeStamp) : "");
+        textViewEventEndDate.setText(event.endTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(event.endTimeStamp) : "");
+
+        textViewEventLocation.setText(event.locationString);
+
+        textViewEventDetails.setText(event.details);
+
+        if (!TextUtils.isEmpty(event.attendingCount)) {
+            textViewEventAttendingCount.setText(event.attendingCount);
+        } else {
+            textViewEventAttending.setVisibility(View.GONE);
+        }
+
+        initMap();
     }
 }

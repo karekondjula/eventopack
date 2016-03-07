@@ -42,7 +42,6 @@
         android:maxLines="2"
         android:paddingLeft="@dimen/item_event_text_padding"
         android:paddingRight="@dimen/item_event_text_padding"
-        android:text="Info"
         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
     <TextView
@@ -52,8 +51,7 @@
         android:maxLines="1"
         android:paddingBottom="@dimen/item_event_text_padding"
         android:paddingLeft="@dimen/item_event_text_padding"
-        android:paddingRight="@dimen/item_event_text_padding"
-        android:text="Details for the current event which can be loooooooooooooooooooooooooong" />
+        android:paddingRight="@dimen/item_event_text_padding" />
 
     <LinearLayout
         android:id="@+id/eventAttending"

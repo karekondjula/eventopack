@@ -26,6 +26,7 @@ import butterknife.ButterKnife;
 public abstract class ObserverFragment extends Fragment implements Observer {
 
     protected FetchAsyncTask fetchAsyncTask;
+    private SearchView searchView;
 
     @Override
     public void onDestroyView() {
@@ -47,13 +48,23 @@ public abstract class ObserverFragment extends Fragment implements Observer {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        if (searchView != null) {
+            searchView.setQuery("", false);
+            searchView.onActionViewCollapsed();
+        }
+    }
+
+    @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater) {
         MenuItem searchItem = menu.findItem(R.id.action_search);
 
         SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 
         if (searchItem != null) {
-            final SearchView searchView = (SearchView) searchItem.getActionView();
+            searchView = (SearchView) searchItem.getActionView();
             searchView.setQueryHint(getString(R.string.filter));
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
@@ -98,39 +109,5 @@ public abstract class ObserverFragment extends Fragment implements Observer {
     @Override
     public void update(Observable observable, Object eventsArrayList) {
         // reminescence from the stupid days o.O
-
-//        if (eventsArrayList instanceof ArrayList) {
-//            if (eventsAdapter != null) {
-//                // TODO ugly solution for a problem which is caused because I use
-//                // TODO one fetchasync task for all data fetching
-//                eventsAdapter.addEvents((ArrayList<Event>) eventsArrayList);
-//                eventsAdapter.notifyDataSetChanged();
-//
-//                if (!NetworkUtils.getInstance().isNetworkAvailable(EventiApplication.applicationContext)) {
-//                    if(getActivity() != null) {
-//                        getActivity().runOnUiThread(() -> {
-//                            Snackbar.make(eventsRecyclerView,
-//                                    R.string.no_internet_connection_cached_events,
-//                                    Snackbar.LENGTH_LONG)
-//                                    .show();
-//                        });
-//                    }
-//                }
-//
-//                if (eventsAdapter.getItemCount() > 0) {
-//                    if(getActivity() != null) {
-//                        getActivity().runOnUiThread(() -> {
-//                            if (emptyAdapterTextView != null) {
-//                                emptyAdapterTextView.setVisibility(View.GONE);
-//                            }
-//                        });
-//                    }
-//                }
-//            }
-//        }
-//
-//        if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
-//            swipeRefreshLayout.setRefreshing(false);
-//        }
     }
 }

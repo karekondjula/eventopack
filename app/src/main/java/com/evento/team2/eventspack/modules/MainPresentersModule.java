@@ -11,6 +11,7 @@ import com.evento.team2.eventspack.presenters.interfaces.FragmentCalendarPresent
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentPlacesPresenter;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentSavedEventsPresenter;
+import com.evento.team2.eventspack.utils.NetworkUtils;
 import com.evento.team2.eventspack.utils.interfaces.MainThread;
 
 import javax.inject.Singleton;
@@ -22,13 +23,13 @@ import dagger.Provides;
  * Created by Daniel on 10-Jan-16.
  */
 @Module
-public class PresentersModule {
+public class MainPresentersModule {
 
     @Provides
     @Singleton
     FragmentEventsPresenter provideFragmentEventsPresenter(EventiApplication application, PreferencesInteractor preferencesInteractor, MainThread mainThread,
-                                                           DatabaseInteractor databaseInteractor) {
-        return new FragmentEventsPresenterImpl(application, preferencesInteractor, mainThread, databaseInteractor);
+                                                           DatabaseInteractor databaseInteractor, NetworkUtils networkUtils) {
+        return new FragmentEventsPresenterImpl(application, preferencesInteractor, mainThread, databaseInteractor, networkUtils);
     }
 
     @Provides

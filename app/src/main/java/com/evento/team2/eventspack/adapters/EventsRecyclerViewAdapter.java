@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.R;
+import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
@@ -40,6 +41,8 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
     private Context context;
     private ArrayList<Event> events;
     private Calendar calendar;
+
+    private NotificationsInteractor notificationsInteractor;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -71,8 +74,9 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         }
     }
 
-    public EventsRecyclerViewAdapter(Context context) {
+    public EventsRecyclerViewAdapter(Context context, NotificationsInteractor notificationsInteractor) {
         this.context = context;
+        this.notificationsInteractor = notificationsInteractor;
         events = new ArrayList<>();
 
         calendar = Calendar.getInstance();
@@ -80,6 +84,7 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
+
     }
 
     public void addEvents(ArrayList<Event> eventArrayList) {
@@ -178,17 +183,23 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
 
             if (event.isEventSaved) {
                 holder.isEventSaved.setText(ICON_TEXT_VIEW_FILLED_HEART);
+                notificationsInteractor.scheduleNotification(event);
             } else {
                 holder.isEventSaved.setText(ICON_TEXT_VIEW_EMPTY_HEART);
+                notificationsInteractor.removeScheduleNotification(event);
             }
             EventsDatabase.getInstance().changeSaveEvent(event, event.isEventSaved);
 
-            Snackbar.make(v,
-                    event.isEventSaved ?
-                            String.format(context.getResources().getString(R.string.event_is_saved, event.name)) :
-                            String.format(context.getResources().getString(R.string.event_is_removed, event.name)),
-                    Snackbar.LENGTH_LONG)
-                    .show();
+            try {
+                Snackbar.make(v,
+                        event.isEventSaved ?
+                                String.format(context.getResources().getString(R.string.event_is_saved, event.name)) :
+                                String.format(context.getResources().getString(R.string.event_is_removed, event.name)),
+                        Snackbar.LENGTH_LONG)
+                        .show();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
 
 //                YoYo.with(Techniques.Tada)
 //                        .duration(700)

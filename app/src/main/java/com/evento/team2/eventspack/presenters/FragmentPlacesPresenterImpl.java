@@ -3,7 +3,6 @@ package com.evento.team2.eventspack.presenters;
 import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentPlacesPresenter;
-import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.utils.interfaces.MainThread;
 import com.evento.team2.eventspack.views.FragmentPlacesView;
 
@@ -17,6 +16,8 @@ public class FragmentPlacesPresenterImpl implements FragmentPlacesPresenter {
     private FragmentPlacesView fragmentPlacesView;
     private MainThread mainThread;
     private DatabaseInteractor databaseInteractor;
+
+    private String lastQuery = "";
 
     public FragmentPlacesPresenterImpl(MainThread mainThread, DatabaseInteractor databaseInteractor) {
         this.mainThread = mainThread;
@@ -34,28 +35,11 @@ public class FragmentPlacesPresenterImpl implements FragmentPlacesPresenter {
             @Override
             public void run() {
 
-                final ArrayList<Place> placeArrayList = databaseInteractor.getPlaces(query);
+                final ArrayList<Place> placeArrayList = databaseInteractor.getPlaces(lastQuery);
                 mainThread.post(() -> fragmentPlacesView.showPlaces(placeArrayList));
             }
         }.start();
 
-//        Observable<String> eventsObservable = Observable.just(query);
-//        eventsObservable
-//                .subscribeOn(Schedulers.newThread())
-//                .observeOn(AndroidSchedulers.mainThread())
-////                .flatMap(new Func1<List<Event>, Observable<Event>>() {
-////                    @Override
-////                    public Observable<Event> call(List<Event> events) {
-////                        return Observable.from(events);
-////                    }
-////                })
-//                .subscribe(new Action1<String>() {
-//                    @Override
-//                    public void call(String lastQuery) {
-//                        ArrayList<Place> placeArrayList = EventsDatabase.getInstance().getPlaces(query);
-//
-//                        fragmentPlacesView.showPlaces(placeArrayList);
-//                    }
-//                });
+        lastQuery = query;
     }
 }

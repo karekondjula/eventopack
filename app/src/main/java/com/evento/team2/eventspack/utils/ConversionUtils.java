@@ -66,35 +66,6 @@ public class ConversionUtils {
         return event;
     }
 
-    // TODO remove this if RxAndroid is OK in ServiceEvento
-//    public static ArrayList<Event> convertJsonEventsArrayListToEventArrayList(ArrayList<JsonEvent> jsonEventArrayList) {
-//
-//        ArrayList<Event> eventArrayList = new ArrayList();
-//
-//        for (JsonEvent jsonEvent : jsonEventArrayList) {
-//            eventArrayList.add(convertJsonEventToEvent(jsonEvent));
-//        }
-//
-//        return eventArrayList;
-//    }
-
-//    public static ArrayList<Place> extractPlacesFromEvents(ArrayList<Event> eventArrayList) {
-//        ArrayList<Place> placeArrayList = new ArrayList<>();
-//
-//        Place place;
-//        for (Event event : eventArrayList) {
-//            if (!TextUtils.isEmpty(event.locationString) && !event.locationString.startsWith("TBA")) {
-//
-//                place = extractPlaceFromEvent(event);
-//                if (!placeArrayList.contains(place)) {
-//                    placeArrayList.add(place);
-//                }
-//            }
-//        }
-//
-//        return placeArrayList;
-//    }
-
     public static Place extractPlaceFromEvent(Event event) {
         Place place= new Place();
 

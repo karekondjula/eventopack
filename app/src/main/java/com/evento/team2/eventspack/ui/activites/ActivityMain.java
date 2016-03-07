@@ -1,5 +1,6 @@
 package com.evento.team2.eventspack.ui.activites;
 
+import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.SearchManager;
@@ -20,8 +21,12 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.astuetz.PagerSlidingTabStrip;
+import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
+import com.evento.team2.eventspack.interactors.interfaces.AlarmManagerInteractor;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
+import com.evento.team2.eventspack.receivers.CleanUpEventsReceiver;
+import com.evento.team2.eventspack.receivers.DownloadEventsReceiver;
 import com.evento.team2.eventspack.ui.fragments.DialogFragmentAbout;
 import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
 import com.evento.team2.eventspack.ui.fragments.FragmentPlaces;
@@ -33,7 +38,10 @@ import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.joanzapata.iconify.fonts.IoniconsModule;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -44,6 +52,7 @@ import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 public class ActivityMain extends AppCompatActivity {
 
     private static final String SHOWCASE_ID = "0";
+    private static final long NOW = new Date().getTime();
 
     @Bind(R.id.navigation_view)
     NavigationView navigationView;
@@ -51,6 +60,9 @@ public class ActivityMain extends AppCompatActivity {
     DrawerLayout drawerLayout;
     @Bind(R.id.viewpager)
     ViewPager viewPager;
+
+    @Inject
+    AlarmManagerInteractor alarmManagerInteractor;
 
     private FragmentEvents fragmentEvents = FragmentEvents.newInstance();
     private FragmentSavedEvents fragmentSavedEvents = FragmentSavedEvents.newInstance();
@@ -64,6 +76,8 @@ public class ActivityMain extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        ((EventiApplication) getApplication()).getAppComponent().inject(this);
 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -125,10 +139,6 @@ public class ActivityMain extends AppCompatActivity {
         pagerSlidingTabStrip.setShouldExpand(true);
         pagerSlidingTabStrip.setViewPager(viewPager);
 
-//        HashMap<String, Object> params = new HashMap<>();
-//        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_TEST_FUNC);
-//        ServiceEvento.getInstance().callServiceMethod(params);
-
         Intent intent = getIntent();
         if (intent != null && Intent.ACTION_SEARCH.equals(intent.getAction())) {
             String query = intent.getStringExtra(SearchManager.QUERY);
@@ -146,7 +156,18 @@ public class ActivityMain extends AppCompatActivity {
             }
         }
 
+        Intent downloadEventsIntent = DownloadEventsReceiver.getIntent();
+        alarmManagerInteractor.scheduleRepeating(downloadEventsIntent, NOW, AlarmManager.INTERVAL_HALF_DAY);
+
+        Intent cleanUpEventsIntent = CleanUpEventsReceiver.getIntent();
+        alarmManagerInteractor.scheduleRepeating(cleanUpEventsIntent, NOW, AlarmManager.INTERVAL_DAY * 30);
+
         presentShowcaseSequence();
+
+//        log.debug("registering headsetPluginReceiver");
+//        headsetPluginIntentFilter = new IntentFilter();
+//        headsetPluginIntentFilter.addAction(Intent.ACTION_HEADSET_PLUG);
+//        registerReceiver(headsetPluginReceiver, headsetPluginIntentFilter);
     }
 
     @Override
@@ -205,6 +226,7 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     public void presentShowcaseSequence() {
+        // TODO make it better!
         ShowcaseConfig config = new ShowcaseConfig();
         config.setDelay(2000);
 

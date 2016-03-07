@@ -9,22 +9,14 @@ import android.net.NetworkInfo;
  */
 public class NetworkUtils {
 
-    private static volatile NetworkUtils instance;
+    private ConnectivityManager connectivityManager;
 
-    private NetworkUtils() {
-    }
-
-    public static NetworkUtils getInstance() {
-        if (instance == null) {
-            instance = new NetworkUtils();
-        }
-
-        return instance;
-    }
-
-    public boolean isNetworkAvailable(Context context) {
-        ConnectivityManager connectivityManager
+    public NetworkUtils(Context context) {
+        connectivityManager
                 = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+    }
+
+    public boolean isNetworkAvailable() {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }

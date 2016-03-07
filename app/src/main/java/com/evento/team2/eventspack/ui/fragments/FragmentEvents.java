@@ -16,6 +16,7 @@ import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapters.EventsRecyclerViewAdapter;
 import com.evento.team2.eventspack.components.AppComponent;
+import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
 import com.evento.team2.eventspack.provider.FetchAsyncTask;
@@ -36,6 +37,9 @@ public class FragmentEvents extends ObserverFragment implements FragmentEventsVi
 
     @Inject
     FragmentEventsPresenter fragmentEventsPresenter;
+
+    @Inject
+    NotificationsInteractor notificationsInteractor;
 
     @Bind(R.id.eventsRecyclerView)
     RecyclerView eventsRecyclerView;
@@ -68,7 +72,7 @@ public class FragmentEvents extends ObserverFragment implements FragmentEventsVi
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         eventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        eventsAdapter = new EventsRecyclerViewAdapter(getActivity());
+        eventsAdapter = new EventsRecyclerViewAdapter(getActivity(), notificationsInteractor);
         eventsRecyclerView.setAdapter(eventsAdapter);
 
         fragmentEventsPresenter.setView(this);
@@ -128,10 +132,6 @@ public class FragmentEvents extends ObserverFragment implements FragmentEventsVi
 //            eventsRecyclerView.swapAdapter(eventsAdapter, false);
                 eventsAdapter.notifyDataSetChanged();
             }
-
-            if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
-                swipeRefreshLayout.setRefreshing(false);
-            }
         }
     }
 
@@ -144,8 +144,8 @@ public class FragmentEvents extends ObserverFragment implements FragmentEventsVi
 
     @Override
     public void stopRefreshAnimation() {
-        if (swipeRefreshLayout != null && !swipeRefreshLayout.isRefreshing()) {
-            swipeRefreshLayout.setRefreshing(true);
+        if (swipeRefreshLayout != null && swipeRefreshLayout.isRefreshing()) {
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 
