@@ -35,8 +35,7 @@ import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.modules.MapModule;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentMapPresenter;
-import com.evento.team2.eventspack.provider.EventsDatabase;
-import com.evento.team2.eventspack.provider.FetchAsyncTask;
+import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.ui.activites.ActivityMap;
 import com.evento.team2.eventspack.ui.activites.ActivityPlaceDetails;
@@ -58,7 +57,6 @@ import com.roomorama.caldroid.CaldroidListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 
 import javax.inject.Inject;
 
@@ -91,14 +89,10 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
 
     private Calendar calendar;
     private GoogleMap mapView;
-    private Location myLocation;
     private String lastSelectedDate;
     private LinearLayout actionViewCalendar;
-    private HashMap<LatLng, Object> hashMapLatLngEventId = new HashMap<>();
-    private long id = FetchAsyncTask.NONE;
-    private int what = FetchAsyncTask.EVENTS;
-    private ArrayList<MarkerOptions> markerOptionsArrayList;
-    private Location eventLocation;
+    private long id = EventiConstants.NONE;
+    private int what = EventiConstants.EVENTS;
 
     @Bind(R.id.map_event_details)
     LinearLayout mapEventDetailsLinearLayout;
@@ -148,17 +142,17 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
 
                 switch (i) {
                     case 0:
-                        what = FetchAsyncTask.EVENTS;
+                        what = EventiConstants.EVENTS;
                         // lastSelectedDate is a full time stamp
                         fragmentMapPresenter.fetchEvents(lastSelectedDate);
                         break;
                     case 1:
-                        what = FetchAsyncTask.PLACES;
+                        what = EventiConstants.PLACES;
                         // places do not have time acknowlegment
                         fragmentMapPresenter.fetchPlaces();
                         break;
                     case 2:
-                        what = FetchAsyncTask.SAVED_EVENTS;
+                        what = EventiConstants.SAVED_EVENTS;
                         // saved events have a DD.MM.YYYY way of filtering, TODO make this same with EVENTS
                         fragmentMapPresenter.fetchSavedEvents(Long.parseLong(lastSelectedDate));
                         break;
@@ -178,11 +172,10 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 
-        if (what != FetchAsyncTask.NONE) {
+        if (what != EventiConstants.NONE) {
             spinner.setSelection(what);
         }
 
-//        dialogCaldroidFragment = CaldroidFragment.newInstance("", calendar.get(Calendar.MONTH) + 1, calendar.get(Calendar.YEAR));
         bundle = new Bundle();
         bundle.putInt(CaldroidFragment.START_DAY_OF_WEEK, CaldroidFragment.MONDAY);
         dialogCaldroidFragment.setArguments(bundle);
@@ -196,14 +189,13 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
 
                 lastSelectedDate = String.valueOf(calendar.getTimeInMillis());
 
-//                fetchAsyncTask = new FetchAsyncTask(FragmentMap.this, what);
-                if (what == FetchAsyncTask.EVENTS) {
+                if (what == EventiConstants.EVENTS) {
                     // lastSelectedDate is a full time stamp
                     fragmentMapPresenter.fetchEvents(lastSelectedDate);
-                } else if (what == FetchAsyncTask.PLACES) {
+                } else if (what == EventiConstants.PLACES) {
                     // places do not have time acknowlegment
                     fragmentMapPresenter.fetchPlaces();
-                } else if (what == FetchAsyncTask.SAVED_EVENTS) {
+                } else if (what == EventiConstants.SAVED_EVENTS) {
                     // saved events have a DD.MM.YYYY way of filtering, TODO make this same with EVENTS
                     fragmentMapPresenter.fetchSavedEvents(calendar.getTimeInMillis());
                 }
@@ -311,40 +303,28 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         mapView.setOnMapClickListener(this);
         mapView.setOnMyLocationChangeListener(this);
 
-        if (id == FetchAsyncTask.NO_EVENT_ID) {
+        if (id == EventiConstants.NO_EVENT_ID) {
             // regular opening of fragment map
             lastSelectedDate = String.valueOf(calendar.getTimeInMillis());
             fragmentMapPresenter.fetchEvents(lastSelectedDate);
         } else {
-            if (what == FetchAsyncTask.PLACES) {
+            if (what == EventiConstants.PLACES) {
                 // the user came here by clicking a Place map
                 // at the moment no places are connected with dates
                 lastSelectedDate = "";
                 fragmentMapPresenter.goToPlace(id);
-            } else if (what == FetchAsyncTask.EVENTS) {
-
+            } else if (what == EventiConstants.EVENTS) {
                 // the user came here by clicking an Event map
-                Event event = EventsDatabase.getInstance().getEventById(id);
+                Event event = fragmentMapPresenter.goToEvent(id);
                 lastSelectedDate = String.valueOf(event.startTimeStamp);
-                eventLocation = new Location("");
-                eventLocation.setLongitude(event.location.longitude);
-                eventLocation.setLatitude(event.location.latitude);
 
                 calendar = Calendar.getInstance();
-                if (event.startTimeStamp < calendar.getTimeInMillis()) {
+                if (event.startTimeStamp >= calendar.getTimeInMillis()) {
                     // the event has started in the past so no point to set calendar to past, going to today
-                } else {
                     calendar.setTimeInMillis(event.startTimeStamp);
                 }
-                calendar.set(Calendar.HOUR_OF_DAY, 0);
-                calendar.set(Calendar.MINUTE, 0);
-                calendar.set(Calendar.SECOND, 0);
-                calendar.set(Calendar.MILLISECOND, 0);
-
+                setCalendarOnStartOfDay(calendar);
                 setCalendarDate(calendar.getTime());
-
-                fetchAsyncTask = new FetchAsyncTask(this, what);
-                fetchAsyncTask.execute(lastSelectedDate);
             }
         }
     }
@@ -372,7 +352,6 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
 
     @Override
     public boolean onMarkerClick(final Marker marker) {
-
         fragmentMapPresenter.markerClicked(marker, what);
         return false;
     }
@@ -385,15 +364,9 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
 
     @Override
     public void onMyLocationChange(Location location) {
-        if (myLocation == null && what != FetchAsyncTask.PLACES) {
-            if (eventLocation != null) {
-                // we came here from event details
-                moveCamera(eventLocation.getLatitude(), eventLocation.getLongitude());
-            } else {
-                // my location is centered
-                moveCamera(location.getLatitude(), location.getLongitude());
-            }
-            myLocation = location;
+        if (id == EventiConstants.NONE) {
+            // my location is centered
+            moveCamera(location.getLatitude(), location.getLongitude());
         }
     }
 
@@ -408,9 +381,9 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         mapView.setPadding(0, 0, 0, 0);
     }
 
-    public static FragmentMap newInstance(@FetchAsyncTask.Category int what, long id) {
+    public static FragmentMap newInstance(@EventiConstants.Category int what, long id) {
         FragmentMap fragmentMap = new FragmentMap();
-        if (what != FetchAsyncTask.NONE) {
+        if (what != EventiConstants.NONE) {
             Bundle args = new Bundle();
             args.putInt(EXTRA_WHAT, what);
             args.putLong(EXTRA_ID, id);
@@ -438,9 +411,9 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
         mapView.clear();
 
         if (getView() != null) {
-            if (what == FetchAsyncTask.EVENTS || what == FetchAsyncTask.SAVED_EVENTS) {
+            if (what == EventiConstants.EVENTS || what == EventiConstants.SAVED_EVENTS) {
                 fetchingEventsSnackBar = Snackbar.make(getView(), R.string.fetching_events, Snackbar.LENGTH_INDEFINITE);
-            } else if (what == FetchAsyncTask.PLACES) {
+            } else if (what == EventiConstants.PLACES) {
                 fetchingEventsSnackBar = Snackbar.make(getView(), R.string.fetching_places, Snackbar.LENGTH_INDEFINITE);
             }
             fetchingEventsSnackBar.show();
@@ -532,9 +505,8 @@ public class FragmentMap extends ObserverFragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void goToLocation(double latitude, double longitude) {
-        moveCamera(latitude, longitude);
-
-        // TODO show marker
+    public void goToLocationAndAddMarker(MarkerOptions markerOptions) {
+        moveCamera(markerOptions.getPosition().latitude, markerOptions.getPosition().longitude);
+        mapView.addMarker(markerOptions);
     }
 }

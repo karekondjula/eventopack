@@ -24,7 +24,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.interactors.interfaces.AlarmManagerInteractor;
-import com.evento.team2.eventspack.provider.FetchAsyncTask;
+import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.receivers.CleanUpEventsReceiver;
 import com.evento.team2.eventspack.receivers.DownloadEventsReceiver;
 import com.evento.team2.eventspack.ui.fragments.DialogFragmentAbout;
@@ -205,7 +205,7 @@ public class ActivityMain extends AppCompatActivity {
 
         Intent intent = null;
         if (id == R.id.action_map) {
-            intent = ActivityMap.createIntent(ActivityMain.this, FetchAsyncTask.EVENTS, FetchAsyncTask.NO_EVENT_ID);
+            intent = ActivityMap.createIntent(ActivityMain.this, EventiConstants.EVENTS, EventiConstants.NO_EVENT_ID);
         } else if (id == R.id.action_calendar) {
             intent = ActivityCalendar.createIntent(ActivityMain.this);
         }
@@ -266,14 +266,14 @@ public class ActivityMain extends AppCompatActivity {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-//                        fragmentEvents.filterList(FetchAsyncTask.NO_FILTER_STRING);
+//                        fragmentEvents.filterList(EventiConstants.NO_FILTER_STRING);
 //                        fragmentEvents.showLastUpdatedInfo();
                         break;
                     case 1:
-                        fragmentPlaces.filterList(FetchAsyncTask.NO_FILTER_STRING);
+                        fragmentPlaces.filterList(EventiConstants.NO_FILTER_STRING);
                         break;
                     case 2:
-                        fragmentSavedEvents.filterList(FetchAsyncTask.NO_FILTER_STRING);
+                        fragmentSavedEvents.filterList(EventiConstants.NO_FILTER_STRING);
                         break;
                     default:
                 }

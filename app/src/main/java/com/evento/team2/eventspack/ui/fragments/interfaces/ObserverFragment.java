@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.components.AppComponent;
-import com.evento.team2.eventspack.provider.FetchAsyncTask;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -23,19 +22,14 @@ import butterknife.ButterKnife;
 /**
  * Created by Daniel on 29-Oct-15.
  */
-public abstract class ObserverFragment extends Fragment implements Observer {
+public abstract class ObserverFragment extends Fragment {
 
-    protected FetchAsyncTask fetchAsyncTask;
     private SearchView searchView;
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        if (fetchAsyncTask != null) {
-            fetchAsyncTask.cancel(true);
-            fetchAsyncTask = null;
-        }
 
 //        RefWatcher refWatcher = EventiApplication.getRefWatcher(getActivity());
 //        refWatcher.watch(this);
@@ -105,9 +99,4 @@ public abstract class ObserverFragment extends Fragment implements Observer {
     public abstract void filterList(String query);
 
     protected abstract void injectComponent(AppComponent component);
-
-    @Override
-    public void update(Observable observable, Object eventsArrayList) {
-        // reminescence from the stupid days o.O
-    }
 }

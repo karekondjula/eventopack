@@ -14,7 +14,7 @@ import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentSavedEventsPresenter;
-import com.evento.team2.eventspack.provider.FetchAsyncTask;
+import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.ui.fragments.interfaces.ObserverFragment;
 import com.evento.team2.eventspack.views.FragmentSavedEventsView;
 
@@ -68,7 +68,7 @@ public class FragmentSavedEvents extends ObserverFragment implements FragmentSav
     public void onResume() {
         super.onResume();
 
-        fragmentSavedEventsPresenter.fetchSavedEvents(FetchAsyncTask.NO_FILTER_STRING);
+        fragmentSavedEventsPresenter.fetchSavedEvents(EventiConstants.NO_FILTER_STRING);
     }
 
     @Override

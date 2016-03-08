@@ -7,7 +7,7 @@ import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentMapPresenter;
-import com.evento.team2.eventspack.provider.FetchAsyncTask;
+import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.ui.activites.ActivityPlaceDetails;
 import com.evento.team2.eventspack.ui.fragments.FragmentMap;
@@ -31,7 +31,7 @@ public class FragmentMapPresenterImpl implements FragmentMapPresenter {
     private MainThread mainThread;
     private FragmentMapView fragmentMapView;
 
-    private HashMap<LatLng, Object> hashMapLatLngEventId = new HashMap<>();
+    private HashMap<LatLng, Object> hashMapLatLngId = new HashMap<>();
     private Marker lastMarkerClicked;
 
     public FragmentMapPresenterImpl(EventiApplication eventiApplication, DatabaseInteractor databaseInteractor,
@@ -60,12 +60,11 @@ public class FragmentMapPresenterImpl implements FragmentMapPresenter {
                 for (Event event : eventArrayList) {
                     if (event.location.latitude != 0 || event.location.longitude != 0) {
                         markerOptions = new MarkerOptions()
-                                .position(new LatLng(event.location.latitude,
-                                        event.location.longitude))
+                                .position(new LatLng(event.location.latitude, event.location.longitude))
                                 .title(event.name)
                                 .snippet(event.details + FragmentMap.DELIMITER + DateFormatterUtils.fullDateFormat.format(event.startTimeStamp));
 
-                        hashMapLatLngEventId.put(markerOptions.getPosition(), event);
+                        hashMapLatLngId.put(markerOptions.getPosition(), event);
                         markerOptionsArrayList.add(markerOptions);
                     }
                 }
@@ -94,11 +93,10 @@ public class FragmentMapPresenterImpl implements FragmentMapPresenter {
                 for (Place place : eventArrayList) {
                     if (place.location.latitude != 0 || place.location.longitude != 0) {
                         markerOptions = new MarkerOptions()
-                                .position(new LatLng(place.location.latitude,
-                                        place.location.longitude))
+                                .position(new LatLng(place.location.latitude, place.location.longitude))
                                 .title(place.name);
 
-                        hashMapLatLngEventId.put(markerOptions.getPosition(), place);
+                        hashMapLatLngId.put(markerOptions.getPosition(), place);
                         markerOptionsArrayList.add(markerOptions);
                     }
                 }
@@ -134,7 +132,7 @@ public class FragmentMapPresenterImpl implements FragmentMapPresenter {
                                 .snippet(event.details + FragmentMap.DELIMITER +
                                         DateFormatterUtils.fullDateFormat.format(event.startTimeStamp));
 
-                        hashMapLatLngEventId.put(markerOptions.getPosition(), event);
+                        hashMapLatLngId.put(markerOptions.getPosition(), event);
                         markerOptionsArrayList.add(markerOptions);
                     }
                 }
@@ -150,15 +148,34 @@ public class FragmentMapPresenterImpl implements FragmentMapPresenter {
     }
 
     @Override
-    public void goToEvent(long eventId) {
+    public Event goToEvent(long eventId) {
         Event event = databaseInteractor.getEventById(eventId);
-        fragmentMapView.goToLocation(event.location.latitude, event.location.longitude);
+
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(new LatLng(event.location.latitude,
+                        event.location.longitude))
+                .title(event.name)
+                .snippet(event.details + FragmentMap.DELIMITER +
+                        DateFormatterUtils.fullDateFormat.format(event.startTimeStamp));
+
+        hashMapLatLngId.put(markerOptions.getPosition(), event);
+
+        fragmentMapView.goToLocationAndAddMarker(markerOptions);
+
+        return event;
     }
 
     @Override
     public void goToPlace(long placeId) {
         Place place = databaseInteractor.getPlaceById(placeId);
-        fragmentMapView.goToLocation(place.location.latitude, place.location.longitude);
+
+        MarkerOptions markerOptions = new MarkerOptions()
+                .position(new LatLng(place.location.latitude, place.location.longitude))
+                .title(place.name);
+
+        hashMapLatLngId.put(markerOptions.getPosition(), place);
+
+        fragmentMapView.goToLocationAndAddMarker(markerOptions);
     }
 
     @Override
@@ -171,22 +188,22 @@ public class FragmentMapPresenterImpl implements FragmentMapPresenter {
 
         if (lastMarkerClicked != null && lastMarkerClicked.equals(marker)) {
             Intent intent = null;
-            if (selectedMode == FetchAsyncTask.EVENTS || selectedMode == FetchAsyncTask.SAVED_EVENTS) {
-                intent = ActivityEventDetails.createIntent(eventiApplication, ((Event) hashMapLatLngEventId.get(marker.getPosition())).id);
-            } else if (selectedMode == FetchAsyncTask.PLACES) {
-                intent = ActivityPlaceDetails.createIntent(eventiApplication, ((Place) hashMapLatLngEventId.get(marker.getPosition())).id);
+            if (selectedMode == EventiConstants.EVENTS || selectedMode == EventiConstants.SAVED_EVENTS) {
+                intent = ActivityEventDetails.createIntent(eventiApplication, ((Event) hashMapLatLngId.get(marker.getPosition())).id);
+            } else if (selectedMode == EventiConstants.PLACES) {
+                intent = ActivityPlaceDetails.createIntent(eventiApplication, ((Place) hashMapLatLngId.get(marker.getPosition())).id);
             }
             eventiApplication.startActivity(intent);
         } else {
             lastMarkerClicked = marker;
 
-            if (selectedMode == FetchAsyncTask.EVENTS || selectedMode == FetchAsyncTask.SAVED_EVENTS) {
+            if (selectedMode == EventiConstants.EVENTS || selectedMode == EventiConstants.SAVED_EVENTS) {
 
-                Event event = (Event) hashMapLatLngEventId.get(marker.getPosition());
+                Event event = (Event) hashMapLatLngId.get(marker.getPosition());
                 fragmentMapView.showEventSelected(event);
-            } else if (selectedMode == FetchAsyncTask.PLACES) {
+            } else if (selectedMode == EventiConstants.PLACES) {
 
-                Place place = (Place) hashMapLatLngEventId.get(marker.getPosition());
+                Place place = (Place) hashMapLatLngId.get(marker.getPosition());
                 fragmentMapView.showPlaceSelected(place);
             }
         }

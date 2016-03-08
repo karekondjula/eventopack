@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
@@ -55,7 +56,6 @@ public class NotificationEventsReceiver extends BroadcastReceiver {
 
             mBuilder.setCategory(Notification.CATEGORY_EVENT);
             mBuilder.setAutoCancel(true);
-//
 ////            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 ////            inboxStyle.setBigContentTitle("Event tracker details:");
 ////
@@ -80,7 +80,13 @@ public class NotificationEventsReceiver extends BroadcastReceiver {
             mBuilder.setContentIntent(resultPendingIntent);
 
             NotificationManager mNotificationManager = (NotificationManager) eventiApplication.getSystemService(Context.NOTIFICATION_SERVICE);
-            mNotificationManager.notify((int) event.id, mBuilder.build());
+
+            Notification notification = mBuilder.build();
+            notification.ledOnMS = 1000;
+            notification.flags |= Notification.FLAG_SHOW_LIGHTS;
+            notification.ledARGB = Color.GREEN;
+
+            mNotificationManager.notify((int) event.id, notification);
         }
     }
 

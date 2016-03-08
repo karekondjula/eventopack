@@ -19,5 +19,5 @@ public interface FragmentMapView {
 
     void showPlaceSelected(Place place);
 
-    void goToLocation(double latitude, double longitude);
+    void goToLocationAndAddMarker(MarkerOptions markerOptions);
 }

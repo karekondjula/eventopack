@@ -1,6 +1,5 @@
 package com.evento.team2.eventspack.ui.fragments;
 
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,13 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapters.PlacesRecyclerViewAdapter;
 import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentPlacesPresenter;
-import com.evento.team2.eventspack.provider.FetchAsyncTask;
+import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.ui.fragments.interfaces.ObserverFragment;
 import com.evento.team2.eventspack.views.FragmentPlacesView;
 
@@ -66,16 +64,13 @@ public class FragmentPlaces extends ObserverFragment implements FragmentPlacesVi
     public void onResume() {
         super.onResume();
 
-        fragmentPlacesPresenter.fetchPlaces(FetchAsyncTask.NO_FILTER_STRING);
+        fragmentPlacesPresenter.fetchPlaces(EventiConstants.NO_FILTER_STRING);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
-        if (fetchAsyncTask != null && fetchAsyncTask.getStatus() == AsyncTask.Status.RUNNING) {
-            fetchAsyncTask.cancel(true);
-        }
     }
 
     public static FragmentPlaces newInstance() {

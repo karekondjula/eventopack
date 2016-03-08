@@ -18,20 +18,13 @@ package com.evento.team2.eventspack.ui.activites;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -50,8 +43,7 @@ import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteracto
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.modules.EventDetailsModule;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventDetailsPresenter;
-import com.evento.team2.eventspack.provider.EventsDatabase;
-import com.evento.team2.eventspack.provider.FetchAsyncTask;
+import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.evento.team2.eventspack.views.FragmentEventDetailsView;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -63,10 +55,6 @@ import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.joanzapata.iconify.fonts.IoniconsModule;
-
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Random;
 
 import javax.inject.Inject;
 
@@ -236,7 +224,7 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
             if (event.location.latitude != 0 || event.location.longitude != 0) {
                 mapView.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(event.location.latitude, event.location.longitude), 15));
                 mapView.setOnMapClickListener(latLng -> {
-                    Intent activityMapIntent = ActivityMap.createIntent(ActivityEventDetails.this, FetchAsyncTask.EVENTS, event.id);
+                    Intent activityMapIntent = ActivityMap.createIntent(ActivityEventDetails.this, EventiConstants.EVENTS, event.id);
                     startActivity(activityMapIntent);
                     finish();
                 });

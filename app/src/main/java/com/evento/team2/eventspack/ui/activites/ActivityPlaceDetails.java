@@ -36,7 +36,7 @@ import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.provider.EventsDatabase;
-import com.evento.team2.eventspack.provider.FetchAsyncTask;
+import com.evento.team2.eventspack.utils.EventiConstants;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -173,7 +173,7 @@ public class ActivityPlaceDetails extends AppCompatActivity {
             if (place.location.latitude != 0 || place.location.longitude != 0) {
                 mapView.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(place.location.latitude, place.location.longitude), 15));
                 mapView.setOnMapClickListener(latLng -> {
-                    Intent intentActivityMap = ActivityMap.createIntent(ActivityPlaceDetails.this, FetchAsyncTask.PLACES, place.id);
+                    Intent intentActivityMap = ActivityMap.createIntent(ActivityPlaceDetails.this, EventiConstants.PLACES, place.id);
                     startActivity(intentActivityMap);
                     finish();
                 });

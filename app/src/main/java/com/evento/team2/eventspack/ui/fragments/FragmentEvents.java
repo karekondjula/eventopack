@@ -12,14 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapters.EventsRecyclerViewAdapter;
 import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
-import com.evento.team2.eventspack.provider.FetchAsyncTask;
+import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.ui.fragments.interfaces.ObserverFragment;
 import com.evento.team2.eventspack.views.FragmentEventsView;
 
@@ -83,7 +82,7 @@ public class FragmentEvents extends ObserverFragment implements FragmentEventsVi
     public void onResume() {
         super.onResume();
         fragmentEventsPresenter.fetchEventsFromServer(false);
-        fragmentEventsPresenter.fetchEvents(FetchAsyncTask.NO_FILTER_STRING);
+        fragmentEventsPresenter.fetchEvents(EventiConstants.NO_FILTER_STRING);
     }
 
     @Override

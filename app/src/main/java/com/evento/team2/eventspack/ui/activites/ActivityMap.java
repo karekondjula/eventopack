@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.evento.team2.eventspack.R;
-import com.evento.team2.eventspack.provider.FetchAsyncTask;
+import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.ui.fragments.FragmentMap;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.IoniconsModule;
@@ -46,20 +46,20 @@ public class ActivityMap extends AppCompatActivity {
                 int what = bundle.getInt(FragmentMap.EXTRA_WHAT);
                 long id = bundle.getLong(FragmentMap.EXTRA_ID);
                 switch (what) {
-                    case FetchAsyncTask.SAVED_EVENTS:
+                    case EventiConstants.SAVED_EVENTS:
                         // TODO go to saved events in activity map
-                    case FetchAsyncTask.EVENTS:
-                        fragmentMap = FragmentMap.newInstance(FetchAsyncTask.EVENTS, id);
+                    case EventiConstants.EVENTS:
+                        fragmentMap = FragmentMap.newInstance(EventiConstants.EVENTS, id);
                         break;
-                    case FetchAsyncTask.PLACES:
-                        fragmentMap = FragmentMap.newInstance(FetchAsyncTask.PLACES, id);
+                    case EventiConstants.PLACES:
+                        fragmentMap = FragmentMap.newInstance(EventiConstants.PLACES, id);
                         break;
 
                     default:
-                        fragmentMap = FragmentMap.newInstance(FetchAsyncTask.NONE, FetchAsyncTask.NO_EVENT_ID);
+                        fragmentMap = FragmentMap.newInstance(EventiConstants.NONE, EventiConstants.NO_EVENT_ID);
                 }
             } else {
-                fragmentMap = FragmentMap.newInstance(FetchAsyncTask.NONE, FetchAsyncTask.NO_EVENT_ID);
+                fragmentMap = FragmentMap.newInstance(EventiConstants.NONE, EventiConstants.NO_EVENT_ID);
             }
         }
 

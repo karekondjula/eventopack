@@ -1,5 +1,6 @@
 package com.evento.team2.eventspack.presenters.interfaces;
 
+import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.views.FragmentMapView;
 import com.google.android.gms.maps.model.Marker;
 
@@ -16,7 +17,7 @@ public interface FragmentMapPresenter {
 
     void fetchSavedEvents(long selectedDateTimeStamp);
 
-    void goToEvent(long eventId);
+    Event goToEvent(long eventId);
 
     void goToPlace(long placeId);
 
