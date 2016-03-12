@@ -48,8 +48,10 @@ public class Event implements Comparable<Event> {
     public String endDateString;
     public boolean isEventSaved = false;
     public String attendingCount;
+    public int categoryId;
     public String categoryString;
 
+    // TODO adapt this to categoryString
     @Category
     public int category;
 

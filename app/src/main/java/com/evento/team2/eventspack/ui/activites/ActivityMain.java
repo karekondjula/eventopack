@@ -24,6 +24,7 @@ import com.astuetz.PagerSlidingTabStrip;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.interactors.interfaces.AlarmManagerInteractor;
+import com.evento.team2.eventspack.receivers.WeeklyEventsReceiver;
 import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.receivers.CleanUpEventsReceiver;
 import com.evento.team2.eventspack.receivers.DownloadEventsReceiver;
@@ -52,7 +53,6 @@ import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 public class ActivityMain extends AppCompatActivity {
 
     private static final String SHOWCASE_ID = "0";
-    private static final long NOW = new Date().getTime();
 
     @Bind(R.id.navigation_view)
     NavigationView navigationView;
@@ -60,9 +60,6 @@ public class ActivityMain extends AppCompatActivity {
     DrawerLayout drawerLayout;
     @Bind(R.id.viewpager)
     ViewPager viewPager;
-
-    @Inject
-    AlarmManagerInteractor alarmManagerInteractor;
 
     private FragmentEvents fragmentEvents = FragmentEvents.newInstance();
     private FragmentSavedEvents fragmentSavedEvents = FragmentSavedEvents.newInstance();
@@ -156,18 +153,7 @@ public class ActivityMain extends AppCompatActivity {
             }
         }
 
-        Intent downloadEventsIntent = DownloadEventsReceiver.getIntent();
-        alarmManagerInteractor.scheduleRepeating(downloadEventsIntent, NOW, AlarmManager.INTERVAL_HALF_DAY);
-
-        Intent cleanUpEventsIntent = CleanUpEventsReceiver.getIntent();
-        alarmManagerInteractor.scheduleRepeating(cleanUpEventsIntent, NOW, AlarmManager.INTERVAL_DAY * 30);
-
         presentShowcaseSequence();
-
-//        log.debug("registering headsetPluginReceiver");
-//        headsetPluginIntentFilter = new IntentFilter();
-//        headsetPluginIntentFilter.addAction(Intent.ACTION_HEADSET_PLUG);
-//        registerReceiver(headsetPluginReceiver, headsetPluginIntentFilter);
     }
 
     @Override

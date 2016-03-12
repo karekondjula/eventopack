@@ -138,6 +138,7 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
 
                         HashMap<String, Object> params = new HashMap();
                         params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
+                        // TODO DAGGER
                         ServiceEvento.getInstance().callServiceMethod(params);
 
                         fetchEvents(lastQuery);

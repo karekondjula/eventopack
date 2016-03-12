@@ -1,6 +1,7 @@
 package com.evento.team2.eventspack.utils;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.models.Place;
@@ -14,6 +15,7 @@ import java.util.Date;
 /**
  * Created by Daniel on 17-Oct-15.
  */
+//  TODO dagger
 public class ConversionUtils {
 
     private static String[] listLat = null;
@@ -61,7 +63,8 @@ public class ConversionUtils {
         event.location = new LatLng(jsonEvent.lat, jsonEvent.lng);
 
         event.attendingCount = jsonEvent.attending_count;
-        event.categoryString = "";
+        event.categoryId = jsonEvent.category_id;
+        event.categoryString = jsonEvent.category;
 
         return event;
     }

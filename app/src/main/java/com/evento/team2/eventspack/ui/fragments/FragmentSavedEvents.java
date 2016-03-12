@@ -14,8 +14,8 @@ import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentSavedEventsPresenter;
+import com.evento.team2.eventspack.ui.fragments.interfaces.BaseFragment;
 import com.evento.team2.eventspack.utils.EventiConstants;
-import com.evento.team2.eventspack.ui.fragments.interfaces.ObserverFragment;
 import com.evento.team2.eventspack.views.FragmentSavedEventsView;
 
 import java.util.ArrayList;
@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Daniel on 31-Jul-15.
  */
-public class FragmentSavedEvents extends ObserverFragment implements FragmentSavedEventsView {
+public class FragmentSavedEvents extends BaseFragment implements FragmentSavedEventsView {
 
     @Inject
     FragmentSavedEventsPresenter fragmentSavedEventsPresenter;
@@ -94,7 +94,7 @@ public class FragmentSavedEvents extends ObserverFragment implements FragmentSav
     @Override
     public void showSavedEvents(ArrayList<Event> eventsArrayList) {
         if (savedEventsAdapter != null) {
-            savedEventsAdapter.addEvents((ArrayList<Event>) eventsArrayList);
+            savedEventsAdapter.addEvents(eventsArrayList);
             savedEventsAdapter.notifyDataSetChanged();
         }
     }

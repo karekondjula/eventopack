@@ -13,8 +13,8 @@ import com.evento.team2.eventspack.adapters.PlacesRecyclerViewAdapter;
 import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentPlacesPresenter;
+import com.evento.team2.eventspack.ui.fragments.interfaces.BaseFragment;
 import com.evento.team2.eventspack.utils.EventiConstants;
-import com.evento.team2.eventspack.ui.fragments.interfaces.ObserverFragment;
 import com.evento.team2.eventspack.views.FragmentPlacesView;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Daniel on 31-Jul-15.
  */
-public class FragmentPlaces extends ObserverFragment implements FragmentPlacesView {
+public class FragmentPlaces extends BaseFragment implements FragmentPlacesView {
 
     @Inject
     FragmentPlacesPresenter fragmentPlacesPresenter;

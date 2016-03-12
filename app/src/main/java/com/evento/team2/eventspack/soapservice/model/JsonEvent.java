@@ -65,6 +65,10 @@ public class JsonEvent {
     public String fb_location_id;
     @JsonField
     public String attending_count;
+    @JsonField
+    public int category_id;
+    @JsonField
+    public String category;
 //    @JsonField
 //    public String floating;
 //    @JsonField

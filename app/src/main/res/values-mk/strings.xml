@@ -32,4 +32,6 @@
     <string name="fetching_places">Превземање на места …</string>
     <string name="updating_now">Превземање…</string>
 
+    <string name="upcoming_event_reminder">Потсетување за настан</string>
+
 </resources>

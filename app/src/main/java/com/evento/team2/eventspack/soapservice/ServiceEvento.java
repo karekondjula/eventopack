@@ -150,7 +150,9 @@ public class ServiceEvento {
 
                     jsonEventsObservable
                             .subscribe(jsonEvent -> {
+                                // TODO DAGGER
                                 Event event = ConversionUtils.convertJsonEventToEvent(jsonEvent);
+                                // TODO DAGGER
                                 EventsDatabase.getInstance().persistEvent(event);
 
                                 Place place = ConversionUtils.extractPlaceFromEvent(event);

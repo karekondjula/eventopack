@@ -35,11 +35,11 @@ import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.modules.MapModule;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentMapPresenter;
+import com.evento.team2.eventspack.ui.fragments.interfaces.BaseFragment;
 import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.ui.activites.ActivityMap;
 import com.evento.team2.eventspack.ui.activites.ActivityPlaceDetails;
-import com.evento.team2.eventspack.ui.fragments.interfaces.ObserverFragment;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.evento.team2.eventspack.views.FragmentMapView;
 import com.google.android.gms.maps.CameraUpdate;
@@ -73,7 +73,7 @@ import permissions.dispatcher.RuntimePermissions;
  * Created by Daniel on 29-Oct-15.
  */
 @RuntimePermissions
-public class FragmentMap extends ObserverFragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
+public class FragmentMap extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
         GoogleMap.OnMapClickListener, GoogleMap.OnMyLocationChangeListener, FragmentMapView {
 
     public static final String EXTRA_WHAT = "extra_what";

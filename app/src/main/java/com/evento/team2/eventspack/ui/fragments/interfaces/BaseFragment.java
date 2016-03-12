@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Daniel on 29-Oct-15.
  */
-public abstract class ObserverFragment extends Fragment {
+public abstract class BaseFragment extends Fragment {
 
     private SearchView searchView;
 

@@ -32,4 +32,6 @@
     <string name="fetching_places">Fetching places …</string>
     <string name="updating_now">Updating now</string>
 
+    <string name="upcoming_event_reminder">Upcoming event reminder</string>
+
 </resources>

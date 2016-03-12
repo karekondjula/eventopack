@@ -37,6 +37,7 @@ public class DownloadEventsReceiver extends BroadcastReceiver {
                 public void run() {
                     HashMap<String, Object> params = new HashMap();
                     params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
+                    // TODO DAGGER
                     ServiceEvento.getInstance().callServiceMethod(params);
 
                     preferencesInteractor.setLastUpdateOfEvents(new Date().getTime());

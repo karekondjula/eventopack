@@ -52,10 +52,12 @@ public class NotificationEventsReceiver extends BroadcastReceiver {
                             .setColor(eventiApplication.getResources().getColor(R.color.colorPrimary))
                             .setSmallIcon(R.drawable.eventi_notification_icon)
                             .setContentTitle(event.name)
-                            .setContentText(DateFormatterUtils.fullDateFormat.format(new Date(event.startTimeStamp)));
+                            .setContentText(DateFormatterUtils.fullDateFormat.format(new Date(event.startTimeStamp)))
+                            .setTicker(eventiApplication.getString(R.string.upcoming_event_reminder))
+                            .setCategory(Notification.CATEGORY_EVENT)
+                            .setAutoCancel(true)
+                            .setVibrate(new long[0]);
 
-            mBuilder.setCategory(Notification.CATEGORY_EVENT);
-            mBuilder.setAutoCancel(true);
 ////            NotificationCompat.InboxStyle inboxStyle = new NotificationCompat.InboxStyle();
 ////            inboxStyle.setBigContentTitle("Event tracker details:");
 ////
@@ -83,8 +85,9 @@ public class NotificationEventsReceiver extends BroadcastReceiver {
 
             Notification notification = mBuilder.build();
             notification.ledOnMS = 1000;
+            notification.ledOffMS = 1000;
             notification.flags |= Notification.FLAG_SHOW_LIGHTS;
-            notification.ledARGB = Color.GREEN;
+            notification.ledARGB = Color.WHITE;
 
             mNotificationManager.notify((int) event.id, notification);
         }

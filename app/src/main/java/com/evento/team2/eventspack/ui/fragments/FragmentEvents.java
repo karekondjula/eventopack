@@ -18,8 +18,8 @@ import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
+import com.evento.team2.eventspack.ui.fragments.interfaces.BaseFragment;
 import com.evento.team2.eventspack.utils.EventiConstants;
-import com.evento.team2.eventspack.ui.fragments.interfaces.ObserverFragment;
 import com.evento.team2.eventspack.views.FragmentEventsView;
 
 import java.util.ArrayList;
@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Daniel on 31-Jul-15.
  */
-public class FragmentEvents extends ObserverFragment implements FragmentEventsView {
+public class FragmentEvents extends BaseFragment implements FragmentEventsView {
 
     @Inject
     FragmentEventsPresenter fragmentEventsPresenter;
