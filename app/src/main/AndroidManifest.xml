@@ -31,7 +31,9 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.LAUNCHER" />
-                <!--<category android:name="ACTION-VIEW" />-->
+            </intent-filter>
+            <intent-filter>
+                <action android:name="ACTION_VIEW" />
             </intent-filter>
             <!-- This is required only if we have a dedicated search activity-->
             <!--<intent-filter>-->

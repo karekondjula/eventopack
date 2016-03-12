@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 def versionMajor = 1
 def versionMinor = 1
-def versionPatch = 6
+def versionPatch = 7
 
 android {
     compileSdkVersion 23
@@ -90,7 +90,9 @@ dependencies {
 
 //    compile 'io.nlopez.smartlocation:library:3.0.11' // location helper
 
-    compile 'io.reactivex:rxandroid:1.1.0' // Rx
+    compile 'io.reactivex:rxandroid:1.1.0'
+    compile 'io.reactivex:rxjava:1.1.1'
+    compile 'com.artemzin.rxjava:proguard-rules:1.1.1.0'
 
 //    compile 'com.android.support:multidex:1.0.1' // overcome 65K methods limit
 }

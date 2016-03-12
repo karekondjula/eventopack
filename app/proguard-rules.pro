@@ -78,10 +78,6 @@
    public void *(android.view.MenuItem);
 }
 
-#-keepclassmembers class * implements android.os.Parcelable {
-#    static android.os.Parcelable$Creator CREATOR;
-#}
-
 -keepclassmembers class **.R$* {
     public static <fields>;
 }
