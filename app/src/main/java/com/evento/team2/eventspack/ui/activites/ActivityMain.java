@@ -1,6 +1,5 @@
 package com.evento.team2.eventspack.ui.activites;
 
-import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.SearchManager;
@@ -23,11 +22,8 @@ import android.view.View;
 import com.astuetz.PagerSlidingTabStrip;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
-import com.evento.team2.eventspack.interactors.interfaces.AlarmManagerInteractor;
-import com.evento.team2.eventspack.receivers.WeeklyEventsReceiver;
+import com.evento.team2.eventspack.ui.fragments.FragmentCategories;
 import com.evento.team2.eventspack.utils.EventiConstants;
-import com.evento.team2.eventspack.receivers.CleanUpEventsReceiver;
-import com.evento.team2.eventspack.receivers.DownloadEventsReceiver;
 import com.evento.team2.eventspack.ui.fragments.DialogFragmentAbout;
 import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
 import com.evento.team2.eventspack.ui.fragments.FragmentPlaces;
@@ -39,10 +35,7 @@ import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.joanzapata.iconify.fonts.IoniconsModule;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -62,6 +55,7 @@ public class ActivityMain extends AppCompatActivity {
     ViewPager viewPager;
 
     private FragmentEvents fragmentEvents = FragmentEvents.newInstance();
+    private FragmentCategories fragmentCategories = FragmentCategories.newInstance();
     private FragmentSavedEvents fragmentSavedEvents = FragmentSavedEvents.newInstance();
     private FragmentPlaces fragmentPlaces = FragmentPlaces.newInstance();
     private MenuItem searchMenuItem;
@@ -144,10 +138,13 @@ public class ActivityMain extends AppCompatActivity {
                     fragmentEvents.filterList(query);
                     break;
                 case 1:
-                    fragmentPlaces.filterList(query);
+                    fragmentCategories.filterList(query);
                     break;
                 case 2:
                     fragmentSavedEvents.filterList(query);
+                    break;
+                case 3:
+                    fragmentPlaces.filterList(query);
                     break;
                 default:
             }
@@ -238,14 +235,14 @@ public class ActivityMain extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getFragmentManager());
         adapter.addFragment(fragmentEvents, getString(R.string.events));
-        adapter.addFragment(fragmentPlaces, getString(R.string.places));
+        adapter.addFragment(fragmentCategories, getString(R.string.categories));
         adapter.addFragment(fragmentSavedEvents, getString(R.string.saved));
+        adapter.addFragment(fragmentPlaces, getString(R.string.places));
         viewPager.setAdapter(adapter);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -256,10 +253,13 @@ public class ActivityMain extends AppCompatActivity {
 //                        fragmentEvents.showLastUpdatedInfo();
                         break;
                     case 1:
-                        fragmentPlaces.filterList(EventiConstants.NO_FILTER_STRING);
+                        fragmentCategories.filterList(EventiConstants.NO_FILTER_STRING);
                         break;
                     case 2:
                         fragmentSavedEvents.filterList(EventiConstants.NO_FILTER_STRING);
+                        break;
+                    case 3:
+                        fragmentPlaces.filterList(EventiConstants.NO_FILTER_STRING);
                         break;
                     default:
                 }

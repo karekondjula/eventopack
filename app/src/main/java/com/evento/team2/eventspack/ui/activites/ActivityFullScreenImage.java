@@ -21,6 +21,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Daniel on 23-Jan-16.
  */
+// TODO animations in the new fancy way of android with connecting components
 public class ActivityFullScreenImage extends Activity {
 
     public static final int EVENT_IMAGE = 0;

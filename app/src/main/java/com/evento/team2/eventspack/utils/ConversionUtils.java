@@ -1,16 +1,11 @@
 package com.evento.team2.eventspack.utils;
 
-import android.text.TextUtils;
-import android.util.Log;
-
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.soapservice.model.JsonEvent;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by Daniel on 17-Oct-15.

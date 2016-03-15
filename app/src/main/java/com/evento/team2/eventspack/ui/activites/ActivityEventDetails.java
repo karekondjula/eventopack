@@ -202,6 +202,11 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
     @OnClick(R.id.backdrop)
     public void openImage(View view) {
 
+        // TODO Consider removing this extra activity which we created because we couldn't get Bitmap fro URI
+        // TODO this is how it's done
+//        Bitmap b = Glide.with(eventiApplication).load(event.pictureUri).
+//                asBitmap().into(-1, -1).get();
+
         Intent fullScreenImage = ActivityFullScreenImage.createIntent(this, ActivityFullScreenImage.EVENT_IMAGE,
                 event.pictureUri, event.name);
         startActivity(fullScreenImage);

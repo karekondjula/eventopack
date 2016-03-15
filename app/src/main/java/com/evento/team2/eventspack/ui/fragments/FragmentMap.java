@@ -35,12 +35,12 @@ import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.modules.MapModule;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentMapPresenter;
-import com.evento.team2.eventspack.ui.fragments.interfaces.BaseFragment;
-import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.ui.activites.ActivityMap;
 import com.evento.team2.eventspack.ui.activites.ActivityPlaceDetails;
+import com.evento.team2.eventspack.ui.fragments.interfaces.BaseFragment;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
+import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.views.FragmentMapView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -87,6 +87,7 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
     @Inject
     CaldroidFragment dialogCaldroidFragment;
 
+    private Location myLocation;
     private Calendar calendar;
     private GoogleMap mapView;
     private String lastSelectedDate;
@@ -364,9 +365,11 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
 
     @Override
     public void onMyLocationChange(Location location) {
-        if (id == EventiConstants.NONE) {
+        if (myLocation == null && id == EventiConstants.NONE) {
             // my location is centered
             moveCamera(location.getLatitude(), location.getLongitude());
+            // go to my location only the first time
+            myLocation = location;
         }
     }
 

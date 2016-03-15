@@ -33,5 +33,6 @@
     <string name="updating_now">Updating now</string>
 
     <string name="upcoming_event_reminder">Upcoming event reminder</string>
+    <string name="categories">Categories</string>
 
 </resources>

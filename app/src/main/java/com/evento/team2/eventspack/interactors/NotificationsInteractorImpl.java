@@ -26,7 +26,7 @@ public class NotificationsInteractorImpl implements NotificationsInteractor {
         Intent eventDetailsIntent = NotificationEventsReceiver.getIntent(event.id);
 
         // TODO preference for how long before start time should the notification show (maybe dialog to choose from)
-        alarmManagerInteractor.scheduleOneTime(eventDetailsIntent, event.startTimeStamp - AlarmManager.INTERVAL_HALF_HOUR);
+        alarmManagerInteractor.scheduleOneTime(eventDetailsIntent, event.startTimeStamp - AlarmManager.INTERVAL_HOUR);
 //        alarmManagerInteractor.scheduleOneTime(eventDetailsIntent, new Date().getTime() + 5000);
     }
 

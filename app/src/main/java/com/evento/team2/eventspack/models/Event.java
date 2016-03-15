@@ -14,15 +14,18 @@ import java.lang.annotation.RetentionPolicy;
  */
 public class Event implements Comparable<Event> {
 
-    @IntDef({FUN, CULTURE, SPORT, OTHER})
+    @IntDef({FUN, CULTURE, SPORT, FAIR, EDUCATION, CONCERTS, OTHER})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Category {
     }
 
-    public static final int FUN = 0;
-    public static final int CULTURE = 1;
-    public static final int SPORT = 2;
-    public static final int OTHER = 3;
+    public static final int FUN = 1;
+    public static final int CULTURE = 3;
+    public static final int SPORT = 6;
+    public static final int FAIR = 7;
+    public static final int EDUCATION = 8;
+    public static final int CONCERTS = 9;
+    public static final int OTHER = 10;
 
     public static final int NOT_SAVED = 0;
     public static final int SAVED = 1;

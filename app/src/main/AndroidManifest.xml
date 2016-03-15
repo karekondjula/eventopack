@@ -76,26 +76,6 @@
         <!--android:value=".ui.activites.ActivityMain" />-->
         <!--</activity>-->
 
-        <!--<activity android:name=".ui.activites.ActivitySocial">-->
-        <!--<meta-data-->
-        <!--android:name="android.support.PARENT_ACTIVITY"-->
-        <!--android:value=".ui.activites.ActivityMain" />-->
-        <!--</activity>-->
-
-        <!--<activity-->
-        <!--android:name=".ui.activites.ActivityLogin"-->
-        <!--android:windowSoftInputMode="stateHidden|adjustResize">-->
-        <!--<meta-data-->
-        <!--android:name="android.support.PARENT_ACTIVITY"-->
-        <!--android:value=".ui.activites.ActivityMain" />-->
-        <!--</activity>-->
-
-        <!--<activity android:name=".ui.activites.ActivitySignup">-->
-        <!--<meta-data-->
-        <!--android:name="android.support.PARENT_ACTIVITY"-->
-        <!--android:value=".ui.activites.ActivityMain" />-->
-        <!--</activity>-->
-
         <activity android:name=".ui.activites.ActivityCalendar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
