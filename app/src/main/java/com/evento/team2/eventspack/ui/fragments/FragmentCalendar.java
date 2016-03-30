@@ -209,7 +209,6 @@ public class FragmentCalendar extends Fragment implements FragmentCalendarView {
                 calendarItemView.setOnClickListener(v -> {
                     Intent intent = ActivityEventDetails.createIntent(getActivity(), event.id);
                     getActivity().startActivity(intent);
-
                 });
 
                 getActivity().runOnUiThread(() -> {

@@ -21,9 +21,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import rx.Observable;
-import rx.Subscriber;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by Daniel on 18-Aug-15.

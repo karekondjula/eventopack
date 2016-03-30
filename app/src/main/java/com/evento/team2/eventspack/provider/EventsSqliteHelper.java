@@ -13,9 +13,9 @@ import com.evento.team2.eventspack.models.Place;
 public class EventsSqliteHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "events.db";
-    private static final int DATABASE_VERSION = 2; // 1
+    private static final int DATABASE_VERSION = 3;
 
-    private static int currentVersion = 1;
+    private static int currentVersion = 2;
 
     public EventsSqliteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -39,6 +39,8 @@ public class EventsSqliteHelper extends SQLiteOpenHelper {
             } else if (fromVersion == 2) {
                 database.execSQL("ALTER TABLE " + Event.Table.TABLE_EVENTS + " ADD " + Event.Table.COLUMN_ATTENDING_COUNT + " TEXT" + ";");
                 database.execSQL("ALTER TABLE " + Event.Table.TABLE_EVENTS + " ADD " + Event.Table.COLUMN_CATEGORY_STRING + " TEXT" + ";");
+            } else if (fromVersion == 3) {
+                database.execSQL("ALTER TABLE " + Event.Table.TABLE_EVENTS + " ADD " + Event.Table.COLUMN_CATEGORY_ID + " integer" + ";");
             }
 
             fromVersion++;

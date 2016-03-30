@@ -14,18 +14,21 @@ import java.lang.annotation.RetentionPolicy;
  */
 public class Event implements Comparable<Event> {
 
-    @IntDef({FUN, CULTURE, SPORT, FAIR, EDUCATION, CONCERTS, OTHER})
+    @IntDef({FUN, CINEMA, CULTURE, FESTIVAL, PROMOTION, SPORT, FAIR, EDUCATION, CONCERTS, OTHER})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Category {
     }
 
     public static final int FUN = 1;
+    public static final int CINEMA = 2;
     public static final int CULTURE = 3;
+    public static final int FESTIVAL = 4;
+    public static final int PROMOTION = 5;
     public static final int SPORT = 6;
     public static final int FAIR = 7;
     public static final int EDUCATION = 8;
     public static final int CONCERTS = 9;
-    public static final int OTHER = 10;
+    public static final int OTHER = 100;
 
     public static final int NOT_SAVED = 0;
     public static final int SAVED = 1;
@@ -51,12 +54,9 @@ public class Event implements Comparable<Event> {
     public String endDateString;
     public boolean isEventSaved = false;
     public String attendingCount;
+    @Category
     public int categoryId;
     public String categoryString;
-
-    // TODO adapt this to categoryString
-    @Category
-    public int category;
 
     public Event() {
     }
@@ -70,6 +70,33 @@ public class Event implements Comparable<Event> {
         this.name = name;
         this.details = description;
         this.pictureUri = pictureUri;
+    }
+
+    public static @Category int getCategoryByInt(int categoryId) {
+        switch (categoryId) {
+            case FUN:
+                return FUN;
+            case CINEMA:
+                return CINEMA;
+            case CULTURE:
+                return CULTURE;
+            case FESTIVAL:
+                return FESTIVAL;
+            case PROMOTION:
+                return PROMOTION;
+            case SPORT:
+                return SPORT;
+            case FAIR:
+                return FAIR;
+            case EDUCATION:
+                return EDUCATION;
+            case CONCERTS:
+                return CONCERTS;
+            case OTHER:
+                return OTHER;
+        }
+
+        return 0;
     }
 
     @Override
@@ -146,6 +173,7 @@ public class Event implements Comparable<Event> {
         public static final String COLUMN_END_TIME_STAMP = "endTimeStamp";
         public static final String COLUMN_IS_EVENT_SAVED = "isEventSaved";
         public static final String COLUMN_ATTENDING_COUNT = "attendingCount";
+        public static final String COLUMN_CATEGORY_ID = "categoryId";
         public static final String COLUMN_CATEGORY_STRING = "categoryString";
 
         // Database creation sql statement

@@ -22,6 +22,8 @@ public interface DatabaseInteractor {
 
     ArrayList<Event> getSavedEvents(String filter);
 
+    ArrayList<Event> getActiveEventsByCategory(@Event.Category int categoryId, String filter);
+
     Event getEventById(long eventId);
 
     void setSavedStateOfEvent(Event event, boolean isSaved);

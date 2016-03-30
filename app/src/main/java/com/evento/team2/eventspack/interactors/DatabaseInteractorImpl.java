@@ -53,6 +53,11 @@ public class DatabaseInteractorImpl implements DatabaseInteractor {
     }
 
     @Override
+    public ArrayList<Event> getActiveEventsByCategory(@Event.Category int categoryId, String filter) {
+        return EventsDatabase.getInstance().getActiveEventsByCategory(categoryId, String.valueOf(new Date().getTime()), filter);
+    }
+
+    @Override
     public Event getEventById(long eventId) {
         return EventsDatabase.getInstance().getEventById(eventId);
     }

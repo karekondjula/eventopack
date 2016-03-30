@@ -12,7 +12,7 @@ public class EventiConstants {
 
     @IntDef({NONE, EVENTS, PLACES, SAVED_EVENTS})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface Category {
+    public @interface SelectedCategory {
     }
 
     public static final int NONE = -1;

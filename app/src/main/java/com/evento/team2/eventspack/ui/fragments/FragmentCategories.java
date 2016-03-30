@@ -1,6 +1,7 @@
 package com.evento.team2.eventspack.ui.fragments;
 
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,15 +10,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.evento.team2.eventspack.R;
-import com.evento.team2.eventspack.adapters.PlacesRecyclerViewAdapter;
+import com.evento.team2.eventspack.adapters.CategoryExpandableRecyclerViewAdapter;
 import com.evento.team2.eventspack.components.AppComponent;
-import com.evento.team2.eventspack.models.Place;
-import com.evento.team2.eventspack.presenters.interfaces.FragmentPlacesPresenter;
+import com.evento.team2.eventspack.models.Category;
+import com.evento.team2.eventspack.models.Event;
+import com.evento.team2.eventspack.presenters.interfaces.FragmentCategoriesPresenter;
+import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.ui.fragments.interfaces.BaseFragment;
 import com.evento.team2.eventspack.utils.EventiConstants;
-import com.evento.team2.eventspack.views.FragmentPlacesView;
+import com.evento.team2.eventspack.views.FragmentCategoriesView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -27,21 +32,20 @@ import butterknife.ButterKnife;
 /**
  * Created by Daniel on 31-Jul-15.
  */
-public class FragmentCategories extends BaseFragment {
+public class FragmentCategories extends BaseFragment implements FragmentCategoriesView {
 
-//    @Inject
-//    FragmentPlacesPresenter fragmentPlacesPresenter;
+    @Inject
+    FragmentCategoriesPresenter fragmentCategoriesPresenter;
 
-    @Bind(R.id.placesRecyclerView)
-    RecyclerView placesRecyclerView;
+    @Bind(R.id.categoriesRecyclerView)
+    RecyclerView categoriesRecyclerView;
 
-    private PlacesRecyclerViewAdapter placesRecyclerViewAdapter;
+    private CategoryExpandableRecyclerViewAdapter categoryExpandableRecyclerViewAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         setHasOptionsMenu(true);
-        View view = inflater.inflate(R.layout.fragment_places, container, false);
+        View view = inflater.inflate(R.layout.fragment_categories, container, false);
         ButterKnife.bind(this, view);
 
         return view;
@@ -50,27 +54,23 @@ public class FragmentCategories extends BaseFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        categoryExpandableRecyclerViewAdapter = new CategoryExpandableRecyclerViewAdapter(getActivity(), new ArrayList<Category>());
 
-        placesRecyclerViewAdapter = new PlacesRecyclerViewAdapter(getActivity());
-        placesRecyclerView.setHasFixedSize(true);
-        placesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        placesRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        placesRecyclerView.setAdapter(placesRecyclerViewAdapter);
+        categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        categoriesRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        categoriesRecyclerView.setAdapter(categoryExpandableRecyclerViewAdapter);
 
-//        fragmentPlacesPresenter.setView(this);
+        categoriesRecyclerView.setHasFixedSize(true);
+        categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        categoriesRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        fragmentCategoriesPresenter.setView(this);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-
-//        fragmentPlacesPresenter.fetchPlaces(EventiConstants.NO_FILTER_STRING);
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
+        fragmentCategoriesPresenter.fetchCategoriesWithActiveEvents(EventiConstants.NO_FILTER_STRING);
     }
 
     public static FragmentCategories newInstance() {
@@ -79,11 +79,19 @@ public class FragmentCategories extends BaseFragment {
 
     @Override
     public void filterList(final String filter) {
-//        fragmentPlacesPresenter.fetchPlaces(filter);
+        fragmentCategoriesPresenter.fetchCategoriesWithActiveEvents(filter);
     }
 
     @Override
     protected void injectComponent(AppComponent component) {
-//        component.inject(this);
+        component.inject(this);
+    }
+
+    @Override
+    public void showCategories(List<Category> categoryList) {
+        categoryExpandableRecyclerViewAdapter = new CategoryExpandableRecyclerViewAdapter(getActivity(), categoryList);
+//        categoriesRecyclerView.swapAdapter(categoryExpandableRecyclerViewAdapter, false);
+        categoriesRecyclerView.setAdapter(categoryExpandableRecyclerViewAdapter);
+        categoryExpandableRecyclerViewAdapter.notifyDataSetChanged();
     }
 }

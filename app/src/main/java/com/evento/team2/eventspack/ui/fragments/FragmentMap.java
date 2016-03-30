@@ -384,7 +384,7 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
         mapView.setPadding(0, 0, 0, 0);
     }
 
-    public static FragmentMap newInstance(@EventiConstants.Category int what, long id) {
+    public static FragmentMap newInstance(@EventiConstants.SelectedCategory int what, long id) {
         FragmentMap fragmentMap = new FragmentMap();
         if (what != EventiConstants.NONE) {
             Bundle args = new Bundle();

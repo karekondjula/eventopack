@@ -13,7 +13,7 @@ import com.evento.team2.eventspack.receivers.DownloadEventsReceiver;
 import com.evento.team2.eventspack.receivers.NotificationEventsReceiver;
 import com.evento.team2.eventspack.receivers.WeeklyEventsReceiver;
 import com.evento.team2.eventspack.ui.activites.ActivityMain;
-import com.evento.team2.eventspack.ui.fragments.FragmentCalendar;
+import com.evento.team2.eventspack.ui.fragments.FragmentCategories;
 import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
 import com.evento.team2.eventspack.ui.fragments.FragmentPlaces;
 import com.evento.team2.eventspack.ui.fragments.FragmentSavedEvents;
@@ -30,6 +30,7 @@ public interface AppComponent {
     void inject(ActivityMain activityMain);
 
     void inject(FragmentEvents fragmentEvents);
+    void inject(FragmentCategories fragmentCategories);
     void inject(FragmentPlaces fragmentPlaces);
     void inject(FragmentSavedEvents fragmentSavedEvents);
 

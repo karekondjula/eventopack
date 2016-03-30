@@ -71,12 +71,6 @@ public class FragmentSavedEvents extends BaseFragment implements FragmentSavedEv
         fragmentSavedEventsPresenter.fetchSavedEvents(EventiConstants.NO_FILTER_STRING);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
-    }
-
     public static FragmentSavedEvents newInstance() {
         return new FragmentSavedEvents();
     }
@@ -95,7 +89,6 @@ public class FragmentSavedEvents extends BaseFragment implements FragmentSavedEv
     public void showSavedEvents(ArrayList<Event> eventsArrayList) {
         if (savedEventsAdapter != null) {
             savedEventsAdapter.addEvents(eventsArrayList);
-            savedEventsAdapter.notifyDataSetChanged();
         }
     }
 }

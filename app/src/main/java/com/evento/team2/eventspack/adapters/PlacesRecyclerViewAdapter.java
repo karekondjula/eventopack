@@ -51,7 +51,13 @@ public class PlacesRecyclerViewAdapter extends RecyclerView.Adapter<PlacesRecycl
     public void addPlaces(ArrayList<Place> placesArrayList) {
         if (!places.equals(placesArrayList)) {
             places.clear();
-            places.addAll(placesArrayList);
+            notifyDataSetChanged();
+//            places.addAll(placesArrayList);
+
+            for (Place place : placesArrayList) {
+                places.add(place);
+                notifyItemInserted(places.size());
+            }
         }
     }
 

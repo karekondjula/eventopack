@@ -130,25 +130,25 @@ public class ActivityMain extends AppCompatActivity {
         pagerSlidingTabStrip.setShouldExpand(true);
         pagerSlidingTabStrip.setViewPager(viewPager);
 
-        Intent intent = getIntent();
-        if (intent != null && Intent.ACTION_SEARCH.equals(intent.getAction())) {
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            switch (viewPager.getCurrentItem()) {
-                case 0:
-                    fragmentEvents.filterList(query);
-                    break;
-                case 1:
-                    fragmentCategories.filterList(query);
-                    break;
-                case 2:
-                    fragmentSavedEvents.filterList(query);
-                    break;
-                case 3:
-                    fragmentPlaces.filterList(query);
-                    break;
-                default:
-            }
-        }
+//        Intent intent = getIntent();
+//        if (intent != null && Intent.ACTION_SEARCH.equals(intent.getAction())) {
+//            String query = intent.getStringExtra(SearchManager.QUERY);
+//            switch (viewPager.getCurrentItem()) {
+//                case 0:
+//                    fragmentEvents.filterList(query);
+//                    break;
+//                case 1:
+//                    fragmentCategories.filterList(query);
+//                    break;
+//                case 2:
+//                    fragmentSavedEvents.filterList(query);
+//                    break;
+//                case 3:
+//                    fragmentPlaces.filterList(query);
+//                    break;
+//                default:
+//            }
+//        }
 
         presentShowcaseSequence();
     }

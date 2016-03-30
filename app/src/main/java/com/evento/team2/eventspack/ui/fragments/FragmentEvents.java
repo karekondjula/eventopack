@@ -60,6 +60,18 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
         swipeRefreshLayout.setOnRefreshListener(() -> fragmentEventsPresenter.fetchEventsFromServer(true));
 
+        eventsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                int topRowVerticalPosition =
+                        (eventsRecyclerView == null || eventsRecyclerView.getChildCount() == 0) ?
+                                0 : eventsRecyclerView.getChildAt(0).getTop();
+                swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
+            }
+        });
+
         return swipeRefreshLayout;
     }
 
@@ -127,9 +139,9 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
 
                 // some kind of optimization ... further read is required
 //            eventsAdapter = new EventsRecyclerViewAdapter(getActivity());
-                eventsAdapter.addEvents(eventsArrayList);
 //            eventsRecyclerView.swapAdapter(eventsAdapter, false);
-                eventsAdapter.notifyDataSetChanged();
+                eventsAdapter.addEvents(eventsArrayList);
+//                eventsAdapter.notifyDataSetChanged();
             }
         }
     }

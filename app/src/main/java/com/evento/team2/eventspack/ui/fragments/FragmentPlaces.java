@@ -67,12 +67,6 @@ public class FragmentPlaces extends BaseFragment implements FragmentPlacesView {
         fragmentPlacesPresenter.fetchPlaces(EventiConstants.NO_FILTER_STRING);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        ButterKnife.unbind(this);
-    }
-
     public static FragmentPlaces newInstance() {
         return new FragmentPlaces();
     }
@@ -91,7 +85,7 @@ public class FragmentPlaces extends BaseFragment implements FragmentPlacesView {
     public void showPlaces(ArrayList<Place> placesArrayList) {
         if (placesRecyclerViewAdapter != null) {
             placesRecyclerViewAdapter.addPlaces(placesArrayList);
-            placesRecyclerViewAdapter.notifyDataSetChanged();
+//            placesRecyclerViewAdapter.notifyDataSetChanged();
         }
     }
 }

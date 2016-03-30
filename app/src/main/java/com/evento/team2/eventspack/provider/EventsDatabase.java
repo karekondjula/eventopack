@@ -49,6 +49,7 @@ public class EventsDatabase {
             Event.Table.COLUMN_IS_EVENT_SAVED,
             Event.Table.COLUMN_ATTENDING_COUNT,
             Event.Table.COLUMN_CATEGORY_STRING,
+            Event.Table.COLUMN_CATEGORY_ID,
     };
 
     private Event cursorToEvent(Cursor cursor) {
@@ -76,6 +77,7 @@ public class EventsDatabase {
 
         event.attendingCount = cursor.getString(12);
         event.categoryString = cursor.getString(13);
+        event.categoryId = Event.getCategoryByInt(cursor.getInt(14));
 
         return event;
     }
@@ -248,6 +250,8 @@ public class EventsDatabase {
         values.put(Event.Table.COLUMN_END_TIME_STAMP, event.endTimeStamp);
 
         values.put(Event.Table.COLUMN_ATTENDING_COUNT, event.attendingCount);
+
+        values.put(Event.Table.COLUMN_CATEGORY_ID, event.categoryId);
         values.put(Event.Table.COLUMN_CATEGORY_STRING, event.categoryString);
 
         long updateRows = database.update(Event.Table.TABLE_EVENTS,
@@ -380,11 +384,11 @@ public class EventsDatabase {
 
 
     public ArrayList<Event> getActiveEventsByLocation(String... filter) {
-        ArrayList<Event> events = new ArrayList<Event>();
+        ArrayList<Event> events = new ArrayList<>();
 
         StringBuilder where = null;
         String whereArgs[] = null;
-        ArrayList<String> whereArgsList = new ArrayList<String>();
+        ArrayList<String> whereArgsList = new ArrayList<>();
         if (filter != null) {
             where = new StringBuilder();
             if (filter.length > 0) {
@@ -432,9 +436,67 @@ public class EventsDatabase {
         return events;
     }
 
+    public ArrayList<Event> getActiveEventsByCategory(@Event.Category int categoryId, String... filter) {
+        ArrayList<Event> events = new ArrayList<>();
+
+        StringBuilder where = new StringBuilder();
+        String whereArgs[] = null;
+        ArrayList<String> whereArgsList = new ArrayList<>();
+
+        where.append(Event.Table.COLUMN_CATEGORY_ID + " = ? ");
+        whereArgsList.add(String.valueOf(categoryId));
+
+        if (filter != null) {
+            if (filter.length > 0) {
+                where.append(" AND ( " +
+                        Event.Table.COLUMN_START_TIME_STAMP + " > ? " +
+                        " OR " +
+                        "( " + Event.Table.COLUMN_START_TIME_STAMP + " < ? AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? ) " +
+                        ")");
+                whereArgsList.add(filter[0]);
+                whereArgsList.add(filter[0]);
+                whereArgsList.add(filter[0]);
+            }
+            if (filter.length > 1) {
+                where.append(" AND (" + Event.Table.COLUMN_NAME + " LIKE ? OR " +
+//                        Event.Table.COLUMN_NAME + " LIKE ? OR " +
+                        Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
+                        Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
+                        Event.Table.COLUMN_START_DATE_STRING + " LIKE ? ) ");
+
+                whereArgsList.add("%" + filter[1] + "%");
+//                whereArgsList.add("%" + ConversionUtils.convertTextToCyrilic(filter[0]) + "%");
+                whereArgsList.add("%" + filter[1] + "%");
+                whereArgsList.add("%" + filter[1] + "%");
+                whereArgsList.add("%" + filter[1] + "%");
+            }
+
+            whereArgs = new String[whereArgsList.size()];
+            whereArgs = whereArgsList.toArray(whereArgs);
+        }
+
+        Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
+                allColumnsEvent,
+                where.toString(),
+                whereArgs,
+                null,
+                null,
+                Event.Table.COLUMN_START_TIME_STAMP + " ASC");
+
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            Event event = cursorToEvent(cursor);
+//            Log.i(">>", DateFormatterUtils.fullDateFormat.format(new Date(event.startTimeStamp)) + " - " + event.name);
+            events.add(event);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return events;
+    }
+
     // TODO refactor it in better times (no need for two differet get<>Events methods!!!
     public ArrayList<Event> getSavedEvents(String... filter) {
-        ArrayList<Event> events = new ArrayList<Event>();
+        ArrayList<Event> events = new ArrayList<>();
 
         Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
                 allColumnsEvent,
@@ -446,7 +508,7 @@ public class EventsDatabase {
                                 Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
                                 Event.Table.COLUMN_START_DATE_STRING + " LIKE ? )"
                                 : ""),
-                (filter.length > 0 ? new String[]{String.valueOf(Event.SAVED),
+                (filter != null && filter.length > 0 ? new String[]{String.valueOf(Event.SAVED),
                         "%" + filter[0] + "%",
 //                        "%" + ConversionUtils.convertTextToCyrilic(filter[0]) + "%",
                         "%" + filter[0] + "%",
@@ -464,7 +526,6 @@ public class EventsDatabase {
             events.add(event);
             cursor.moveToNext();
         }
-        // make sure to close the cursor
         cursor.close();
         return events;
     }
