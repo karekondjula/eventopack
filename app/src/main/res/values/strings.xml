@@ -34,5 +34,15 @@
 
     <string name="upcoming_event_reminder">Upcoming event reminder</string>
     <string name="categories">Categories</string>
+    <string name="category_fun">Fun</string>
+    <string name="category_cinema">Cinema</string>
+    <string name="category_culture">Culture</string>
+    <string name="category_festival">Festival</string>
+    <string name="category_promotion">Promotion</string>
+    <string name="category_sport">Sport</string>
+    <string name="category_fair">Fair</string>
+    <string name="category_education">Education</string>
+    <string name="category_concerts">Concerts</string>
+    <string name="category_other">Other</string>
 
 </resources>

@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapters.EventsRecyclerViewAdapter;
 import com.evento.team2.eventspack.components.AppComponent;
+import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
@@ -39,6 +40,9 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
 
     @Inject
     NotificationsInteractor notificationsInteractor;
+
+    @Inject
+    DatabaseInteractor databaseInteractor;
 
     @Bind(R.id.eventsRecyclerView)
     RecyclerView eventsRecyclerView;
@@ -83,7 +87,7 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         eventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        eventsAdapter = new EventsRecyclerViewAdapter(getActivity(), notificationsInteractor);
+        eventsAdapter = new EventsRecyclerViewAdapter(getActivity(), notificationsInteractor, databaseInteractor);
         eventsRecyclerView.setAdapter(eventsAdapter);
 
         fragmentEventsPresenter.setView(this);

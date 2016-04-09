@@ -4,11 +4,11 @@ import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.models.Category;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentCategoriesPresenter;
+import com.evento.team2.eventspack.utils.ConversionUtils;
 import com.evento.team2.eventspack.utils.interfaces.MainThread;
 import com.evento.team2.eventspack.views.FragmentCategoriesView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -46,8 +46,7 @@ public class FragmentCategoriesPresenterImpl implements FragmentCategoriesPresen
 
                     events = databaseInteractor.getActiveEventsByCategory(Event.getCategoryByInt(i), lastQuery);
                     if (events.size() > 0) {
-                        // TODO localization
-                        category = new Category(events.get(0).categoryString, events);
+                        category = new Category(events.get(0).categoryId, ConversionUtils.getCategoryNameIdByCategoryId(events.get(0).categoryId), events);
                         categories.add(category);
                     }
                 }

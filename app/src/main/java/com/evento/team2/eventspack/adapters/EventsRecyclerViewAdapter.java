@@ -14,9 +14,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.R;
+import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
 import com.evento.team2.eventspack.models.Event;
-import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.joanzapata.iconify.widget.IconTextView;
@@ -43,6 +43,7 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
     private Calendar calendar;
 
     private NotificationsInteractor notificationsInteractor;
+    private DatabaseInteractor databaseInteractor;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -74,9 +75,11 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         }
     }
 
-    public EventsRecyclerViewAdapter(Context context, NotificationsInteractor notificationsInteractor) {
+    public EventsRecyclerViewAdapter(Context context, NotificationsInteractor notificationsInteractor, DatabaseInteractor databaseInteractor) {
         this.context = context;
         this.notificationsInteractor = notificationsInteractor;
+        this.databaseInteractor = databaseInteractor;
+
         events = new ArrayList<>();
 
         calendar = Calendar.getInstance();
@@ -84,7 +87,6 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
-
     }
 
     public void addEvents(ArrayList<Event> eventArrayList) {
@@ -203,7 +205,7 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
                 holder.isEventSaved.setText(ICON_TEXT_VIEW_EMPTY_HEART);
                 notificationsInteractor.removeScheduleNotification(event);
             }
-            EventsDatabase.getInstance().changeSaveEvent(event, event.isEventSaved);
+            databaseInteractor.changeSaveEvent(event, event.isEventSaved);
 
             try {
                 Snackbar.make(v,

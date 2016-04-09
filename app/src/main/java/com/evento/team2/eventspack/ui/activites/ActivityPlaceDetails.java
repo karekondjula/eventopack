@@ -33,17 +33,21 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
+import com.evento.team2.eventspack.components.DaggerPlaceDetailsComponent;
+import com.evento.team2.eventspack.components.PlaceDetailsComponent;
 import com.evento.team2.eventspack.models.Place;
-import com.evento.team2.eventspack.provider.EventsDatabase;
+import com.evento.team2.eventspack.modules.PlaceDetailsModule;
+import com.evento.team2.eventspack.presenters.interfaces.FragmentPlaceDetailsPresenter;
 import com.evento.team2.eventspack.utils.EventiConstants;
+import com.evento.team2.eventspack.views.FragmentPlaceDetailsView;
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.joanzapata.iconify.Iconify;
-import com.joanzapata.iconify.fonts.IoniconsModule;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -56,9 +60,12 @@ import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
-public class ActivityPlaceDetails extends AppCompatActivity {
+public class ActivityPlaceDetails extends AppCompatActivity implements FragmentPlaceDetailsView {
 
     public static final String EXTRA_ID = "place_id";
+
+    @Inject
+    FragmentPlaceDetailsPresenter fragmentPlaceDetailsPresenter;
 
     @Bind(R.id.backdrop)
     ImageView backdropImage;
@@ -73,17 +80,18 @@ public class ActivityPlaceDetails extends AppCompatActivity {
     LinearLayout placeDetailsEventsLinearLayout;
 
     private Place place;
-    private MapFragment mapFragment;
-
-    static {
-        Iconify.with(new IoniconsModule());
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
         ButterKnife.bind(this);
+
+        PlaceDetailsComponent placeDetailsComponent = DaggerPlaceDetailsComponent.builder()
+                .appComponent(((EventiApplication) getApplication()).getAppComponent())
+                .placeDetailsModule(new PlaceDetailsModule())
+                .build();
+        placeDetailsComponent.inject(this);
 
         final Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -93,21 +101,7 @@ public class ActivityPlaceDetails extends AppCompatActivity {
         }
         // TODO make the toolbar disappear completely on top most scroll
 
-        Intent intent = getIntent();
-        final long eventId = intent.getLongExtra(EXTRA_ID, 0);
-        place = EventsDatabase.getInstance().getPlaceById(eventId);
-
-        collapsingToolbar.setTitle(place.name);
-
-        if (TextUtils.isEmpty(place.pictureUri)) {
-            Glide.with(this).load(R.drawable.place_image).into(backdropImage);
-        } else {
-            Glide.with(this).load(place.pictureUri).into(backdropImage);
-        }
-
-        textViewEventLocation.setText(place.locationString);
-
-        initMap();
+        fragmentPlaceDetailsPresenter.setView(this);
 
 //        new Thread() {
 //            @Override
@@ -144,11 +138,20 @@ public class ActivityPlaceDetails extends AppCompatActivity {
 //        }.start();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Intent intent = getIntent();
+        long eventId = intent.getLongExtra(EXTRA_ID, 0);
+
+        fragmentPlaceDetailsPresenter.fetchPlaceDetails(eventId);
+    }
+
     @OnClick(R.id.backdrop)
     public void openImage(View view) {
 
-        Intent fullScreenImage = ActivityFullScreenImage.createIntent(this, ActivityFullScreenImage.PLACE_IMAGE,
-                place.pictureUri, place.name);
+        Intent fullScreenImage = ActivityFullScreenImage.createIntent(this, ActivityFullScreenImage.PLACE_IMAGE, place.pictureUri, place.name);
         startActivity(fullScreenImage);
     }
 
@@ -163,21 +166,20 @@ public class ActivityPlaceDetails extends AppCompatActivity {
     }
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-    protected void initMap() {
-        mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.event_detail_map);
+    protected void initMap(Place place) {
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.event_detail_map);
         mapFragment.getMapAsync(googleMap -> {
-            GoogleMap mapView = googleMap;
-            mapView.setMyLocationEnabled(true);
-            mapView.getUiSettings().setAllGesturesEnabled(false);
-            mapView.getUiSettings().setMyLocationButtonEnabled(false);
-            if (place.location.latitude != 0 || place.location.longitude != 0) {
-                mapView.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(place.location.latitude, place.location.longitude), 15));
-                mapView.setOnMapClickListener(latLng -> {
-                    Intent intentActivityMap = ActivityMap.createIntent(ActivityPlaceDetails.this, EventiConstants.PLACES, place.id);
+            googleMap.setMyLocationEnabled(true);
+            googleMap.getUiSettings().setAllGesturesEnabled(false);
+            googleMap.getUiSettings().setMyLocationButtonEnabled(false);
+            if (this.place.location.latitude != 0 || this.place.location.longitude != 0) {
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(this.place.location.latitude, this.place.location.longitude), 15));
+                googleMap.setOnMapClickListener(latLng -> {
+                    Intent intentActivityMap = ActivityMap.createIntent(ActivityPlaceDetails.this, EventiConstants.PLACES, this.place.id);
                     startActivity(intentActivityMap);
                     finish();
                 });
-                mapView.addMarker(new MarkerOptions().position(new LatLng(place.location.latitude, place.location.longitude)));
+                googleMap.addMarker(new MarkerOptions().position(new LatLng(this.place.location.latitude, this.place.location.longitude)));
             }
         });
     }
@@ -208,5 +210,22 @@ public class ActivityPlaceDetails extends AppCompatActivity {
         intent.putExtra(ActivityPlaceDetails.EXTRA_ID, id);
 
         return intent;
+    }
+
+    @Override
+    public void showPlace(Place place) {
+        this.place = place;
+
+        collapsingToolbar.setTitle(place.name);
+
+        if (TextUtils.isEmpty(place.pictureUri)) {
+            Glide.with(this).load(R.drawable.place_image).into(backdropImage);
+        } else {
+            Glide.with(this).load(place.pictureUri).into(backdropImage);
+        }
+
+        textViewEventLocation.setText(place.locationString);
+
+        initMap(place);
     }
 }

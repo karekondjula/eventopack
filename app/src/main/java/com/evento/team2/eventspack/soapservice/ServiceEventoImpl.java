@@ -3,9 +3,11 @@ package com.evento.team2.eventspack.soapservice;
 import android.util.Log;
 
 import com.bluelinelabs.logansquare.LoganSquare;
+import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.provider.EventsDatabase;
+import com.evento.team2.eventspack.soapservice.interfaces.ServiceEvento;
 import com.evento.team2.eventspack.soapservice.model.JsonEvent;
 import com.evento.team2.eventspack.utils.ConversionUtils;
 
@@ -25,8 +27,9 @@ import rx.Observable;
 /**
  * Created by Daniel on 18-Aug-15.
  */
-public class ServiceEvento {
-    private static final String TAG = ">> ServiceEvento";
+public class ServiceEventoImpl implements ServiceEvento {
+
+    private static final String TAG = ">> ServiceEventoImpl";
 
     private static final String NAMESPACE = "urn:eventservice";
     private static final String URL = "http://ap.mk/evento/server.php";
@@ -56,21 +59,14 @@ public class ServiceEvento {
     public static final String METHOD_GET_ALL_PLACES = "get_all_places";
     // end methods
 
-    private static ServiceEvento instance;
+    private DatabaseInteractor databaseInteractor;
 
-    private ServiceEvento() {
-    }
-
-    public static ServiceEvento getInstance() {
-        if (instance == null) {
-            instance = new ServiceEvento();
-        }
-
-        return instance;
+    public ServiceEventoImpl(DatabaseInteractor databaseInteractor) {
+        this.databaseInteractor = databaseInteractor;
     }
 
     /**
-     * Must contain at least [ServiceEvento.METHOD_NAME_KEY, methodName] pair
+     * Must contain at least [ServiceEventoImpl.METHOD_NAME_KEY, methodName] pair
      */
     public void callServiceMethod(HashMap<String, Object> params) {
 //        new AsyncCallWS().execute(params);
@@ -147,13 +143,11 @@ public class ServiceEvento {
 
                     jsonEventsObservable
                             .subscribe(jsonEvent -> {
-                                // TODO DAGGER
                                 Event event = ConversionUtils.convertJsonEventToEvent(jsonEvent);
-                                // TODO DAGGER
-                                EventsDatabase.getInstance().persistEvent(event);
+                                databaseInteractor.persistEvent(event);
 
                                 Place place = ConversionUtils.extractPlaceFromEvent(event);
-                                EventsDatabase.getInstance().persistPlace(place);
+                                databaseInteractor.persistPlace(place);
                             });
 
                 } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_PLACES)) {
@@ -168,4 +162,3 @@ public class ServiceEvento {
         }
     }
 }
-

@@ -1,5 +1,6 @@
 package com.evento.team2.eventspack.utils;
 
+import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.soapservice.model.JsonEvent;
@@ -10,7 +11,6 @@ import java.text.SimpleDateFormat;
 /**
  * Created by Daniel on 17-Oct-15.
  */
-//  TODO dagger
 public class ConversionUtils {
 
     private static String[] listLat = null;
@@ -27,7 +27,7 @@ public class ConversionUtils {
 //        listCyr = cyr.split(" ");
     }
 
-    public static String convertTextToCyrilic(String line){
+    public static String convertTextToCyrilic(String line) {
 
         int i = 0;
 
@@ -65,7 +65,7 @@ public class ConversionUtils {
     }
 
     public static Place extractPlaceFromEvent(Event event) {
-        Place place= new Place();
+        Place place = new Place();
 
         place.id = event.id;
         place.name = event.locationString.trim().replace(", null", "").replace("\"", "");
@@ -73,5 +73,45 @@ public class ConversionUtils {
         place.pictureUri = event.pictureUri;
 
         return place;
+    }
+
+    public static int getCategoryNameIdByCategoryId(@Event.Category int category) {
+
+        int resourceId = Event.OTHER;
+
+        switch (category) {
+            case Event.FUN:
+                resourceId = R.string.category_fun;
+                break;
+            case Event.CINEMA:
+                resourceId = R.string.category_cinema;
+                break;
+            case Event.CULTURE:
+                resourceId = R.string.category_culture;
+                break;
+            case Event.FESTIVAL:
+                resourceId = R.string.category_festival;
+                break;
+            case Event.PROMOTION:
+                resourceId = R.string.category_promotion;
+                break;
+            case Event.SPORT:
+                resourceId = R.string.category_sport;
+                break;
+            case Event.FAIR:
+                resourceId = R.string.category_fair;
+                break;
+            case Event.EDUCATION:
+                resourceId = R.string.category_education;
+                break;
+            case Event.CONCERTS:
+                resourceId = R.string.category_concerts;
+                break;
+            case Event.OTHER:
+                resourceId = R.string.category_other;
+                break;
+        }
+
+        return resourceId;
     }
 }

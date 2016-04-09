@@ -11,6 +11,7 @@ import com.evento.team2.eventspack.presenters.interfaces.FragmentCategoriesPrese
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentPlacesPresenter;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentSavedEventsPresenter;
+import com.evento.team2.eventspack.soapservice.interfaces.ServiceEvento;
 import com.evento.team2.eventspack.utils.NetworkUtils;
 import com.evento.team2.eventspack.utils.interfaces.MainThread;
 
@@ -28,8 +29,8 @@ public class MainPresentersModule {
     @Provides
     @Singleton
     FragmentEventsPresenter provideFragmentEventsPresenter(EventiApplication application, PreferencesInteractor preferencesInteractor, MainThread mainThread,
-                                                           DatabaseInteractor databaseInteractor, NetworkUtils networkUtils) {
-        return new FragmentEventsPresenterImpl(application, preferencesInteractor, mainThread, databaseInteractor, networkUtils);
+                                                           DatabaseInteractor databaseInteractor, NetworkUtils networkUtils, ServiceEvento serviceEvento) {
+        return new FragmentEventsPresenterImpl(application, preferencesInteractor, mainThread, databaseInteractor, networkUtils, serviceEvento);
     }
 
     @Provides

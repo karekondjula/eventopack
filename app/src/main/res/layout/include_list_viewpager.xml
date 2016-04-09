@@ -16,7 +16,9 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+            app:layout_scrollFlags="scroll|enterAlways"/>
+        <!--app:layout_scrollFlags="scroll|enterAlways"-->
 
         <com.astuetz.PagerSlidingTabStrip
             android:id="@+id/tabs"
@@ -25,8 +27,8 @@
             android:layout_marginLeft="30dp"
             app:pstsDividerColor="@android:color/white"
             app:pstsIndicatorColor="@android:color/white"
-            app:pstsUnderlineColor="@android:color/white" />
-
+            app:pstsUnderlineColor="@android:color/white"/>
+        <!--android:layout_height="48dip"-->
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager

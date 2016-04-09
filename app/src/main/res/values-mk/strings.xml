@@ -34,5 +34,15 @@
 
     <string name="upcoming_event_reminder">Потсетување за настан</string>
     <string name="categories">Категории</string>
+    <string name="category_fun">Забава</string>
+    <string name="category_cinema">Кино</string>
+    <string name="category_culture">Култура</string>
+    <string name="category_festival">Фестивали</string>
+    <string name="category_promotion">Промоции</string>
+    <string name="category_sport">Спорт</string>
+    <string name="category_fair">Саеми</string>
+    <string name="category_education">Едукација</string>
+    <string name="category_concerts">Концерти</string>
+    <string name="category_other">Разно</string>
 
 </resources>

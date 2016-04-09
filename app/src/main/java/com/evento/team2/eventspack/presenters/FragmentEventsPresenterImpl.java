@@ -6,10 +6,8 @@ import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.PreferencesInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
-import com.evento.team2.eventspack.provider.EventsDatabase;
-import com.evento.team2.eventspack.soapservice.ServiceEvento;
-import com.evento.team2.eventspack.soapservice.model.JsonEvent;
-import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
+import com.evento.team2.eventspack.soapservice.ServiceEventoImpl;
+import com.evento.team2.eventspack.soapservice.interfaces.ServiceEvento;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.evento.team2.eventspack.utils.NetworkUtils;
 import com.evento.team2.eventspack.utils.interfaces.MainThread;
@@ -19,13 +17,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
-
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.functions.Func1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by Daniel on 10-Jan-16.
@@ -38,16 +29,18 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
     private MainThread mainThread;
     private DatabaseInteractor databaseInteractor;
     private PreferencesInteractor preferencesInteractor;
+    private ServiceEvento serviceEvento;
 
     private String lastQuery = "";
 
-    public FragmentEventsPresenterImpl(EventiApplication application, PreferencesInteractor preferencesInteractor,
-                                       MainThread mainThread, DatabaseInteractor databaseInteractor, NetworkUtils networkUtils) {
+    public FragmentEventsPresenterImpl(EventiApplication application, PreferencesInteractor preferencesInteractor, MainThread mainThread,
+                                       DatabaseInteractor databaseInteractor, NetworkUtils networkUtils, ServiceEvento serviceEvento) {
         this.application = application;
         this.preferencesInteractor = preferencesInteractor;
         this.mainThread = mainThread;
         this.databaseInteractor = databaseInteractor;
         this.networkUtils = networkUtils;
+        this.serviceEvento = serviceEvento;
     }
 
     @Override
@@ -137,9 +130,8 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
 
 
                         HashMap<String, Object> params = new HashMap();
-                        params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
-                        // TODO DAGGER
-                        ServiceEvento.getInstance().callServiceMethod(params);
+                        params.put(ServiceEventoImpl.METHOD_NAME_KEY, ServiceEventoImpl.METHOD_GET_ALL_EVENTS);
+                        serviceEvento.callServiceMethod(params);
 
                         fetchEvents(lastQuery);
 

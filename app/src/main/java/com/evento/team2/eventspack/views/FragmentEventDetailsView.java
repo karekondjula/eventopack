@@ -7,5 +7,5 @@ import com.evento.team2.eventspack.models.Event;
  */
 public interface FragmentEventDetailsView {
 
-    public void showEvent(Event event);
+    void showEvent(Event event);
 }

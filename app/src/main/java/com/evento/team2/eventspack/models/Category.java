@@ -7,13 +7,16 @@ import java.util.List;
 /**
  * Created by Daniel on 15-Mar-16.
  */
+// TODO try AutoValues
 public class Category implements ParentListItem {
 
-    public String name;
+    public @Event.Category int categoryId;
+    public int categoryNameId;
     private List<Event> events;
 
-    public Category(String name, List<Event> events) {
-        this.name = name;
+    public Category(int categoryId, int categoryNameId, List<Event> events) {
+        this.categoryId = categoryId;
+        this.categoryNameId = categoryNameId;
         this.events = events;
     }
 

@@ -6,7 +6,8 @@ import android.content.Intent;
 
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.interactors.interfaces.PreferencesInteractor;
-import com.evento.team2.eventspack.soapservice.ServiceEvento;
+import com.evento.team2.eventspack.soapservice.ServiceEventoImpl;
+import com.evento.team2.eventspack.soapservice.interfaces.ServiceEvento;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -23,6 +24,9 @@ public class DownloadEventsReceiver extends BroadcastReceiver {
     @Inject
     PreferencesInteractor preferencesInteractor;
 
+    @Inject
+    ServiceEvento serviceEvento;
+
     @Override
     public void onReceive(Context context, Intent intent) {
 
@@ -36,9 +40,8 @@ public class DownloadEventsReceiver extends BroadcastReceiver {
                 @Override
                 public void run() {
                     HashMap<String, Object> params = new HashMap();
-                    params.put(ServiceEvento.METHOD_NAME_KEY, ServiceEvento.METHOD_GET_ALL_EVENTS);
-                    // TODO DAGGER
-                    ServiceEvento.getInstance().callServiceMethod(params);
+                    params.put(ServiceEventoImpl.METHOD_NAME_KEY, ServiceEventoImpl.METHOD_GET_ALL_EVENTS);
+                    serviceEvento.callServiceMethod(params);
 
                     preferencesInteractor.setLastUpdateOfEvents(new Date().getTime());
                 }

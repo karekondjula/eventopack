@@ -2,6 +2,7 @@ package com.evento.team2.eventspack.adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,13 +20,10 @@ import com.evento.team2.eventspack.models.Category;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
-import com.joanzapata.iconify.widget.IconTextView;
 
 import java.util.List;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Created by Daniel on 15-Mar-16.
@@ -47,14 +45,12 @@ public class CategoryExpandableRecyclerViewAdapter extends ExpandableRecyclerAda
 
     @Override
     public CategoryViewHolder onCreateParentViewHolder(ViewGroup parentViewGroup) {
-//        View categoryView = inflater.inflate(R.layout.item_small, parentViewGroup, false);
-        View categoryView = inflater.inflate(android.R.layout.simple_expandable_list_item_1, parentViewGroup, false);
+        View categoryView = inflater.inflate(R.layout.item_category, parentViewGroup, false);
         return new CategoryViewHolder(categoryView);
     }
 
     @Override
     public EventViewHolder onCreateChildViewHolder(ViewGroup childViewGroup) {
-//        View eventView = inflater.inflate(R.layout.item_small, childViewGroup, false);
         View eventView = inflater.inflate(R.layout.item_small, childViewGroup, false);
         return new EventViewHolder(eventView);
     }
@@ -89,15 +85,49 @@ public class CategoryExpandableRecyclerViewAdapter extends ExpandableRecyclerAda
     public class CategoryViewHolder extends ParentViewHolder {
 
         private TextView categoryTextView;
+        private ImageView categoryImageView;
 
         public CategoryViewHolder(View itemView) {
             super(itemView);
-//            categoryTextView = (TextView) itemView.findViewById(R.id.event_title);
-            categoryTextView = (TextView) itemView.findViewById(android.R.id.text1);
+            categoryTextView = (TextView) itemView.findViewById(R.id.category);
+            categoryImageView = (ImageView) itemView.findViewById(R.id.category_image);
         }
 
         public void bind(Category category) {
-            categoryTextView.setText(category.name);
+            categoryTextView.setText(context.getResources().getString(category.categoryNameId));
+
+            switch (category.categoryId) {
+                case Event.FUN:
+                    categoryImageView.setImageResource(R.drawable.fun);
+                    break;
+                case Event.CINEMA:
+                    categoryImageView.setImageResource(R.drawable.ic_movie_black_24dp);
+                    break;
+                case Event.CULTURE:
+                    categoryImageView.setImageResource(R.drawable.culture);
+                    break;
+                case Event.FESTIVAL:
+                    categoryImageView.setImageResource(R.drawable.ic_surround_sound_black_24dp);
+                    break;
+                case Event.PROMOTION:
+                    categoryImageView.setImageResource(R.drawable.promotion);
+                    break;
+                case Event.SPORT:
+                    categoryImageView.setImageResource(R.drawable.ic_directions_run_black_24dp);
+                    break;
+                case Event.FAIR:
+                    categoryImageView.setImageResource(R.drawable.ic_shopping_basket_black_24dp);
+                    break;
+                case Event.EDUCATION:
+                    categoryImageView.setImageResource(R.drawable.ic_import_contacts_black_24dp);
+                    break;
+                case Event.CONCERTS:
+                    categoryImageView.setImageResource(R.drawable.ic_library_music_black_24dp);
+                    break;
+                case Event.OTHER:
+                    categoryImageView.setImageResource(R.drawable.ic_group_black_24dp);
+                    break;
+            }
         }
 
         @Override
@@ -126,7 +156,7 @@ public class CategoryExpandableRecyclerViewAdapter extends ExpandableRecyclerAda
 //        View mEventAttending;
 //        @Bind(R.id.eventAttendingCount)
 //        TextView mEventAttendingCount;
-            
+
 
         public EventViewHolder(View itemView) {
             super(itemView);
@@ -156,5 +186,4 @@ public class CategoryExpandableRecyclerViewAdapter extends ExpandableRecyclerAda
             });
         }
     }
-
 }

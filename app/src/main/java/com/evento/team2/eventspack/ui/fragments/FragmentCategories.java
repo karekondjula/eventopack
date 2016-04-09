@@ -54,7 +54,7 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        categoryExpandableRecyclerViewAdapter = new CategoryExpandableRecyclerViewAdapter(getActivity(), new ArrayList<Category>());
+        categoryExpandableRecyclerViewAdapter = new CategoryExpandableRecyclerViewAdapter(getActivity(), new ArrayList<>());
 
         categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         categoriesRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -90,6 +90,7 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
     @Override
     public void showCategories(List<Category> categoryList) {
         categoryExpandableRecyclerViewAdapter = new CategoryExpandableRecyclerViewAdapter(getActivity(), categoryList);
+        // TODO what can we do about this
 //        categoriesRecyclerView.swapAdapter(categoryExpandableRecyclerViewAdapter, false);
         categoriesRecyclerView.setAdapter(categoryExpandableRecyclerViewAdapter);
         categoryExpandableRecyclerViewAdapter.notifyDataSetChanged();

@@ -12,6 +12,7 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * Created by Daniel on 04-Aug-15.
  */
+// TODO try AutoValues
 public class Event implements Comparable<Event> {
 
     @IntDef({FUN, CINEMA, CULTURE, FESTIVAL, PROMOTION, SPORT, FAIR, EDUCATION, CONCERTS, OTHER})
@@ -94,9 +95,9 @@ public class Event implements Comparable<Event> {
                 return CONCERTS;
             case OTHER:
                 return OTHER;
+            default:
+                return OTHER;
         }
-
-        return 0;
     }
 
     @Override

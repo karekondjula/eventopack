@@ -17,8 +17,9 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="snap"
+
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+            <!--app:layout_scrollFlags="snap" TODO with version 22->23-->-->
 
             <Spinner
                 android:id="@+id/spinner_navigation"

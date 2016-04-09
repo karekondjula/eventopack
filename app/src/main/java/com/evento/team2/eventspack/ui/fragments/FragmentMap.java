@@ -99,9 +99,6 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
     LinearLayout mapEventDetailsLinearLayout;
     private Snackbar fetchingEventsSnackBar;
 
-    private Bitmap placeImageBitmap;
-    private Bitmap eventImageBitmap;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -205,14 +202,6 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
             }
         });
 
-        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.party_image);
-        eventImageBitmap = Bitmap.createScaledBitmap(b, b.getWidth() / 8, b.getHeight() / 8, false);
-        b.recycle();
-
-        b = BitmapFactory.decodeResource(getResources(), R.drawable.place_image);
-        placeImageBitmap = Bitmap.createScaledBitmap(b, b.getWidth() / 8, b.getHeight() / 8, false);
-        b.recycle();
-
         return view;
     }
 
@@ -246,11 +235,6 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
             mapView.stopAnimation();
             mapView = null;
         }
-
-        eventImageBitmap.recycle();
-        eventImageBitmap = null;
-        placeImageBitmap.recycle();
-        placeImageBitmap = null;
     }
 
     @Override
@@ -415,9 +399,11 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
 
         if (getView() != null) {
             if (what == EventiConstants.EVENTS || what == EventiConstants.SAVED_EVENTS) {
-                fetchingEventsSnackBar = Snackbar.make(getView(), R.string.fetching_events, Snackbar.LENGTH_INDEFINITE);
+//                fetchingEventsSnackBar = Snackbar.make(getView(), R.string.fetching_events, Snackbar.LENGTH_INDEFINITE);
+                fetchingEventsSnackBar = Snackbar.make(getView(), R.string.fetching_events, Snackbar.LENGTH_LONG);
             } else if (what == EventiConstants.PLACES) {
-                fetchingEventsSnackBar = Snackbar.make(getView(), R.string.fetching_places, Snackbar.LENGTH_INDEFINITE);
+//                fetchingEventsSnackBar = Snackbar.make(getView(), R.string.fetching_places, Snackbar.LENGTH_INDEFINITE);
+                fetchingEventsSnackBar = Snackbar.make(getView(), R.string.fetching_places, Snackbar.LENGTH_LONG);
             }
             fetchingEventsSnackBar.show();
         }

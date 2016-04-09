@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapters.EventsRecyclerViewAdapter;
 import com.evento.team2.eventspack.components.AppComponent;
+import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentSavedEventsPresenter;
@@ -36,6 +37,9 @@ public class FragmentSavedEvents extends BaseFragment implements FragmentSavedEv
     @Inject
     NotificationsInteractor notificationsInteractor;
 
+    @Inject
+    DatabaseInteractor databaseInteractor;
+
     @Bind(R.id.savedEventsRecyclerView)
     RecyclerView savedEventsRecyclerView;
 
@@ -55,7 +59,7 @@ public class FragmentSavedEvents extends BaseFragment implements FragmentSavedEv
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        savedEventsAdapter = new EventsRecyclerViewAdapter(getActivity(), notificationsInteractor);
+        savedEventsAdapter = new EventsRecyclerViewAdapter(getActivity(), notificationsInteractor, databaseInteractor);
         savedEventsRecyclerView.setHasFixedSize(true);
         savedEventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         savedEventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
