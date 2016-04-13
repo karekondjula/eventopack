@@ -43,8 +43,8 @@ import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteracto
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.modules.EventDetailsModule;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventDetailsPresenter;
-import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
+import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.views.FragmentEventDetailsView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -106,6 +106,8 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
     @Bind(R.id.eventAttendingCount)
     TextView textViewEventAttendingCount;
 
+    private FloatingActionButton fab;
+
     private Drawable emptyHeart;
     private Drawable filledHeart;
     private GoogleMap mapView;
@@ -149,6 +151,8 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
             finish();
         }
 
+        fab = ((FloatingActionButton) findViewById(R.id.fab_add_to_saved));
+
         fragmentEventDetailsPresenter.setView(this);
     }
 
@@ -183,7 +187,7 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         event.isEventSaved = !event.isEventSaved;
         fragmentEventDetailsPresenter.updateSavedStateOfEvent(event, event.isEventSaved);
 
-        ((FloatingActionButton) findViewById(R.id.fab_add_to_saved)).setImageDrawable(event.isEventSaved ? filledHeart : emptyHeart);
+        fab.setImageDrawable(event.isEventSaved ? filledHeart : emptyHeart);
 
         Snackbar.make(view,
                 event.isEventSaved ?
@@ -207,8 +211,8 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
 //        Bitmap b = Glide.with(eventiApplication).load(event.pictureUri).
 //                asBitmap().into(-1, -1).get();
 
-        Intent fullScreenImage = ActivityFullScreenImage.createIntent(this, ActivityFullScreenImage.EVENT_IMAGE,
-                event.pictureUri, event.name);
+        Intent fullScreenImage = ActivityFullScreenImage.createIntent(this,
+                ActivityFullScreenImage.EVENT_IMAGE, event.pictureUri, event.name);
         startActivity(fullScreenImage);
     }
 
@@ -216,6 +220,12 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_event, menu);
         return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        ActivityEventDetailsPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
@@ -244,9 +254,9 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         // E.g. show a dialog explaining why you need the permission.
         // Call proceed() or cancel() on the incoming request to continue or abort the current permissions process
         new AlertDialog.Builder(this)
-                .setMessage("Map needs your permission. Allow it?")
-                .setPositiveButton("OK", (dialog, which) -> request.proceed())
-                .setNegativeButton("Abort", (dialog, which) -> request.cancel())
+                .setMessage(R.string.map_needs_permission)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> request.proceed())
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> request.cancel())
                 .show();
     }
 
@@ -298,6 +308,6 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
             textViewEventAttending.setVisibility(View.GONE);
         }
 
-        initMap();
+        ActivityEventDetailsPermissionsDispatcher.initMapWithCheck(this);
     }
 }

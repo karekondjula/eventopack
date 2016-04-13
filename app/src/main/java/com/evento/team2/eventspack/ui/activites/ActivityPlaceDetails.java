@@ -165,8 +165,14 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        ActivityPlaceDetailsPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-    protected void initMap(Place place) {
+    protected void initMap() {
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.event_detail_map);
         mapFragment.getMapAsync(googleMap -> {
             googleMap.setMyLocationEnabled(true);
@@ -189,9 +195,9 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
         // E.g. show a dialog explaining why you need the permission.
         // Call proceed() or cancel() on the incoming request to continue or abort the current permissions process
         new AlertDialog.Builder(this)
-                .setMessage("Map needs your permission. Allow it?")
-                .setPositiveButton("OK", (dialog, which) -> request.proceed())
-                .setNegativeButton("Abort", (dialog, which) -> request.cancel())
+                .setMessage(R.string.map_needs_permission)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> request.proceed())
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> request.cancel())
                 .show();
     }
 
@@ -225,7 +231,6 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
         }
 
         textViewEventLocation.setText(place.locationString);
-
-        initMap(place);
+        ActivityPlaceDetailsPermissionsDispatcher.initMapWithCheck(this);
     }
 }

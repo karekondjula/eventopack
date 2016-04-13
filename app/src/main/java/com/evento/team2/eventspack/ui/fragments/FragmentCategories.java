@@ -92,7 +92,8 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
         categoryExpandableRecyclerViewAdapter = new CategoryExpandableRecyclerViewAdapter(getActivity(), categoryList);
         // TODO what can we do about this
 //        categoriesRecyclerView.swapAdapter(categoryExpandableRecyclerViewAdapter, false);
-        categoriesRecyclerView.setAdapter(categoryExpandableRecyclerViewAdapter);
-        categoryExpandableRecyclerViewAdapter.notifyDataSetChanged();
+        if(categoriesRecyclerView != null) {
+            categoriesRecyclerView.setAdapter(categoryExpandableRecyclerViewAdapter);
+        }
     }
 }

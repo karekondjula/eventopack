@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.evento.team2.eventspack.EventiApplication;
@@ -209,7 +210,13 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     public void presentShowcaseSequence() {
+
         // TODO make it better!
+
+        //    getActionBarToolbar().getChildAt(1)
+//
+//    ((ViewGroup) mSlidingTabLayout.getChildAt(0)).getChildAt(0)
+
         ShowcaseConfig config = new ShowcaseConfig();
         config.setDelay(2000);
 

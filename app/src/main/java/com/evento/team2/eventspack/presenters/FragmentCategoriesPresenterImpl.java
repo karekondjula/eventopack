@@ -44,6 +44,7 @@ public class FragmentCategoriesPresenterImpl implements FragmentCategoriesPresen
 
                 for (int i = 0; i < Event.OTHER; i++) {
 
+                    // TODO check this in time reference
                     events = databaseInteractor.getActiveEventsByCategory(Event.getCategoryByInt(i), lastQuery);
                     if (events.size() > 0) {
                         category = new Category(events.get(0).categoryId, ConversionUtils.getCategoryNameIdByCategoryId(events.get(0).categoryId), events);
@@ -51,12 +52,7 @@ public class FragmentCategoriesPresenterImpl implements FragmentCategoriesPresen
                     }
                 }
 
-                mainThread.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        fragmentCategoriesView.showCategories(categories);
-                    }
-                });
+                mainThread.post(() -> fragmentCategoriesView.showCategories(categories));
             }
         }.start();
 

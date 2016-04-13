@@ -3,8 +3,6 @@ package com.evento.team2.eventspack.ui.fragments;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -218,12 +216,7 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
         calendar = Calendar.getInstance();
         setCalendarOnStartOfDay(calendar);
 
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.location_map);
-        if (mapFragment == null) {
-            mapFragment = MapFragment.newInstance();
-            getFragmentManager().beginTransaction().replace(R.id.location_map, mapFragment).commit();
-        }
-        mapFragment.getMapAsync(this);
+        FragmentMapPermissionsDispatcher.initMapWithCheck(this);
     }
 
     @Override
@@ -274,7 +267,6 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
         return super.onOptionsItemSelected(item);
     }
 
-    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mapView = googleMap;
@@ -314,14 +306,30 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
         }
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        FragmentMapPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    }
+
+    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
+    protected void initMap() {
+        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.location_map);
+        if (mapFragment == null) {
+            mapFragment = MapFragment.newInstance();
+            getFragmentManager().beginTransaction().replace(R.id.location_map, mapFragment).commit();
+        }
+        mapFragment.getMapAsync(this);
+    }
+
     @OnShowRationale({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     protected void showMapsRationale(final PermissionRequest request) {
         // E.g. show a dialog explaining why you need the permission.
         // Call proceed() or cancel() on the incoming request to continue or abort the current permissions process
         new AlertDialog.Builder(getActivity())
-                .setMessage("Map needs your permission. Allow it?")
-                .setPositiveButton("OK", (dialog, which) -> request.proceed())
-                .setNegativeButton("Abort", (dialog, which) -> request.cancel())
+                .setMessage(R.string.map_needs_permission)
+                .setPositiveButton(android.R.string.ok, (dialog, which) -> request.proceed())
+                .setNegativeButton(android.R.string.cancel, (dialog, which) -> request.cancel())
                 .show();
     }
 
