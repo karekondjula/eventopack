@@ -141,7 +141,7 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         setSupportActionBar(toolbar);
         final ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
         // TODO make the toolbar disappear completely on top most scroll
 

@@ -136,6 +136,8 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
                     return;
                 }
 
+                lastSelectedDate = String.valueOf(calendar.getTimeInMillis());
+
                 switch (i) {
                     case 0:
                         what = EventiConstants.EVENTS;
@@ -407,11 +409,9 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
 
         if (getView() != null) {
             if (what == EventiConstants.EVENTS || what == EventiConstants.SAVED_EVENTS) {
-//                fetchingEventsSnackBar = Snackbar.make(getView(), R.string.fetching_events, Snackbar.LENGTH_INDEFINITE);
-                fetchingEventsSnackBar = Snackbar.make(getView(), R.string.fetching_events, Snackbar.LENGTH_LONG);
+                fetchingEventsSnackBar = Snackbar.make(getView(), R.string.fetching_events, Snackbar.LENGTH_INDEFINITE);
             } else if (what == EventiConstants.PLACES) {
-//                fetchingEventsSnackBar = Snackbar.make(getView(), R.string.fetching_places, Snackbar.LENGTH_INDEFINITE);
-                fetchingEventsSnackBar = Snackbar.make(getView(), R.string.fetching_places, Snackbar.LENGTH_LONG);
+                fetchingEventsSnackBar = Snackbar.make(getView(), R.string.fetching_places, Snackbar.LENGTH_INDEFINITE);
             }
             fetchingEventsSnackBar.show();
         }

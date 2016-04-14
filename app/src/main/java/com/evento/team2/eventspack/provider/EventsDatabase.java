@@ -394,7 +394,7 @@ public class EventsDatabase {
             if (filter.length > 0) {
                 where.append("( " +
                                 "(" + Event.Table.COLUMN_LATITUDE + " LIKE ? AND " +
-                                Event.Table.COLUMN_LONGITUDE + " LIKE ? ) OR " +
+                                Event.Table.COLUMN_LONGITUDE + " LIKE ? ) AND " +
                                 Event.Table.COLUMN_LOCATION_STRING + " LIKE ? ) " +
                                 " AND ( " +
                                 Event.Table.COLUMN_START_TIME_STAMP + " > ? " +
@@ -557,7 +557,7 @@ public class EventsDatabase {
     }
 
     public void cleanUpEventsAndPlaces() {
-        database.execSQL("DELETE FROM " + Place.Table.TABLE_PLACES);
+//        database.execSQL("DELETE FROM " + Place.Table.TABLE_PLACES);
 
         // delete events older than two months
         database.execSQL("DELETE FROM " + Event.Table.TABLE_EVENTS +

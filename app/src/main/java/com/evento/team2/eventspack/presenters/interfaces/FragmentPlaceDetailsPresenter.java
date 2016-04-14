@@ -1,5 +1,7 @@
 package com.evento.team2.eventspack.presenters.interfaces;
 
+import android.location.Location;
+
 import com.evento.team2.eventspack.views.FragmentEventDetailsView;
 import com.evento.team2.eventspack.views.FragmentPlaceDetailsView;
 
@@ -11,4 +13,6 @@ public interface FragmentPlaceDetailsPresenter {
     void setView(FragmentPlaceDetailsView fragmentPlaceDetailsView);
 
     void fetchPlaceDetails(long placeId);
+
+    void fetchActiveEventsByLocation(long placeId);
 }

@@ -12,7 +12,7 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * Created by Daniel on 04-Aug-15.
  */
-// TODO try AutoValues
+// TODO try AutoValues (https://github.com/frankiesardo/auto-parcel)
 public class Event implements Comparable<Event> {
 
     @IntDef({FUN, CINEMA, CULTURE, FESTIVAL, PROMOTION, SPORT, FAIR, EDUCATION, CONCERTS, OTHER})

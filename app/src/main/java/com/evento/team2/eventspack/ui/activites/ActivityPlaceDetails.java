@@ -27,25 +27,34 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bluelinelabs.logansquare.typeconverters.DateTypeConverter;
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.components.DaggerPlaceDetailsComponent;
 import com.evento.team2.eventspack.components.PlaceDetailsComponent;
+import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.modules.PlaceDetailsModule;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentPlaceDetailsPresenter;
+import com.evento.team2.eventspack.provider.EventsDatabase;
+import com.evento.team2.eventspack.utils.ConversionUtils;
+import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.views.FragmentPlaceDetailsView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -95,47 +104,13 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
 
         final Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
-        final ActionBar actionBare = getSupportActionBar();
-        if (actionBare != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
         // TODO make the toolbar disappear completely on top most scroll
 
         fragmentPlaceDetailsPresenter.setView(this);
-
-//        new Thread() {
-//            @Override
-//            public void run() {
-//                ArrayList<Event> eventArrayList = EventsDatabase.getInstance().getActiveEventsByLocation(String.valueOf(place.location.latitude),
-//                        String.valueOf(place.location.longitude), place.locationString, String.valueOf(new Date().getTime()));
-//
-//                if (eventArrayList != null && eventArrayList.size() > 0) {
-//                    for (final Event event : eventArrayList) {
-//                        final View eventItemView = LayoutInflater.from(ActivityPlaceDetails.this).inflate(R.layout.item_small, placeDetailsEventsLinearLayout, false);
-//                        ImageView calendarEventImageView = ButterKnife.findById(eventItemView, R.id.small_event_picture);
-//                        ButterKnife.findById(eventItemView, R.id.event_color).setVisibility(View.GONE);
-//                        ((TextView) ButterKnife.findById(eventItemView, R.id.event_title)).setText(event.name);
-//                        ((TextView) ButterKnife.findById(eventItemView, R.id.event_details)).setText(event.details);
-//                        ((TextView) ButterKnife.findById(eventItemView, R.id.event_time)).setText(event.startTimeString);
-//                        eventItemView.setClickable(true);
-//                        eventItemView.setOnClickListener(v -> {
-//                            Intent eventIntent = ActivityEventDetails.createIntent(ActivityPlaceDetails.this, event.id);
-//                            startActivity(eventIntent);
-//                            finish();
-//                        });
-//
-//                        runOnUiThread(() -> {
-//                            if (TextUtils.isEmpty(event.pictureUri)) {
-//                                Glide.with(ActivityPlaceDetails.this).load(R.drawable.party_image).into(calendarEventImageView);
-//                            } else {
-//                                Glide.with(ActivityPlaceDetails.this).load(event.pictureUri).into(calendarEventImageView);
-//                            }
-//                            placeDetailsEventsLinearLayout.addView(eventItemView);
-//                        });
-//                    }
-//                }
-//            }
-//        }.start();
     }
 
     @Override
@@ -143,9 +118,10 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
         super.onResume();
 
         Intent intent = getIntent();
-        long eventId = intent.getLongExtra(EXTRA_ID, 0);
+        long placeId = intent.getLongExtra(EXTRA_ID, 0);
 
-        fragmentPlaceDetailsPresenter.fetchPlaceDetails(eventId);
+        fragmentPlaceDetailsPresenter.fetchPlaceDetails(placeId);
+        fragmentPlaceDetailsPresenter.fetchActiveEventsByLocation(placeId);
     }
 
     @OnClick(R.id.backdrop)
@@ -232,5 +208,33 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
 
         textViewEventLocation.setText(place.locationString);
         ActivityPlaceDetailsPermissionsDispatcher.initMapWithCheck(this);
+    }
+
+    @Override
+    public void showEventsAtPlace(ArrayList<Event> eventArrayList) {
+        if (eventArrayList != null && eventArrayList.size() > 0) {
+            for (final Event event : eventArrayList) {
+                final View eventItemView = LayoutInflater.from(ActivityPlaceDetails.this).inflate(R.layout.item_small, placeDetailsEventsLinearLayout, false);
+                ImageView calendarEventImageView = ButterKnife.findById(eventItemView, R.id.small_event_picture);
+                ButterKnife.findById(eventItemView, R.id.event_color).setVisibility(View.GONE);
+                ((TextView) ButterKnife.findById(eventItemView, R.id.event_title)).setText(event.name);
+                ((TextView) ButterKnife.findById(eventItemView, R.id.event_details)).setText(event.details);
+                ((TextView) ButterKnife.findById(eventItemView, R.id.event_time)).setText(DateFormatterUtils.fullDateFormat.format(new Date(event.startTimeStamp)));
+                eventItemView.setClickable(true);
+                eventItemView.setOnClickListener(v -> {
+                    Intent eventIntent = ActivityEventDetails.createIntent(ActivityPlaceDetails.this, event.id);
+                    startActivity(eventIntent);
+                });
+
+                runOnUiThread(() -> {
+                    if (TextUtils.isEmpty(event.pictureUri)) {
+                        Glide.with(ActivityPlaceDetails.this).load(R.drawable.party_image).into(calendarEventImageView);
+                    } else {
+                        Glide.with(ActivityPlaceDetails.this).load(event.pictureUri).into(calendarEventImageView);
+                    }
+                    placeDetailsEventsLinearLayout.addView(eventItemView);
+                });
+            }
+        }
     }
 }
