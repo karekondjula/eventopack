@@ -5,10 +5,11 @@
     android:orientation="vertical"
     tools:context="com.evento.team2.eventspack.ui.fragments.FragmentPlaces">
 
-    <android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    <android.support.v7.widget.RecyclerView
         android:id="@+id/placesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:scrollbarThumbVertical="@drawable/colored_scrollbar"
         android:scrollbars="vertical" />
 
 </RelativeLayout>

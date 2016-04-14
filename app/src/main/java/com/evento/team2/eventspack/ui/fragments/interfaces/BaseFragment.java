@@ -36,10 +36,16 @@ public abstract class BaseFragment extends Fragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onAttach(Context context) {
+        super.onAttach(context);
         injectComponent(((EventiApplication) getActivity().getApplication()).getAppComponent());
     }
+
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        injectComponent(((EventiApplication) getActivity().getApplication()).getAppComponent());
+//    }
 
     @Override
     public void onResume() {

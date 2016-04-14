@@ -51,8 +51,8 @@ public class FragmentPlaceDetailsPresenterImpl implements FragmentPlaceDetailsPr
             @Override
             public void run() {
                 final Place place = databaseInteractor.getPlaceById(placeId);
-                ArrayList<Event> eventArrayList = EventsDatabase.getInstance().getActiveEventsByLocation(String.valueOf(place.location.latitude),
-                        String.valueOf(place.location.longitude), place.name, String.valueOf(new Date().getTime()));
+                ArrayList<Event> eventArrayList = databaseInteractor.getActiveEventsByLocation(String.valueOf(place.location.latitude),
+                        String.valueOf(place.location.longitude), place.name);
 
                 fragmentPlaceDetailsView.showEventsAtPlace(eventArrayList);
             }

@@ -382,7 +382,6 @@ public class EventsDatabase {
         return events;
     }
 
-
     public ArrayList<Event> getActiveEventsByLocation(String... filter) {
         ArrayList<Event> events = new ArrayList<>();
 
@@ -400,7 +399,7 @@ public class EventsDatabase {
                                 Event.Table.COLUMN_START_TIME_STAMP + " > ? " +
                                 " OR " +
                                 "( " + Event.Table.COLUMN_START_TIME_STAMP + " < ? AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? ) " +
-                                ")"
+                            ")"
                 );
 
                 whereArgsList.add("%" + filter[0] + "%");
@@ -427,11 +426,9 @@ public class EventsDatabase {
         Event event;
         while (!cursor.isAfterLast()) {
             event = cursorToEvent(cursor);
-//            Log.i(">>", event.toString());
             events.add(event);
             cursor.moveToNext();
         }
-        // make sure to close the cursor
         cursor.close();
         return events;
     }

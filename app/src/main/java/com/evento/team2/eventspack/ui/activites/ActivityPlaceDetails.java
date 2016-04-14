@@ -33,7 +33,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bluelinelabs.logansquare.typeconverters.DateTypeConverter;
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
@@ -43,8 +42,6 @@ import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.modules.PlaceDetailsModule;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentPlaceDetailsPresenter;
-import com.evento.team2.eventspack.provider.EventsDatabase;
-import com.evento.team2.eventspack.utils.ConversionUtils;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.views.FragmentPlaceDetailsView;
