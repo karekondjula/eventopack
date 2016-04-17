@@ -43,6 +43,28 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
     private CategoryExpandableRecyclerViewAdapter categoryExpandableRecyclerViewAdapter;
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            List<Integer> expandedParentsList = savedInstanceState.getIntegerArrayList("expandedParentsList");
+            if (expandedParentsList != null) {
+                for(int expandedParent : expandedParentsList) {
+                    categoryExpandableRecyclerViewAdapter.expandParent(expandedParent);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putIntegerArrayList("expandedParentsList",
+                (ArrayList<Integer>) categoryExpandableRecyclerViewAdapter.getExpandedParentsList());
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_categories, container, false);

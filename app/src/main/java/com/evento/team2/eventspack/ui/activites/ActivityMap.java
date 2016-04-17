@@ -7,8 +7,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.evento.team2.eventspack.R;
-import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.ui.fragments.FragmentMap;
+import com.evento.team2.eventspack.utils.EventiConstants;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.IoniconsModule;
 
@@ -38,7 +39,7 @@ public class ActivityMap extends AppCompatActivity {
 //            actionbar.setTitle("Calendar");
 //        }
 
-        FragmentMap fragmentMap = null;
+        SupportMapFragment fragmentMap = null;
 
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
@@ -63,7 +64,7 @@ public class ActivityMap extends AppCompatActivity {
             }
         }
 
-        getFragmentManager().beginTransaction()
+        getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_map_frame, fragmentMap, FragmentMap.TAG)
                 .commit();
     }

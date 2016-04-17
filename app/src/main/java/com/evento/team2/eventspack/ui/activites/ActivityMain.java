@@ -1,12 +1,11 @@
 package com.evento.team2.eventspack.ui.activites;
 
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v13.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -18,17 +17,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
-import com.evento.team2.eventspack.ui.fragments.FragmentCategories;
-import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.ui.fragments.DialogFragmentAbout;
+import com.evento.team2.eventspack.ui.fragments.FragmentCategories;
 import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
 import com.evento.team2.eventspack.ui.fragments.FragmentPlaces;
 import com.evento.team2.eventspack.ui.fragments.FragmentSavedEvents;
+import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.utils.MaterialShowCase;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.Iconify;
@@ -82,6 +80,12 @@ public class ActivityMain extends AppCompatActivity {
             ab.setHomeAsUpIndicator(R.drawable.ic_menu);
             ab.setDisplayHomeAsUpEnabled(true);
         }
+
+//        if (savedInstanceState != null) {
+//            //Restore the fragment's instance
+//            mContent = getSupportFragmentManager().getFragment(savedInstanceState, "mContent");
+//
+//        }
 
         navigationView.setNavigationItemSelectedListener(menuItem -> {
 
@@ -152,6 +156,14 @@ public class ActivityMain extends AppCompatActivity {
 //        }
 
         presentShowcaseSequence();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        //Save the fragment's instance
+        getSupportFragmentManager().putFragment(outState, "fragmentCategories", fragmentCategories);
     }
 
     @Override
@@ -240,7 +252,7 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        Adapter adapter = new Adapter(getFragmentManager());
+        Adapter adapter = new Adapter(getSupportFragmentManager());
         adapter.addFragment(fragmentEvents, getString(R.string.events));
         adapter.addFragment(fragmentCategories, getString(R.string.categories));
         adapter.addFragment(fragmentSavedEvents, getString(R.string.saved));

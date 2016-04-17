@@ -43,8 +43,8 @@ import com.evento.team2.eventspack.views.FragmentMapView;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -316,9 +316,9 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     protected void initMap() {
-        MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.location_map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.location_map);
         if (mapFragment == null) {
-            mapFragment = MapFragment.newInstance();
+            mapFragment = SupportMapFragment.newInstance();
             getFragmentManager().beginTransaction().replace(R.id.location_map, mapFragment).commit();
         }
         mapFragment.getMapAsync(this);
@@ -378,8 +378,8 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
         mapView.setPadding(0, 0, 0, 0);
     }
 
-    public static FragmentMap newInstance(@EventiConstants.SelectedCategory int what, long id) {
-        FragmentMap fragmentMap = new FragmentMap();
+    public static SupportMapFragment newInstance(@EventiConstants.SelectedCategory int what, long id) {
+        SupportMapFragment fragmentMap = new SupportMapFragment();
         if (what != EventiConstants.NONE) {
             Bundle args = new Bundle();
             args.putInt(EXTRA_WHAT, what);
