@@ -2,7 +2,6 @@ package com.evento.team2.eventspack.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +20,6 @@ import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -33,17 +31,15 @@ public class CategoryExpandableRecyclerViewAdapter extends ExpandableRecyclerAda
         CategoryExpandableRecyclerViewAdapter.CategoryViewHolder, CategoryExpandableRecyclerViewAdapter.EventViewHolder> {
 
     private Context context;
-    private List<Category> categoryList;
+//    private List<Category> categoryList;
     private LayoutInflater inflater;
-    private List<Integer> expandedParentsList;
 
     public CategoryExpandableRecyclerViewAdapter(Context context, List<Category> parentItemList) {
         super(parentItemList);
 
         this.context = context;
-        categoryList = parentItemList;
+//        categoryList = parentItemList;
         inflater = LayoutInflater.from(context);
-        expandedParentsList = new ArrayList<>();
     }
 
     @Override
@@ -87,7 +83,6 @@ public class CategoryExpandableRecyclerViewAdapter extends ExpandableRecyclerAda
 
     public class CategoryViewHolder extends ParentViewHolder {
 
-        private Category category;
         private TextView categoryTextView;
         private ImageView categoryImageView;
 
@@ -98,7 +93,6 @@ public class CategoryExpandableRecyclerViewAdapter extends ExpandableRecyclerAda
         }
 
         public void bind(Category category) {
-            this.category = category;
             categoryTextView.setText(context.getResources().getString(category.categoryNameId));
 
             switch (category.categoryId) {
@@ -138,17 +132,6 @@ public class CategoryExpandableRecyclerViewAdapter extends ExpandableRecyclerAda
         @Override
         public boolean shouldItemViewClickToggleExpansion() {
             return true;
-        }
-
-        @Override
-        public void onClick(View v) {
-            super.onClick(v);
-
-            if(expandedParentsList.contains(category.categoryId - 1)) {
-                expandedParentsList.remove(category.categoryId - 1);
-            } else {
-                expandedParentsList.add(category.categoryId - 1);
-            }
         }
     }
 
@@ -201,9 +184,5 @@ public class CategoryExpandableRecyclerViewAdapter extends ExpandableRecyclerAda
                 context.startActivity(intent);
             });
         }
-    }
-
-    public List<Integer> getExpandedParentsList() {
-        return expandedParentsList;
     }
 }

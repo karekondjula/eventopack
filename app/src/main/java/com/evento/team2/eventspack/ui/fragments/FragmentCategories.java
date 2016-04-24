@@ -1,7 +1,6 @@
 package com.evento.team2.eventspack.ui.fragments;
 
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,19 +8,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapters.CategoryExpandableRecyclerViewAdapter;
 import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.models.Category;
-import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentCategoriesPresenter;
-import com.evento.team2.eventspack.provider.EventsDatabase;
 import com.evento.team2.eventspack.ui.fragments.interfaces.BaseFragment;
 import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.views.FragmentCategoriesView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -34,35 +32,17 @@ import butterknife.ButterKnife;
  */
 public class FragmentCategories extends BaseFragment implements FragmentCategoriesView {
 
+    public static final String TAG = "fragmentCategories";
+
     @Inject
     FragmentCategoriesPresenter fragmentCategoriesPresenter;
 
     @Bind(R.id.categoriesRecyclerView)
     RecyclerView categoriesRecyclerView;
 
-    private CategoryExpandableRecyclerViewAdapter categoryExpandableRecyclerViewAdapter;
+    private HashSet<Integer> expandedParentsList = new HashSet<>();
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        if (savedInstanceState != null) {
-            List<Integer> expandedParentsList = savedInstanceState.getIntegerArrayList("expandedParentsList");
-            if (expandedParentsList != null) {
-                for(int expandedParent : expandedParentsList) {
-                    categoryExpandableRecyclerViewAdapter.expandParent(expandedParent);
-                }
-            }
-        }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-
-        outState.putIntegerArrayList("expandedParentsList",
-                (ArrayList<Integer>) categoryExpandableRecyclerViewAdapter.getExpandedParentsList());
-    }
+    private CategoryExpandableRecyclerViewAdapter categoryAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -76,11 +56,11 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        categoryExpandableRecyclerViewAdapter = new CategoryExpandableRecyclerViewAdapter(getActivity(), new ArrayList<>());
+        categoryAdapter = new CategoryExpandableRecyclerViewAdapter(getActivity(), new ArrayList<>());
 
         categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         categoriesRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        categoriesRecyclerView.setAdapter(categoryExpandableRecyclerViewAdapter);
+        categoriesRecyclerView.setAdapter(categoryAdapter);
 
         categoriesRecyclerView.setHasFixedSize(true);
         categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -111,11 +91,29 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
 
     @Override
     public void showCategories(List<Category> categoryList) {
-        categoryExpandableRecyclerViewAdapter = new CategoryExpandableRecyclerViewAdapter(getActivity(), categoryList);
-        // TODO what can we do about this
-//        categoriesRecyclerView.swapAdapter(categoryExpandableRecyclerViewAdapter, false);
+        categoryAdapter = new CategoryExpandableRecyclerViewAdapter(getActivity(), categoryList);
+
+        categoryAdapter.setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
+            @Override
+            public void onListItemExpanded(int position) {
+                expandedParentsList.add(position);
+            }
+
+            @Override
+            public void onListItemCollapsed(int position) {
+                expandedParentsList.remove(position);
+            }
+        });
+
         if(categoriesRecyclerView != null) {
-            categoriesRecyclerView.setAdapter(categoryExpandableRecyclerViewAdapter);
+            categoriesRecyclerView.setAdapter(categoryAdapter);
+        }
+
+        if (expandedParentsList != null) {
+            for(int expandedParent : expandedParentsList) {
+                categoryAdapter.expandParent(expandedParent);
+            }
+            categoryAdapter.notifyDataSetChanged();
         }
     }
 }

@@ -53,10 +53,10 @@ public class ActivityMain extends AppCompatActivity {
     @Bind(R.id.viewpager)
     ViewPager viewPager;
 
-    private FragmentEvents fragmentEvents = FragmentEvents.newInstance();
-    private FragmentCategories fragmentCategories = FragmentCategories.newInstance();
-    private FragmentSavedEvents fragmentSavedEvents = FragmentSavedEvents.newInstance();
-    private FragmentPlaces fragmentPlaces = FragmentPlaces.newInstance();
+    private FragmentEvents fragmentEvents;// = FragmentEvents.newInstance();
+    private FragmentCategories fragmentCategories;// = FragmentCategories.newInstance();
+    private FragmentSavedEvents fragmentSavedEvents;// = FragmentSavedEvents.newInstance();
+    private FragmentPlaces fragmentPlaces;// = FragmentPlaces.newInstance();
     private MenuItem searchMenuItem;
 
     static {
@@ -81,11 +81,16 @@ public class ActivityMain extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
-//        if (savedInstanceState != null) {
-//            //Restore the fragment's instance
-//            mContent = getSupportFragmentManager().getFragment(savedInstanceState, "mContent");
-//
-//        }
+        fragmentEvents = FragmentEvents.newInstance();
+        fragmentSavedEvents = FragmentSavedEvents.newInstance();
+        fragmentPlaces = FragmentPlaces.newInstance();
+
+        if (savedInstanceState != null) {
+            fragmentCategories = (FragmentCategories) getSupportFragmentManager()
+                    .getFragment(savedInstanceState, FragmentCategories.TAG);
+        } else {
+            fragmentCategories = FragmentCategories.newInstance();
+        }
 
         navigationView.setNavigationItemSelectedListener(menuItem -> {
 
@@ -161,9 +166,8 @@ public class ActivityMain extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
         //Save the fragment's instance
-        getSupportFragmentManager().putFragment(outState, "fragmentCategories", fragmentCategories);
+        getSupportFragmentManager().putFragment(outState, FragmentCategories.TAG, fragmentCategories);
     }
 
     @Override
@@ -272,13 +276,13 @@ public class ActivityMain extends AppCompatActivity {
 //                        fragmentEvents.showLastUpdatedInfo();
                         break;
                     case 1:
-                        fragmentCategories.filterList(EventiConstants.NO_FILTER_STRING);
+//                        fragmentCategories.filterList(EventiConstants.NO_FILTER_STRING);
                         break;
                     case 2:
-                        fragmentSavedEvents.filterList(EventiConstants.NO_FILTER_STRING);
+//                        fragmentSavedEvents.filterList(EventiConstants.NO_FILTER_STRING);
                         break;
                     case 3:
-                        fragmentPlaces.filterList(EventiConstants.NO_FILTER_STRING);
+//                        fragmentPlaces.filterList(EventiConstants.NO_FILTER_STRING);
                         break;
                     default:
                 }
@@ -286,7 +290,6 @@ public class ActivityMain extends AppCompatActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
             }
         });
     }

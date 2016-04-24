@@ -42,14 +42,20 @@ public class FragmentCategoriesPresenterImpl implements FragmentCategoriesPresen
                 Category category;
                 List<Category> categories = new ArrayList<>();
 
-                for (int i = 0; i < Event.OTHER; i++) {
+                // must be changed when new categories are added :/
+                for (int i = 0; i < Event.CONCERTS; i++) {
 
-                    // TODO check this in time reference
                     events = databaseInteractor.getActiveEventsByCategory(Event.getCategoryByInt(i), lastQuery);
                     if (events.size() > 0) {
                         category = new Category(events.get(0).categoryId, ConversionUtils.getCategoryNameIdByCategoryId(events.get(0).categoryId), events);
                         categories.add(category);
                     }
+                }
+
+                events = databaseInteractor.getActiveEventsByCategory(Event.getCategoryByInt(Event.OTHER), lastQuery);
+                if (events.size() > 0) {
+                    category = new Category(events.get(0).categoryId, ConversionUtils.getCategoryNameIdByCategoryId(events.get(0).categoryId), events);
+                    categories.add(category);
                 }
 
                 mainThread.post(() -> fragmentCategoriesView.showCategories(categories));
