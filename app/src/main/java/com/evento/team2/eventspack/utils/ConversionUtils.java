@@ -17,27 +17,30 @@ public class ConversionUtils {
     private static String[] listCyr = null;
 
     static {
-        // TODO sooon >)
-//        String lat = "DZ LJ NJ A B C CH D E F G H I J K L M N O P R S SH T U V Z ZH";
-//        String lat = "LJ NJ A B CH D E F G H I J K L M N O P R S SH T U V ZH";
-//        lat += " " + lat.toLowerCase();
-//        lat += " Lj Nj";
-//
-//        listLat = lat.split(" ");
-//        listCyr = cyr.split(" ");
+        String lat = "DZ LJ NJ CH SH ZH A B C D E F G H I J K L M N O P R S T U V Z";
+        lat += " " + lat.toLowerCase();
+        lat += " Lj Nj";
+
+        String cyr = "Џ Љ Њ Ч Ш Ж А Б Ц Д Е Ф Г Х И Ј К Л М Н О П Р С Т У В З";
+        cyr += " " + cyr.toLowerCase();
+        cyr += " Љ Њ";
+
+        listLat = lat.split(" ");
+        listCyr = cyr.split(" ");
     }
 
     public static String convertTextToCyrilic(String line) {
 
         int i = 0;
 
-        return line.replaceAll("c|ch|g|gj|s|sh", "%");
-//        for (String item : listLat) {
-//            line = line.replaceAll(item, listCyr[i]);
-//            i++;
-//        }
-//
-//        return line;
+//        line = line.replaceAll("ch|gj|sh|lj|nj|c|g|s", "%");
+
+        for (String item : listLat) {
+            line = line.replaceAll(item, listCyr[i]);
+            i++;
+        }
+
+        return line;
     }
 
     public static Event convertJsonEventToEvent(JsonEvent jsonEvent) {

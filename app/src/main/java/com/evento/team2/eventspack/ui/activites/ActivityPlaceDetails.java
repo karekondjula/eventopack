@@ -114,6 +114,10 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
     protected void onResume() {
         super.onResume();
 
+        if (placeDetailsEventsLinearLayout != null) {
+            placeDetailsEventsLinearLayout.removeAllViews();
+        }
+
         Intent intent = getIntent();
         long placeId = intent.getLongExtra(EXTRA_ID, 0);
 

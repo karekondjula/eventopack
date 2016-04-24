@@ -13,6 +13,7 @@ import android.util.Log;
 
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.models.Place;
+import com.evento.team2.eventspack.utils.ConversionUtils;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -57,7 +58,7 @@ public class EventsDatabase {
         event.id = cursor.getLong(0);
         event.facebookId = cursor.getLong(1);
         event.pictureUri = cursor.getString(4);
-        event.locationString = cursor.getString(5);
+        event.locationString = cursor.getString(5).trim().replace(", null", "").replace("\"", "");;
         event.location = new LatLng(cursor.getDouble(6), cursor.getDouble(7));
         event.startTimeStamp = cursor.getLong(8);
         event.startTimeString = new SimpleDateFormat("HH:mm").format(event.startTimeStamp);
@@ -157,10 +158,6 @@ public class EventsDatabase {
         values.put(Place.Table.COLUMN_PICTURE_URI, place.pictureUri);
 
         try {
-            // TODO faqu
-//            Log.i(">>", "place.id " + place.id);
-//            Log.i(">>", "place.longitude " + place.location.longitude);
-//            Log.i(">>", "place.latitude " + place.location.latitude);
             long updateRows = database.update(Place.Table.TABLE_PLACES,
                     values,
                     Place.Table.COLUMN_ID + " = ? OR " +
@@ -190,12 +187,12 @@ public class EventsDatabase {
         Cursor cursor = database.query(Place.Table.TABLE_PLACES,
                 allColumnsPlace,
                 (filter != null && filter.length > 0
-                        ? Event.Table.COLUMN_NAME + " LIKE ? "
-//                        Event.Table.COLUMN_NAME + " LIKE ? "
+                        ? Event.Table.COLUMN_NAME + " LIKE ? OR " +
+                        Event.Table.COLUMN_NAME + " LIKE ? "
                         : null),
                 (filter != null && filter.length > 0
                         ? new String[]{"%" + filter[0] + "%",
-//                        "%" + ConversionUtils.convertTextToCyrilic(filter[0]) + "%",
+                        "%" + ConversionUtils.convertTextToCyrilic(filter[0]) + "%",
                 }
                         : null),
                 null, null, null);
@@ -237,6 +234,7 @@ public class EventsDatabase {
                         stringBuilder.append(addresses.get(0).getAddressLine(i) + ", ");
                     }
                     event.locationString = stringBuilder.toString().trim().substring(0, stringBuilder.length() - 2).replace("(FYROM)", "");
+                    event.locationString = event.locationString.trim().replace(", null", "").replace("\"", "");
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -287,13 +285,13 @@ public class EventsDatabase {
             where = new StringBuilder();
             if (filter.length > 0) {
                 where.append("(" + Event.Table.COLUMN_NAME + " LIKE ? OR " +
-//                        Event.Table.COLUMN_NAME + " LIKE ? OR " +
+                        Event.Table.COLUMN_NAME + " LIKE ? OR " +
                         Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
                         Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
                         Event.Table.COLUMN_START_DATE_STRING + " LIKE ? ) ");
 
                 whereArgsList.add("%" + filter[0] + "%");
-//                whereArgsList.add("%" + ConversionUtils.convertTextToCyrilic(filter[0]) + "%");
+                whereArgsList.add("%" + ConversionUtils.convertTextToCyrilic(filter[0]) + "%");
                 whereArgsList.add("%" + filter[0] + "%");
                 whereArgsList.add("%" + filter[0] + "%");
                 whereArgsList.add("%" + filter[0] + "%");
