@@ -33,13 +33,7 @@ public class ActivityMap extends AppCompatActivity {
         Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        final ActionBar actionbar = getSupportActionBar();
-//        if (actionbar != null) {
-//            actionbar.setDisplayHomeAsUpEnabled(true);
-//            actionbar.setTitle("Calendar");
-//        }
-
-        SupportMapFragment fragmentMap = null;
+        FragmentMap fragmentMap = null;
 
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
@@ -55,13 +49,14 @@ public class ActivityMap extends AppCompatActivity {
                     case EventiConstants.PLACES:
                         fragmentMap = FragmentMap.newInstance(EventiConstants.PLACES, id);
                         break;
-
                     default:
-                        fragmentMap = FragmentMap.newInstance(EventiConstants.NONE, EventiConstants.NO_EVENT_ID);
+                        fragmentMap = FragmentMap.newInstance(EventiConstants.EVENTS, EventiConstants.NO_EVENT_ID);
                 }
             } else {
-                fragmentMap = FragmentMap.newInstance(EventiConstants.NONE, EventiConstants.NO_EVENT_ID);
+                fragmentMap = FragmentMap.newInstance(EventiConstants.EVENTS, EventiConstants.NO_EVENT_ID);
             }
+        } else {
+            fragmentMap = FragmentMap.newInstance(EventiConstants.EVENTS, EventiConstants.NO_EVENT_ID);
         }
 
         getSupportFragmentManager().beginTransaction()

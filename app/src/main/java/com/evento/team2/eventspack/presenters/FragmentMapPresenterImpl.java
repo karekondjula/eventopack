@@ -62,7 +62,7 @@ public class FragmentMapPresenterImpl implements FragmentMapPresenter {
                         markerOptions = new MarkerOptions()
                                 .position(new LatLng(event.location.latitude, event.location.longitude))
                                 .title(event.name)
-                                .snippet(event.details + FragmentMap.DELIMITER + DateFormatterUtils.fullDateFormat.format(event.startTimeStamp));
+                                .snippet(event.locationString);
 
                         hashMapLatLngId.put(markerOptions.getPosition(), event);
                         markerOptionsArrayList.add(markerOptions);
@@ -129,8 +129,7 @@ public class FragmentMapPresenterImpl implements FragmentMapPresenter {
                                 .position(new LatLng(event.location.latitude,
                                         event.location.longitude))
                                 .title(event.name)
-                                .snippet(event.details + FragmentMap.DELIMITER +
-                                        DateFormatterUtils.fullDateFormat.format(event.startTimeStamp));
+                                .snippet(event.locationString);
 
                         hashMapLatLngId.put(markerOptions.getPosition(), event);
                         markerOptionsArrayList.add(markerOptions);
@@ -155,8 +154,7 @@ public class FragmentMapPresenterImpl implements FragmentMapPresenter {
                 .position(new LatLng(event.location.latitude,
                         event.location.longitude))
                 .title(event.name)
-                .snippet(event.details + FragmentMap.DELIMITER +
-                        DateFormatterUtils.fullDateFormat.format(event.startTimeStamp));
+                .snippet(event.details);
 
         hashMapLatLngId.put(markerOptions.getPosition(), event);
 

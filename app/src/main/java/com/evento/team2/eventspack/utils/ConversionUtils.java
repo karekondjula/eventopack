@@ -33,7 +33,7 @@ public class ConversionUtils {
 
         int i = 0;
 
-//        line = line.replaceAll("ch|gj|sh|lj|nj|c|g|s", "%");
+        line = line.replaceAll("ch|gj|sh|lj|nj|c|g|s", "%");
 
         for (String item : listLat) {
             line = line.replaceAll(item, listCyr[i]);

@@ -5,7 +5,7 @@
 -keepattributes *Annotation*
 
 -dontwarn butterknife.internal.**
--dontwarn com.google.android.gms.**
+#-dontwarn com.google.android.gms.**
 -dontwarn android.content.**
 -dontwarn android.graphics.**
 -dontwarn android.util.**
@@ -25,7 +25,7 @@
 -keep class com.evento.team2.eventspack.** { *; }
 -keep class com.evento.team2.eventspack.models.** { *; }
 -keep interface com.evento.team2.eventspack.** { *; }
--keep public class com.google.android.gms.* { public *; }
+#-keep public class com.google.android.gms.* { public *; }
 -keep class javax..** { *; }
 -keep interface javax.** { *; }
 #-keep interface javax.inject.** { *; }

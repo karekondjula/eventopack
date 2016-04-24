@@ -42,8 +42,9 @@ public class FragmentCategoriesPresenterImpl implements FragmentCategoriesPresen
                 Category category;
                 List<Category> categories = new ArrayList<>();
 
+                // TODO still this is problematic
                 // must be changed when new categories are added :/
-                for (int i = 0; i < Event.CONCERTS; i++) {
+                for (int i = 0; i <= Event.CONCERTS; i++) {
 
                     events = databaseInteractor.getActiveEventsByCategory(Event.getCategoryByInt(i), lastQuery);
                     if (events.size() > 0) {

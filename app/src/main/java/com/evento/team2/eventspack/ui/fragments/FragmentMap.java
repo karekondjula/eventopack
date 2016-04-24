@@ -76,8 +76,7 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
 
     public static final String EXTRA_WHAT = "extra_what";
     public static final String EXTRA_ID = "extra_id";
-    public static final String TAG = "FragmentMap";
-    public static final String DELIMITER = "\b";
+    public static final String TAG = "FragmentMapTag";
 
     @Inject
     FragmentMapPresenter fragmentMapPresenter;
@@ -208,7 +207,6 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         fragmentMapPresenter.setView(this);
     }
 
@@ -234,7 +232,7 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-//        super.onCreateOptionsMenu(menu, inflater); we might need this?!
+        super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_map, menu);
         final MenuItem calendarMenuItem = menu.findItem(R.id.action_calendar);
         actionViewCalendar = ButterKnife.findById(MenuItemCompat.getActionView(calendarMenuItem), R.id.menu_map_date);
@@ -316,10 +314,10 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
 
     @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     protected void initMap() {
-        SupportMapFragment mapFragment = (SupportMapFragment) getFragmentManager().findFragmentById(R.id.location_map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.location_map);
         if (mapFragment == null) {
             mapFragment = SupportMapFragment.newInstance();
-            getFragmentManager().beginTransaction().replace(R.id.location_map, mapFragment).commit();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.location_map, mapFragment).commit();
         }
         mapFragment.getMapAsync(this);
     }
@@ -378,8 +376,8 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
         mapView.setPadding(0, 0, 0, 0);
     }
 
-    public static SupportMapFragment newInstance(@EventiConstants.SelectedCategory int what, long id) {
-        SupportMapFragment fragmentMap = new SupportMapFragment();
+    public static FragmentMap newInstance(@EventiConstants.SelectedCategory int what, long id) {
+        FragmentMap fragmentMap = new FragmentMap();
         if (what != EventiConstants.NONE) {
             Bundle args = new Bundle();
             args.putInt(EXTRA_WHAT, what);
