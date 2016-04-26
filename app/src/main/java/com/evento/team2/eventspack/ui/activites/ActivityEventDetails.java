@@ -21,6 +21,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -46,6 +47,9 @@ import com.evento.team2.eventspack.presenters.interfaces.FragmentEventDetailsPre
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.views.FragmentEventDetailsView;
+import com.facebook.share.model.ShareHashtag;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareDialog;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -201,6 +205,23 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         } else {
             notificationsInteractor.removeScheduleNotification(event);
         }
+
+        // TODO finish me and find me a place ^_^
+        ShareDialog shareDialog = new ShareDialog(this);
+
+        ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                .setContentTitle("Hello Facebook")
+                .setContentDescription(
+                        "The 'Hello Facebook' sample  showcases simple Facebook integration")
+                .setContentUrl(Uri.parse("http://developers.facebook.com/android"))
+                .setShareHashtag(new ShareHashtag.Builder()
+                        .setHashtag("#ConnectTheWorld")
+                        .build())
+                .setQuote("Connect on a global scale.")
+                .build();
+
+        shareDialog.show(linkContent);
+
     }
 
     @OnClick(R.id.backdrop)

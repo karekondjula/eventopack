@@ -36,7 +36,7 @@ public class NotificationsInteractorImpl implements NotificationsInteractor {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 
-        if (calendar.getTimeInMillis() > event.startTimeStamp) {
+        if (calendar.getTimeInMillis() < event.startTimeStamp) {
             // TODO aggregate daily notifications
             alarmManagerInteractor.scheduleOneTime(eventDetailsIntent, calendar.getTimeInMillis());
         }

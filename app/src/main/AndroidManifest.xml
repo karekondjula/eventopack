@@ -23,6 +23,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDlpVs0imkm5GvwRlXfYO2QshwHh_IJf_g" />
 
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+
         <activity
             android:name=".ui.activites.ActivityMain"
             android:label="@string/app_name"
@@ -90,6 +94,16 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.activites.ActivityMain" />
         </activity>
+
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+
+        <provider android:authorities="com.facebook.app.FacebookContentProvider835820619855102"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true" />
 
         <receiver android:name=".receivers.DownloadEventsReceiver">
             <intent-filter>

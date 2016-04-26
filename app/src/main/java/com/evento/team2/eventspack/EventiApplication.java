@@ -11,6 +11,8 @@ import com.evento.team2.eventspack.modules.AppModule;
 import com.evento.team2.eventspack.receivers.CleanUpEventsReceiver;
 import com.evento.team2.eventspack.receivers.DownloadEventsReceiver;
 import com.evento.team2.eventspack.receivers.WeeklyEventsReceiver;
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 
 import java.util.Date;
 
@@ -44,6 +46,10 @@ public class EventiApplication extends Application {
 
         Intent cleanUpEventsIntent = CleanUpEventsReceiver.getIntent();
         alarmManagerInteractor.scheduleRepeating(cleanUpEventsIntent, NOW, AlarmManager.INTERVAL_DAY * 30);
+
+        // TODO add linux debug key hash and release key hash to fb hashes!!!
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        AppEventsLogger.activateApp(this);
 
 //        Intent savedEventsIntent = WeeklyEventsReceiver.getIntent();
 //        // calculate time to monday
