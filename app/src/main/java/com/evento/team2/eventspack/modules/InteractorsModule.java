@@ -56,7 +56,7 @@ public class InteractorsModule {
 
     @Provides
     @Singleton
-    ServiceEvento provideServiceEvento(DatabaseInteractor databaseInteractor) {
-        return new ServiceEventoImpl(databaseInteractor);
+    ServiceEvento provideServiceEvento(EventiApplication eventiApplication, DatabaseInteractor databaseInteractor) {
+        return new ServiceEventoImpl(eventiApplication, databaseInteractor);
     }
 }

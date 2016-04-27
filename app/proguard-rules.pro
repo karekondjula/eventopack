@@ -22,8 +22,8 @@
 -keep class org.xmlpull.v1.** { *; }
 
 #-keep class com.parse.** { *; } # not used
--keep class com.evento.team2.eventspack.** { *; }
--keep class com.evento.team2.eventspack.models.** { *; }
+-keep class com.evento.team2.eventspack.** { *; } # TODO try to keep only activities or dagger related classes?!
+-keep class com.evento.team2.eventspack.models.** { *; } # TODO try to keep only activities or dagger related classes?!
 -keep interface com.evento.team2.eventspack.** { *; }
 #-keep public class com.google.android.gms.* { public *; }
 -keep class javax..** { *; }
