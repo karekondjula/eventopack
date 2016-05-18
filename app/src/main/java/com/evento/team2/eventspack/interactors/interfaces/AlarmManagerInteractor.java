@@ -7,7 +7,7 @@ import android.content.Intent;
  */
 public interface AlarmManagerInteractor {
 
-    void scheduleRepeating(Intent intent, long startIn, long repeatIn);
+    void scheduleRepeating(Intent intent, long startAt, long repeatIn);
 
     void scheduleOneTime(Intent intent, long startAt);
 

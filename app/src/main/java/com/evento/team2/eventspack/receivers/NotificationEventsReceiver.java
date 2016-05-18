@@ -65,7 +65,8 @@ public class NotificationEventsReceiver extends BroadcastReceiver {
                                     .setTicker(eventiApplication.getString(R.string.upcoming_event_reminder))
                                     .setCategory(Notification.CATEGORY_EVENT)
                                     .setAutoCancel(true)
-                                    .setVibrate(new long[0]);
+                                    .setVibrate(new long[0])
+                                    .setLights(Color.GREEN, 1000, 1000);
 
                     Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
                     savedEventNotification.setSound(alarmSound);
@@ -99,13 +100,7 @@ public class NotificationEventsReceiver extends BroadcastReceiver {
 
                     NotificationManager mNotificationManager = (NotificationManager) eventiApplication.getSystemService(Context.NOTIFICATION_SERVICE);
 
-                    Notification notification = savedEventNotification.build();
-                    notification.ledOnMS = 1000;
-                    notification.ledOffMS = 1000;
-                    notification.flags |= Notification.FLAG_SHOW_LIGHTS;
-                    notification.ledARGB = Color.WHITE;
-
-                    mNotificationManager.notify((int) event.id, notification);
+                    mNotificationManager.notify((int) event.id, savedEventNotification.build());
                 }
             }.start();
         }

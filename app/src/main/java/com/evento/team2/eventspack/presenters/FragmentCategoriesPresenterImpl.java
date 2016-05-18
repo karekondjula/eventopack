@@ -43,6 +43,7 @@ public class FragmentCategoriesPresenterImpl implements FragmentCategoriesPresen
                 List<Category> categories = new ArrayList<>();
 
                 // TODO still this is problematic
+                // FIXME maybe use reactive?
                 // must be changed when new categories are added :/
                 for (int i = 0; i <= Event.CONCERTS; i++) {
 

@@ -46,5 +46,6 @@
     <string name="category_concerts">Concerts</string>
     <string name="category_other">Other</string>
     <string name="map_needs_permission">Map needs your permission. Allow it?</string>
+    <string name="soon">Soon...</string>
 
 </resources>

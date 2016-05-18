@@ -45,5 +45,6 @@
     <string name="category_concerts">Концерти</string>
     <string name="category_other">Разно</string>
     <string name="map_needs_permission">Дали е дозволено користење на мапа?</string>
+    <string name="soon">Наскоро...</string>
 
 </resources>

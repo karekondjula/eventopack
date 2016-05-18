@@ -23,6 +23,8 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -30,6 +32,8 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
@@ -57,6 +61,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.EntypoModule;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.joanzapata.iconify.fonts.IoniconsModule;
 
@@ -110,6 +115,9 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
     @Bind(R.id.eventAttendingCount)
     TextView textViewEventAttendingCount;
 
+    @Bind(R.id.bottom_sheet)
+    View bottomSheet;
+
     private FloatingActionButton fab;
 
     private Drawable emptyHeart;
@@ -123,6 +131,7 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
 
     static {
         Iconify.with(new IoniconsModule());
+        Iconify.with(new EntypoModule());
     }
 
     @Override
@@ -133,9 +142,9 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         ButterKnife.bind(this);
 
         EventDetailsComponent eventDetailsComponent = DaggerEventDetailsComponent.builder()
-                        .appComponent(((EventiApplication) getApplication()).getAppComponent())
-                        .eventDetailsModule(new EventDetailsModule())
-                        .build();
+                .appComponent(((EventiApplication) getApplication()).getAppComponent())
+                .eventDetailsModule(new EventDetailsModule())
+                .build();
         eventDetailsComponent.inject(this);
 
         emptyHeart = new IconDrawable(this, IoniconsIcons.ion_android_favorite_outline).colorRes(android.R.color.white).actionBarSize();
@@ -158,6 +167,10 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         fab = ((FloatingActionButton) findViewById(R.id.fab_add_to_saved));
 
         fragmentEventDetailsPresenter.setView(this);
+
+        BottomSheetBehavior mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
+        mBottomSheetBehavior.setPeekHeight(dipToPixels(this, 70));
+        mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 
     @Override
@@ -205,23 +218,6 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         } else {
             notificationsInteractor.removeScheduleNotification(event);
         }
-
-        // TODO finish me and find me a place ^_^
-        ShareDialog shareDialog = new ShareDialog(this);
-
-        ShareLinkContent linkContent = new ShareLinkContent.Builder()
-                .setContentTitle("Hello Facebook")
-                .setContentDescription(
-                        "The 'Hello Facebook' sample  showcases simple Facebook integration")
-                .setContentUrl(Uri.parse("http://developers.facebook.com/android"))
-                .setShareHashtag(new ShareHashtag.Builder()
-                        .setHashtag("#ConnectTheWorld")
-                        .build())
-                .setQuote("Connect on a global scale.")
-                .build();
-
-        shareDialog.show(linkContent);
-
     }
 
     @OnClick(R.id.backdrop)
@@ -237,6 +233,39 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         startActivity(fullScreenImage);
     }
 
+    @OnClick(R.id.share_facebook)
+    public void shareOnFacebook(View view) {
+        ShareDialog shareDialog = new ShareDialog(this);
+
+        ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                .setContentTitle(event.name)
+                .setContentDescription(event.details)
+                .setContentUrl(Uri.parse("http://www.facebook.com/events/".concat(String.valueOf(event.facebookId))))
+                .setShareHashtag(new ShareHashtag.Builder()
+                        .setHashtag("#eventi")
+                        .build())
+                .setQuote("Find something attractive.")
+                .build();
+
+        shareDialog.show(linkContent);
+    }
+
+    @OnClick(R.id.share_twitter)
+    public void shareOnTwitter(View view) {
+        Snackbar.make(view,
+                R.string.soon,
+                Snackbar.LENGTH_SHORT)
+                .show();
+    }
+
+    @OnClick(R.id.share_gplus)
+    public void shareOnGplus(View view) {
+        Snackbar.make(view,
+                R.string.soon,
+                Snackbar.LENGTH_SHORT)
+                .show();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_event, menu);
@@ -244,7 +273,7 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         ActivityEventDetailsPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
     }
@@ -272,7 +301,6 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
 
     @OnShowRationale({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     protected void showMapsRationale(final PermissionRequest request) {
-        // E.g. show a dialog explaining why you need the permission.
         // Call proceed() or cancel() on the incoming request to continue or abort the current permissions process
         new AlertDialog.Builder(this)
                 .setMessage(R.string.map_needs_permission)
@@ -330,5 +358,10 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         }
 
         ActivityEventDetailsPermissionsDispatcher.initMapWithCheck(this);
+    }
+
+    private static int dipToPixels(Context context, int dipValue) {
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
     }
 }

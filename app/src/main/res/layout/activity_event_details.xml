@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_content"
@@ -46,6 +45,7 @@
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginBottom="80dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -103,7 +103,7 @@
                                 android:id="@+id/event_details_end_date"
                                 android:singleLine="true"
                                 android:text="31.10.2015 22:00" />
-                            <!--"-->
+
                         </TableRow>
 
                     </TableLayout>
@@ -197,6 +197,82 @@
                 </LinearLayout>
 
             </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:background="@android:color/white"
+        android:clipToPadding="true"
+        app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:text="Share"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:id="@+id/share_facebook"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:contentDescription="share_on_fb"
+                    android:gravity="center"
+                    android:shadowColor="#22000000"
+                    android:shadowDx="3"
+                    android:shadowDy="3"
+                    android:shadowRadius="5"
+                    android:text="{entypo-facebook-with-circle #3b5998}"
+                    android:textAlignment="center"
+                    android:textSize="50sp" />
+
+                <!--#dd4b39-->
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:id="@+id/share_gplus"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:contentDescription="share_on_gplus"
+                    android:gravity="center"
+                    android:shadowColor="#22000000"
+                    android:shadowDx="3"
+                    android:shadowDy="3"
+                    android:shadowRadius="5"
+                    android:text="{entypo-google-with-circle #A9AEB0}"
+                    android:textSize="50sp" />
+
+                <!--#4099FF-->
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:id="@+id/share_twitter"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:contentDescription="share_on_twitter"
+                    android:gravity="center"
+                    android:shadowColor="#22000000"
+                    android:shadowDx="3"
+                    android:shadowDy="3"
+                    android:shadowRadius="5"
+                    android:text="{entypo-twitter-with-circle #A9AEB0}"
+                    android:textSize="50sp" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
