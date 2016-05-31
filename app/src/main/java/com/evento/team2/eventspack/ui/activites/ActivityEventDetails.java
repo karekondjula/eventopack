@@ -158,12 +158,6 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         }
         // TODO make the toolbar disappear completely on top most scroll
 
-        if (collapsingToolbar == null) {
-            // it happened once ... just to be safe
-            // TODO show 'Something went wrong ... please try again'
-            finish();
-        }
-
         fab = ((FloatingActionButton) findViewById(R.id.fab_add_to_saved));
 
         fragmentEventDetailsPresenter.setView(this);
@@ -242,9 +236,9 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
                 .setContentDescription(event.details)
                 .setContentUrl(Uri.parse("http://www.facebook.com/events/".concat(String.valueOf(event.facebookId))))
                 .setShareHashtag(new ShareHashtag.Builder()
-                        .setHashtag("#eventi")
+                        .setHashtag("#евенти")
                         .build())
-                .setQuote("Find something attractive.")
+                .setQuote("Find something attractive")
                 .build();
 
         shareDialog.show(linkContent);

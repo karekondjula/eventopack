@@ -123,6 +123,12 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name=".receivers.DailyEventsReminderReceiver">
+            <intent-filter>
+                <action android:name="DailyEventsReminderReceiver" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

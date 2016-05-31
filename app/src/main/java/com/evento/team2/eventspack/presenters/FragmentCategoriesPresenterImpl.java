@@ -66,23 +66,4 @@ public class FragmentCategoriesPresenterImpl implements FragmentCategoriesPresen
 
         lastQuery = query;
     }
-
-//    @Override
-//    public void setView(FragmentPlacesView fragmentEventsView) {
-//        this.fragmentCategoriesView = fragmentEventsView;
-//    }
-//
-//    @Override
-//    public void fetchPlaces(String query) {
-//        new Thread() {
-//            @Override
-//            public void run() {
-//
-//                final ArrayList<Place> placeArrayList = databaseInteractor.getPlaces(lastQuery);
-//                mainThread.post(() -> fragmentCategoriesView.showPlaces(placeArrayList));
-//            }
-//        }.start();
-//
-//        lastQuery = query;
-//    }
 }

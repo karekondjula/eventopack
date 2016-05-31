@@ -9,11 +9,13 @@ import com.evento.team2.eventspack.components.DaggerAppComponent;
 import com.evento.team2.eventspack.interactors.interfaces.AlarmManagerInteractor;
 import com.evento.team2.eventspack.modules.AppModule;
 import com.evento.team2.eventspack.receivers.CleanUpEventsReceiver;
+import com.evento.team2.eventspack.receivers.DailyEventsReminderReceiver;
 import com.evento.team2.eventspack.receivers.DownloadEventsReceiver;
 import com.evento.team2.eventspack.receivers.WeeklyEventsReceiver;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.inject.Inject;
@@ -47,7 +49,14 @@ public class EventiApplication extends Application {
         Intent cleanUpEventsIntent = CleanUpEventsReceiver.getIntent();
         alarmManagerInteractor.scheduleRepeating(cleanUpEventsIntent, NOW, AlarmManager.INTERVAL_DAY * 30);
 
-        // TODO add linux debug key hash and release key hash to fb hashes!!!
+        Calendar tenAmCalendar = Calendar.getInstance();
+        tenAmCalendar.set(Calendar.HOUR_OF_DAY, 10);
+        tenAmCalendar.set(Calendar.AM_PM, Calendar.AM);
+        tenAmCalendar.set(Calendar.MINUTE, 0);
+        tenAmCalendar.set(Calendar.SECOND, 0);
+        Intent dailyReminderIntent = DailyEventsReminderReceiver.getIntent();
+        alarmManagerInteractor.scheduleRepeating(dailyReminderIntent, tenAmCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY);
+
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
 

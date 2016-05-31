@@ -33,10 +33,24 @@ public class ConversionUtils {
 
         int i = 0;
 
-        line = line.replaceAll("ch|gj|sh|lj|nj|c|g|s", "%");
+        line = line.replaceAll("ч|ѓ|ш|љ|њ|ц|г|с", "%");
 
         for (String item : listLat) {
             line = line.replaceAll(item, listCyr[i]);
+            i++;
+        }
+
+        return line;
+    }
+
+    public static String convertCyrilicToText(String line) {
+
+        int i = 0;
+
+        line = line.replaceAll("ch|gj|sh|lj|nj|c|g|s", "%");
+
+        for (String item : listCyr) {
+            line = line.replaceAll(item, listLat[i]);
             i++;
         }
 

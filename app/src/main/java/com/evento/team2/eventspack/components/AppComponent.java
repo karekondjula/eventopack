@@ -9,6 +9,7 @@ import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
 import com.evento.team2.eventspack.modules.AppModule;
 import com.evento.team2.eventspack.receivers.CleanUpEventsReceiver;
+import com.evento.team2.eventspack.receivers.DailyEventsReminderReceiver;
 import com.evento.team2.eventspack.receivers.DownloadEventsReceiver;
 import com.evento.team2.eventspack.receivers.NotificationEventsReceiver;
 import com.evento.team2.eventspack.receivers.WeeklyEventsReceiver;
@@ -37,6 +38,7 @@ public interface AppComponent {
     void inject(DownloadEventsReceiver downloadEventsReceiver);
     void inject(CleanUpEventsReceiver cleanUpEventsReceiver);
     void inject(NotificationEventsReceiver notificationEventsReceiver);
+    void inject(DailyEventsReminderReceiver dailyEventsReminderReceiver);
     void inject(WeeklyEventsReceiver weeklyEventsReceiver);
 
     MainThread mainThread();
