@@ -1,6 +1,7 @@
 package com.evento.team2.eventspack.modules;
 
 import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
+import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
 import com.evento.team2.eventspack.presenters.FragmentEventDetailsPresenterImpl;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventDetailsPresenter;
 import com.evento.team2.eventspack.scopes.EventDetailsScope;
@@ -19,7 +20,9 @@ public class EventDetailsModule {
 
     @Provides
     @EventDetailsScope
-    FragmentEventDetailsPresenter provideFragmentEventDetailsPresenter(MainThread mainThread, DatabaseInteractor databaseInteractor) {
-        return new FragmentEventDetailsPresenterImpl(mainThread, databaseInteractor);
+    FragmentEventDetailsPresenter provideFragmentEventDetailsPresenter(MainThread mainThread,
+                                                                       DatabaseInteractor databaseInteractor,
+                                                                       NotificationsInteractor notificationsInteractor) {
+        return new FragmentEventDetailsPresenterImpl(mainThread, databaseInteractor, notificationsInteractor);
     }
 }

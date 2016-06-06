@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">EVENTI</string>
     <string name="facebook_app_id" translatable="false">835820619855102</string>
+    <string name="server_client_id">902703939267-5apqh4qdilfbg80b752lv1dvvt7jta0u.apps.googleusercontent.com</string>
 
     <string name="action_search">Search</string>
     <string name="drawer_open">Open</string>
@@ -46,6 +47,6 @@
     <string name="category_concerts">Concerts</string>
     <string name="category_other">Other</string>
     <string name="map_needs_permission">Map needs your permission. Allow it?</string>
-    <string name="soon">Soon...</string>
 
+    <string name="soon">Soon…</string>
 </resources>

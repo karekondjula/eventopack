@@ -242,7 +242,6 @@
                     android:textAlignment="center"
                     android:textSize="50sp" />
 
-                <!--#dd4b39-->
                 <com.joanzapata.iconify.widget.IconTextView
                     android:id="@+id/share_gplus"
                     android:layout_width="0dp"
@@ -254,10 +253,9 @@
                     android:shadowDx="3"
                     android:shadowDy="3"
                     android:shadowRadius="5"
-                    android:text="{entypo-google-with-circle #A9AEB0}"
+                    android:text="{entypo-google-with-circle #dd4b39}"
                     android:textSize="50sp" />
 
-                <!--#4099FF-->
                 <com.joanzapata.iconify.widget.IconTextView
                     android:id="@+id/share_twitter"
                     android:layout_width="0dp"
@@ -269,7 +267,7 @@
                     android:shadowDx="3"
                     android:shadowDy="3"
                     android:shadowRadius="5"
-                    android:text="{entypo-twitter-with-circle #A9AEB0}"
+                    android:text="{entypo-twitter-with-circle #4099FF}"
                     android:textSize="50sp" />
 
             </LinearLayout>

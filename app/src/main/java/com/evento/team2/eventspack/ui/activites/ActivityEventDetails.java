@@ -59,6 +59,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.plus.PlusShare;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.EntypoModule;
@@ -194,24 +195,7 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
 
     @OnClick(R.id.fab_add_to_saved)
     public void saveEvent(View view) {
-
-        event.isEventSaved = !event.isEventSaved;
-        fragmentEventDetailsPresenter.updateSavedStateOfEvent(event, event.isEventSaved);
-
-        fab.setImageDrawable(event.isEventSaved ? filledHeart : emptyHeart);
-
-        Snackbar.make(view,
-                event.isEventSaved ?
-                        String.format(getResources().getString(R.string.event_is_saved), event.name) :
-                        String.format(getResources().getString(R.string.event_is_removed), event.name),
-                Snackbar.LENGTH_LONG)
-                .show();
-
-        if (event.isEventSaved) {
-            notificationsInteractor.scheduleNotification(event);
-        } else {
-            notificationsInteractor.removeScheduleNotification(event);
-        }
+        fragmentEventDetailsPresenter.updateSavedStateOfEvent(event);
     }
 
     @OnClick(R.id.backdrop)
@@ -238,26 +222,30 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
                 .setShareHashtag(new ShareHashtag.Builder()
                         .setHashtag("#евенти")
                         .build())
-                .setQuote("Find something attractive")
+                .setQuote(getString(R.string.promo_message))
                 .build();
 
         shareDialog.show(linkContent);
     }
 
-    @OnClick(R.id.share_twitter)
-    public void shareOnTwitter(View view) {
-        Snackbar.make(view,
-                R.string.soon,
-                Snackbar.LENGTH_SHORT)
-                .show();
-    }
-
     @OnClick(R.id.share_gplus)
     public void shareOnGplus(View view) {
-        Snackbar.make(view,
-                R.string.soon,
-                Snackbar.LENGTH_SHORT)
-                .show();
+        Intent shareIntent = new PlusShare.Builder(this)
+                .setType("text/plain")
+                .setText(getString(R.string.promo_message))
+                .setContentUrl(Uri.parse("http://www.facebook.com/events/".concat(String.valueOf(event.facebookId))))
+                .getIntent();
+
+        startActivityForResult(shareIntent, 0);
+    }
+
+    @OnClick(R.id.share_twitter)
+    public void shareOnTwitter(View view) {
+        String tweetUrl = "https://twitter.com/intent/tweet?text="
+                + getString(R.string.promo_message) + " at "
+                + "http://www.facebook.com/events/".concat(String.valueOf(event.facebookId));
+        Uri uri = Uri.parse(tweetUrl);
+        startActivity(new Intent(Intent.ACTION_VIEW, uri));
     }
 
     @Override
@@ -352,6 +340,18 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         }
 
         ActivityEventDetailsPermissionsDispatcher.initMapWithCheck(this);
+    }
+
+    @Override
+    public void notifyUserForUpdateInEvent(boolean isSaved) {
+        fab.setImageDrawable(event.isEventSaved ? filledHeart : emptyHeart);
+
+        Snackbar.make(bottomSheet,
+                event.isEventSaved ?
+                        String.format(getResources().getString(R.string.event_is_saved), event.name) :
+                        String.format(getResources().getString(R.string.event_is_removed), event.name),
+                Snackbar.LENGTH_LONG)
+                .show();
     }
 
     private static int dipToPixels(Context context, int dipValue) {

@@ -8,4 +8,6 @@ import com.evento.team2.eventspack.models.Event;
 public interface FragmentEventDetailsView {
 
     void showEvent(Event event);
+
+    void notifyUserForUpdateInEvent(boolean isSaved);
 }
