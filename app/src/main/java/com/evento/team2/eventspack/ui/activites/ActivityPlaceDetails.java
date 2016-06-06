@@ -180,7 +180,7 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
 
     @OnPermissionDenied({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     protected void mapsDenied() {
-        // maybe close map activity or just don't show maps?
+        // maybe close menuItemMap activity or just don't show maps?
     }
 
     @OnNeverAskAgain({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})

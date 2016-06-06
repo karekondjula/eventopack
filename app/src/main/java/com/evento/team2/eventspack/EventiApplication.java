@@ -11,7 +11,6 @@ import com.evento.team2.eventspack.modules.AppModule;
 import com.evento.team2.eventspack.receivers.CleanUpEventsReceiver;
 import com.evento.team2.eventspack.receivers.DailyEventsReminderReceiver;
 import com.evento.team2.eventspack.receivers.DownloadEventsReceiver;
-import com.evento.team2.eventspack.receivers.WeeklyEventsReceiver;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 

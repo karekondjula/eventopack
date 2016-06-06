@@ -2,7 +2,6 @@ package com.evento.team2.eventspack.ui.fragments.interfaces;
 
 import android.app.SearchManager;
 import android.content.Context;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
@@ -13,9 +12,6 @@ import android.view.MenuItem;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.components.AppComponent;
-
-import java.util.Observable;
-import java.util.Observer;
 
 import butterknife.ButterKnife;
 

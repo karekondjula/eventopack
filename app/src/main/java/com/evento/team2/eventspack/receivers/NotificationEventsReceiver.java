@@ -66,6 +66,7 @@ public class NotificationEventsReceiver extends BroadcastReceiver {
                                     .setCategory(Notification.CATEGORY_EVENT)
                                     .setAutoCancel(true)
                                     .setVibrate(new long[0])
+                                    .setVisibility(Notification.VISIBILITY_PUBLIC)
                                     .setLights(Color.GREEN, 1000, 1000);
 
                     Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);

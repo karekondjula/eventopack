@@ -55,6 +55,7 @@ public class WeeklyEventsReceiver extends BroadcastReceiver {
                             .setTicker("Saved events weekly reminder")
                             .setCategory(Notification.CATEGORY_EVENT)
                             .setAutoCancel(true)
+                            .setVisibility(Notification.VISIBILITY_PUBLIC)
                             .setVibrate(new long[0]);
 
 //            Intent eventDetailsIntent = ActivityEventDetails.createIntent(eventiApplication, event.id);

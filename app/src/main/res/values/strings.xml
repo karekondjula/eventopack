@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">EVENTI</string>
     <string name="facebook_app_id" translatable="false">835820619855102</string>
-    <string name="server_client_id">902703939267-5apqh4qdilfbg80b752lv1dvvt7jta0u.apps.googleusercontent.com</string>
+    <string name="server_client_id" translatable="false">902703939267-5apqh4qdilfbg80b752lv1dvvt7jta0u.apps.googleusercontent.com</string>
 
     <string name="action_search">Search</string>
     <string name="drawer_open">Open</string>
@@ -25,8 +25,13 @@
     <string name="pull_to_refresh">Pull to fetch data</string>
     <string name="about">About</string>
 
-    <string name="showcase_welcome_message">Welcome to EVENTI\nCurrent events are shown here</string>
+    <string name="showcase_welcome_message">Welcome to EVENTI</string>
     <string name="showcase_toolbar_message">Filter, calendar and map options are in the toolbar menu</string>
+    <string name="showcase_events_message">Active events are ordered by their start time</string>
+    <string name="showcase_categories_message">Categories of currently active events</string>
+    <string name="showcase_saved_message">Your saved events</string>
+    <string name="showcase_places_message">Places tab contains places from expired and active events(on the right end)</string>
+
     <string name="filter">Filter…</string>
     <string name="today">Today </string>
     <string name="attending">Attending:</string>

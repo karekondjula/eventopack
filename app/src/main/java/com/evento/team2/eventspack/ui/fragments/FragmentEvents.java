@@ -75,6 +75,8 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
                 swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
             }
         });
+        // TODO we need load more call for this to work
+//        eventsRecyclerView.setItemAnimator(new SlideInLeftAnimator());
 
         return swipeRefreshLayout;
     }

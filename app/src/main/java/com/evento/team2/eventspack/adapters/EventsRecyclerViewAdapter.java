@@ -1,6 +1,7 @@
 package com.evento.team2.eventspack.adapters;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.Snackbar;
@@ -13,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
@@ -218,22 +221,27 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
                 e.printStackTrace();
             }
 
-//                YoYo.with(Techniques.Tada)
-//                        .duration(700)
-//                        .playOn(v);
+            YoYo.with(Techniques.Tada)
+                    .duration(700)
+                    .playOn(v);
         });
 
-        holder.mView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.mView.setOnClickListener(view -> {
 
-                Activity activity = (Activity) v.getContext();
+            Activity activity = (Activity) view.getContext();
 
-                Intent intent = ActivityEventDetails.createIntent(context, event.id);
+            Intent intent = ActivityEventDetails.createIntent(context, event.id);
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+                ActivityOptions options = ActivityOptions
+                        .makeSceneTransitionAnimation(activity, holder.mEventImage, "transitionEventImage");
+
+                activity.startActivity(intent, options.toBundle());
+            } else {
                 activity.startActivity(intent);
-                // TODO fancy animation please ^_^
-//                activity.overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             }
+
+            // TODO fancy animation please ^_^
         });
     }
 

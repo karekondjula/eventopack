@@ -16,7 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:cropToPadding="false"
-            android:scaleType="centerCrop" />
+            android:scaleType="centerCrop"
+            android:transitionName="transitionEventImage" />
         <!--android:src="@drawable/party_image"-->
 
         <com.joanzapata.iconify.widget.IconTextView

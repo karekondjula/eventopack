@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.evento.team2.eventspack.EventiApplication;
@@ -44,14 +45,19 @@ import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 public class ActivityMain extends AppCompatActivity {
 
-    private static final String SHOWCASE_ID = "0";
+    private static final String SHOWCASE_ID = "1";
 
     @Bind(R.id.navigation_view)
     NavigationView navigationView;
+
     @Bind(R.id.drawer)
     DrawerLayout drawerLayout;
+
     @Bind(R.id.viewpager)
     ViewPager viewPager;
+
+    @Bind(R.id.tabs)
+    PagerSlidingTabStrip pagerSlidingTabStrip;
 
     private FragmentEvents fragmentEvents;// = FragmentEvents.newInstance();
     private FragmentCategories fragmentCategories;// = FragmentCategories.newInstance();
@@ -135,7 +141,6 @@ public class ActivityMain extends AppCompatActivity {
         actionBarDrawerToggle.syncState();
         setupViewPager(viewPager);
 
-        PagerSlidingTabStrip pagerSlidingTabStrip = ButterKnife.findById(this, R.id.tabs);
         pagerSlidingTabStrip.setTextColor(getResources().getColor(android.R.color.white));
         pagerSlidingTabStrip.setShouldExpand(true);
         pagerSlidingTabStrip.setViewPager(viewPager);
@@ -183,15 +188,13 @@ public class ActivityMain extends AppCompatActivity {
 
         searchMenuItem = menu.findItem(R.id.action_search);
 
-        menu.findItem(R.id.action_calendar).setIcon(
-                new IconDrawable(this, IoniconsIcons.ion_calendar)
-                        .colorRes(android.R.color.white)
-                        .actionBarSize());
+        menu.findItem(R.id.action_calendar).setIcon(new IconDrawable(this, IoniconsIcons.ion_calendar)
+                .colorRes(android.R.color.white)
+                .actionBarSize());
 
-        menu.findItem(R.id.action_map).setIcon(
-                new IconDrawable(this, IoniconsIcons.ion_map)
-                        .colorRes(android.R.color.white)
-                        .actionBarSize());
+        menu.findItem(R.id.action_map).setIcon(new IconDrawable(this, IoniconsIcons.ion_map)
+                .colorRes(android.R.color.white)
+                .actionBarSize());
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -227,29 +230,43 @@ public class ActivityMain extends AppCompatActivity {
 
     public void presentShowcaseSequence() {
 
-        // TODO make it better!
-
-        //    getActionBarToolbar().getChildAt(1)
-//
-//    ((ViewGroup) mSlidingTabLayout.getChildAt(0)).getChildAt(0)
-
         ShowcaseConfig config = new ShowcaseConfig();
-        config.setDelay(2000);
+        config.setDelay(3000);
 
-        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(this, SHOWCASE_ID);
+        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(ActivityMain.this, SHOWCASE_ID);
 
         sequence.setConfig(config);
 
         MaterialShowcaseView.Builder baseView;
 
-        baseView = MaterialShowCase.createBaseShowCase(this);
-        baseView.setTarget(viewPager);
+        baseView = MaterialShowCase.createBaseShowCase(ActivityMain.this);
+        baseView.setTarget(ButterKnife.findById(ActivityMain.this, R.id.appbar));
         baseView.setContentText(R.string.showcase_welcome_message);
         sequence.addSequenceItem(baseView.build());
 
-        baseView = MaterialShowCase.createBaseShowCase(this);
-        baseView.setTarget(ButterKnife.findById(this, R.id.appbar));
+        baseView = MaterialShowCase.createBaseShowCase(ActivityMain.this);
+        baseView.setTarget(ButterKnife.findById(ActivityMain.this, R.id.appbar));
         baseView.setContentText(R.string.showcase_toolbar_message);
+        sequence.addSequenceItem(baseView.build());
+
+        baseView = MaterialShowCase.createBaseShowCase(ActivityMain.this);
+        baseView.setTarget(((ViewGroup) pagerSlidingTabStrip.getChildAt(0)).getChildAt(0));
+        baseView.setContentText(R.string.showcase_events_message);
+        sequence.addSequenceItem(baseView.build());
+
+        baseView = MaterialShowCase.createBaseShowCase(ActivityMain.this);
+        baseView.setTarget(((ViewGroup) pagerSlidingTabStrip.getChildAt(0)).getChildAt(1));
+        baseView.setContentText(R.string.showcase_categories_message);
+        sequence.addSequenceItem(baseView.build());
+
+        baseView = MaterialShowCase.createBaseShowCase(ActivityMain.this);
+        baseView.setTarget(((ViewGroup) pagerSlidingTabStrip.getChildAt(0)).getChildAt(2));
+        baseView.setContentText(R.string.showcase_saved_message);
+        sequence.addSequenceItem(baseView.build());
+
+        baseView = MaterialShowCase.createBaseShowCase(ActivityMain.this);
+        baseView.setTarget(((ViewGroup) pagerSlidingTabStrip.getChildAt(0)).getChildAt(3));
+        baseView.setContentText(R.string.showcase_places_message);
         sequence.addSequenceItem(baseView.build());
 
         sequence.start();

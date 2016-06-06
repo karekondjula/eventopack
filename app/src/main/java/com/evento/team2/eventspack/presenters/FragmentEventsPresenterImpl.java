@@ -136,11 +136,11 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
                         fetchEvents(lastQuery);
 
                         preferencesInteractor.setLastUpdateOfEvents(new Date().getTime());
-
-                        mainThread.post(fragmentEventsView::stopRefreshAnimation);
                     } else {
                         mainThread.post(fragmentEventsView::showNoInternetConnectionMessage);
                     }
+
+                    mainThread.post(fragmentEventsView::stopRefreshAnimation);
                 }
             }
         }.start();

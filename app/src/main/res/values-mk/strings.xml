@@ -23,8 +23,13 @@
     <string name="pull_to_refresh">Повлечи за повеќе настани</string>
     <string name="about">Во врска со EVENTI</string>
 
-    <string name="showcase_welcome_message">Добредојде на EVENTI\nНастаните се прикажуваат во ова поле</string>
+    <string name="showcase_welcome_message">Добредојде на EVENTI</string>
     <string name="showcase_toolbar_message">Филтрирање, календар и мапа на настани се наоѓаат во менито од алатникот</string>
+    <string name="showcase_events_message">Актуелните настани се подредени по време на почнување</string>
+    <string name="showcase_categories_message">Категории на актуелни настани</string>
+    <string name="showcase_saved_message">Вашите зачувани настани</string>
+    <string name="showcase_places_message">Табот со места од изминати и активни настани се наоѓа најдесно</string>
+
     <string name="filter">Филтрирај…</string>
     <string name="today">Денес </string>
     <string name="attending">Присуствуваат:</string>
@@ -45,6 +50,6 @@
     <string name="category_concerts">Концерти</string>
     <string name="category_other">Разно</string>
     <string name="map_needs_permission">Дали е дозволено користење на мапа?</string>
-    <string name="soon">Наскоро...</string>
+    <string name="soon">Наскоро…</string>
 
 </resources>

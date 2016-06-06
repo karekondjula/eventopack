@@ -40,6 +40,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.components.DaggerEventDetailsComponent;
@@ -196,6 +198,10 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
     @OnClick(R.id.fab_add_to_saved)
     public void saveEvent(View view) {
         fragmentEventDetailsPresenter.updateSavedStateOfEvent(event);
+
+        YoYo.with(Techniques.Tada)
+                .duration(700)
+                .playOn(view);
     }
 
     @OnClick(R.id.backdrop)
@@ -213,6 +219,11 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
 
     @OnClick(R.id.share_facebook)
     public void shareOnFacebook(View view) {
+
+        YoYo.with(Techniques.Tada)
+                .duration(700)
+                .playOn(view);
+
         ShareDialog shareDialog = new ShareDialog(this);
 
         ShareLinkContent linkContent = new ShareLinkContent.Builder()
@@ -230,6 +241,11 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
 
     @OnClick(R.id.share_gplus)
     public void shareOnGplus(View view) {
+
+        YoYo.with(Techniques.Tada)
+                .duration(700)
+                .playOn(view);
+
         Intent shareIntent = new PlusShare.Builder(this)
                 .setType("text/plain")
                 .setText(getString(R.string.promo_message))
@@ -241,6 +257,11 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
 
     @OnClick(R.id.share_twitter)
     public void shareOnTwitter(View view) {
+
+        YoYo.with(Techniques.Tada)
+                .duration(700)
+                .playOn(view);
+
         String tweetUrl = "https://twitter.com/intent/tweet?text="
                 + getString(R.string.promo_message) + " at "
                 + "http://www.facebook.com/events/".concat(String.valueOf(event.facebookId));
@@ -283,7 +304,6 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
 
     @OnShowRationale({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     protected void showMapsRationale(final PermissionRequest request) {
-        // Call proceed() or cancel() on the incoming request to continue or abort the current permissions process
         new AlertDialog.Builder(this)
                 .setMessage(R.string.map_needs_permission)
                 .setPositiveButton(android.R.string.ok, (dialog, which) -> request.proceed())
@@ -293,7 +313,7 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
 
     @OnPermissionDenied({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
     protected void mapsDenied() {
-        // maybe close map activity or just don't show maps?
+        // maybe close menuItemMap activity or just don't show maps?
     }
 
     @OnNeverAskAgain({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})

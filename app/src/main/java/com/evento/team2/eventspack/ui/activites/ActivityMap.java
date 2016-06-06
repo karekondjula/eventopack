@@ -42,7 +42,7 @@ public class ActivityMap extends AppCompatActivity {
                 long id = bundle.getLong(FragmentMap.EXTRA_ID);
                 switch (what) {
                     case EventiConstants.SAVED_EVENTS:
-                        // TODO go to saved events in activity map
+                        // TODO go to saved events in activity menuItemMap
                     case EventiConstants.EVENTS:
                         fragmentMap = FragmentMap.newInstance(EventiConstants.EVENTS, id);
                         break;

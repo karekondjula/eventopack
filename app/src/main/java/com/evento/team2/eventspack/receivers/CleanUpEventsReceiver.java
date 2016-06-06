@@ -3,6 +3,7 @@ package com.evento.team2.eventspack.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
@@ -33,7 +34,7 @@ public class CleanUpEventsReceiver extends BroadcastReceiver {
                     databaseInteractor.cleanUpEventsAndPlaces();
 
                     Intent intent = new Intent(context, DownloadEventsReceiver.class);
-                    context.sendBroadcast(intent);
+                    LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
                 }
             }.start();
         }
