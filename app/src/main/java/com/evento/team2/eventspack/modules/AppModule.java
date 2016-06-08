@@ -11,7 +11,10 @@ import dagger.Provides;
  * Created by Daniel on 10-Jan-16.
  */
 
-@Module(includes = {MainPresentersModule.class, InteractorsModule.class, ThreadsModule.class})
+@Module(includes = {MainPresentersModule.class,
+        InteractorsModule.class,
+        ThreadsModule.class,
+        BroadcastReceiversModule.class})
 public class AppModule {
 
     EventiApplication eventiApplication;

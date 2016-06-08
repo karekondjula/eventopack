@@ -38,6 +38,7 @@
     <string name="updating_now">Превземање…</string>
 
     <string name="upcoming_event_reminder">Потсетување за настан</string>
+    <string name="saved_event_starts_today">Зачуван настан за денес</string>
     <string name="categories">Категории</string>
     <string name="category_fun">Забава</string>
     <string name="category_cinema">Кино</string>

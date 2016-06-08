@@ -40,6 +40,7 @@
     <string name="updating_now">Updating now</string>
 
     <string name="upcoming_event_reminder">Upcoming event reminder</string>
+    <string name="saved_event_starts_today">A saved event starts today</string>
     <string name="categories">Categories</string>
     <string name="category_fun">Fun</string>
     <string name="category_cinema">Cinema</string>

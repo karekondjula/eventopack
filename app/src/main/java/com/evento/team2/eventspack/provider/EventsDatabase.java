@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.location.Address;
 import android.location.Geocoder;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.models.Place;
@@ -534,16 +533,9 @@ public class EventsDatabase {
 
         where = new StringBuilder();
         where.append(Event.Table.COLUMN_IS_EVENT_SAVED + " = ? " +
-                "AND ( " +
-                " ( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? < 86400000 AND " + Event.Table.COLUMN_START_TIME_STAMP + " - ? >= 0 " + ") " +
-                " OR " +
-                " ( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? <= 0 AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? ) " +
-                ") "
+                " AND " + Event.Table.COLUMN_START_TIME_STAMP + " - ? <= 900000 "
         );
         whereArgsList.add(String.valueOf(Event.SAVED));
-        whereArgsList.add(timestamp);
-        whereArgsList.add(timestamp);
-        whereArgsList.add(timestamp);
         whereArgsList.add(timestamp);
 
         whereArgs = new String[whereArgsList.size()];

@@ -105,27 +105,15 @@
             android:name="com.facebook.FacebookContentProvider"
             android:exported="true" />
 
-        <receiver android:name=".receivers.DownloadEventsReceiver">
+        <receiver android:name=".receivers.DownloadEventsReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="ActionDownloadEventsReceiver" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name=".receivers.CleanUpEventsReceiver">
+        <receiver android:name=".receivers.CleanUpEventsReceiver" android:exported="false">
             <intent-filter>
                 <action android:name="ActionCleanUpEventsReceiver" />
-            </intent-filter>
-        </receiver>
-
-        <receiver android:name=".receivers.NotificationEventsReceiver">
-            <intent-filter>
-                <action android:name="ActionNotificationEventsReceiver" />
-            </intent-filter>
-        </receiver>
-
-        <receiver android:name=".receivers.DailyEventsReminderReceiver">
-            <intent-filter>
-                <action android:name="DailyEventsReminderReceiver" />
             </intent-filter>
         </receiver>
 

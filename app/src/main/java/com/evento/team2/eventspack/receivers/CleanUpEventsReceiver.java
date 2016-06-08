@@ -15,7 +15,7 @@ import javax.inject.Inject;
  */
 public class CleanUpEventsReceiver extends BroadcastReceiver {
 
-    public static String ACTION = "ActionCleanUpEventsReceiver";
+    public static String ACTION = "com.evento.team2.eventspack.ActionCleanUpEventsReceiver";
 
     @Inject
     DatabaseInteractor databaseInteractor;

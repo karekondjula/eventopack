@@ -83,7 +83,7 @@ import permissions.dispatcher.RuntimePermissions;
 @RuntimePermissions
 public class ActivityEventDetails extends AppCompatActivity implements FragmentEventDetailsView {
 
-    public static final String EXTRA_ID = "event_id";
+    public static final String EXTRA_EVENT_ID = "event_id";
 
     @Inject
     FragmentEventDetailsPresenter fragmentEventDetailsPresenter;
@@ -175,7 +175,7 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         super.onResume();
 
         Intent intent = getIntent();
-        eventId = intent.getLongExtra(EXTRA_ID, 0);
+        eventId = intent.getLongExtra(EXTRA_EVENT_ID, 0);
 
         fragmentEventDetailsPresenter.fetchEventDetails(eventId);
     }
@@ -323,7 +323,7 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
 
     public static Intent createIntent(Context context, long id) {
         Intent intent = new Intent(context, ActivityEventDetails.class);
-        intent.putExtra(ActivityEventDetails.EXTRA_ID, id);
+        intent.putExtra(ActivityEventDetails.EXTRA_EVENT_ID, id);
 
         return intent;
     }

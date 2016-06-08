@@ -312,8 +312,8 @@ public class ActivityMain extends AppCompatActivity {
     }
 
     private static class Adapter extends FragmentPagerAdapter {
-        private final List<Fragment> mFragments = new ArrayList<>();
-        private final List<String> mFragmentTitles = new ArrayList<>();
+        private List<Fragment> mFragments = new ArrayList<>();
+        private List<String> mFragmentTitles = new ArrayList<>();
 
         public Adapter(FragmentManager fm) {
             super(fm);

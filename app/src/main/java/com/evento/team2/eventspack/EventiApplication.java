@@ -3,6 +3,7 @@ package com.evento.team2.eventspack;
 import android.app.AlarmManager;
 import android.app.Application;
 import android.content.Intent;
+import android.content.IntentFilter;
 
 import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.components.DaggerAppComponent;
@@ -11,6 +12,7 @@ import com.evento.team2.eventspack.modules.AppModule;
 import com.evento.team2.eventspack.receivers.CleanUpEventsReceiver;
 import com.evento.team2.eventspack.receivers.DailyEventsReminderReceiver;
 import com.evento.team2.eventspack.receivers.DownloadEventsReceiver;
+import com.evento.team2.eventspack.receivers.NotificationEventsReceiver;
 import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 
@@ -33,6 +35,15 @@ public class EventiApplication extends Application {
 
 //    private RefWatcher refWatcher;
 
+    @Inject
+    NotificationEventsReceiver notificationEventsReceiver;
+
+    @Inject
+    DailyEventsReminderReceiver dailyEventsReminderReceiver;
+
+    IntentFilter notificationEventsFilter;
+    IntentFilter dailyEventsReminderFilter;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -42,6 +53,14 @@ public class EventiApplication extends Application {
                 .build();
         appComponent.inject(this);
 
+        notificationEventsFilter = new IntentFilter();
+        notificationEventsFilter.addAction(NotificationEventsReceiver.ACTION);
+        registerReceiver(notificationEventsReceiver, notificationEventsFilter);
+
+        dailyEventsReminderFilter = new IntentFilter();
+        dailyEventsReminderFilter.addAction(DailyEventsReminderReceiver.ACTION);
+        registerReceiver(dailyEventsReminderReceiver, dailyEventsReminderFilter);
+
         Intent downloadEventsIntent = DownloadEventsReceiver.getIntent();
         alarmManagerInteractor.scheduleRepeating(downloadEventsIntent, NOW, AlarmManager.INTERVAL_HALF_DAY);
 
@@ -49,12 +68,12 @@ public class EventiApplication extends Application {
         alarmManagerInteractor.scheduleRepeating(cleanUpEventsIntent, NOW, AlarmManager.INTERVAL_DAY * 30);
 
         Calendar tenAmCalendar = Calendar.getInstance();
-        tenAmCalendar.set(Calendar.HOUR_OF_DAY, 10);
-        tenAmCalendar.set(Calendar.AM_PM, Calendar.AM);
-        tenAmCalendar.set(Calendar.MINUTE, 0);
-        tenAmCalendar.set(Calendar.SECOND, 0);
+        tenAmCalendar.set(Calendar.HOUR_OF_DAY, 9);
+        tenAmCalendar.set(Calendar.MINUTE, 3);
+        tenAmCalendar.set(Calendar.SECOND, 1);
         Intent dailyReminderIntent = DailyEventsReminderReceiver.getIntent();
         alarmManagerInteractor.scheduleRepeating(dailyReminderIntent, tenAmCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY);
+//        alarmManagerInteractor.scheduleRepeating(dailyReminderIntent, tenAmCalendar.getTimeInMillis(), 1000 * 60);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);

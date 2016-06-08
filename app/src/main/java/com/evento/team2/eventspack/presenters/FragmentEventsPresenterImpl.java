@@ -23,7 +23,7 @@ import java.util.HashMap;
  */
 public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
 
-    private final NetworkUtils networkUtils;
+    private NetworkUtils networkUtils;
     private EventiApplication application;
     private FragmentEventsView fragmentEventsView;
     private MainThread mainThread;

@@ -17,7 +17,7 @@ import java.util.Date;
  */
 public class NotificationsInteractorImpl implements NotificationsInteractor {
 
-    private final AlarmManagerInteractor alarmManagerInteractor;
+    private AlarmManagerInteractor alarmManagerInteractor;
 
     public NotificationsInteractorImpl(AlarmManagerInteractor alarmManagerInteractor) {
         this.alarmManagerInteractor = alarmManagerInteractor;
@@ -32,17 +32,6 @@ public class NotificationsInteractorImpl implements NotificationsInteractor {
 
             // TODO preference for how long before start time should the notification show (maybe dialog to choose from)
             alarmManagerInteractor.scheduleOneTime(eventDetailsIntent, event.startTimeStamp - AlarmManager.INTERVAL_HOUR);
-
-//            calendar.setTimeInMillis(event.startTimeStamp);
-//            calendar.set(Calendar.HOUR_OF_DAY, 10);
-//            calendar.set(Calendar.MINUTE, 0);
-//            calendar.set(Calendar.SECOND, 0);
-//
-//            if (calendar.getTimeInMillis() < event.startTimeStamp) {
-//                // no point daily notification for events which start before 10am
-//                // TODO aggregate daily notifications
-//                alarmManagerInteractor.scheduleOneTime(eventDetailsIntent, calendar.getTimeInMillis());
-//            }
         }
     }
 
