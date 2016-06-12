@@ -53,8 +53,8 @@ public class DatabaseInteractorImpl implements DatabaseInteractor {
     }
 
     @Override
-    public ArrayList<Event> getSavedEventsOnDate(String timestamp) {
-        return EventsDatabase.getInstance().getSavedEventsOnDate(timestamp);
+    public ArrayList<Event> getSavedEventsInNext24Hours(String timestamp) {
+        return EventsDatabase.getInstance().getSavedEventsInNext24Hours(timestamp);
     }
 
     @Override

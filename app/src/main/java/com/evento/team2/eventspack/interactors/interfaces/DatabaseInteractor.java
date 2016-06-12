@@ -22,7 +22,7 @@ public interface DatabaseInteractor {
 
     ArrayList<Event> getSavedEvents(String filter);
 
-    ArrayList<Event> getSavedEventsOnDate(String timestamp);
+    ArrayList<Event> getSavedEventsInNext24Hours(String timestamp);
 
     ArrayList<Event> getActiveEventsByCategory(@Event.Category int categoryId, String filter);
 

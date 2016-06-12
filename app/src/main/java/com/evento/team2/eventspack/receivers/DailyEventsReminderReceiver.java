@@ -45,7 +45,7 @@ public class DailyEventsReminderReceiver extends BroadcastReceiver {
             new Thread() {
                 @Override
                 public void run() {
-                    ArrayList<Event> savedEventsForToday = databaseInteractor.getSavedEventsOnDate(String.valueOf(new Date().getTime()));
+                    ArrayList<Event> savedEventsForToday = databaseInteractor.getSavedEventsInNext24Hours(String.valueOf(new Date().getTime()));
 
                     NotificationCompat.Builder savedEventNotification;
 

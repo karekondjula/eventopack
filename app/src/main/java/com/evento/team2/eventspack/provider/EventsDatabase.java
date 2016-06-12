@@ -524,7 +524,7 @@ public class EventsDatabase {
         return events;
     }
 
-    public ArrayList<Event> getSavedEventsOnDate(String timestamp) {
+    public ArrayList<Event> getSavedEventsInNext24Hours(String timestamp) {
         ArrayList<Event> events = new ArrayList<Event>();
 
         StringBuilder where;
@@ -533,7 +533,7 @@ public class EventsDatabase {
 
         where = new StringBuilder();
         where.append(Event.Table.COLUMN_IS_EVENT_SAVED + " = ? " +
-                " AND " + Event.Table.COLUMN_START_TIME_STAMP + " - ? <= 900000 "
+                " AND " + Event.Table.COLUMN_START_TIME_STAMP + " - ? <= 86400000 "
         );
         whereArgsList.add(String.valueOf(Event.SAVED));
         whereArgsList.add(timestamp);

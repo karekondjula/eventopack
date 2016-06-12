@@ -67,13 +67,13 @@ public class EventiApplication extends Application {
         Intent cleanUpEventsIntent = CleanUpEventsReceiver.getIntent();
         alarmManagerInteractor.scheduleRepeating(cleanUpEventsIntent, NOW, AlarmManager.INTERVAL_DAY * 30);
 
-        Calendar tenAmCalendar = Calendar.getInstance();
-        tenAmCalendar.set(Calendar.HOUR_OF_DAY, 9);
-        tenAmCalendar.set(Calendar.MINUTE, 3);
-        tenAmCalendar.set(Calendar.SECOND, 1);
+        Calendar nineAmCalendar = Calendar.getInstance();
+        nineAmCalendar.set(Calendar.HOUR_OF_DAY, 9);
+        nineAmCalendar.set(Calendar.MINUTE, 3);
+        nineAmCalendar.set(Calendar.SECOND, 1);
         Intent dailyReminderIntent = DailyEventsReminderReceiver.getIntent();
-        alarmManagerInteractor.scheduleRepeating(dailyReminderIntent, tenAmCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY);
-//        alarmManagerInteractor.scheduleRepeating(dailyReminderIntent, tenAmCalendar.getTimeInMillis(), 1000 * 60);
+        alarmManagerInteractor.scheduleRepeating(dailyReminderIntent, nineAmCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY);
+//        alarmManagerInteractor.scheduleRepeating(dailyReminderIntent, nineAmCalendar.getTimeInMillis(), 1000 * 60);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
         AppEventsLogger.activateApp(this);
