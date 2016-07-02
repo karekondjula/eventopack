@@ -17,15 +17,15 @@
 package com.evento.team2.eventspack.ui.activites;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v7.app.ActionBar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,6 +46,7 @@ import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.views.FragmentPlaceDetailsView;
 import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -58,14 +59,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.OnNeverAskAgain;
-import permissions.dispatcher.OnPermissionDenied;
-import permissions.dispatcher.OnShowRationale;
-import permissions.dispatcher.PermissionRequest;
-import permissions.dispatcher.RuntimePermissions;
 
-@RuntimePermissions
 public class ActivityPlaceDetails extends AppCompatActivity implements FragmentPlaceDetailsView {
 
     public static final String EXTRA_ID = "place_id";
@@ -86,6 +80,7 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
     LinearLayout placeDetailsEventsLinearLayout;
 
     private Place place;
+    private GoogleMap mapView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,15 +94,20 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
                 .build();
         placeDetailsComponent.inject(this);
 
-        final Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
-        setSupportActionBar(toolbar);
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+//        final Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        final ActionBar actionBar = getSupportActionBar();
+//        if (actionBar != null) {
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//        }
         // TODO make the toolbar disappear completely on top most scroll
 
         fragmentPlaceDetailsPresenter.setView(this);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, EventiConstants.ungrantedPremissions, EventiConstants.PERMISSIONS_REQUEST_CODE);
+        }
     }
 
     @Override
@@ -143,16 +143,36 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        ActivityPlaceDetailsPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case EventiConstants.PERMISSIONS_REQUEST_CODE: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0) {
+
+                    for (int grantResult : grantResults) {
+                        if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                            // TODO a permission was not granted - o.O what to do?
+                            return;
+                        }
+                    }
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mapView.setMyLocationEnabled(true);
+                        }
+                    });
+                } else {
+                    // TODO a permission was not granted - o.O what to do?
+                }
+            }
+        }
     }
 
-    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-    protected void initMap() {
+    private void initMap() {
         MapFragment mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.event_detail_map);
         mapFragment.getMapAsync(googleMap -> {
-            googleMap.setMyLocationEnabled(true);
+            mapView = googleMap;
             googleMap.getUiSettings().setAllGesturesEnabled(false);
             googleMap.getUiSettings().setMyLocationButtonEnabled(false);
             if (this.place.location.latitude != 0 || this.place.location.longitude != 0) {
@@ -165,27 +185,6 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
                 googleMap.addMarker(new MarkerOptions().position(new LatLng(this.place.location.latitude, this.place.location.longitude)));
             }
         });
-    }
-
-    @OnShowRationale({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-    protected void showMapsRationale(final PermissionRequest request) {
-        // E.g. show a dialog explaining why you need the permission.
-        // Call proceed() or cancel() on the incoming request to continue or abort the current permissions process
-        new AlertDialog.Builder(this)
-                .setMessage(R.string.map_needs_permission)
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> request.proceed())
-                .setNegativeButton(android.R.string.cancel, (dialog, which) -> request.cancel())
-                .show();
-    }
-
-    @OnPermissionDenied({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-    protected void mapsDenied() {
-        // maybe close menuItemMap activity or just don't show maps?
-    }
-
-    @OnNeverAskAgain({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-    protected void showNeverAskForMap() {
-//        Toast.makeText(this, R.string.permission_camera_neverask, Toast.LENGTH_SHORT).show();
     }
 
     public static Intent createIntent(Context context, long id) {
@@ -208,7 +207,8 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
         }
 
         textViewEventLocation.setText(place.locationString);
-        ActivityPlaceDetailsPermissionsDispatcher.initMapWithCheck(this);
+
+        initMap();
     }
 
     @Override

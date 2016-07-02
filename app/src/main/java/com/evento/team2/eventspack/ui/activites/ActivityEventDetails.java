@@ -17,9 +17,9 @@
 package com.evento.team2.eventspack.ui.activites;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,9 +28,9 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.ActionBar;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
@@ -73,14 +73,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.OnNeverAskAgain;
-import permissions.dispatcher.OnPermissionDenied;
-import permissions.dispatcher.OnShowRationale;
-import permissions.dispatcher.PermissionRequest;
-import permissions.dispatcher.RuntimePermissions;
 
-@RuntimePermissions
 public class ActivityEventDetails extends AppCompatActivity implements FragmentEventDetailsView {
 
     public static final String EXTRA_EVENT_ID = "event_id";
@@ -153,12 +146,12 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         emptyHeart = new IconDrawable(this, IoniconsIcons.ion_android_favorite_outline).colorRes(android.R.color.white).actionBarSize();
         filledHeart = new IconDrawable(this, IoniconsIcons.ion_android_favorite).colorRes(R.color.colorPrimary).actionBarSize();
 
-        final Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
-        setSupportActionBar(toolbar);
-        final ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
+//        final Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//        final ActionBar actionBar = getSupportActionBar();
+//        if (actionBar != null) {
+//            actionBar.setDisplayHomeAsUpEnabled(true);
+//        }
         // TODO make the toolbar disappear completely on top most scroll
 
         fab = ((FloatingActionButton) findViewById(R.id.fab_add_to_saved));
@@ -168,6 +161,11 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         BottomSheetBehavior mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior.setPeekHeight(dipToPixels(this, 70));
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, EventiConstants.ungrantedPremissions, EventiConstants.PERMISSIONS_REQUEST_CODE);
+        }
     }
 
     @Override
@@ -193,6 +191,32 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         markerOptions = null;
         emptyHeart = null;
         filledHeart = null;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case EventiConstants.PERMISSIONS_REQUEST_CODE: {
+                if (grantResults.length > 0) {
+
+                    for (int grantResult : grantResults) {
+                        if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                            // TODO a permission was not granted - o.O what to do?
+                            return;
+                        }
+                    }
+
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mapView.setMyLocationEnabled(true);
+                        }
+                    });
+                } else {
+                    // TODO a permission was not granted - o.O what to do?
+                }
+            }
+        }
     }
 
     @OnClick(R.id.fab_add_to_saved)
@@ -275,21 +299,14 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         return true;
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        ActivityEventDetailsPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
-    }
-
-    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-    protected void initMap() {
+    private void initMap() {
         mapFragment = (MapFragment) getFragmentManager().findFragmentById(R.id.event_detail_map);
         mapFragment.getMapAsync(googleMap -> {
             mapView = googleMap;
-            mapView.setMyLocationEnabled(true);
             mapView.getUiSettings().setAllGesturesEnabled(false);
             mapView.getUiSettings().setMyLocationButtonEnabled(false);
-            if (event.location.latitude != 0 || event.location.longitude != 0) {
+
+            if ((event.location.latitude != 0 || event.location.longitude != 0)) {
                 mapView.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(event.location.latitude, event.location.longitude), 15));
                 mapView.setOnMapClickListener(latLng -> {
                     Intent activityMapIntent = ActivityMap.createIntent(ActivityEventDetails.this, EventiConstants.EVENTS, event.id);
@@ -300,25 +317,6 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
                 mapView.addMarker(markerOptions);
             }
         });
-    }
-
-    @OnShowRationale({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-    protected void showMapsRationale(final PermissionRequest request) {
-        new AlertDialog.Builder(this)
-                .setMessage(R.string.map_needs_permission)
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> request.proceed())
-                .setNegativeButton(android.R.string.cancel, (dialog, which) -> request.cancel())
-                .show();
-    }
-
-    @OnPermissionDenied({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-    protected void mapsDenied() {
-        // maybe close menuItemMap activity or just don't show maps?
-    }
-
-    @OnNeverAskAgain({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-    protected void showNeverAskForMap() {
-//        Toast.makeText(this, R.string.permission_camera_neverask, Toast.LENGTH_SHORT).show();
     }
 
     public static Intent createIntent(Context context, long id) {
@@ -359,7 +357,7 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
             textViewEventAttending.setVisibility(View.GONE);
         }
 
-        ActivityEventDetailsPermissionsDispatcher.initMapWithCheck(this);
+        initMap();
     }
 
     @Override

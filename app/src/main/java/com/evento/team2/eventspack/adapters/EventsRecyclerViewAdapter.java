@@ -22,6 +22,7 @@ import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteracto
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
+import com.evento.team2.eventspack.utils.EventiConstants;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import java.text.ParseException;
@@ -232,16 +233,14 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
 
             Intent intent = ActivityEventDetails.createIntent(context, event.id);
 
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
-                ActivityOptions options = ActivityOptions
-                        .makeSceneTransitionAnimation(activity, holder.mEventImage, "transitionEventImage");
-
-                activity.startActivity(intent, options.toBundle());
-            } else {
+//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+//                ActivityOptions options = ActivityOptions
+//                        .makeSceneTransitionAnimation(activity, holder.mEventImage, EventiConstants.TRANSITION_EVENT_IMAGE);
+//
+//                activity.startActivity(intent, options.toBundle());
+//            } else {
                 activity.startActivity(intent);
-            }
-
-            // TODO fancy animation please ^_^
+//            }
         });
     }
 

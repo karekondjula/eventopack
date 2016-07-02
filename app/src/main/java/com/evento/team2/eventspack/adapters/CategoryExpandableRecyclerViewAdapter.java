@@ -1,5 +1,7 @@
 package com.evento.team2.eventspack.adapters;
 
+import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -19,6 +21,7 @@ import com.evento.team2.eventspack.models.Category;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
+import com.evento.team2.eventspack.utils.EventiConstants;
 
 import java.util.List;
 
@@ -181,7 +184,16 @@ public class CategoryExpandableRecyclerViewAdapter extends ExpandableRecyclerAda
 
             mView.setOnClickListener(view -> {
                 Intent intent = ActivityEventDetails.createIntent(context, event.id);
-                context.startActivity(intent);
+
+//                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+//                    ActivityOptions options = ActivityOptions
+//                            .makeSceneTransitionAnimation((Activity) context, mEventImage, EventiConstants.TRANSITION_EVENT_IMAGE);
+//
+//                    context.startActivity(intent, options.toBundle());
+//                } else {
+                    context.startActivity(intent);
+//                }
+
             });
         }
     }

@@ -103,11 +103,7 @@ public class FragmentCalendar extends Fragment implements FragmentCalendarView {
                 .build();
 
         calendarComponent.inject(this);
-    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
         fragmentCalendarPresenter.fetchEvents();
     }
 
@@ -208,7 +204,15 @@ public class FragmentCalendar extends Fragment implements FragmentCalendarView {
                 calendarItemView.setClickable(true);
                 calendarItemView.setOnClickListener(v -> {
                     Intent intent = ActivityEventDetails.createIntent(getActivity(), event.id);
-                    getActivity().startActivity(intent);
+
+//                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+//                        ActivityOptions options = ActivityOptions
+//                                .makeSceneTransitionAnimation( getActivity(), calendarEventImageView, EventiConstants.TRANSITION_EVENT_IMAGE);
+//
+//                        getActivity().startActivity(intent, options.toBundle());
+//                    } else {
+                        startActivity(intent);
+//                    }
                 });
 
                 getActivity().runOnUiThread(() -> {

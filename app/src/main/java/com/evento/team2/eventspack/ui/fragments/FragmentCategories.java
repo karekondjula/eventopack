@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
+import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapters.CategoryExpandableRecyclerViewAdapter;
 import com.evento.team2.eventspack.components.AppComponent;
@@ -67,12 +68,14 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
         categoriesRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         fragmentCategoriesPresenter.setView(this);
+
+        fragmentCategoriesPresenter.fetchCategoriesWithActiveEvents(EventiConstants.NO_FILTER_STRING);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        fragmentCategoriesPresenter.fetchCategoriesWithActiveEvents(EventiConstants.NO_FILTER_STRING);
+
     }
 
     public static FragmentCategories newInstance() {
@@ -91,29 +94,31 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
 
     @Override
     public void showCategories(List<Category> categoryList) {
-        categoryAdapter = new CategoryExpandableRecyclerViewAdapter(getActivity(), categoryList);
+        if (getActivity() != null) {
+            categoryAdapter = new CategoryExpandableRecyclerViewAdapter(getActivity(), categoryList);
 
-        categoryAdapter.setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
-            @Override
-            public void onListItemExpanded(int position) {
-                expandedParentsList.add(position);
+            categoryAdapter.setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
+                @Override
+                public void onListItemExpanded(int position) {
+                    expandedParentsList.add(position);
+                }
+
+                @Override
+                public void onListItemCollapsed(int position) {
+                    expandedParentsList.remove(position);
+                }
+            });
+
+            if(categoriesRecyclerView != null) {
+                categoriesRecyclerView.setAdapter(categoryAdapter);
             }
 
-            @Override
-            public void onListItemCollapsed(int position) {
-                expandedParentsList.remove(position);
+            if (expandedParentsList != null) {
+                for(int expandedParent : expandedParentsList) {
+                    categoryAdapter.expandParent(expandedParent);
+                }
+                categoryAdapter.notifyDataSetChanged();
             }
-        });
-
-        if(categoriesRecyclerView != null) {
-            categoriesRecyclerView.setAdapter(categoryAdapter);
-        }
-
-        if (expandedParentsList != null) {
-            for(int expandedParent : expandedParentsList) {
-                categoryAdapter.expandParent(expandedParent);
-            }
-            categoryAdapter.notifyDataSetChanged();
         }
     }
 }

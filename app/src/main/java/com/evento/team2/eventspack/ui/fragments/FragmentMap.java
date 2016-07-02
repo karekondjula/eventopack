@@ -1,11 +1,13 @@
 package com.evento.team2.eventspack.ui.fragments;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.Toolbar;
@@ -60,17 +62,10 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.OnNeverAskAgain;
-import permissions.dispatcher.OnPermissionDenied;
-import permissions.dispatcher.OnShowRationale;
-import permissions.dispatcher.PermissionRequest;
-import permissions.dispatcher.RuntimePermissions;
 
 /**
  * Created by Daniel on 29-Oct-15.
  */
-@RuntimePermissions
 public class FragmentMap extends BaseFragment implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener,
         GoogleMap.OnMapClickListener, GoogleMap.OnMyLocationChangeListener, FragmentMapView {
 
@@ -208,6 +203,13 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         fragmentMapPresenter.setView(this);
+
+//        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+//                ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(getActivity(), ungrantedPremissions, EventiConstants.PERMISSIONS_REQUEST_CODE);
+//        } else {
+            initMap();
+//        }
     }
 
     @Override
@@ -215,8 +217,6 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
         super.onResume();
         calendar = Calendar.getInstance();
         setCalendarOnStartOfDay(calendar);
-
-        FragmentMapPermissionsDispatcher.initMapWithCheck(this);
     }
 
     @Override
@@ -268,17 +268,50 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
     }
 
     @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case EventiConstants.PERMISSIONS_REQUEST_CODE: {
+                if (grantResults.length > 0) {
+                    for (int grantResult : grantResults) {
+                        if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                            // TODO a permission was not granted - o.O what to do?
+                            return;
+                        }
+                    }
+
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mapView.setMyLocationEnabled(true);
+                            mapView.setOnMyLocationChangeListener(FragmentMap.this);
+                        }
+                    });
+                } else {
+                    // TODO a permission was not granted - o.O what to do?
+                }
+            }
+        }
+    }
+
+    private void initMap() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.location_map);
+        if (mapFragment == null) {
+            mapFragment = SupportMapFragment.newInstance();
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.location_map, mapFragment).commit();
+        }
+        mapFragment.getMapAsync(this);
+    }
+
+    @Override
     public void onMapReady(GoogleMap googleMap) {
         mapView = googleMap;
         mapView.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-        mapView.setMyLocationEnabled(true);
         mapView.getUiSettings().setCompassEnabled(true);
         mapView.getUiSettings().setRotateGesturesEnabled(true);
         mapView.getUiSettings().setZoomControlsEnabled(true);
         mapView.getUiSettings().setZoomGesturesEnabled(true);
         mapView.setOnMarkerClickListener(this);
         mapView.setOnMapClickListener(this);
-        mapView.setOnMyLocationChangeListener(this);
 
         if (id == EventiConstants.NO_EVENT_ID) {
             // regular opening of fragment map
@@ -304,43 +337,14 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
                 setCalendarDate(calendar.getTime());
             }
         }
-    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        FragmentMapPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
-    }
-
-    @NeedsPermission({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-    protected void initMap() {
-        SupportMapFragment mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.location_map);
-        if (mapFragment == null) {
-            mapFragment = SupportMapFragment.newInstance();
-            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.location_map, mapFragment).commit();
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(EventiConstants.ungrantedPremissions, EventiConstants.PERMISSIONS_REQUEST_CODE);
+        } else {
+            mapView.setMyLocationEnabled(true);
+            mapView.setOnMyLocationChangeListener(this);
         }
-        mapFragment.getMapAsync(this);
-    }
-
-    @OnShowRationale({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-    protected void showMapsRationale(final PermissionRequest request) {
-        // E.g. show a dialog explaining why you need the permission.
-        // Call proceed() or cancel() on the incoming request to continue or abort the current permissions process
-        new AlertDialog.Builder(getActivity())
-                .setMessage(R.string.map_needs_permission)
-                .setPositiveButton(android.R.string.ok, (dialog, which) -> request.proceed())
-                .setNegativeButton(android.R.string.cancel, (dialog, which) -> request.cancel())
-                .show();
-    }
-
-    @OnPermissionDenied({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-    protected void mapsDenied() {
-        // maybe close map activity or just don't show maps?
-    }
-
-    @OnNeverAskAgain({Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION})
-    protected void showNeverAskForMap() {
-//        Toast.makeText(this, R.string.permission_camera_neverask, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -458,7 +462,15 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
         ButterKnife.findById(mapEventItemView, R.id.close_event).setOnClickListener(view -> removeSelectedEventLayout());
         mapEventItemView.setOnClickListener(v -> {
             Intent intent = ActivityEventDetails.createIntent(getActivity(), event.id);
-            startActivity(intent);
+
+//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+//                ActivityOptions options = ActivityOptions
+//                        .makeSceneTransitionAnimation(getActivity(), mapEventImageView, EventiConstants.TRANSITION_EVENT_IMAGE);
+//
+//                startActivity(intent, options.toBundle());
+//            } else {
+                startActivity(intent);
+//            }
         });
 
         mapEventDetailsLinearLayout.addView(mapEventItemView);

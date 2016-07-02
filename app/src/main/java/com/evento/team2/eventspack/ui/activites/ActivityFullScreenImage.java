@@ -3,6 +3,7 @@ package com.evento.team2.eventspack.ui.activites;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.text.TextUtils;
@@ -10,10 +11,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.davemorrissey.labs.subscaleview.ImageSource;
+import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
 import com.evento.team2.eventspack.R;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.concurrent.ExecutionException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,7 +41,7 @@ public class ActivityFullScreenImage extends Activity {
     public static final String TITLE = "title";
 
     @Bind(R.id.image)
-    ImageView image;
+    SubsamplingScaleImageView image;
 
     @Bind(R.id.event_title)
     TextView eventTitle;
@@ -53,22 +57,42 @@ public class ActivityFullScreenImage extends Activity {
         final String imageUri = intent.getStringExtra(IMAGE_URI);
         final String title = intent.getStringExtra(TITLE);
 
-        if (TextUtils.isEmpty(imageUri)) {
-            int category = intent.getIntExtra(CATEGORY, PLACE_IMAGE);
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    Bitmap b;
 
-            if (category == EVENT_IMAGE) {
-                Glide.with(this).load(R.drawable.party_image).into(image);
-            } else {
-                Glide.with(this).load(R.drawable.place_image).into(image);
+                    if (TextUtils.isEmpty(imageUri)) {
+                        int category = intent.getIntExtra(CATEGORY, PLACE_IMAGE);
+
+                        if (category == EVENT_IMAGE) {
+
+                            b = Glide.with(ActivityFullScreenImage.this).load(R.drawable.party_image).asBitmap().into(-1, -1).get();
+
+//                Glide.with(this).load(R.drawable.party_image).into(image);
+                        } else {
+//                Glide.with(this).load(R.drawable.place_image).into(image);
+                            b = Glide.with(ActivityFullScreenImage.this).load(R.drawable.party_image).asBitmap().into(-1, -1).get();
+                        }
+                    } else {
+                        b = Glide.with(ActivityFullScreenImage.this).load(imageUri).asBitmap().into(-1, -1).get();
+//            Glide.with(this).load(imageUri).into(image);
+                    }
+                    runOnUiThread(() -> image.setImage(ImageSource.bitmap(b)));
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
             }
-        } else {
-            Glide.with(this).load(imageUri).into(image);
-        }
+        }.start();
 
         eventTitle.setText(title);
     }
 
-    public static Intent createIntent(Context context,  @Category int category, String imageUri, String eventTitle) {
+    public static Intent createIntent(Context context, @Category int category, String imageUri, String eventTitle) {
         Intent intent = new Intent(context, ActivityFullScreenImage.class);
         intent.putExtra(ActivityFullScreenImage.CATEGORY, category);
         intent.putExtra(ActivityFullScreenImage.IMAGE_URI, imageUri);

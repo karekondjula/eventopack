@@ -3,8 +3,8 @@ package com.evento.team2.eventspack.soapservice;
 import android.util.Log;
 
 import com.bluelinelabs.logansquare.LoganSquare;
+import com.evento.team2.eventspack.BuildConfig;
 import com.evento.team2.eventspack.EventiApplication;
-import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.models.Place;
@@ -76,7 +76,7 @@ public class ServiceEventoImpl implements ServiceEvento {
 
     private HashMap<String, Object> getResponse(HashMap<String, Object> inputParameters) {
         String methodNameParam = (String) inputParameters.get(METHOD_NAME_KEY);
-        String soapActionParam = eventiApplication.getResources().getString(R.string.soap_action);//SOAP_ACTION.concat(methodNameParam);
+        String soapActionParam = BuildConfig.SOAP_ACTION;//SOAP_ACTION.concat(methodNameParam);
 
         HashMap<String, Object> responseMap = new HashMap<>();
 
@@ -85,7 +85,7 @@ public class ServiceEventoImpl implements ServiceEvento {
         inputParameters.remove(METHOD_NAME_KEY);
 
         //Create request
-        SoapObject request = new SoapObject(eventiApplication.getResources().getString(R.string.namespace), methodNameParam);
+        SoapObject request = new SoapObject(BuildConfig.NAMESPACE, methodNameParam);
 
         //Property which holds input parameters
         PropertyInfo property = new PropertyInfo();
@@ -108,7 +108,7 @@ public class ServiceEventoImpl implements ServiceEvento {
         //Set output SOAP object
         envelope.setOutputSoapObject(request);
         //Create HTTP call object
-        HttpTransportSE androidHttpTransport = new HttpTransportSE(eventiApplication.getResources().getString(R.string.url));
+        HttpTransportSE androidHttpTransport = new HttpTransportSE(BuildConfig.URL);
 
         try {
             androidHttpTransport.call(soapActionParam, envelope);

@@ -2,11 +2,11 @@ apply plugin: 'com.android.application'
 
 def versionMajor = 1
 def versionMinor = 2
-def versionPatch = 5
+def versionPatch = 6
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion 24
+    buildToolsVersion "24"
     dexOptions {
         incremental true
         maxProcessCount 4
@@ -15,12 +15,16 @@ android {
     defaultConfig {
         applicationId "com.evento.team2.eventspack"
         minSdkVersion 15
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+        buildConfigField "String", "NAMESPACE", '"urn:eventservice"'
+        buildConfigField "String", "URL", '"http://ap.mk/evento/server.php"'
+        buildConfigField "String", "SOAP_ACTION", '"http://ap.mk/evento/server.php/"'
         // Enabling multidex support.
 //        multiDexEnabled true
     }
+
     buildTypes {
         release {
             minifyEnabled true
@@ -53,19 +57,20 @@ apply plugin: 'me.tatarka.retrolambda'
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.google.android.gms:play-services-maps:9.0.2'
-    compile 'com.google.android.gms:play-services-plus:9.0.2'
-    compile 'com.android.support:appcompat-v7:23.4.0'
-    compile 'com.android.support:support-v13:23.4.0'
-    compile 'com.android.support:design:23.4.0'
-    compile 'com.android.support:recyclerview-v7:23.4.0'
-    compile 'com.android.support:cardview-v7:23.4.0'
+    compile 'com.google.android.gms:play-services-maps:9.2.0'
+    compile 'com.google.android.gms:play-services-plus:9.2.0'
+    compile 'com.android.support:appcompat-v7:24.0.0'
+    compile 'com.android.support:support-v13:24.0.0'
+    compile 'com.android.support:design:24.0.0'
+    compile 'com.android.support:recyclerview-v7:24.0.0'
+    compile 'com.android.support:cardview-v7:24.0.0'
     compile 'com.bignerdranch.android:expandablerecyclerview:2.1.1'
     compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
     compile 'com.google.dagger:dagger:2.2'
     provided 'com.google.dagger:dagger-compiler:2.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
     apt 'com.google.dagger:dagger-compiler:2.2'
+    compile 'com.davemorrissey.labs:subsampling-scale-image-view:3.5.0'
     // happy layouts
     compile 'com.jakewharton:butterknife:7.0.1'
     // introduction to layouts
@@ -85,9 +90,6 @@ dependencies {
     // compile-time annotation processing
     compile 'com.bluelinelabs:logansquare:1.1.0'
     // thunder fast JSON parser
-    compile 'com.github.hotchemi:permissionsdispatcher:2.1.2'
-    // new permissions model
-    apt 'com.github.hotchemi:permissionsdispatcher-processor:2.1.2'
 
 //    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.3.1'
 //    debugCompile 'com.squareup.leakcanary:leakcanary-android:1.3.1'
