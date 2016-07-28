@@ -1,7 +1,5 @@
 package com.evento.team2.eventspack.adapters;
 
-import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
@@ -21,7 +19,6 @@ import com.evento.team2.eventspack.models.Category;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
-import com.evento.team2.eventspack.utils.EventiConstants;
 
 import java.util.List;
 
@@ -144,19 +141,19 @@ public class CategoryExpandableRecyclerViewAdapter extends ExpandableRecyclerAda
         public ImageView mEventImage;
         public TextView mEventTitle;
 
-//        @Bind(R.id.event_details)
+//        @BindView(R.id.event_details)
 //        public TextView mEventDetails;
-//        @Bind(R.id.event_start_time)
+//        @BindView(R.id.event_start_time)
 //        public TextView mEventStartTime;
-//        @Bind(R.id.event_end_time)
+//        @BindView(R.id.event_end_time)
 //        public TextView mEventEndTime;
-//        @Bind(R.id.event_location)
+//        @BindView(R.id.event_location)
 //        public TextView mEventLocation;
-//        @Bind(R.id.btn_save_icon)
+//        @BindView(R.id.btn_save_icon)
 //        public IconTextView isEventSaved;
-//        @Bind(R.id.eventAttending)
+//        @BindView(R.id.eventAttending)
 //        View mEventAttending;
-//        @Bind(R.id.eventAttendingCount)
+//        @BindView(R.id.eventAttendingCount)
 //        TextView mEventAttendingCount;
 
 

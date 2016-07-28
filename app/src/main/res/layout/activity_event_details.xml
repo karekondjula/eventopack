@@ -29,8 +29,8 @@
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
-                app:layout_collapseMode="parallax"
-                android:transitionName="transitionEventImage" />
+                android:transitionName="transitionEventImage"
+                app:layout_collapseMode="parallax" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -271,6 +271,19 @@
                     android:text="{entypo-twitter-with-circle #4099FF}"
                     android:textSize="50sp" />
 
+                <com.joanzapata.iconify.widget.IconTextView
+                    android:id="@+id/share_on_other"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:contentDescription="share_on_other"
+                    android:gravity="center"
+                    android:shadowColor="#22000000"
+                    android:shadowDx="3"
+                    android:shadowDy="3"
+                    android:shadowRadius="5"
+                    android:text="{entypo-share #99cc00}"
+                    android:textSize="50sp" />
             </LinearLayout>
 
         </LinearLayout>

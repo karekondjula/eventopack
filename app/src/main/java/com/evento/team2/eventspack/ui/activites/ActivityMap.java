@@ -9,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.ui.fragments.FragmentMap;
 import com.evento.team2.eventspack.utils.EventiConstants;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.IoniconsModule;
 
@@ -28,12 +27,11 @@ public class ActivityMap extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        ButterKnife.bind(this);
 
         Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FragmentMap fragmentMap = null;
+        FragmentMap fragmentMap;
 
         if (getIntent() != null) {
             Bundle bundle = getIntent().getExtras();
@@ -70,11 +68,5 @@ public class ActivityMap extends AppCompatActivity {
         intent.putExtra(FragmentMap.EXTRA_ID, id);
 
         return intent;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        ButterKnife.unbind(this);
     }
 }

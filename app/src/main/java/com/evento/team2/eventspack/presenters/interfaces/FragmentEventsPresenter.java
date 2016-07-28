@@ -1,5 +1,6 @@
 package com.evento.team2.eventspack.presenters.interfaces;
 
+import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.views.FragmentEventsView;
 
 /**
@@ -14,4 +15,8 @@ public interface FragmentEventsPresenter {
     void fetchEventsFromServer(boolean forceUpdate);
 
     void fetchLastUpdatedTimestamp();
+
+    void fetchSavedEvents(String query);
+
+    void changeSavedStateOfEvent(Event event);
 }

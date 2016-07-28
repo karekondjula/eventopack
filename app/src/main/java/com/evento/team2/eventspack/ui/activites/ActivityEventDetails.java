@@ -20,6 +20,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.View;
@@ -52,6 +54,7 @@ import com.evento.team2.eventspack.modules.EventDetailsModule;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventDetailsPresenter;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.evento.team2.eventspack.utils.EventiConstants;
+import com.evento.team2.eventspack.utils.MimeTypeResolver;
 import com.evento.team2.eventspack.views.FragmentEventDetailsView;
 import com.facebook.share.model.ShareHashtag;
 import com.facebook.share.model.ShareLinkContent;
@@ -68,15 +71,24 @@ import com.joanzapata.iconify.fonts.EntypoModule;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.joanzapata.iconify.fonts.IoniconsModule;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 public class ActivityEventDetails extends AppCompatActivity implements FragmentEventDetailsView {
 
     public static final String EXTRA_EVENT_ID = "event_id";
+
+    @Inject
+    EventiApplication eventiApplication;
 
     @Inject
     FragmentEventDetailsPresenter fragmentEventDetailsPresenter;
@@ -84,35 +96,37 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
     @Inject
     NotificationsInteractor notificationsInteractor;
 
-    @Bind(R.id.backdrop)
+    @BindView(R.id.backdrop)
     ImageView backdropImage;
 
-    @Bind(R.id.fab_add_to_saved)
+    @BindView(R.id.fab_add_to_saved)
     FloatingActionButton saveEvent;
 
-    @Bind(R.id.collapsing_toolbar)
+    @BindView(R.id.collapsing_toolbar)
     CollapsingToolbarLayout collapsingToolbar;
 
-    @Bind(R.id.event_details_start_date)
+    @BindView(R.id.event_details_start_date)
     TextView textViewEventStartDate;
 
-    @Bind(R.id.event_details_end_date)
+    @BindView(R.id.event_details_end_date)
     TextView textViewEventEndDate;
 
-    @Bind(R.id.event_location)
+    @BindView(R.id.event_location)
     TextView textViewEventLocation;
 
-    @Bind(R.id.event_details)
+    @BindView(R.id.event_details)
     TextView textViewEventDetails;
 
-    @Bind(R.id.eventAttending)
+    @BindView(R.id.eventAttending)
     View textViewEventAttending;
 
-    @Bind(R.id.eventAttendingCount)
+    @BindView(R.id.eventAttendingCount)
     TextView textViewEventAttendingCount;
 
-    @Bind(R.id.bottom_sheet)
+    @BindView(R.id.bottom_sheet)
     View bottomSheet;
+
+    private Unbinder unbinder;
 
     private FloatingActionButton fab;
 
@@ -135,7 +149,7 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_event_details);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
 
         EventDetailsComponent eventDetailsComponent = DaggerEventDetailsComponent.builder()
                 .appComponent(((EventiApplication) getApplication()).getAppComponent())
@@ -181,7 +195,7 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
         mapFragment = null;
         if (mapView != null) {
             mapView.clear();
@@ -221,24 +235,107 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
 
     @OnClick(R.id.fab_add_to_saved)
     public void saveEvent(View view) {
-        fragmentEventDetailsPresenter.updateSavedStateOfEvent(event);
+        fragmentEventDetailsPresenter.changeSavedStateOfEvent(event);
 
         YoYo.with(Techniques.Tada)
                 .duration(700)
                 .playOn(view);
     }
 
+
+    private Uri fileUri;
+    private File tempFile;
+
     @OnClick(R.id.backdrop)
     public void openImage(View view) {
 
         // TODO Consider removing this extra activity which we created because we couldn't get Bitmap fro URI
         // TODO this is how it's done
-//        Bitmap b = Glide.with(eventiApplication).load(event.pictureUri).
-//                asBitmap().into(-1, -1).get();
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    Bitmap bmp = Glide.with(eventiApplication).load(event.pictureUri).asBitmap().into(-1, -1).get();
 
-        Intent fullScreenImage = ActivityFullScreenImage.createIntent(this,
-                ActivityFullScreenImage.EVENT_IMAGE, event.pictureUri, event.name);
-        startActivity(fullScreenImage);
+                    FileOutputStream out = null;
+                    try {
+
+                        if (tempFile != null && tempFile.exists()) {
+                            Intent intent = new Intent();
+                            intent.setAction(Intent.ACTION_VIEW);
+                            Log.d(">>", tempFile.getAbsoluteFile().getAbsolutePath());
+                            intent.setDataAndType(fileUri, "image/*");
+                            startActivity(intent);
+                        } else {
+//                            tempFile = File.createTempFile("temp",".jpg");
+                            tempFile = new File(getFilesDir().toString().concat("tempimage.jpg"));
+//                            tempFile = new File(Environment.getExternalStorageDirectory().toString().concat("tempimage.jpg"));
+                            out = new FileOutputStream(tempFile);
+
+                            bmp.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
+                            out.flush();
+                            out.close();
+                            tempFile.setReadable(true, false);
+
+                            MimeTypeResolver.startActivityWithMimeType(ActivityEventDetails.this, tempFile.getAbsoluteFile().getAbsolutePath());
+//                            Intent intent = new Intent();
+//                            intent.setAction(Intent.ACTION_VIEW);
+//                            intent.setDataAndType(Uri.parse("file://" + tempFile.getAbsoluteFile().getAbsolutePath()), "image/jpg");
+//                            startActivity(intent);
+
+//                            scanFile(eventiApplication, new String[]{tempFile.getAbsoluteFile().getAbsolutePath()},
+//                                    null, (path, uri) -> {
+//                                        Log.i(">> ExternalStorage", "Scanned " + path + ":");
+//                                        Log.i(">> ExternalStorage", "-> uri=" + uri);
+//                                        Log.d(">>", tempFile.getAbsoluteFile().getAbsolutePath());
+//
+//                                        new File(uri.toString()).setReadable(true);
+//                                        fileUri = uri;
+//                                        Intent intent = new Intent();
+//                                        intent.setAction(Intent.ACTION_VIEW);
+//                                        intent.setDataAndType(Uri.parse("file://" + path), "image/jpg");
+//                                        startActivity(intent);
+//                                    });
+                        }
+
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        try {
+                            if (out != null) {
+                                out.close();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                } catch (ExecutionException ee) {
+                    ee.printStackTrace();
+                }
+//                catch (IOException ioe) {
+//                    ioe.printStackTrace();
+//                }
+            }
+        }.start();
+//        try {
+//            Bitmap b = Glide.with(eventiApplication).load(event.pictureUri).asBitmap().into(-1, -1).get();
+//
+//            Intent intent = new Intent();
+//            intent.setAction(Intent.ACTION_VIEW);
+//            intent.setDataAndType(Uri.parse(event.pictureUri), "image/*");
+//            startActivity(intent);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        } catch (ExecutionException e) {
+//            e.printStackTrace();
+//        }
+
+//        Intent fullScreenImage = ActivityFullScreenImage.createIntent(this,
+//                ActivityFullScreenImage.EVENT_IMAGE, event.pictureUri, event.name);
+//        startActivity(fullScreenImage);
     }
 
     @OnClick(R.id.share_facebook)
@@ -291,6 +388,15 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
                 + "http://www.facebook.com/events/".concat(String.valueOf(event.facebookId));
         Uri uri = Uri.parse(tweetUrl);
         startActivity(new Intent(Intent.ACTION_VIEW, uri));
+    }
+
+    @OnClick(R.id.share_on_other)
+    public void shareOnOther(View view) {
+        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
+        sharingIntent.setType("text/*");
+        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT,
+                "http://www.facebook.com/events/".concat(String.valueOf(event.facebookId)));
+        startActivity(Intent.createChooser(sharingIntent, "Share using"));
     }
 
     @Override

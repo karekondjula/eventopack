@@ -14,6 +14,7 @@ import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.components.AppComponent;
 
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by Daniel on 29-Oct-15.
@@ -22,10 +23,14 @@ public abstract class BaseFragment extends Fragment {
 
     private SearchView searchView;
 
+    protected Unbinder unbinder;
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        if (unbinder != null) {
+            unbinder.unbind();
+        }
 
 //        RefWatcher refWatcher = EventiApplication.getRefWatcher(getActivity());
 //        refWatcher.watch(this);

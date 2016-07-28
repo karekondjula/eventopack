@@ -18,7 +18,7 @@ import com.evento.team2.eventspack.ui.activites.ActivityPlaceDetails;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -32,11 +32,11 @@ public class PlacesRecyclerViewAdapter extends RecyclerView.Adapter<PlacesRecycl
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         public final View mView;
-        @Bind(R.id.place_picture)
+        @BindView(R.id.place_picture)
         public ImageView mPlacePicture;
-        @Bind(R.id.place_title)
+        @BindView(R.id.place_title)
         public TextView mPlaceTitle;
-//        @Bind(R.id.place_location) TODO maybe number of events in the place?!
+//        @BindView(R.id.place_location) TODO maybe number of events in the place?!
 //        public TextView mPlaceLocation;
 
         public ViewHolder(View view) {

@@ -42,7 +42,7 @@ public class FragmentEventDetailsPresenterImpl implements FragmentEventDetailsPr
     }
 
     @Override
-    public void updateSavedStateOfEvent(Event event) {
+    public void changeSavedStateOfEvent(Event event) {
         event.isEventSaved = !event.isEventSaved;
 
         databaseInteractor.changeSaveEvent(event, event.isEventSaved);

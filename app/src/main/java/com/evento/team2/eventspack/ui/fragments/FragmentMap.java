@@ -60,8 +60,9 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by Daniel on 29-Oct-15.
@@ -87,15 +88,18 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
     private long id = EventiConstants.NONE;
     private int what = EventiConstants.EVENTS;
 
-    @Bind(R.id.map_event_details)
+    @BindView(R.id.map_event_details)
     LinearLayout mapEventDetailsLinearLayout;
+
+    private Unbinder unbinder;
+
     private Snackbar fetchingEventsSnackBar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_map, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
         setHasOptionsMenu(true);
 
         final Toolbar toolbar = ButterKnife.findById(getActivity(), R.id.toolbar);
@@ -222,7 +226,7 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
         if (mapView != null) {
             mapView.clear();
             mapView.stopAnimation();

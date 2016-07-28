@@ -12,6 +12,6 @@ public interface FragmentEventDetailsPresenter {
 
     void fetchEventDetails(long eventId);
 
-    void updateSavedStateOfEvent(Event event);
+    void changeSavedStateOfEvent(Event event);
 
 }

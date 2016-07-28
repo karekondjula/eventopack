@@ -13,10 +13,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.evento.team2.eventspack.R;
-import com.evento.team2.eventspack.adapters.EventsRecyclerViewAdapter;
+import com.evento.team2.eventspack.adapters.EventsAdapter;
 import com.evento.team2.eventspack.components.AppComponent;
-import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
-import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
 import com.evento.team2.eventspack.ui.fragments.interfaces.BaseFragment;
@@ -27,8 +25,9 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by Daniel on 31-Jul-15.
@@ -38,19 +37,14 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
     @Inject
     FragmentEventsPresenter fragmentEventsPresenter;
 
-    @Inject
-    NotificationsInteractor notificationsInteractor;
-
-    @Inject
-    DatabaseInteractor databaseInteractor;
-
-    @Bind(R.id.eventsRecyclerView)
+    @BindView(R.id.eventsRecyclerView)
     RecyclerView eventsRecyclerView;
-    @Bind(R.id.empty_view)
+
+    @BindView(R.id.empty_view)
     TextView emptyAdapterTextView;
 
     private SwipeRefreshLayout swipeRefreshLayout;
-    private EventsRecyclerViewAdapter eventsAdapter;
+    private EventsAdapter eventsAdapter;
 
     @Nullable
     @Override
@@ -59,7 +53,7 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
         setHasOptionsMenu(true);
         swipeRefreshLayout = (SwipeRefreshLayout) inflater.inflate(R.layout.fragment_events_list, container, false);
 
-        ButterKnife.bind(this, swipeRefreshLayout);
+        unbinder = ButterKnife.bind(this, swipeRefreshLayout);
 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
         swipeRefreshLayout.setOnRefreshListener(() -> fragmentEventsPresenter.fetchEventsFromServer(true));
@@ -89,7 +83,7 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         eventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        eventsAdapter = new EventsRecyclerViewAdapter(getActivity(), notificationsInteractor, databaseInteractor);
+        eventsAdapter = new EventsAdapter(getActivity(), fragmentEventsPresenter);
         eventsRecyclerView.setAdapter(eventsAdapter);
 
         fragmentEventsPresenter.setView(this);
@@ -144,7 +138,7 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
                 }
 
                 // some kind of optimization ... further read is required
-//            eventsAdapter = new EventsRecyclerViewAdapter(getActivity());
+//            eventsAdapter = new EventsAdapter(getActivity());
 //            eventsRecyclerView.swapAdapter(eventsAdapter, false);
                 eventsAdapter.addEvents(eventsArrayList);
 //                eventsAdapter.notifyDataSetChanged();
@@ -178,6 +172,17 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
     public void showNoInternetConnectionMessage() {
         Snackbar.make(eventsRecyclerView,
                 R.string.no_internet_connection_cached_events,
+                Snackbar.LENGTH_LONG)
+                .show();
+    }
+
+    @Override
+    public void notifyUserForUpdateInEvent(boolean isSaved, String eventName) {
+
+        Snackbar.make(eventsRecyclerView,
+                isSaved ?
+                        String.format(getResources().getString(R.string.event_is_saved), eventName) :
+                        String.format(getResources().getString(R.string.event_is_removed), eventName),
                 Snackbar.LENGTH_LONG)
                 .show();
     }

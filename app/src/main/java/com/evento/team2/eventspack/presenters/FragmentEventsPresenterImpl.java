@@ -3,6 +3,7 @@ package com.evento.team2.eventspack.presenters;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
+import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.PreferencesInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
@@ -30,17 +31,20 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
     private DatabaseInteractor databaseInteractor;
     private PreferencesInteractor preferencesInteractor;
     private ServiceEvento serviceEvento;
+    private NotificationsInteractor notificationsInteractor;
 
     private String lastQuery = "";
 
     public FragmentEventsPresenterImpl(EventiApplication application, PreferencesInteractor preferencesInteractor, MainThread mainThread,
-                                       DatabaseInteractor databaseInteractor, NetworkUtils networkUtils, ServiceEvento serviceEvento) {
+                                       DatabaseInteractor databaseInteractor, NetworkUtils networkUtils, ServiceEvento serviceEvento,
+                                       NotificationsInteractor notificationsInteractor) {
         this.application = application;
         this.preferencesInteractor = preferencesInteractor;
         this.mainThread = mainThread;
         this.databaseInteractor = databaseInteractor;
         this.networkUtils = networkUtils;
         this.serviceEvento = serviceEvento;
+        this.notificationsInteractor = notificationsInteractor;
     }
 
     @Override
@@ -159,5 +163,32 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
         }
 
         fragmentEventsView.showLastUpdatedTimestampMessage(lastUpdateDate);
+    }
+
+    @Override
+    public void fetchSavedEvents(String query) {
+        new Thread() {
+            @Override
+            public void run() {
+
+                ArrayList<Event> savedEventsArrayList = databaseInteractor.getSavedEvents(query);
+                mainThread.post(() -> fragmentEventsView.showEvents(savedEventsArrayList));
+            }
+        }.start();
+    }
+
+    @Override
+    public void changeSavedStateOfEvent(Event event) {
+        event.isEventSaved = !event.isEventSaved;
+
+        databaseInteractor.changeSaveEvent(event, event.isEventSaved);
+
+        if (event.isEventSaved) {
+            notificationsInteractor.scheduleNotification(event);
+        } else {
+            notificationsInteractor.removeScheduleNotification(event);
+        }
+
+        fragmentEventsView.notifyUserForUpdateInEvent(event.isEventSaved, event.name);
     }
 }

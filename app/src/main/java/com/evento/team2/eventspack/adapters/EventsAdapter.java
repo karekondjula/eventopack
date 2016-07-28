@@ -1,10 +1,8 @@
 package com.evento.team2.eventspack.adapters;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,12 +15,10 @@ import com.bumptech.glide.Glide;
 import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.evento.team2.eventspack.R;
-import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
-import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
 import com.evento.team2.eventspack.models.Event;
+import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
-import com.evento.team2.eventspack.utils.EventiConstants;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import java.text.ParseException;
@@ -30,13 +26,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by Daniel on 12-Aug-15.
  */
-public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecyclerViewAdapter.ViewHolder> {
+public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder> {
 
     private static final String ICON_TEXT_VIEW_FILLED_HEART = "{ion-android-favorite @color/colorPrimary}";
     private static final String ICON_TEXT_VIEW_EMPTY_HEART = "{ion-android-favorite-outline @color/colorPrimary}";
@@ -46,29 +42,28 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
     private ArrayList<Event> events;
     private Calendar calendar;
 
-    private NotificationsInteractor notificationsInteractor;
-    private DatabaseInteractor databaseInteractor;
+    private FragmentEventsPresenter presenter;
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         public final View mView;
-        @Bind(R.id.event_picture)
+        @BindView(R.id.event_picture)
         public ImageView mEventImage;
-        @Bind(R.id.event_title)
+        @BindView(R.id.event_title)
         public TextView mEventTitle;
-        @Bind(R.id.event_details)
+        @BindView(R.id.event_details)
         public TextView mEventDetails;
-        @Bind(R.id.event_start_time)
+        @BindView(R.id.event_start_time)
         public TextView mEventStartTime;
-        @Bind(R.id.event_end_time)
+        @BindView(R.id.event_end_time)
         public TextView mEventEndTime;
-        @Bind(R.id.event_location)
+        @BindView(R.id.event_location)
         public TextView mEventLocation;
-        @Bind(R.id.btn_save_icon)
+        @BindView(R.id.btn_save_icon)
         public IconTextView isEventSaved;
-        @Bind(R.id.eventAttending)
+        @BindView(R.id.eventAttending)
         View mEventAttending;
-        @Bind(R.id.eventAttendingCount)
+        @BindView(R.id.eventAttendingCount)
         TextView mEventAttendingCount;
 
         public ViewHolder(View view) {
@@ -79,10 +74,9 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         }
     }
 
-    public EventsRecyclerViewAdapter(Context context, NotificationsInteractor notificationsInteractor, DatabaseInteractor databaseInteractor) {
+    public EventsAdapter(Context context, FragmentEventsPresenter presenter) {
         this.context = context;
-        this.notificationsInteractor = notificationsInteractor;
-        this.databaseInteractor = databaseInteractor;
+        this.presenter = presenter;
 
         events = new ArrayList<>();
 
@@ -200,27 +194,13 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
 
         holder.isEventSaved.setOnClickListener(v -> {
 
-            event.isEventSaved = !event.isEventSaved;
-
-            if (event.isEventSaved) {
+            if (!event.isEventSaved) {
                 holder.isEventSaved.setText(ICON_TEXT_VIEW_FILLED_HEART);
-                notificationsInteractor.scheduleNotification(event);
             } else {
                 holder.isEventSaved.setText(ICON_TEXT_VIEW_EMPTY_HEART);
-                notificationsInteractor.removeScheduleNotification(event);
             }
-            databaseInteractor.changeSaveEvent(event, event.isEventSaved);
 
-            try {
-                Snackbar.make(v,
-                        event.isEventSaved ?
-                                String.format(context.getResources().getString(R.string.event_is_saved, event.name)) :
-                                String.format(context.getResources().getString(R.string.event_is_removed, event.name)),
-                        Snackbar.LENGTH_LONG)
-                        .show();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            presenter.changeSavedStateOfEvent(event);
 
             YoYo.with(Techniques.Tada)
                     .duration(700)

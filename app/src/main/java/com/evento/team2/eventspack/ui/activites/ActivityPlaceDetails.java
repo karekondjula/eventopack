@@ -56,9 +56,10 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 public class ActivityPlaceDetails extends AppCompatActivity implements FragmentPlaceDetailsView {
 
@@ -67,17 +68,19 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
     @Inject
     FragmentPlaceDetailsPresenter fragmentPlaceDetailsPresenter;
 
-    @Bind(R.id.backdrop)
+    @BindView(R.id.backdrop)
     ImageView backdropImage;
 
-    @Bind(R.id.collapsing_toolbar)
+    @BindView(R.id.collapsing_toolbar)
     CollapsingToolbarLayout collapsingToolbar;
 
-    @Bind(R.id.event_location)
+    @BindView(R.id.event_location)
     TextView textViewEventLocation;
 
-    @Bind(R.id.place_details_events_linear_layout)
+    @BindView(R.id.place_details_events_linear_layout)
     LinearLayout placeDetailsEventsLinearLayout;
+
+    private Unbinder unbinder;
 
     private Place place;
     private GoogleMap mapView;
@@ -86,7 +89,7 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_place_details);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
 
         PlaceDetailsComponent placeDetailsComponent = DaggerPlaceDetailsComponent.builder()
                 .appComponent(((EventiApplication) getApplication()).getAppComponent())
@@ -135,7 +138,7 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
         Fragment fragment = getFragmentManager().findFragmentById(R.id.event_detail_map);
         if (fragment != null) {
             fragment.onDestroyView();

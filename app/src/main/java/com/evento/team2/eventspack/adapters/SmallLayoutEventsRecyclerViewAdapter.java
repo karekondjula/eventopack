@@ -18,7 +18,7 @@ import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -33,13 +33,13 @@ public class SmallLayoutEventsRecyclerViewAdapter extends RecyclerView.Adapter<S
     static class ViewHolder extends RecyclerView.ViewHolder {
 
         public final View mView;
-        @Bind(R.id.small_event_picture)
+        @BindView(R.id.small_event_picture)
         public ImageView mEventImage;
-        @Bind(R.id.event_title)
+        @BindView(R.id.event_title)
         public TextView mEventTitle;
-        @Bind(R.id.event_details)
+        @BindView(R.id.event_details)
         public TextView mEventDetails;
-//        @Bind(R.id.btn_bookmark_icon)
+//        @BindView(R.id.btn_bookmark_icon)
 //        public ToggleButton isEventSaved;
 
         public ViewHolder(View view) {

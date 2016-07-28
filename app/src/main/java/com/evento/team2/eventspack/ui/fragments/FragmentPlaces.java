@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -32,7 +32,7 @@ public class FragmentPlaces extends BaseFragment implements FragmentPlacesView {
     @Inject
     FragmentPlacesPresenter fragmentPlacesPresenter;
 
-    @Bind(R.id.placesRecyclerView)
+    @BindView(R.id.placesRecyclerView)
     RecyclerView placesRecyclerView;
 
     private PlacesRecyclerViewAdapter placesRecyclerViewAdapter;
@@ -42,7 +42,7 @@ public class FragmentPlaces extends BaseFragment implements FragmentPlacesView {
 
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_places, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         return view;
     }

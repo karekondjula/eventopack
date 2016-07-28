@@ -3,9 +3,9 @@ package com.evento.team2.eventspack.ui.activites;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -37,8 +37,9 @@ import com.joanzapata.iconify.fonts.IoniconsModule;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
 import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
@@ -47,17 +48,19 @@ public class ActivityMain extends AppCompatActivity {
 
     private static final String SHOWCASE_ID = "1";
 
-    @Bind(R.id.navigation_view)
+    @BindView(R.id.navigation_view)
     NavigationView navigationView;
 
-    @Bind(R.id.drawer)
+    @BindView(R.id.drawer)
     DrawerLayout drawerLayout;
 
-    @Bind(R.id.viewpager)
+    @BindView(R.id.viewpager)
     ViewPager viewPager;
 
-    @Bind(R.id.tabs)
+    @BindView(R.id.tabs)
     PagerSlidingTabStrip pagerSlidingTabStrip;
+
+    private Unbinder unbinder;
 
     private FragmentEvents fragmentEvents;// = FragmentEvents.newInstance();
     private FragmentCategories fragmentCategories;// = FragmentCategories.newInstance();
@@ -76,7 +79,7 @@ public class ActivityMain extends AppCompatActivity {
         ((EventiApplication) getApplication()).getAppComponent().inject(this);
 
         setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
 
         Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -178,7 +181,7 @@ public class ActivityMain extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     @Override
@@ -293,6 +296,7 @@ public class ActivityMain extends AppCompatActivity {
 //                        fragmentEvents.showLastUpdatedInfo();
                         break;
                     case 1:
+                        fragmentCategories.refreshViewIfRequired();
 //                        fragmentCategories.filterList(EventiConstants.NO_FILTER_STRING);
                         break;
                     case 2:

@@ -1,5 +1,7 @@
 package com.evento.team2.eventspack.views;
 
+import android.view.View;
+
 import com.evento.team2.eventspack.models.Event;
 
 import java.util.ArrayList;
@@ -18,4 +20,6 @@ public interface FragmentEventsView {
     void showLastUpdatedTimestampMessage(String lastUpdateTimestamp);
 
     void showNoInternetConnectionMessage();
+
+    void notifyUserForUpdateInEvent(boolean isSaved, String eventName);
 }

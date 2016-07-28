@@ -7,7 +7,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.text.TextUtils;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -19,8 +18,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.concurrent.ExecutionException;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * Created by Daniel on 23-Jan-16.
@@ -40,18 +40,20 @@ public class ActivityFullScreenImage extends Activity {
     public static final String IMAGE_URI = "image_uri";
     public static final String TITLE = "title";
 
-    @Bind(R.id.image)
+    @BindView(R.id.image)
     SubsamplingScaleImageView image;
 
-    @Bind(R.id.event_title)
+    @BindView(R.id.event_title)
     TextView eventTitle;
+
+    private Unbinder unbinder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_full_screen_image);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
 
         Intent intent = getIntent();
         final String imageUri = intent.getStringExtra(IMAGE_URI);
@@ -90,6 +92,12 @@ public class ActivityFullScreenImage extends Activity {
         }.start();
 
         eventTitle.setText(title);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbinder.unbind();
     }
 
     public static Intent createIntent(Context context, @Category int category, String imageUri, String eventTitle) {

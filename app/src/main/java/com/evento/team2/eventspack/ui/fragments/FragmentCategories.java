@@ -4,12 +4,12 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
-import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapters.CategoryExpandableRecyclerViewAdapter;
 import com.evento.team2.eventspack.components.AppComponent;
@@ -25,7 +25,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -38,7 +38,7 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
     @Inject
     FragmentCategoriesPresenter fragmentCategoriesPresenter;
 
-    @Bind(R.id.categoriesRecyclerView)
+    @BindView(R.id.categoriesRecyclerView)
     RecyclerView categoriesRecyclerView;
 
     private HashSet<Integer> expandedParentsList = new HashSet<>();
@@ -49,7 +49,7 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_categories, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         return view;
     }
@@ -70,12 +70,6 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
         fragmentCategoriesPresenter.setView(this);
 
         fragmentCategoriesPresenter.fetchCategoriesWithActiveEvents(EventiConstants.NO_FILTER_STRING);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
     }
 
     public static FragmentCategories newInstance() {
@@ -118,6 +112,18 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
                     categoryAdapter.expandParent(expandedParent);
                 }
                 categoryAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    /**
+     * This fragment is created in the same time with Events so on first start it will show no
+     * categories :(
+     * */
+    public void refreshViewIfRequired() {
+        if (getActivity() != null) {
+            if (categoryAdapter != null && categoryAdapter.getItemCount() == 0) {
+                fragmentCategoriesPresenter.fetchCategoriesWithActiveEvents(EventiConstants.NO_FILTER_STRING);
             }
         }
     }

@@ -33,8 +33,9 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -48,12 +49,6 @@ public class FragmentCalendar extends Fragment implements FragmentCalendarView {
     private ArrayList<Long> selectedDates;
     private ArrayList<Long> eventDates;
 
-    @Bind(R.id.caldroidCalendar)
-    FrameLayout calendarContainer;
-
-    @Bind(R.id.calendarEventsLinearLayout)
-    LinearLayout calendarEventsLinearLayout;
-
     @Inject
     CaldroidFragment caldroidFragment;
 
@@ -63,11 +58,19 @@ public class FragmentCalendar extends Fragment implements FragmentCalendarView {
     @Inject
     ColorUtils colorUtils;
 
+    @BindView(R.id.caldroidCalendar)
+    FrameLayout calendarContainer;
+
+    @BindView(R.id.calendarEventsLinearLayout)
+    LinearLayout calendarEventsLinearLayout;
+
+    private Unbinder unbinder;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_calendar, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         selectedDates = new ArrayList<>();
         eventDates = new ArrayList<>();
@@ -110,7 +113,7 @@ public class FragmentCalendar extends Fragment implements FragmentCalendarView {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
+        unbinder.unbind();
     }
 
     final CaldroidListener listener = new CaldroidListener() {
