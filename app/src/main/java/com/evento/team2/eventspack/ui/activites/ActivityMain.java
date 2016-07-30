@@ -115,6 +115,14 @@ public class ActivityMain extends AppCompatActivity {
 //                        Intent intentSocial = new Intent(ActivityMain.this, ActivitySocial.class);
 //                        startActivity(intentSocial);
 //                        break;
+                case R.id.calendar:
+                    Intent intentCalendar = ActivityCalendar.createIntent(ActivityMain.this);
+                    startActivity(intentCalendar);
+                    break;
+                case R.id.map:
+                    Intent intentMap = ActivityMap.createIntent(ActivityMain.this, EventiConstants.EVENTS, EventiConstants.NO_EVENT_ID);
+                    startActivity(intentMap);
+                    break;
                 case R.id.about:
                     DialogFragmentAbout editNameDialog = new DialogFragmentAbout();
                     editNameDialog.show(getFragmentManager(), getString(R.string.about));
@@ -147,26 +155,6 @@ public class ActivityMain extends AppCompatActivity {
         pagerSlidingTabStrip.setTextColor(getResources().getColor(android.R.color.white));
         pagerSlidingTabStrip.setShouldExpand(true);
         pagerSlidingTabStrip.setViewPager(viewPager);
-
-//        Intent intent = getIntent();
-//        if (intent != null && Intent.ACTION_SEARCH.equals(intent.getAction())) {
-//            String query = intent.getStringExtra(SearchManager.QUERY);
-//            switch (viewPager.getCurrentItem()) {
-//                case 0:
-//                    fragmentEvents.filterList(query);
-//                    break;
-//                case 1:
-//                    fragmentCategories.filterList(query);
-//                    break;
-//                case 2:
-//                    fragmentSavedEvents.filterList(query);
-//                    break;
-//                case 3:
-//                    fragmentPlaces.filterList(query);
-//                    break;
-//                default:
-//            }
-//        }
 
         presentShowcaseSequence();
     }

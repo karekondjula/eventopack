@@ -27,7 +27,7 @@ public class ActivityCalendar extends AppCompatActivity {
         final ActionBar actionbar = getSupportActionBar();
         if (actionbar != null) {
             actionbar.setDisplayHomeAsUpEnabled(true);
-            actionbar.setTitle(R.string.calendar);
+            actionbar.setTitle(R.string.choose_dates);
         }
 
         getSupportFragmentManager().beginTransaction()

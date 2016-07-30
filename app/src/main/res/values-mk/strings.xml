@@ -7,10 +7,12 @@
 
     <string name="event_is_saved">Настанот \'%s\' е зачуван</string>
     <string name="event_is_removed">Настанот \'%s\' отсранет од зачувани настани</string>
-    <string name="calendar">Избери датуми</string>
+    <string name="choose_dates">Избери датуми</string>
     <string name="events">Настани</string>
     <string name="places">Места</string>
     <string name="saved">Зачувани</string>
+    <string name="calendar">Календар</string>
+    <string name="map">Мапа</string>
     <string name="no_internet_connection_cached_events">Нема интернет конекција. Прикажувам зачувани настани …</string>
     <string name="date">ДАТУМ</string>
     <string name="location">ЛОКАЦИЈА</string>

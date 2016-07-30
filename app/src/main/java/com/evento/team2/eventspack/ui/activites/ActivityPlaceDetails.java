@@ -44,6 +44,7 @@ import com.evento.team2.eventspack.modules.PlaceDetailsModule;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentPlaceDetailsPresenter;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.evento.team2.eventspack.utils.EventiConstants;
+import com.evento.team2.eventspack.utils.Utils;
 import com.evento.team2.eventspack.views.FragmentPlaceDetailsView;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -130,9 +131,7 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
 
     @OnClick(R.id.backdrop)
     public void openImage(View view) {
-
-        Intent fullScreenImage = ActivityFullScreenImage.createIntent(this, ActivityFullScreenImage.PLACE_IMAGE, place.pictureUri, place.name);
-        startActivity(fullScreenImage);
+        Utils.openImageInGallery(this, place.pictureUri);
     }
 
     @Override

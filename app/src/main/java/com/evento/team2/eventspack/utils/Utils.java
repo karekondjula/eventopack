@@ -1,15 +1,21 @@
 package com.evento.team2.eventspack.utils;
 
+import android.content.Context;
+import android.graphics.Bitmap;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.models.Event;
 import com.google.android.gms.maps.model.LatLng;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by Daniel on 04-Aug-15.
@@ -65,5 +71,43 @@ public class Utils {
         public static String getEventsJson() {
             return "";
         }
+    }
+
+    public static void openImageInGallery(Context context, String pictureUri) {
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    Bitmap bmp = Glide.with(context).load(pictureUri).asBitmap().into(-1, -1).get();
+
+                    FileOutputStream out = null;
+                    try {
+                        File tempFile = File.createTempFile("temp", ".jpg");
+//                            tempFile = new File(getFilesDir().toString().concat("tempimage.jpg"));
+//                            tempFile = new File(Environment.getExternalStorageDirectory().toString().concat("tempimage.jpg"));
+                        out = new FileOutputStream(tempFile);
+
+                        bmp.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
+                        out.flush();
+                        out.close();
+                        tempFile.setReadable(true, false);
+
+                        MimeTypeResolver.startActivityWithMimeType(context, tempFile.getAbsoluteFile().getAbsolutePath());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        try {
+                            if (out != null) {
+                                out.close();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                } catch (InterruptedException | ExecutionException ie) {
+                    ie.printStackTrace();
+                }
+            }
+        }.start();
     }
 }

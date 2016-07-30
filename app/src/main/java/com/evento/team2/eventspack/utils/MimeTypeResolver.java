@@ -13,45 +13,26 @@ import java.io.File;
  */
 public class MimeTypeResolver {
 
-
-//    public static boolean isMediaScannerFinished = true;
-
     public static String getMimeTypeFromUri(String fileUri) {
-//        try {
-            if (fileUri == null) {
-                return "*/*";
-            }
-            if (endsWithIgnoreCase(fileUri, ".jpg")) {
-                return "image/*";
-            }
-            if (endsWithIgnoreCase(fileUri, ".jpeg")) {
-                return "image/jpeg";
-            }
-            if (endsWithIgnoreCase(fileUri, ".png")) {
-                return "image/*";
-            }
-//            if (endsWithIgnoreCase(fileUri, ".m4v")) {
-//                return "video/*";
-//            }
-//            if (endsWithIgnoreCase(fileUri, ".mp4")) {
-//                return "video/*";
-//            }
-//            if (endsWithIgnoreCase(fileUri, ".apk")) {
-//                return "application/vnd.android.package-archive";
-//            }
-//            if (endsWithIgnoreCase(fileUri, ".vcf")) {
-//                return "text/x-vcard";
-//            }
-
-            String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(fileUri));
-            if (TextUtils.isEmpty(mime)) {
-                return mime;
-            }
-
+        if (fileUri == null) {
             return "*/*";
-//        } catch (Exception e) {
-//            return "*/*";
-//        }
+        }
+        if (endsWithIgnoreCase(fileUri, ".jpg")) {
+            return "image/*";
+        }
+        if (endsWithIgnoreCase(fileUri, ".jpeg")) {
+            return "image/jpeg";
+        }
+        if (endsWithIgnoreCase(fileUri, ".png")) {
+            return "image/*";
+        }
+
+        String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(MimeTypeMap.getFileExtensionFromUrl(fileUri));
+        if (TextUtils.isEmpty(mime)) {
+            return mime;
+        }
+
+        return "*/*";
     }
 
     public static void startActivityWithMimeType(Context context, String fileUri) {

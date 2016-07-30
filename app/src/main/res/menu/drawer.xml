@@ -3,6 +3,7 @@
 
     <group android:checkableBehavior="none">
 
+         <!--TODO in settings: when-to-notify,-->
         <!--<item-->
             <!--android:id="@+id/settings"-->
             <!--android:checked="false"-->
@@ -16,10 +17,24 @@
             <!--android:title="Social" />-->
 
         <item
+            android:id="@+id/calendar"
+            android:checked="false"
+            android:icon="@android:drawable/ic_menu_my_calendar"
+            android:title="@string/calendar" />
+
+        <item
+            android:id="@+id/map"
+            android:checked="false"
+            android:icon="@android:drawable/ic_dialog_map"
+            android:title="@string/map" />
+
+        <!-- TODO Archived events -->
+
+        <item
             android:id="@+id/about"
             android:checked="false"
             android:icon="@android:drawable/ic_dialog_info"
-            android:title="About" />
+            android:title="@string/about" />
 
     </group>
 

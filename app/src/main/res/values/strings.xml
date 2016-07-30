@@ -10,10 +10,12 @@
 
     <string name="event_is_saved">Event \'%s\' is saved</string>
     <string name="event_is_removed">"Event \'%s\' is removed from saved events</string>
-    <string name="calendar">Choose dates</string>
+    <string name="choose_dates">Choose dates</string>
     <string name="events">Events</string>
     <string name="places">Places</string>
     <string name="saved">Saved</string>
+    <string name="calendar">Calendar</string>
+    <string name="map">Map</string>
     <string name="no_internet_connection_cached_events">No internet connection. Showing cached events …</string>
     <string name="date">DATE</string>
     <string name="location">LOCATION</string>
