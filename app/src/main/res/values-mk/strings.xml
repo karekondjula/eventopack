@@ -53,6 +53,11 @@
     <string name="category_concerts">Концерти</string>
     <string name="category_other">Разно</string>
     <string name="map_needs_permission">Дали е дозволено користење на мапа?</string>
+
     <string name="soon">Наскоро…</string>
+    <string name="gps_network_not_enabled">Локацијата не е вклучена</string>
+    <string name="gps_network_not_enabled_message">Локацијата е потреба за мапите да функционираат оптимално. Вклучи ја сега?</string>
+    <string name="open_location_settings">Отвори опции за локација</string>
+    <string name="cancel">Откажи</string>
 
 </resources>

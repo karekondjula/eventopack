@@ -58,4 +58,9 @@
     <string name="map_needs_permission">Map needs your permission. Allow it?</string>
 
     <string name="soon">Soon…</string>
+    <string name="gps_network_not_enabled_title">Locations not enabled</string>
+    <string name="gps_network_not_enabled_message">Location is required for the maps functionality to work optimal. Enable it now?</string>
+    <string name="open_location_settings">Open location settings</string>
+    <string name="cancel">Cancel</string>
+
 </resources>
