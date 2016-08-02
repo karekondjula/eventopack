@@ -5,8 +5,8 @@ package com.evento.team2.eventspack.components;
  */
 
 import com.evento.team2.eventspack.EventiApplication;
+import com.evento.team2.eventspack.interactors.NotificationsInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
-import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
 import com.evento.team2.eventspack.modules.AppModule;
 import com.evento.team2.eventspack.receivers.CleanUpEventsReceiver;
 import com.evento.team2.eventspack.receivers.DailyEventsReminderReceiver;

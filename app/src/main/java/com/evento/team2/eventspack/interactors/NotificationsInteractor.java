@@ -3,27 +3,23 @@ package com.evento.team2.eventspack.interactors;
 import android.app.AlarmManager;
 import android.content.Intent;
 
-import com.evento.team2.eventspack.components.CalendarComponent;
 import com.evento.team2.eventspack.interactors.interfaces.AlarmManagerInteractor;
-import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.receivers.NotificationEventsReceiver;
 
 import java.util.Calendar;
-import java.util.Date;
 
 /**
  * Created by Daniel on 06-Mar-16.
  */
-public class NotificationsInteractorImpl implements NotificationsInteractor {
+public class NotificationsInteractor {
 
     private AlarmManagerInteractor alarmManagerInteractor;
 
-    public NotificationsInteractorImpl(AlarmManagerInteractor alarmManagerInteractor) {
+    public NotificationsInteractor(AlarmManagerInteractor alarmManagerInteractor) {
         this.alarmManagerInteractor = alarmManagerInteractor;
     }
 
-    @Override
     public void scheduleNotification(Event event) {
         Calendar calendar = Calendar.getInstance();
 
@@ -35,7 +31,6 @@ public class NotificationsInteractorImpl implements NotificationsInteractor {
         }
     }
 
-    @Override
     public void removeScheduleNotification(Event event) {
         Intent eventDetailsIntent = NotificationEventsReceiver.getIntent(event.id);
         alarmManagerInteractor.removeScheduledEvent(eventDetailsIntent);

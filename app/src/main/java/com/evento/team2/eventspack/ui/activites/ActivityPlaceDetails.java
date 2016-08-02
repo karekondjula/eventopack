@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -104,7 +105,6 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
 //        if (actionBar != null) {
 //            actionBar.setDisplayHomeAsUpEnabled(true);
 //        }
-        // TODO make the toolbar disappear completely on top most scroll
 
         fragmentPlaceDetailsPresenter.setView(this);
 
@@ -145,7 +145,7 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case EventiConstants.PERMISSIONS_REQUEST_CODE: {
                 // If request is cancelled, the result arrays are empty.
@@ -164,9 +164,8 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
                             mapView.setMyLocationEnabled(true);
                         }
                     });
-                } else {
-                    // TODO a permission was not granted - o.O what to do?
                 }
+                // a permission was not granted - o.O what to do?
             }
         }
     }

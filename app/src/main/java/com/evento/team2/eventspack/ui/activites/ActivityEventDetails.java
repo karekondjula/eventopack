@@ -46,10 +46,10 @@ import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.components.DaggerEventDetailsComponent;
 import com.evento.team2.eventspack.components.EventDetailsComponent;
-import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
+import com.evento.team2.eventspack.interactors.NotificationsInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.modules.EventDetailsModule;
-import com.evento.team2.eventspack.presenters.interfaces.FragmentEventDetailsPresenter;
+import com.evento.team2.eventspack.presenters.FragmentEventDetailsPresenter;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.utils.Utils;
@@ -159,11 +159,8 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
 //        if (actionBar != null) {
 //            actionBar.setDisplayHomeAsUpEnabled(true);
 //        }
-        // TODO make the toolbar disappear completely on top most scroll
 
         fab = ((FloatingActionButton) findViewById(R.id.fab_add_to_saved));
-
-        fragmentEventDetailsPresenter.setView(this);
 
         BottomSheetBehavior mBottomSheetBehavior = BottomSheetBehavior.from(bottomSheet);
         mBottomSheetBehavior.setPeekHeight(dipToPixels(this, 70));
@@ -173,6 +170,14 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, EventiConstants.ungrantedPremissions, EventiConstants.PERMISSIONS_REQUEST_CODE);
         }
+
+        fragmentEventDetailsPresenter.setView(this);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_event, menu);
+        return true;
     }
 
     @Override
@@ -219,9 +224,8 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
                             mapView.setMyLocationEnabled(true);
                         }
                     });
-                } else {
-                    // TODO a permission was not granted - o.O what to do?
                 }
+                // a permission was not granted - o.O what to do?
             }
         }
     }
@@ -299,12 +303,6 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT,
                 "http://www.facebook.com/events/".concat(String.valueOf(event.facebookId)));
         startActivity(Intent.createChooser(sharingIntent, "Share using"));
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_event, menu);
-        return true;
     }
 
     private void initMap() {

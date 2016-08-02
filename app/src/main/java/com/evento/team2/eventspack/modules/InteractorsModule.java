@@ -3,11 +3,10 @@ package com.evento.team2.eventspack.modules;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.interactors.AlarmManagerInteractorImpl;
 import com.evento.team2.eventspack.interactors.DatabaseInteractorImpl;
-import com.evento.team2.eventspack.interactors.NotificationsInteractorImpl;
+import com.evento.team2.eventspack.interactors.NotificationsInteractor;
 import com.evento.team2.eventspack.interactors.PreferencesInteractorImpl;
 import com.evento.team2.eventspack.interactors.interfaces.AlarmManagerInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
-import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.PreferencesInteractor;
 import com.evento.team2.eventspack.soapservice.ServiceEventoImpl;
 import com.evento.team2.eventspack.soapservice.interfaces.ServiceEvento;
@@ -51,7 +50,7 @@ public class InteractorsModule {
     @Provides
     @Singleton
     NotificationsInteractor provideNotificationsInteractor(AlarmManagerInteractor alarmManagerInteractor) {
-        return new NotificationsInteractorImpl(alarmManagerInteractor);
+        return new NotificationsInteractor(alarmManagerInteractor);
     }
 
     @Provides

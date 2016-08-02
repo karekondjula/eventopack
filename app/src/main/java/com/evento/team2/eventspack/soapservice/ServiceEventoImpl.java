@@ -67,7 +67,7 @@ public class ServiceEventoImpl implements ServiceEvento {
     /**
      * Must contain at least [ServiceEventoImpl.METHOD_NAME_KEY, methodName] pair
      */
-    public void callServiceMethod(HashMap<String, Object> params) {
+    private void callServiceMethod(HashMap<String, Object> params) {
 //        new AsyncCallWS().execute(params);
 
         HashMap<String, Object> responseHashMap = getResponse(params);
@@ -159,5 +159,12 @@ public class ServiceEventoImpl implements ServiceEvento {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void getAllCurrentEvents() {
+        HashMap<String, Object> params = new HashMap();
+        params.put(ServiceEventoImpl.METHOD_NAME_KEY, ServiceEventoImpl.METHOD_GET_ALL_EVENTS);
+        callServiceMethod(params);
     }
 }

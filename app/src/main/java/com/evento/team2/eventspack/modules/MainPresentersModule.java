@@ -1,8 +1,8 @@
 package com.evento.team2.eventspack.modules;
 
 import com.evento.team2.eventspack.EventiApplication;
+import com.evento.team2.eventspack.interactors.NotificationsInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
-import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.PreferencesInteractor;
 import com.evento.team2.eventspack.presenters.FragmentCategoriesPresenterImpl;
 import com.evento.team2.eventspack.presenters.FragmentEventsPresenterImpl;

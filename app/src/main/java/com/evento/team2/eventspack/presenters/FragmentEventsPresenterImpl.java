@@ -2,8 +2,8 @@ package com.evento.team2.eventspack.presenters;
 
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
+import com.evento.team2.eventspack.interactors.NotificationsInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
-import com.evento.team2.eventspack.interactors.interfaces.NotificationsInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.PreferencesInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
@@ -89,7 +89,6 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
 
     @Override
     public void fetchEventsFromServer(boolean forceUpdate) {
-        //TODO Maybe better to call it from alarmmanager two times a day ?!
         new Thread() {
             @Override
             public void run() {
@@ -133,9 +132,8 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
 //                                });
 
 
-                        HashMap<String, Object> params = new HashMap();
-                        params.put(ServiceEventoImpl.METHOD_NAME_KEY, ServiceEventoImpl.METHOD_GET_ALL_EVENTS);
-                        serviceEvento.callServiceMethod(params);
+                        // TODO this service implementation is idiotic ... god help us all
+                        serviceEvento.getAllCurrentEvents();
 
                         fetchEvents(lastQuery);
 

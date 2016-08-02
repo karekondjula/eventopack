@@ -4,14 +4,13 @@ import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.bignerdranch.expandablerecyclerview.Adapter.ExpandableRecyclerAdapter;
 import com.evento.team2.eventspack.R;
-import com.evento.team2.eventspack.adapters.CategoryExpandableRecyclerViewAdapter;
+import com.evento.team2.eventspack.adapters.CategoriesViewAdapter;
 import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.models.Category;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentCategoriesPresenter;
@@ -43,7 +42,7 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
 
     private HashSet<Integer> expandedParentsList = new HashSet<>();
 
-    private CategoryExpandableRecyclerViewAdapter categoryAdapter;
+    private CategoriesViewAdapter categoryAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -57,7 +56,7 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        categoryAdapter = new CategoryExpandableRecyclerViewAdapter(getActivity(), new ArrayList<>());
+        categoryAdapter = new CategoriesViewAdapter(getActivity(), new ArrayList<>());
 
         categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         categoriesRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -89,7 +88,7 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
     @Override
     public void showCategories(List<Category> categoryList) {
         if (getActivity() != null) {
-            categoryAdapter = new CategoryExpandableRecyclerViewAdapter(getActivity(), categoryList);
+            categoryAdapter = new CategoriesViewAdapter(getActivity(), categoryList);
 
             categoryAdapter.setExpandCollapseListener(new ExpandableRecyclerAdapter.ExpandCollapseListener() {
                 @Override

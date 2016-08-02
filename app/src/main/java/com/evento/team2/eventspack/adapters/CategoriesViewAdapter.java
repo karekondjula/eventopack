@@ -27,14 +27,14 @@ import butterknife.ButterKnife;
 /**
  * Created by Daniel on 15-Mar-16.
  */
-public class CategoryExpandableRecyclerViewAdapter extends ExpandableRecyclerAdapter<
-        CategoryExpandableRecyclerViewAdapter.CategoryViewHolder, CategoryExpandableRecyclerViewAdapter.EventViewHolder> {
+public class CategoriesViewAdapter extends ExpandableRecyclerAdapter<
+        CategoriesViewAdapter.CategoryViewHolder, CategoriesViewAdapter.EventViewHolder> {
 
     private Context context;
 //    private List<Category> categoryList;
     private LayoutInflater inflater;
 
-    public CategoryExpandableRecyclerViewAdapter(Context context, List<Category> parentItemList) {
+    public CategoriesViewAdapter(Context context, List<Category> parentItemList) {
         super(parentItemList);
 
         this.context = context;
