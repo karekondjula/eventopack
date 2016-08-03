@@ -30,11 +30,14 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -153,12 +156,12 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         emptyHeart = new IconDrawable(this, IoniconsIcons.ion_android_favorite_outline).colorRes(android.R.color.white).actionBarSize();
         filledHeart = new IconDrawable(this, IoniconsIcons.ion_android_favorite).colorRes(R.color.colorPrimary).actionBarSize();
 
-//        final Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        final ActionBar actionBar = getSupportActionBar();
-//        if (actionBar != null) {
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//        }
+        final Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
+        setSupportActionBar(toolbar);
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         fab = ((FloatingActionButton) findViewById(R.id.fab_add_to_saved));
 
@@ -172,22 +175,24 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         }
 
         fragmentEventDetailsPresenter.setView(this);
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_event, menu);
-        return true;
+        Intent intent = getIntent();
+        eventId = intent.getLongExtra(EXTRA_EVENT_ID, 0);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        Intent intent = getIntent();
-        eventId = intent.getLongExtra(EXTRA_EVENT_ID, 0);
-
         fragmentEventDetailsPresenter.fetchEventDetails(eventId);
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+
+        if (intent != null) {
+            eventId = intent.getLongExtra(EXTRA_EVENT_ID, 0);
+        }
     }
 
     @Override
@@ -203,6 +208,23 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         markerOptions = null;
         emptyHeart = null;
         filledHeart = null;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_event, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @Override

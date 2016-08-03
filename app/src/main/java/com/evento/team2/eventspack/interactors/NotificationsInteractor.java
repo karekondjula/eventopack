@@ -8,6 +8,7 @@ import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.receivers.NotificationEventsReceiver;
 
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by Daniel on 06-Mar-16.

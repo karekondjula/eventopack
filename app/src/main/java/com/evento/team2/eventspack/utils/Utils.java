@@ -61,7 +61,7 @@ public class Utils {
 
                     dummyEvent.startTimeString = dateTime.split(" ")[0];
                     dummyEvent.startDateString = dateTime.split(" ")[1];
-                    Log.i(">>", dummyEvent.toString());
+//                    Log.i(">>", dummyEvent.toString());
                     events.add(dummyEvent);
                 }
             }

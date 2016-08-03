@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.EventiApplication;
@@ -31,7 +30,7 @@ import java.util.concurrent.ExecutionException;
  */
 public class NotificationEventsReceiver extends BroadcastReceiver {
 
-    public static String ACTION = "com.evento.team2.eventspack.ActionNotificationEventsReceiver";
+    public static String ACTION = "ActionNotificationEventsReceiver";
 
     private DatabaseInteractor databaseInteractor;
 
@@ -74,11 +73,9 @@ public class NotificationEventsReceiver extends BroadcastReceiver {
                     Bitmap b = null;
                     try {
                         if (!TextUtils.isEmpty(event.pictureUri)) {
-                            b = Glide.with(context).load(event.pictureUri).
-                                    asBitmap().into(-1, -1).get();
+                            b = Glide.with(context).load(event.pictureUri).asBitmap().into(-1, -1).get();
                         } else {
-                            b = Glide.with(context).load(R.drawable.party_image).
-                                    asBitmap().into(-1, -1).get();
+                            b = Glide.with(context).load(R.drawable.party_image).asBitmap().into(-1, -1).get();
                         }
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
@@ -91,10 +88,9 @@ public class NotificationEventsReceiver extends BroadcastReceiver {
                     savedEventNotification.setStyle(bigPictureStyle);
 
                     Intent eventDetailsIntent = ActivityEventDetails.createIntent(context, event.id);
-                    eventDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    eventDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-                    PendingIntent resultPendingIntent = PendingIntent.getActivities(context, 0,
-                            new Intent[]{eventDetailsIntent}, PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent resultPendingIntent = PendingIntent.getActivities(context, 0, new Intent[]{eventDetailsIntent}, PendingIntent.FLAG_UPDATE_CURRENT);
 
                     savedEventNotification.setContentIntent(resultPendingIntent);
 

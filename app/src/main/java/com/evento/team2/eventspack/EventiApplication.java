@@ -73,10 +73,10 @@ public class EventiApplication extends Application {
         nineAmCalendar.set(Calendar.SECOND, 1);
         Intent dailyReminderIntent = DailyEventsReminderReceiver.getIntent();
         alarmManagerInteractor.scheduleRepeating(dailyReminderIntent, nineAmCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY);
-//        alarmManagerInteractor.scheduleRepeating(dailyReminderIntent, nineAmCalendar.getTimeInMillis(), 1000 * 60);
+//        alarmManagerInteractor.scheduleRepeating(dailyReminderIntent, NOW, 1000 * 20);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
-        AppEventsLogger.activateApp(this);
+//        AppEventsLogger.activateApp(this);
 
 //        Intent savedEventsIntent = WeeklyEventsReceiver.getIntent();
 //        // calculate time to monday

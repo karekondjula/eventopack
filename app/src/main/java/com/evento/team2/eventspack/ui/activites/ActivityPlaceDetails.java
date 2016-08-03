@@ -26,9 +26,12 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -86,6 +89,7 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
 
     private Place place;
     private GoogleMap mapView;
+    private long placeId;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -99,12 +103,12 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
                 .build();
         placeDetailsComponent.inject(this);
 
-//        final Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
-//        setSupportActionBar(toolbar);
-//        final ActionBar actionBar = getSupportActionBar();
-//        if (actionBar != null) {
-//            actionBar.setDisplayHomeAsUpEnabled(true);
-//        }
+        final Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
+        setSupportActionBar(toolbar);
+        final ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         fragmentPlaceDetailsPresenter.setView(this);
 
@@ -112,6 +116,9 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, EventiConstants.ungrantedPremissions, EventiConstants.PERMISSIONS_REQUEST_CODE);
         }
+
+        Intent intent = getIntent();
+        placeId = intent.getLongExtra(EXTRA_ID, 0);
     }
 
     @Override
@@ -122,11 +129,19 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
             placeDetailsEventsLinearLayout.removeAllViews();
         }
 
-        Intent intent = getIntent();
-        long placeId = intent.getLongExtra(EXTRA_ID, 0);
-
         fragmentPlaceDetailsPresenter.fetchPlaceDetails(placeId);
         fragmentPlaceDetailsPresenter.fetchActiveEventsByLocation(placeId);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     @OnClick(R.id.backdrop)

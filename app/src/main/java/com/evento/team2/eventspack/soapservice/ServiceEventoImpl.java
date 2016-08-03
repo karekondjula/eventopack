@@ -154,7 +154,7 @@ public class ServiceEventoImpl implements ServiceEvento {
                 }
             } else {
 //                EventsDatabase.getInstance().persistEvents(Utils.Helpers.createEvents());
-                Log.i(TAG, "no response ;( ");
+//                Log.i(TAG, "no response ;( ");
             }
         } catch (IOException e) {
             e.printStackTrace();

@@ -26,7 +26,7 @@ import java.util.Date;
  */
 public class DailyEventsReminderReceiver extends BroadcastReceiver {
 
-    public static String ACTION = "com.evento.team2.eventspack.DailyEventsReminderReceiver";
+    public static String ACTION = "ActionDailyEventsReminderReceiver";
 
     private DatabaseInteractor databaseInteractor;
 
@@ -72,10 +72,9 @@ public class DailyEventsReminderReceiver extends BroadcastReceiver {
                         savedEventNotification.setSound(alarmSound);
 
                         eventDetailsIntent = ActivityEventDetails.createIntent(context, event.id);
-                        eventDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        eventDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 
-                        resultPendingIntent = PendingIntent.getActivities(context, 0,
-                                new Intent[]{eventDetailsIntent}, PendingIntent.FLAG_UPDATE_CURRENT);
+                        resultPendingIntent = PendingIntent.getActivities(context, 0, new Intent[]{eventDetailsIntent}, PendingIntent.FLAG_UPDATE_CURRENT);
 
                         savedEventNotification.setContentIntent(resultPendingIntent);
 

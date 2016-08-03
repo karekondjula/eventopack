@@ -22,7 +22,7 @@ import javax.inject.Inject;
  */
 public class WeeklyEventsReceiver extends BroadcastReceiver {
 
-    public static String ACTION = "com.evento.team2.eventspack.WeeklyEventsReceiver";
+    public static String ACTION = "ActionWeeklyEventsReceiver";
 
     @Inject
     DatabaseInteractor databaseInteractor;
