@@ -73,7 +73,7 @@ public class EventiApplication extends Application {
         nineAmCalendar.set(Calendar.SECOND, 1);
         Intent dailyReminderIntent = DailyEventsReminderReceiver.getIntent();
         alarmManagerInteractor.scheduleRepeating(dailyReminderIntent, nineAmCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY);
-//        alarmManagerInteractor.scheduleRepeating(dailyReminderIntent, NOW, 1000 * 20);
+//        alarmManagerInteractor.scheduleRepeating(dailyReminderIntent, NOW, 1000 * 60);
 
         FacebookSdk.sdkInitialize(getApplicationContext());
 //        AppEventsLogger.activateApp(this);

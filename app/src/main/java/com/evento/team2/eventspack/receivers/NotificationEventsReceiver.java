@@ -88,9 +88,10 @@ public class NotificationEventsReceiver extends BroadcastReceiver {
                     savedEventNotification.setStyle(bigPictureStyle);
 
                     Intent eventDetailsIntent = ActivityEventDetails.createIntent(context, event.id);
-                    eventDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    eventDetailsIntent.setAction(String.valueOf(event.id));
+                    eventDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-                    PendingIntent resultPendingIntent = PendingIntent.getActivities(context, 0, new Intent[]{eventDetailsIntent}, PendingIntent.FLAG_UPDATE_CURRENT);
+                    PendingIntent resultPendingIntent = PendingIntent.getActivities(context, 0, new Intent[]{eventDetailsIntent}, PendingIntent.FLAG_ONE_SHOT);
 
                     savedEventNotification.setContentIntent(resultPendingIntent);
 

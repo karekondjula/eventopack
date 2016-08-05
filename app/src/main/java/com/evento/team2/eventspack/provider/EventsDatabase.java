@@ -533,9 +533,11 @@ public class EventsDatabase {
 
         where = new StringBuilder();
         where.append(Event.Table.COLUMN_IS_EVENT_SAVED + " = ? " +
+                " AND " + Event.Table.COLUMN_START_TIME_STAMP + " - ? > 0 " +
                 " AND " + Event.Table.COLUMN_START_TIME_STAMP + " - ? <= 86400000 "
         );
         whereArgsList.add(String.valueOf(Event.SAVED));
+        whereArgsList.add(timestamp);
         whereArgsList.add(timestamp);
 
         whereArgs = new String[whereArgsList.size()];

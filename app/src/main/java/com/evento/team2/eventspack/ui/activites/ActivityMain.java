@@ -1,7 +1,9 @@
 package com.evento.team2.eventspack.ui.activites;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -45,6 +47,8 @@ import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
 import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
 public class ActivityMain extends AppCompatActivity {
+
+    public static final String ACTION_SAVED_EVENTS = "ACTION_SAVED_EVENTS";
 
     private static final String SHOWCASE_ID = "1";
 
@@ -95,8 +99,8 @@ public class ActivityMain extends AppCompatActivity {
         fragmentPlaces = FragmentPlaces.newInstance();
 
         if (savedInstanceState != null) {
-            fragmentCategories = (FragmentCategories) getSupportFragmentManager()
-                    .getFragment(savedInstanceState, FragmentCategories.TAG);
+            // restore fragment categories due to is complicated parent-child adapter
+            fragmentCategories = (FragmentCategories) getSupportFragmentManager().getFragment(savedInstanceState, FragmentCategories.TAG);
         } else {
             fragmentCategories = FragmentCategories.newInstance();
         }
@@ -157,6 +161,37 @@ public class ActivityMain extends AppCompatActivity {
         pagerSlidingTabStrip.setViewPager(viewPager);
 
         presentShowcaseSequence();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        boolean goToSavedEvents = getIntent().getAction().equals(ACTION_SAVED_EVENTS);
+
+        int SAVED_EVENTS_ORDINAL_NUMBER = 2;
+
+        if (goToSavedEvents) {
+            new Thread() {
+                @Override
+                public void run() {
+
+                    SystemClock.sleep(700);
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            viewPager.setCurrentItem(SAVED_EVENTS_ORDINAL_NUMBER);
+                        }
+                    });
+                }
+            }.start();
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
     }
 
     @Override
@@ -301,6 +336,11 @@ public class ActivityMain extends AppCompatActivity {
             public void onPageScrollStateChanged(int state) {
             }
         });
+    }
+
+    public static Intent createIntent(Context context) {
+        Intent intent = new Intent(context, ActivityMain.class);
+        return intent;
     }
 
     private static class Adapter extends FragmentPagerAdapter {

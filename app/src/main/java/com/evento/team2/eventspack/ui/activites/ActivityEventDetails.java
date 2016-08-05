@@ -35,6 +35,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -175,24 +176,26 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         }
 
         fragmentEventDetailsPresenter.setView(this);
+    }
 
-        Intent intent = getIntent();
-        eventId = intent.getLongExtra(EXTRA_EVENT_ID, 0);
+    public static Intent createIntent(Context context, long id) {
+        Intent intent = new Intent(context, ActivityEventDetails.class);
+        intent.putExtra(ActivityEventDetails.EXTRA_EVENT_ID, id);
+
+        return intent;
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        eventId = getIntent().getLongExtra(EXTRA_EVENT_ID, 0);
+
         fragmentEventDetailsPresenter.fetchEventDetails(eventId);
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-
-        if (intent != null) {
-            eventId = intent.getLongExtra(EXTRA_EVENT_ID, 0);
-        }
+        setIntent(intent);
     }
 
     @Override
@@ -347,15 +350,9 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         });
     }
 
-    public static Intent createIntent(Context context, long id) {
-        Intent intent = new Intent(context, ActivityEventDetails.class);
-        intent.putExtra(ActivityEventDetails.EXTRA_EVENT_ID, id);
-
-        return intent;
-    }
-
     @Override
     public void showEvent(Event event) {
+        Log.d(">> showEvent eventId", event + "");
         this.event = event;
 
         collapsingToolbar.setTitle(event.name);

@@ -43,7 +43,7 @@
     <string name="updating_now">Updating now</string>
 
     <string name="upcoming_event_reminder">Upcoming event reminder</string>
-    <string name="saved_event_starts_today">A saved event starts today</string>
+    <string name="saved_event_starts_today">Saved events for today</string>
     <string name="categories">Categories</string>
     <string name="category_fun">Fun</string>
     <string name="category_cinema">Cinema</string>
@@ -62,5 +62,10 @@
     <string name="gps_network_not_enabled_message">Location is required for the maps functionality to work optimal. Enable it now?</string>
     <string name="open_location_settings">Open location settings</string>
     <string name="cancel">Cancel</string>
+
+    <plurals name="number_of_saved_events">
+        <item quantity="one">%d saved event</item>
+        <item quantity="other">%d saved events</item>
+    </plurals>
 
 </resources>
