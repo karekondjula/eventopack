@@ -105,6 +105,18 @@ public class ActivityMain extends AppCompatActivity {
             fragmentCategories = FragmentCategories.newInstance();
         }
 
+        navigationView.getMenu().getItem(0).setIcon(new IconDrawable(this, IoniconsIcons.ion_calendar)
+                .colorRes(android.R.color.black)
+                .actionBarSize());
+
+        navigationView.getMenu().getItem(1).setIcon(new IconDrawable(this, IoniconsIcons.ion_map)
+                .colorRes(android.R.color.black)
+                .actionBarSize());
+
+        navigationView.getMenu().getItem(2).setIcon(new IconDrawable(this, IoniconsIcons.ion_information)
+                .colorRes(android.R.color.black)
+                .actionBarSize());
+
         navigationView.setNavigationItemSelectedListener(menuItem -> {
 
             drawerLayout.closeDrawers();
