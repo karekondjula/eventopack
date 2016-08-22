@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 def versionMajor = 1
 def versionMinor = 2
-def versionPatch = 6
+def versionPatch = 8
 
 android {
     compileSdkVersion 24
@@ -18,9 +18,7 @@ android {
         targetSdkVersion 24
         versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
-        buildConfigField "String", "NAMESPACE", '"urn:eventservice"'
-        buildConfigField "String", "URL", '"http://ap.mk/evento/server.php"'
-        buildConfigField "String", "SOAP_ACTION", '"http://ap.mk/evento/server.php/"'
+
         // Enabling multidex support.
 //        multiDexEnabled true
     }
@@ -57,8 +55,8 @@ apply plugin: 'me.tatarka.retrolambda'
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.google.android.gms:play-services-maps:9.2.1'
-    compile 'com.google.android.gms:play-services-plus:9.2.1'
+    compile 'com.google.android.gms:play-services-maps:9.4.0'
+    compile 'com.google.android.gms:play-services-plus:9.4.0'
     compile 'com.android.support:appcompat-v7:24.1.1'
     compile 'com.android.support:support-v13:24.1.1'
     compile 'com.android.support:design:24.1.1'
@@ -103,7 +101,10 @@ dependencies {
     compile 'io.reactivex:rxandroid:1.1.0'
     compile 'io.reactivex:rxjava:1.1.1'
     compile 'com.artemzin.rxjava:proguard-rules:1.1.1.0'
-    compile 'com.facebook.android:facebook-android-sdk:4.+'
+    compile 'com.facebook.android:facebook-android-sdk:4.14.0'
+
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
 
 //    compile 'com.android.support:multidex:1.0.1' // overcome 65K methods limit
 }
