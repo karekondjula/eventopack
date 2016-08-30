@@ -14,7 +14,6 @@ import com.evento.team2.eventspack.receivers.DailyEventsReminderReceiver;
 import com.evento.team2.eventspack.receivers.DownloadEventsReceiver;
 import com.evento.team2.eventspack.receivers.NotificationEventsReceiver;
 import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 
 import java.util.Calendar;
 import java.util.Date;

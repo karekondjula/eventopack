@@ -67,6 +67,11 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
         categoriesRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         fragmentCategoriesPresenter.setView(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
 
         fragmentCategoriesPresenter.fetchCategoriesWithActiveEvents(EventiConstants.NO_FILTER_STRING);
     }

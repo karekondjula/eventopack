@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.evento.team2.eventspack.R;
-import com.evento.team2.eventspack.adapters.PlacesRecyclerViewAdapter;
+import com.evento.team2.eventspack.adapters.PlacesAdapter;
 import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentPlacesPresenter;
@@ -35,7 +35,7 @@ public class FragmentPlaces extends BaseFragment implements FragmentPlacesView {
     @BindView(R.id.placesRecyclerView)
     RecyclerView placesRecyclerView;
 
-    private PlacesRecyclerViewAdapter placesRecyclerViewAdapter;
+    private PlacesAdapter placesAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,11 +51,11 @@ public class FragmentPlaces extends BaseFragment implements FragmentPlacesView {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        placesRecyclerViewAdapter = new PlacesRecyclerViewAdapter(getActivity());
+        placesAdapter = new PlacesAdapter(getActivity());
         placesRecyclerView.setHasFixedSize(true);
         placesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         placesRecyclerView.setItemAnimator(new DefaultItemAnimator());
-        placesRecyclerView.setAdapter(placesRecyclerViewAdapter);
+        placesRecyclerView.setAdapter(placesAdapter);
 
         fragmentPlacesPresenter.setView(this);
     }
@@ -83,9 +83,9 @@ public class FragmentPlaces extends BaseFragment implements FragmentPlacesView {
 
     @Override
     public void showPlaces(ArrayList<Place> placesArrayList) {
-        if (placesRecyclerViewAdapter != null) {
-            placesRecyclerViewAdapter.addPlaces(placesArrayList);
-//            placesRecyclerViewAdapter.notifyDataSetChanged();
+        if (placesAdapter != null) {
+            placesAdapter.addPlaces(placesArrayList);
+//            placesAdapter.notifyDataSetChanged();
         }
     }
 }

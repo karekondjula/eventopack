@@ -14,6 +14,11 @@
 -dontwarn android.support.**
 -dontwarn dagger.producers.monitoring.internal.**
 
+#-dontwarn com.squareup.okhttp.**
+#-dontwarn okio.**
+#-dontwarn retrofit.**
+#-dontwarn rx.**
+
 -keep public class * extends android.app.Activity
 -keep public class * extends android.app.Application
 #-keep public class * extends android.app.Service # not used
@@ -44,6 +49,10 @@
     public void set*(...);
 }
 
+#-keep class com.squareup.okhttp.** { *; }
+#-keep class retrofit.** { *; }
+#-keep interface com.squareup.okhttp.** { *; }
+
 -keepclasseswithmembers class * {
     public <init>(android.content.Context, android.util.AttributeSet);
 }
@@ -60,6 +69,10 @@
 -keepclassmembers class **.R$* {
     public static <fields>;
 }
+
+#-keepclasseswithmembers class * {
+#    @retrofit.http.* <methods>;
+#}
 
 #-keepclassmembers class * {
 #    @android.webkit.JavascriptInterface <methods>;

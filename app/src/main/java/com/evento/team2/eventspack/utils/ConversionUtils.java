@@ -3,7 +3,7 @@ package com.evento.team2.eventspack.utils;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.models.Place;
-import com.evento.team2.eventspack.soapservice.model.JsonEvent;
+import com.evento.team2.eventspack.soapservice.models.JsonEvent;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.text.SimpleDateFormat;

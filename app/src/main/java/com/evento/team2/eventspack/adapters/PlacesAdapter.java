@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Daniel on 12-Aug-15.
  */
-public class PlacesRecyclerViewAdapter extends RecyclerView.Adapter<PlacesRecyclerViewAdapter.ViewHolder> {
+public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.ViewHolder> {
 
     private ArrayList<Place> places;
     private Context context;
@@ -49,19 +49,16 @@ public class PlacesRecyclerViewAdapter extends RecyclerView.Adapter<PlacesRecycl
     }
 
     public void addPlaces(ArrayList<Place> placesArrayList) {
-        if (!places.equals(placesArrayList)) {
-            places.clear();
-            notifyDataSetChanged();
-//            places.addAll(placesArrayList);
+        places.clear();
+        notifyDataSetChanged();
 
-            for (Place place : placesArrayList) {
-                places.add(place);
-                notifyItemInserted(places.size());
-            }
+        for (Place place : placesArrayList) {
+            places.add(place);
+            notifyItemInserted(places.size());
         }
     }
 
-    public PlacesRecyclerViewAdapter(Context context) {
+    public PlacesAdapter(Context context) {
         this.context = context;
         places = new ArrayList<>();
     }

@@ -1,4 +1,4 @@
-package com.evento.team2.eventspack.soapservice.model;
+package com.evento.team2.eventspack.soapservice.models;
 
 import com.bluelinelabs.logansquare.annotation.JsonField;
 import com.bluelinelabs.logansquare.annotation.JsonObject;

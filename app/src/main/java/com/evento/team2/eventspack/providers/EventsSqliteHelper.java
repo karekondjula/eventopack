@@ -1,4 +1,4 @@
-package com.evento.team2.eventspack.provider;
+package com.evento.team2.eventspack.providers;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

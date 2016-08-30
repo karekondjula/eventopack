@@ -90,26 +90,14 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
     public void addEvents(ArrayList<Event> eventArrayList) {
         // TODO add fancy logic, to find the exact place an event should fit
         // so we use the automatic animation by android (hash maps<id, position>?)
-        if (!events.equals(eventArrayList)) {
-            events.clear();
-            notifyDataSetChanged();
+        events.clear();
+        notifyDataSetChanged();
 
-            for (Event event : eventArrayList) {
-                events.add(event);
-                notifyItemInserted(events.size());
-            }
+        for (Event event : eventArrayList) {
+            events.add(event);
+            notifyItemInserted(events.size());
         }
     }
-
-//    public void addEvents(ArrayList<Event> eventArrayList) {
-//        if (!events.equals(eventArrayList)) {
-//            events.clear();
-//            events.addAll(eventArrayList);
-//        }
-//// else {
-////            Log.i(">>", "same ol' events!!!");
-////        }
-//    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

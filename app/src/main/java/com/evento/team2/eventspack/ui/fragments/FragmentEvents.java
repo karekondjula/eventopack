@@ -27,7 +27,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 /**
  * Created by Daniel on 31-Jul-15.
@@ -85,14 +84,14 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
 
         eventsAdapter = new EventsAdapter(getActivity(), fragmentEventsPresenter);
         eventsRecyclerView.setAdapter(eventsAdapter);
-
-        fragmentEventsPresenter.setView(this);
-        fragmentEventsPresenter.fetchLastUpdatedTimestamp();
     }
 
     @Override
     public void onResume() {
         super.onResume();
+
+        fragmentEventsPresenter.setView(this);
+        fragmentEventsPresenter.fetchLastUpdatedTimestamp();
         fragmentEventsPresenter.fetchEventsFromServer(false);
         fragmentEventsPresenter.fetchEvents(EventiConstants.NO_FILTER_STRING);
     }

@@ -194,6 +194,7 @@
                         the current jsonEvent lorum ipsos kratos Details for the current jsonEvent lorum
                         ipsos kratos Details for the current jsonEvent lorum ipsos kratos Details for
                         the current jsonEvent lorum ipsos kratos "
+                        android:textIsSelectable="true"
                         android:theme="@style/Widget.CardContent.EventDetails.Content" />
 
                 </LinearLayout>

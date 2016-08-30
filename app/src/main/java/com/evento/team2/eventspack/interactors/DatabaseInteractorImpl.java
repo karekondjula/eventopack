@@ -6,7 +6,7 @@ import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.models.Place;
-import com.evento.team2.eventspack.provider.EventsDatabase;
+import com.evento.team2.eventspack.providers.EventsDatabase;
 
 import java.util.ArrayList;
 import java.util.Date;

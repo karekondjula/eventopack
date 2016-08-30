@@ -13,7 +13,7 @@ import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapters.EventsAdapter;
 import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.models.Event;
-import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
+import com.evento.team2.eventspack.presenters.FragmentSavedEventsPresenterImpl;
 import com.evento.team2.eventspack.ui.fragments.interfaces.BaseFragment;
 import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.views.FragmentEventsView;
@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 public class FragmentSavedEvents extends BaseFragment implements FragmentEventsView {
 
     @Inject
-    FragmentEventsPresenter fragmentEventsPresenter;
+    FragmentSavedEventsPresenterImpl fragmentEventsPresenter;
 
     @BindView(R.id.savedEventsRecyclerView)
     RecyclerView savedEventsRecyclerView;

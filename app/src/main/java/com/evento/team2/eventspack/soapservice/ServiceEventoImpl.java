@@ -1,7 +1,5 @@
 package com.evento.team2.eventspack.soapservice;
 
-import android.util.Log;
-
 import com.bluelinelabs.logansquare.LoganSquare;
 import com.evento.team2.eventspack.BuildConfig;
 import com.evento.team2.eventspack.EventiApplication;
@@ -9,7 +7,7 @@ import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.soapservice.interfaces.ServiceEvento;
-import com.evento.team2.eventspack.soapservice.model.JsonEvent;
+import com.evento.team2.eventspack.soapservice.models.JsonEvent;
 import com.evento.team2.eventspack.utils.ConversionUtils;
 
 import org.ksoap2.SoapEnvelope;
@@ -109,7 +107,7 @@ public class ServiceEventoImpl implements ServiceEvento {
         envelope.setOutputSoapObject(request);
         //Create HTTP call object
         HttpTransportSE androidHttpTransport = new HttpTransportSE(BuildConfig.URL);
-
+        androidHttpTransport.debug = false;
         try {
             androidHttpTransport.call(soapActionParam, envelope);
 //            Log.i(TAG, envelope.getResponse().toString());
