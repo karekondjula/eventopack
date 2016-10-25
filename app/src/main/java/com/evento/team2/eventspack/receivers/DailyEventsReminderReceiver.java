@@ -35,7 +35,7 @@ public class DailyEventsReminderReceiver extends BroadcastReceiver {
 
     public static String ACTION = "ActionDailyEventsReminderReceiver";
 
-    private DatabaseInteractor databaseInteractor;
+    DatabaseInteractor databaseInteractor;
 
     public DailyEventsReminderReceiver(DatabaseInteractor databaseInteractor) {
         this.databaseInteractor = databaseInteractor;

@@ -40,7 +40,7 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
     @BindView(R.id.categoriesRecyclerView)
     RecyclerView categoriesRecyclerView;
 
-    private HashSet<Integer> expandedParentsList = new HashSet<>();
+    HashSet<Integer> expandedParentsList = new HashSet<>();
 
     private CategoriesViewAdapter categoryAdapter;
 

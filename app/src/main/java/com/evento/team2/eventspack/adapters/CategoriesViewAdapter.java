@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
 public class CategoriesViewAdapter extends ExpandableRecyclerAdapter<
         CategoriesViewAdapter.CategoryViewHolder, CategoriesViewAdapter.EventViewHolder> {
 
-    private Context context;
+    Context context;
 //    private List<Category> categoryList;
     private LayoutInflater inflater;
 

@@ -22,16 +22,16 @@ import java.util.Date;
  */
 public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
 
-    private NetworkUtils networkUtils;
+    NetworkUtils networkUtils;
     private EventiApplication application;
-    private FragmentEventsView fragmentEventsView;
-    private MainThread mainThread;
-    private DatabaseInteractor databaseInteractor;
-    private PreferencesInteractor preferencesInteractor;
-    private ServiceEvento serviceEvento;
+    FragmentEventsView fragmentEventsView;
+    MainThread mainThread;
+    DatabaseInteractor databaseInteractor;
+    PreferencesInteractor preferencesInteractor;
+    ServiceEvento serviceEvento;
     private NotificationsInteractor notificationsInteractor;
 
-    private String lastQuery = "";
+    String lastQuery = "";
 
     public FragmentEventsPresenterImpl(EventiApplication application, PreferencesInteractor preferencesInteractor, MainThread mainThread,
                                        DatabaseInteractor databaseInteractor, NetworkUtils networkUtils, ServiceEvento serviceEvento,
@@ -149,7 +149,7 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
     @Override
     public void fetchLastUpdatedTimestamp() {
 //        String lastUpdateDate = "NOW";
-        // TODO make it more human friendly
+        // TODO make it more human friendly -> DateUtils.getRelativeDateTimeString()
         long timestamp = preferencesInteractor.getLastUpdateOfEvents();
         String lastUpdateDate;
         if (timestamp == 0) {

@@ -67,7 +67,7 @@ public class ActivityMain extends AppCompatActivity {
     private Unbinder unbinder;
 
     private FragmentEvents fragmentEvents;// = FragmentEvents.newInstance();
-    private FragmentCategories fragmentCategories;// = FragmentCategories.newInstance();
+    FragmentCategories fragmentCategories;// = FragmentCategories.newInstance();
     private FragmentSavedEvents fragmentSavedEvents;// = FragmentSavedEvents.newInstance();
     private FragmentPlaces fragmentPlaces;// = FragmentPlaces.newInstance();
     private MenuItem searchMenuItem;

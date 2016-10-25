@@ -11,9 +11,9 @@ import com.evento.team2.eventspack.views.FragmentEventDetailsView;
  */
 public class FragmentEventDetailsPresenter {
 
-    private FragmentEventDetailsView fragmentEventDetailsView;
-    private MainThread mainThread;
-    private DatabaseInteractor databaseInteractor;
+    FragmentEventDetailsView fragmentEventDetailsView;
+    MainThread mainThread;
+    DatabaseInteractor databaseInteractor;
     private NotificationsInteractor notificationsInteractor;
 
     public FragmentEventDetailsPresenter(MainThread mainThread,

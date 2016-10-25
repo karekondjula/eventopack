@@ -14,9 +14,9 @@ import java.util.ArrayList;
  */
 public class FragmentPlaceDetailsPresenterImpl implements FragmentPlaceDetailsPresenter {
 
-    private FragmentPlaceDetailsView fragmentPlaceDetailsView;
-    private MainThread mainThread;
-    private DatabaseInteractor databaseInteractor;
+    FragmentPlaceDetailsView fragmentPlaceDetailsView;
+    MainThread mainThread;
+    DatabaseInteractor databaseInteractor;
 
     public FragmentPlaceDetailsPresenterImpl(MainThread mainThread, DatabaseInteractor databaseInteractor) {
         this.mainThread = mainThread;

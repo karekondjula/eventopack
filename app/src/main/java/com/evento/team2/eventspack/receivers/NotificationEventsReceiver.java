@@ -32,7 +32,7 @@ public class NotificationEventsReceiver extends BroadcastReceiver {
 
     public static String ACTION = "ActionNotificationEventsReceiver";
 
-    private DatabaseInteractor databaseInteractor;
+    DatabaseInteractor databaseInteractor;
 
     public NotificationEventsReceiver(DatabaseInteractor databaseInteractor) {
         this.databaseInteractor = databaseInteractor;

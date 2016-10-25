@@ -42,7 +42,7 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
     @BindView(R.id.empty_view)
     TextView emptyAdapterTextView;
 
-    private SwipeRefreshLayout swipeRefreshLayout;
+    SwipeRefreshLayout swipeRefreshLayout;
     private EventsAdapter eventsAdapter;
 
     @Nullable

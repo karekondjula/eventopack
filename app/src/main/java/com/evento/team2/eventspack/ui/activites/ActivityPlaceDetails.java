@@ -88,7 +88,7 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
     private Unbinder unbinder;
 
     private Place place;
-    private GoogleMap mapView;
+    GoogleMap mapView;
     private long placeId;
 
     @Override

@@ -16,11 +16,11 @@ import java.util.List;
  */
 public class FragmentCategoriesPresenterImpl implements FragmentCategoriesPresenter {
 
-    private FragmentCategoriesView fragmentCategoriesView;
-    private MainThread mainThread;
-    private DatabaseInteractor databaseInteractor;
+    FragmentCategoriesView fragmentCategoriesView;
+    MainThread mainThread;
+    DatabaseInteractor databaseInteractor;
 
-    private String lastQuery = "";
+    String lastQuery = "";
 
     public FragmentCategoriesPresenterImpl(MainThread mainThread, DatabaseInteractor databaseInteractor) {
         this.mainThread = mainThread;

@@ -14,9 +14,9 @@ import java.util.ArrayList;
  */
 public class FragmentSavedEventsPresenterImpl implements FragmentEventsPresenter {
 
-    private FragmentEventsView fragmentEventsView;
-    private MainThread mainThread;
-    private DatabaseInteractor databaseInteractor;
+    FragmentEventsView fragmentEventsView;
+    MainThread mainThread;
+    DatabaseInteractor databaseInteractor;
     private NotificationsInteractor notificationsInteractor;
 
     public FragmentSavedEventsPresenterImpl(MainThread mainThread, DatabaseInteractor databaseInteractor,

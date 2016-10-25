@@ -81,12 +81,12 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
     CaldroidFragment dialogCaldroidFragment;
 
     private Location myLocation;
-    private Calendar calendar;
-    private GoogleMap mapView;
-    private String lastSelectedDate;
+    Calendar calendar;
+    GoogleMap mapView;
+    String lastSelectedDate;
     private LinearLayout actionViewCalendar;
     private long id = EventiConstants.NONE;
-    private int what = EventiConstants.EVENTS;
+    int what = EventiConstants.EVENTS;
 
     @BindView(R.id.map_event_details)
     LinearLayout mapEventDetailsLinearLayout;
@@ -395,14 +395,14 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
         return fragmentMap;
     }
 
-    private void setCalendarDate(Date date) {
+    void setCalendarDate(Date date) {
         if (actionViewCalendar != null) {
             // probably too early but calendar is already set to the correct date
             ((TextView) actionViewCalendar.findViewById(R.id.menu_text_date)).setText(DateFormatterUtils.compareDateFormat.format(date));
         }
     }
 
-    private void setCalendarOnStartOfDay(Calendar calendar) {
+    void setCalendarOnStartOfDay(Calendar calendar) {
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);

@@ -13,11 +13,11 @@ import java.util.ArrayList;
  */
 public class FragmentPlacesPresenterImpl implements FragmentPlacesPresenter {
 
-    private FragmentPlacesView fragmentPlacesView;
-    private MainThread mainThread;
-    private DatabaseInteractor databaseInteractor;
+    FragmentPlacesView fragmentPlacesView;
+    MainThread mainThread;
+    DatabaseInteractor databaseInteractor;
 
-    private String lastQuery = "";
+    String lastQuery = "";
 
     public FragmentPlacesPresenterImpl(MainThread mainThread, DatabaseInteractor databaseInteractor) {
         this.mainThread = mainThread;

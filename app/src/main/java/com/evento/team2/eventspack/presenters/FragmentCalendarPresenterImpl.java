@@ -32,9 +32,9 @@ import rx.schedulers.Schedulers;
  */
 public class FragmentCalendarPresenterImpl implements FragmentCalendarPresenter {
 
-    private FragmentCalendarView fragmentCalendarView;
-    private MainThread mainThread;
-    private DatabaseInteractor databaseInteractor;
+    FragmentCalendarView fragmentCalendarView;
+    MainThread mainThread;
+    DatabaseInteractor databaseInteractor;
 
     public FragmentCalendarPresenterImpl(MainThread mainThread, DatabaseInteractor databaseInteractor) {
         this.mainThread = mainThread;

@@ -1,6 +1,7 @@
 package com.evento.team2.eventspack.ui.fragments;
 
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -46,8 +47,8 @@ public class FragmentCalendar extends Fragment implements FragmentCalendarView {
 
     private final static Date TODAY = new Date();
 
-    private ArrayList<Long> selectedDates;
-    private ArrayList<Long> eventDates;
+    ArrayList<Long> selectedDates;
+    ArrayList<Long> eventDates;
 
     @Inject
     CaldroidFragment caldroidFragment;
@@ -124,9 +125,10 @@ public class FragmentCalendar extends Fragment implements FragmentCalendarView {
 
             if (selectedDates.contains(dateLong)) { // remove from selected
                 if (eventDates.contains(dateLong)) { // a day with events returns to dark green
-                    caldroidFragment.setBackgroundResourceForDate(R.color.colorPrimaryDark, date);
+                    caldroidFragment.setBackgroundDrawableForDate(
+                            new ColorDrawable(getResources().getColor(R.color.colorPrimaryDark)), date);
                 } else { // day with no events return to white background
-                    caldroidFragment.clearBackgroundResourceForDate(date);
+                    caldroidFragment.clearBackgroundDrawableForDate(date);
                 }
                 selectedDates.remove(dateLong);
             } else { // add to selected
@@ -138,7 +140,7 @@ public class FragmentCalendar extends Fragment implements FragmentCalendarView {
                     colorUtils.dateColorHashMap.put(dateLong, color);
                 }
 
-                caldroidFragment.setBackgroundResourceForDate(color, date);
+                caldroidFragment.setBackgroundDrawableForDate(new ColorDrawable(getResources().getColor(color)), date);
                 selectedDates.add(dateLong);
             }
 
@@ -182,7 +184,8 @@ public class FragmentCalendar extends Fragment implements FragmentCalendarView {
                 calendar.set(Calendar.MILLISECOND, 0);
 
                 if (!eventDates.contains(calendar.getTime().getTime())) {
-                    caldroidFragment.setBackgroundResourceForDate(R.color.colorPrimaryDark, eventDate);
+                    caldroidFragment.setBackgroundDrawableForDate(
+                            new ColorDrawable(getResources().getColor(R.color.colorPrimaryDark)), eventDate);
                     eventDates.add(calendar.getTime().getTime());
                 }
             }

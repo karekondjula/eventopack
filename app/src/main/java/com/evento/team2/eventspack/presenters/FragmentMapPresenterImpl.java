@@ -9,7 +9,6 @@ import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentMapPresenter;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.ui.activites.ActivityPlaceDetails;
-import com.evento.team2.eventspack.ui.fragments.FragmentMap;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.utils.interfaces.MainThread;
@@ -27,11 +26,11 @@ import java.util.HashMap;
 public class FragmentMapPresenterImpl implements FragmentMapPresenter {
 
     private EventiApplication eventiApplication;
-    private DatabaseInteractor databaseInteractor;
-    private MainThread mainThread;
-    private FragmentMapView fragmentMapView;
+    DatabaseInteractor databaseInteractor;
+    MainThread mainThread;
+    FragmentMapView fragmentMapView;
 
-    private HashMap<LatLng, Object> hashMapLatLngId = new HashMap<>();
+    HashMap<LatLng, Object> hashMapLatLngId = new HashMap<>();
     private Marker lastMarkerClicked;
 
     public FragmentMapPresenterImpl(EventiApplication eventiApplication, DatabaseInteractor databaseInteractor,
@@ -191,6 +190,7 @@ public class FragmentMapPresenterImpl implements FragmentMapPresenter {
             } else if (selectedMode == EventiConstants.PLACES) {
                 intent = ActivityPlaceDetails.createIntent(eventiApplication, ((Place) hashMapLatLngId.get(marker.getPosition())).id);
             }
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             eventiApplication.startActivity(intent);
         } else {
             lastMarkerClicked = marker;
