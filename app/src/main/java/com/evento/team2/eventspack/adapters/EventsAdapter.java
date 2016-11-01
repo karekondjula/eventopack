@@ -46,19 +46,19 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public final View mView;
+        final View mView;
         @BindView(R.id.event_picture)
-        public ImageView mEventImage;
+        ImageView mEventImage;
         @BindView(R.id.event_title)
-        public TextView mEventTitle;
+        TextView mEventTitle;
         @BindView(R.id.event_details)
-        public TextView mEventDetails;
+        TextView mEventDetails;
         @BindView(R.id.event_start_time)
-        public TextView mEventStartTime;
+        TextView mEventStartTime;
         @BindView(R.id.event_end_time)
-        public TextView mEventEndTime;
+        TextView mEventEndTime;
         @BindView(R.id.event_location)
-        public TextView mEventLocation;
+        TextView mEventLocation;
         @BindView(R.id.btn_save_icon)
         public IconTextView isEventSaved;
         @BindView(R.id.eventAttending)
@@ -66,10 +66,9 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         @BindView(R.id.eventAttendingCount)
         TextView mEventAttendingCount;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             mView = view;
-            // TODO maybe we should not use BK because we can not unbind the view
             ButterKnife.bind(this, view);
         }
     }
@@ -89,6 +88,7 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
     public void addEvents(ArrayList<Event> eventArrayList) {
         // TODO add fancy logic, to find the exact place an event should fit
+        // TODO https://medium.com/@nullthemall/diffutil-is-a-must-797502bc1149#.ebm52aykt
         // so we use the automatic animation by android (hash maps<id, position>?)
         events.clear();
         notifyDataSetChanged();

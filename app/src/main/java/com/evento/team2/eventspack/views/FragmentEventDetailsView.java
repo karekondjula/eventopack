@@ -10,4 +10,6 @@ public interface FragmentEventDetailsView {
     void showEvent(Event event);
 
     void notifyUserForUpdateInEvent(boolean isSaved);
+
+    void setDetails(String details);
 }

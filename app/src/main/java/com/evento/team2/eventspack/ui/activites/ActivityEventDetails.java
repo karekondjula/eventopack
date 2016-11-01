@@ -35,7 +35,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -88,7 +87,7 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
     EventiApplication eventiApplication;
 
     @Inject
-    FragmentEventDetailsPresenter fragmentEventDetailsPresenter;
+    FragmentEventDetailsPresenter eventDetailsPresenter;
 
     @Inject
     NotificationsInteractor notificationsInteractor;
@@ -129,7 +128,7 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
 
     private Drawable emptyHeart;
     private Drawable filledHeart;
-    private GoogleMap mapView;
+    GoogleMap mapView;
     private MapFragment mapFragment;
     private MarkerOptions markerOptions;
     private Event event;
@@ -175,7 +174,7 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
             ActivityCompat.requestPermissions(this, EventiConstants.ungrantedPremissions, EventiConstants.PERMISSIONS_REQUEST_CODE);
         }
 
-        fragmentEventDetailsPresenter.setView(this);
+        eventDetailsPresenter.setView(this);
     }
 
     public static Intent createIntent(Context context, long id) {
@@ -190,7 +189,7 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
         super.onResume();
         eventId = getIntent().getLongExtra(EXTRA_EVENT_ID, 0);
 
-        fragmentEventDetailsPresenter.fetchEventDetails(eventId);
+        eventDetailsPresenter.fetchEventDetails(eventId);
     }
 
     @Override
@@ -257,7 +256,7 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
 
     @OnClick(R.id.fab_add_to_saved)
     public void saveEvent(View view) {
-        fragmentEventDetailsPresenter.changeSavedStateOfEvent(event);
+        eventDetailsPresenter.changeSavedStateOfEvent(event);
 
         YoYo.with(Techniques.Tada)
                 .duration(700)
@@ -323,11 +322,26 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
 
     @OnClick(R.id.share_on_other)
     public void shareOnOther(View view) {
+
+        YoYo.with(Techniques.Tada)
+                .duration(700)
+                .playOn(view);
+
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/*");
         sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT,
                 "http://www.facebook.com/events/".concat(String.valueOf(event.facebookId)));
         startActivity(Intent.createChooser(sharingIntent, "Share using"));
+    }
+
+    @OnClick(R.id.translate)
+    public void translate(View view)  {
+
+        YoYo.with(Techniques.Tada)
+                .duration(700)
+                .playOn(view);
+
+        eventDetailsPresenter.translateToEnglish(event);
     }
 
     private void initMap() {
@@ -352,7 +366,6 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
 
     @Override
     public void showEvent(Event event) {
-        Log.d(">> showEvent eventId", event + "");
         this.event = event;
 
         collapsingToolbar.setTitle(event.name);
@@ -395,6 +408,11 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
                         String.format(getResources().getString(R.string.event_is_removed), event.name),
                 Snackbar.LENGTH_LONG)
                 .show();
+    }
+
+    @Override
+    public void setDetails(String details) {
+        textViewEventDetails.setText(details);
     }
 
     private static int dipToPixels(Context context, int dipValue) {

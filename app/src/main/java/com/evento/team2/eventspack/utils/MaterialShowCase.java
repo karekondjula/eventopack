@@ -16,8 +16,9 @@ public class MaterialShowCase {
 //                    .setTarget(mButtonShow)
 //                    .setContentText("This is some amazing feature you should know about")
                 .setDismissOnTouch(true)
+                .setFadeDuration(500)
                 .setContentTextColor(activity.getResources().getColor(android.R.color.white))
-                .setMaskColour(activity.getResources().getColor(R.color.colorPrimary))
+                .setMaskColour(activity.getResources().getColor(R.color.colorPrimaryShowcase))
                 .setDismissText(android.R.string.ok);
 
     }

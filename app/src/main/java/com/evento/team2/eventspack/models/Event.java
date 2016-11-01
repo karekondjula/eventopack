@@ -12,7 +12,7 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * Created by Daniel on 04-Aug-15.
  */
-// TODO try AutoValues (https://github.com/frankiesardo/auto-parcel)
+// TODO try AutoValues
 //https://caster.io/episodes/understanding-autovalue-autovalue-value-types-minus-boiler-plate-part-1
 public class Event implements Comparable<Event> {
 

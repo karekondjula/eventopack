@@ -7,7 +7,6 @@ import java.util.List;
 /**
  * Created by Daniel on 15-Mar-16.
  */
-// TODO try AutoValues
 public class Category implements ParentListItem {
 
     public @Event.Category int categoryId;
