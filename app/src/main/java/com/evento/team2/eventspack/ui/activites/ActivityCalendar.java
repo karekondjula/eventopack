@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.evento.team2.eventspack.R;
@@ -12,7 +11,7 @@ import com.evento.team2.eventspack.ui.fragments.FragmentCalendar;
 
 import butterknife.ButterKnife;
 
-public class ActivityCalendar extends AppCompatActivity {
+public class ActivityCalendar extends BaseAppCompatActivity {
     private static final String TAG = "ActivityCalendar";
 
     @Override

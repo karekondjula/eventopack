@@ -7,7 +7,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import com.evento.team2.eventspack.R;
@@ -21,7 +20,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Daniel on 01-Oct-15.
  */
-public class ActivityMap extends AppCompatActivity {
+public class ActivityMap extends BaseAppCompatActivity {
 
     static {
         Iconify.with(new IoniconsModule());

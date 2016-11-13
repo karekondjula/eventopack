@@ -44,8 +44,6 @@ public class ActivityMain extends BaseAppCompatActivity {
 
     public static final String ACTION_SAVED_EVENTS = "ACTION_SAVED_EVENTS";
 
-    private static final String SHOWCASE_ID = "1";
-
     @BindView(R.id.navigation_view)
     NavigationView navigationView;
 
@@ -312,11 +310,11 @@ public class ActivityMain extends BaseAppCompatActivity {
         private List<Fragment> mFragments = new ArrayList<>();
         private List<String> mFragmentTitles = new ArrayList<>();
 
-        public Adapter(FragmentManager fm) {
+        Adapter(FragmentManager fm) {
             super(fm);
         }
 
-        public void addFragment(Fragment fragment, String title) {
+        void addFragment(Fragment fragment, String title) {
             mFragments.add(fragment);
             mFragmentTitles.add(title);
         }
