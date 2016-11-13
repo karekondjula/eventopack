@@ -1,9 +1,13 @@
 package com.evento.team2.eventspack.presenters;
 
+import android.text.TextUtils;
+import android.util.Log;
+
 import com.evento.team2.eventspack.interactors.NotificationsInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.services.TranslateService;
+import com.evento.team2.eventspack.services.models.JsonDetection;
 import com.evento.team2.eventspack.services.models.JsonTranslation;
 import com.evento.team2.eventspack.utils.interfaces.MainThread;
 import com.evento.team2.eventspack.views.FragmentEventDetailsView;
@@ -25,6 +29,8 @@ public class FragmentEventDetailsPresenter {
     MainThread mainThread;
     DatabaseInteractor databaseInteractor;
     private NotificationsInteractor notificationsInteractor;
+    TranslateService service;
+    String translatedDetails;
 
     public FragmentEventDetailsPresenter(MainThread mainThread,
                                          DatabaseInteractor databaseInteractor,
@@ -32,6 +38,14 @@ public class FragmentEventDetailsPresenter {
         this.mainThread = mainThread;
         this.databaseInteractor = databaseInteractor;
         this.notificationsInteractor = notificationsInteractor;
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://translate.yandex.net/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        // TODO daggerify retrofit and TranslateService
+        service = retrofit.create(TranslateService.class);
     }
 
     public void setView(FragmentEventDetailsView fragmentEventDetailsView) {
@@ -64,33 +78,61 @@ public class FragmentEventDetailsPresenter {
 
     public void translateToEnglish(Event event) {
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://translate.yandex.net/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        TranslateService service = retrofit.create(TranslateService.class);
-
-        Call<JsonTranslation> jsonTranslationCall = service.translate("mk-en",
+        Call<JsonDetection> jsonDetect = service.detect(
                 "trnsl.1.1.20160808T170832Z.353235d926160df6.e608b7d2675e0add16ee340b97cc50d80ff19416",
                 event.details);
-        jsonTranslationCall.enqueue(new Callback<JsonTranslation>() {
+        jsonDetect.enqueue(new Callback<JsonDetection>() {
             @Override
-            public void onResponse(Call<JsonTranslation> call, Response<JsonTranslation> response) {
+            public void onResponse(Call<JsonDetection> call, Response<JsonDetection> response) {
 
-                final JsonTranslation jsonTranslation = response.body();
+                final JsonDetection jsonTranslation = response.body();
+                final boolean isResponseGood = response.isSuccessful();
                 mainThread.post(new Runnable() {
                     @Override
                     public void run() {
-                        eventDetailsView.setDetails(Arrays.toString(jsonTranslation.text));
+                        if (isResponseGood) {
+                            Log.d(">>", jsonTranslation.lang);
+                        }
                     }
                 });
             }
 
             @Override
-            public void onFailure(Call<JsonTranslation> call, Throwable t) {
-
+            public void onFailure(Call<JsonDetection> call, Throwable t) {
+                // TODO inform user
             }
         });
+
+        if (!TextUtils.isEmpty(translatedDetails)) {
+            eventDetailsView.setTranslatedDetails(translatedDetails);
+        } else {
+            Call<JsonTranslation> jsonTranslationCall = service.translate("mk-en",
+                    "trnsl.1.1.20160808T170832Z.353235d926160df6.e608b7d2675e0add16ee340b97cc50d80ff19416",
+                    event.details);
+            jsonTranslationCall.enqueue(new Callback<JsonTranslation>() {
+                @Override
+                public void onResponse(Call<JsonTranslation> call, Response<JsonTranslation> response) {
+
+                    final JsonTranslation jsonTranslation = response.body();
+                    final boolean isResponseGood = response.isSuccessful();
+                    mainThread.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (isResponseGood) {
+                                translatedDetails = Arrays.toString(jsonTranslation.text);
+                                translatedDetails = translatedDetails.substring(1, translatedDetails.length() - 2);
+
+                                eventDetailsView.setTranslatedDetails(translatedDetails);
+                            }
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(Call<JsonTranslation> call, Throwable t) {
+                    // TODO inform user
+                }
+            });
+        }
     }
 }

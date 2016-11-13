@@ -71,6 +71,7 @@ import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.EntypoModule;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.joanzapata.iconify.fonts.IoniconsModule;
+import com.joanzapata.iconify.widget.IconTextView;
 
 import javax.inject.Inject;
 
@@ -79,7 +80,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 
-public class ActivityEventDetails extends AppCompatActivity implements FragmentEventDetailsView {
+public class ActivityEventDetails extends BaseAppCompatActivity implements FragmentEventDetailsView {
 
     public static final String EXTRA_EVENT_ID = "event_id";
 
@@ -121,6 +122,9 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
 
     @BindView(R.id.bottom_sheet)
     View bottomSheet;
+
+    @BindView(R.id.translate)
+    IconTextView translate;
 
     private Unbinder unbinder;
 
@@ -336,12 +340,13 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
 
     @OnClick(R.id.translate)
     public void translate(View view)  {
-
-        YoYo.with(Techniques.Tada)
-                .duration(700)
-                .playOn(view);
-
-        eventDetailsPresenter.translateToEnglish(event);
+        // TODO show license for translation
+        translate.setText("{ion-code-working spin}");
+        if (translated) {
+            setTranslatedDetails(event.details);
+        } else {
+            eventDetailsPresenter.translateToEnglish(event);
+        }
     }
 
     private void initMap() {
@@ -410,9 +415,13 @@ public class ActivityEventDetails extends AppCompatActivity implements FragmentE
                 .show();
     }
 
+    private boolean translated = false;
+
     @Override
-    public void setDetails(String details) {
+    public void setTranslatedDetails(String details) {
+        translate.setText("{ion-code-working}");
         textViewEventDetails.setText(details);
+        translated = !translated;
     }
 
     private static int dipToPixels(Context context, int dipValue) {

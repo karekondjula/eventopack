@@ -83,8 +83,6 @@ public class Utils {
                     FileOutputStream out = null;
                     try {
                         File tempFile = File.createTempFile("temp", ".jpg");
-//                            tempFile = new File(getFilesDir().toString().concat("tempimage.jpg"));
-//                            tempFile = new File(Environment.getExternalStorageDirectory().toString().concat("tempimage.jpg"));
                         out = new FileOutputStream(tempFile);
 
                         bmp.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance

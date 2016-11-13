@@ -11,5 +11,5 @@ public interface FragmentEventDetailsView {
 
     void notifyUserForUpdateInEvent(boolean isSaved);
 
-    void setDetails(String details);
+    void setTranslatedDetails(String details);
 }

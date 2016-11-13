@@ -11,9 +11,9 @@ import java.io.File;
 /**
  * Created by daniel-kareski on 7/14/16.
  */
-public class MimeTypeResolver {
+class MimeTypeResolver {
 
-    public static String getMimeTypeFromUri(String fileUri) {
+    private static String getMimeTypeFromUri(String fileUri) {
         if (fileUri == null) {
             return "*/*";
         }
@@ -35,7 +35,7 @@ public class MimeTypeResolver {
         return "*/*";
     }
 
-    public static void startActivityWithMimeType(Context context, String fileUri) {
+    static void startActivityWithMimeType(Context context, String fileUri) {
         try {
             Intent intent = new Intent();
             String mime = MimeTypeResolver.getMimeTypeFromUri(fileUri);

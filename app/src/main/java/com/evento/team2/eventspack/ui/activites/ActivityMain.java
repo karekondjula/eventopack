@@ -12,14 +12,12 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.evento.team2.eventspack.EventiApplication;
@@ -30,7 +28,6 @@ import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
 import com.evento.team2.eventspack.ui.fragments.FragmentPlaces;
 import com.evento.team2.eventspack.ui.fragments.FragmentSavedEvents;
 import com.evento.team2.eventspack.utils.EventiConstants;
-import com.evento.team2.eventspack.utils.MaterialShowCase;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
@@ -42,11 +39,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseSequence;
-import uk.co.deanwild.materialshowcaseview.MaterialShowcaseView;
-import uk.co.deanwild.materialshowcaseview.ShowcaseConfig;
 
-public class ActivityMain extends AppCompatActivity {
+public class ActivityMain extends BaseAppCompatActivity {
 
     public static final String ACTION_SAVED_EVENTS = "ACTION_SAVED_EVENTS";
 
@@ -172,31 +166,34 @@ public class ActivityMain extends AppCompatActivity {
         pagerSlidingTabStrip.setShouldExpand(true);
         pagerSlidingTabStrip.setViewPager(viewPager);
 
-        presentShowcaseSequence();
+//        presentShowcaseSequence();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        boolean goToSavedEvents = getIntent().getAction().equals(ACTION_SAVED_EVENTS);
+        Intent intent = getIntent();
+        if (intent != null && intent.getAction() != null) {
+            boolean goToSavedEvents = intent.getAction().equals(ACTION_SAVED_EVENTS);
 
-        int SAVED_EVENTS_ORDINAL_NUMBER = 2;
+            int SAVED_EVENTS_ORDINAL_NUMBER = 2;
 
-        if (goToSavedEvents) {
-            new Thread() {
-                @Override
-                public void run() {
+            if (goToSavedEvents) {
+                new Thread() {
+                    @Override
+                    public void run() {
 
-                    SystemClock.sleep(700);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            viewPager.setCurrentItem(SAVED_EVENTS_ORDINAL_NUMBER);
-                        }
-                    });
-                }
-            }.start();
+                        SystemClock.sleep(700);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                viewPager.setCurrentItem(SAVED_EVENTS_ORDINAL_NUMBER);
+                            }
+                        });
+                    }
+                }.start();
+            }
         }
     }
 
@@ -264,50 +261,6 @@ public class ActivityMain extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
-    }
-
-    public void presentShowcaseSequence() {
-
-        ShowcaseConfig config = new ShowcaseConfig();
-        config.setDelay(3000);
-
-        MaterialShowcaseSequence sequence = new MaterialShowcaseSequence(ActivityMain.this, SHOWCASE_ID);
-
-        sequence.setConfig(config);
-
-        MaterialShowcaseView.Builder baseView;
-
-        baseView = MaterialShowCase.createBaseShowCase(ActivityMain.this);
-        baseView.setTarget(ButterKnife.findById(ActivityMain.this, R.id.appbar));
-        baseView.setContentText(R.string.showcase_welcome_message);
-        sequence.addSequenceItem(baseView.build());
-
-        baseView = MaterialShowCase.createBaseShowCase(ActivityMain.this);
-        baseView.setTarget(ButterKnife.findById(ActivityMain.this, R.id.appbar));
-        baseView.setContentText(R.string.showcase_toolbar_message);
-        sequence.addSequenceItem(baseView.build());
-
-        baseView = MaterialShowCase.createBaseShowCase(ActivityMain.this);
-        baseView.setTarget(((ViewGroup) pagerSlidingTabStrip.getChildAt(0)).getChildAt(0));
-        baseView.setContentText(R.string.showcase_events_message);
-        sequence.addSequenceItem(baseView.build());
-
-        baseView = MaterialShowCase.createBaseShowCase(ActivityMain.this);
-        baseView.setTarget(((ViewGroup) pagerSlidingTabStrip.getChildAt(0)).getChildAt(1));
-        baseView.setContentText(R.string.showcase_categories_message);
-        sequence.addSequenceItem(baseView.build());
-
-        baseView = MaterialShowCase.createBaseShowCase(ActivityMain.this);
-        baseView.setTarget(((ViewGroup) pagerSlidingTabStrip.getChildAt(0)).getChildAt(2));
-        baseView.setContentText(R.string.showcase_saved_message);
-        sequence.addSequenceItem(baseView.build());
-
-        baseView = MaterialShowCase.createBaseShowCase(ActivityMain.this);
-        baseView.setTarget(((ViewGroup) pagerSlidingTabStrip.getChildAt(0)).getChildAt(3));
-        baseView.setContentText(R.string.showcase_places_message);
-        sequence.addSequenceItem(baseView.build());
-
-        sequence.start();
     }
 
     private void setupViewPager(ViewPager viewPager) {
