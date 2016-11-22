@@ -10,3 +10,4 @@ build.gradle
 google-maps-keys
 todo.txt
 eventopack.iml
+gradle.properties

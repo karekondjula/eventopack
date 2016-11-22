@@ -18,8 +18,9 @@ android {
         targetSdkVersion 25
         versionCode versionMajor * 10000 + versionMinor * 100 + versionPatch
         versionName "${versionMajor}.${versionMinor}.${versionPatch}"
-        // remove config fields when git commit/push!!!
-
+        buildConfigField "String", "NAMESPACE", soapNamespace
+        buildConfigField "String", "URL", soapUrl
+        buildConfigField "String", "SOAP_ACTION", soapAction
         // Enabling multidex support.
 //        multiDexEnabled true
     }
@@ -55,8 +56,8 @@ apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'me.tatarka.retrolambda'
 
 ext {
-    supportLibraryVersion = '25.0.0'
-    playServicesVersion = '9.8.0'
+    supportLibraryVersion = '25.0.1'
+    playServicesVersion = '10.0.0'
 }
 
 dependencies {
@@ -78,8 +79,6 @@ dependencies {
     // happy layouts
     compile 'com.jakewharton:butterknife:8.4.0'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
-    // introduction to layouts
-    compile 'com.github.deano2390:MaterialShowcaseView:1.1.0'
     // calendar
     compile 'com.roomorama:caldroid:3.0.1'
     // ikonchinja
