@@ -7,6 +7,7 @@ import com.evento.team2.eventspack.soapservice.models.JsonEvent;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 /**
  * Created by Daniel on 17-Oct-15.
@@ -64,7 +65,7 @@ public class ConversionUtils {
         event.facebookId = jsonEvent.fb_id;
         event.startTimeStamp = jsonEvent.startTime * 1000; // in ms
 
-        String dateTime = new SimpleDateFormat("HH:mm dd.MM.yyyy").format(event.startTimeStamp);
+        String dateTime = new SimpleDateFormat("HH:mm dd.MM.yyyy", Locale.getDefault()).format(event.startTimeStamp);
 
         event.startTimeString = dateTime.split(" ")[0];
         event.startDateString = dateTime.split(" ")[1];

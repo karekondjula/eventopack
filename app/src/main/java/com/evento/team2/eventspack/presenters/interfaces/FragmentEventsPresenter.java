@@ -10,7 +10,7 @@ public interface FragmentEventsPresenter {
 
     void setView(FragmentEventsView fragmentEventsView);
 
-    void fetchEvents(String query);
+    void fetchEvents(String query, int offset);
 
     void fetchEventsFromServer(boolean forceUpdate);
 

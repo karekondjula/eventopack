@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by Daniel on 15-Aug-15.
@@ -29,10 +30,8 @@ import java.util.List;
 public class EventsDatabase {
 
     private static EventsDatabase instance;
-
     private SQLiteDatabase database;
     private EventsSqliteHelper dbHelper;
-
     private Geocoder geocoder;
 
     private String[] allColumnsEvent = {Event.Table.COLUMN_ID,
@@ -57,10 +56,10 @@ public class EventsDatabase {
         event.id = cursor.getLong(0);
         event.facebookId = cursor.getLong(1);
         event.pictureUri = cursor.getString(4);
-        event.locationString = cursor.getString(5).trim().replace(", null", "").replace("\"", "");;
+        event.locationString = cursor.getString(5).trim().replace(", null", "").replace("\"", "");
         event.location = new LatLng(cursor.getDouble(6), cursor.getDouble(7));
         event.startTimeStamp = cursor.getLong(8);
-        event.startTimeString = new SimpleDateFormat("HH:mm").format(event.startTimeStamp);
+        event.startTimeString = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(event.startTimeStamp);
 
         Calendar cal = Calendar.getInstance();
         cal.setTimeInMillis(event.startTimeStamp);
@@ -230,7 +229,7 @@ public class EventsDatabase {
                     Address address = addresses.get(addresses.size() - 1);
                     StringBuilder stringBuilder = new StringBuilder();
                     for (int i = 0; i <= address.getMaxAddressLineIndex(); i++) {
-                        stringBuilder.append(addresses.get(0).getAddressLine(i) + ", ");
+                        stringBuilder.append(addresses.get(0).getAddressLine(i)).append(", ");
                     }
                     event.locationString = stringBuilder.toString().trim().substring(0, stringBuilder.length() - 2).replace("(FYROM)", "");
                     event.locationString = event.locationString.trim().replace(", null", "").replace("\"", "");
@@ -268,52 +267,18 @@ public class EventsDatabase {
         }
     }
 
-//    public void removeSavedEvent(Event event) {
+    //    public void removeSavedEvent(Event event) {
 //        long id = event.id;
 //        database.delete(Event.Table.TABLE_EVENTS, Event.Table.COLUMN_ID + " = " + id, null);
 //    }
 
-    // TODO refactor it in better times (no need for two differet get<>Events methods!!!
-    public ArrayList<Event> getEvents(String... filter) {
+    public ArrayList<Event> getEvents() {
         ArrayList<Event> events = new ArrayList<Event>();
-
-        StringBuilder where = null;
-        String whereArgs[] = null;
-        ArrayList<String> whereArgsList = new ArrayList<String>();
-        if (filter != null) {
-            where = new StringBuilder();
-            if (filter.length > 0) {
-                where.append("(" + Event.Table.COLUMN_NAME + " LIKE ? OR " +
-                        Event.Table.COLUMN_NAME + " LIKE ? OR " +
-                        Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
-                        Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
-                        Event.Table.COLUMN_START_DATE_STRING + " LIKE ? ) ");
-
-                whereArgsList.add("%" + ConversionUtils.convertCyrilicToText(filter[0]) + "%");
-                whereArgsList.add("%" + ConversionUtils.convertTextToCyrilic(filter[0]) + "%");
-                whereArgsList.add("%" + filter[0] + "%");
-                whereArgsList.add("%" + filter[0] + "%");
-                whereArgsList.add("%" + filter[0] + "%");
-            }
-            if (filter.length > 1) {
-                where.append(" AND ( " +
-                        Event.Table.COLUMN_START_TIME_STAMP + " > ? " +
-                        " OR " +
-                        "( " + Event.Table.COLUMN_START_TIME_STAMP + " < ? AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? ) " +
-                        ")");
-                whereArgsList.add(filter[1]);
-                whereArgsList.add(filter[1]);
-                whereArgsList.add(filter[1]);
-            }
-
-            whereArgs = new String[whereArgsList.size()];
-            whereArgs = whereArgsList.toArray(whereArgs);
-        }
 
         Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
                 allColumnsEvent,
-                (where != null ? where.toString() : null),
-                (whereArgs != null ? whereArgs : null),
+                null,
+                null,
                 null,
                 null,
                 Event.Table.COLUMN_START_TIME_STAMP + " ASC");
@@ -329,7 +294,51 @@ public class EventsDatabase {
         // make sure to close the cursor
         cursor.close();
 
-        if (events.size() == 0 && filter != null && TextUtils.isEmpty(filter[0])) {
+        if (events.size() == 0) {
+            // no events are fetched from server -> empty database
+            return null;
+        }
+
+        return events;
+    }
+
+    public ArrayList<Event> getEvents(String filter, int offset, String dateNow) {
+        ArrayList<Event> events = new ArrayList<Event>();
+
+        Cursor cursor = database.rawQuery("SELECT * " +
+                        " FROM " + Event.Table.TABLE_EVENTS +
+                        " WHERE ( " + Event.Table.COLUMN_NAME + " LIKE ? OR " +
+                        Event.Table.COLUMN_NAME + " LIKE ? OR " +
+                        Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
+                        Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
+                        Event.Table.COLUMN_START_DATE_STRING + " LIKE ? )" +
+                        "   AND ( " + Event.Table.COLUMN_START_TIME_STAMP + " > ? " +
+                        "           OR " + Event.Table.COLUMN_START_TIME_STAMP + " < ? AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? " +
+                        "       ) " +
+                        " ORDER BY " + Event.Table.COLUMN_START_TIME_STAMP + " ASC " +
+                        " LIMIT ?",
+                new String[]{"%" + ConversionUtils.convertCyrilicToText(filter) + "%",
+                        "%" + ConversionUtils.convertCyrilicToText(filter) + "%",
+                        filter,
+                        filter,
+                        filter,
+                        dateNow,
+                        dateNow,
+                        dateNow,
+                        String.valueOf(offset)}
+        );
+
+        cursor.moveToFirst();
+        Event event;
+        while (!cursor.isAfterLast()) {
+            event = cursorToEvent(cursor);
+            events.add(event);
+            cursor.moveToNext();
+        }
+        // make sure to close the cursor
+        cursor.close();
+
+        if (events.size() == 0 && filter != null && TextUtils.isEmpty(filter)) {
             // no events are fetched from server -> empty database
             return null;
         }
@@ -346,10 +355,10 @@ public class EventsDatabase {
 
         where = new StringBuilder();
         where.append(" ( " +
-                        "( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? < 86400000 AND " + Event.Table.COLUMN_START_TIME_STAMP + " - ? >= 0 " + ") " +
-                        " OR " +
-                        "( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? <= 0 AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? ) " +
-                        " ) "
+                "( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? < 86400000 AND " + Event.Table.COLUMN_START_TIME_STAMP + " - ? >= 0 " + ") " +
+                " OR " +
+                "( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? <= 0 AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? ) " +
+                " ) "
         );
         whereArgsList.add(timestamp);
         whereArgsList.add(timestamp);
@@ -389,14 +398,14 @@ public class EventsDatabase {
             where = new StringBuilder();
             if (filter.length > 0) {
                 where.append("( " +
-                                "(" + Event.Table.COLUMN_LATITUDE + " LIKE ? AND " +
-                                Event.Table.COLUMN_LONGITUDE + " LIKE ? ) AND " +
-                                Event.Table.COLUMN_LOCATION_STRING + " LIKE ? ) " +
-                                " AND ( " +
-                                Event.Table.COLUMN_START_TIME_STAMP + " > ? " +
-                                " OR " +
-                                "( " + Event.Table.COLUMN_START_TIME_STAMP + " < ? AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? ) " +
-                            ")"
+                        "(" + Event.Table.COLUMN_LATITUDE + " LIKE ? AND " +
+                        Event.Table.COLUMN_LONGITUDE + " LIKE ? ) AND " +
+                        Event.Table.COLUMN_LOCATION_STRING + " LIKE ? ) " +
+                        " AND ( " +
+                        Event.Table.COLUMN_START_TIME_STAMP + " > ? " +
+                        " OR " +
+                        "( " + Event.Table.COLUMN_START_TIME_STAMP + " < ? AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? ) " +
+                        ")"
                 );
 
                 whereArgsList.add("%" + filter[0] + "%");
@@ -595,7 +604,7 @@ public class EventsDatabase {
         // delete events older than two months
         database.execSQL("DELETE FROM " + Event.Table.TABLE_EVENTS +
                         " WHERE " + Event.Table.COLUMN_START_TIME_STAMP + " < ?",
-                new String[]{String.valueOf((new Date().getTime() - 5184000000l))}
+                new String[]{String.valueOf((new Date().getTime() - 5184000000L))}
         );
     }
 }

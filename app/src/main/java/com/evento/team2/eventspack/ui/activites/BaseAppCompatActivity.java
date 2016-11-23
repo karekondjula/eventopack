@@ -36,5 +36,4 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     protected void overridePendingTransitionExit() {
         overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
     }
-
 }

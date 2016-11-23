@@ -12,7 +12,7 @@ public interface DatabaseInteractor {
 
     long persistEvent(Event event);
 
-    ArrayList<Event> getActiveEvents(String filter);
+    ArrayList<Event> getActiveEvents(String filter, int offset);
 
     ArrayList<Event> getAllEvents();
 

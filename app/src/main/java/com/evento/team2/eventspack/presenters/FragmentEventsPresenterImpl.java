@@ -1,5 +1,7 @@
 package com.evento.team2.eventspack.presenters;
 
+import android.text.format.DateUtils;
+
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.interactors.NotificationsInteractor;
@@ -8,7 +10,6 @@ import com.evento.team2.eventspack.interactors.interfaces.PreferencesInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
 import com.evento.team2.eventspack.soapservice.interfaces.ServiceEvento;
-import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.evento.team2.eventspack.utils.NetworkUtils;
 import com.evento.team2.eventspack.utils.interfaces.MainThread;
 import com.evento.team2.eventspack.views.FragmentEventsView;
@@ -32,6 +33,7 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
     private NotificationsInteractor notificationsInteractor;
 
     String lastQuery = "";
+    int lastOffset = 0;
 
     public FragmentEventsPresenterImpl(EventiApplication application, PreferencesInteractor preferencesInteractor, MainThread mainThread,
                                        DatabaseInteractor databaseInteractor, NetworkUtils networkUtils, ServiceEvento serviceEvento,
@@ -51,12 +53,12 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
     }
 
     @Override
-    public void fetchEvents(String query) {
+    public void fetchEvents(String query, int offset) {
 
         new Thread() {
             @Override
             public void run() {
-                final ArrayList<Event> eventArrayList = databaseInteractor.getActiveEvents(lastQuery);
+                final ArrayList<Event> eventArrayList = databaseInteractor.getActiveEvents(lastQuery, offset);
 
                 mainThread.post(() -> fragmentEventsView.showEvents(eventArrayList));
             }
@@ -83,6 +85,7 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
 
 
         lastQuery = query;
+        lastOffset = offset;
     }
 
     @Override
@@ -110,30 +113,10 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
 
                         mainThread.post(fragmentEventsView::startRefreshAnimation);
 
-//                        Observable<String> fetchFromGoogle = Observable.create(new Observable.OnSubscribe<List<Event>>() {
-//                            @Override
-//                            public void call(Subscriber<? super List<Event>> subscriber) {
-//                                try {
-//                                    subscriber.onNext(data); // Emit the contents of the URL
-//                                    subscriber.onCompleted(); // Nothing more to emit
-//                                }catch(Exception e){
-//                                    subscriber.onError(e); // In case there are network errors
-//                                }
-//                            }
-//                        });
-//
-//                        fetchFromGoogle
-//                                .subscribeOn(Schedulers.newThread()) // Create a new Thread
-//                                .observeOn(AndroidSchedulers.mainThread()) // Use the UI thread
-//                                .subscribe(eventArrayList -> {
-//                                    fragmentEventsView.showEvents(eventArrayList);
-//                                });
-
-
-                        // TODO this service implementation is idiotic ... god help us all
+                        // TODO this service implementation is idiotic ... Cthulu help us all
                         serviceEvento.getAllCurrentEvents();
 
-                        fetchEvents(lastQuery);
+                        fetchEvents(lastQuery, lastOffset);
 
                         preferencesInteractor.setLastUpdateOfEvents(new Date().getTime());
                     } else {
@@ -148,14 +131,14 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
 
     @Override
     public void fetchLastUpdatedTimestamp() {
-//        String lastUpdateDate = "NOW";
-        // TODO make it more human friendly -> DateUtils.getRelativeDateTimeString()
         long timestamp = preferencesInteractor.getLastUpdateOfEvents();
         String lastUpdateDate;
+
         if (timestamp == 0) {
             lastUpdateDate = application.getString(R.string.updating_now);
         } else {
-            lastUpdateDate = DateFormatterUtils.fullDateFormat.format(timestamp);
+            lastUpdateDate = DateUtils.getRelativeDateTimeString(application, timestamp,
+                    DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0).toString();
         }
 
         fragmentEventsView.showLastUpdatedTimestampMessage(lastUpdateDate);

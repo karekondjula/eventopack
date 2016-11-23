@@ -32,7 +32,7 @@ public class FragmentSavedEventsPresenterImpl implements FragmentEventsPresenter
     }
 
     @Override
-    public void fetchEvents(String query) {
+    public void fetchEvents(String query, int offset) {
 
     }
 

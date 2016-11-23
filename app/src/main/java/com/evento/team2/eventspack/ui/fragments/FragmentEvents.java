@@ -18,6 +18,7 @@ import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
 import com.evento.team2.eventspack.ui.fragments.interfaces.BaseFragment;
+import com.evento.team2.eventspack.ui.views.EndlessRecyclerViewScrollListener;
 import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.views.FragmentEventsView;
 
@@ -33,6 +34,8 @@ import butterknife.ButterKnife;
  */
 public class FragmentEvents extends BaseFragment implements FragmentEventsView {
 
+    private static final int OFFSET = 8;
+
     @Inject
     FragmentEventsPresenter fragmentEventsPresenter;
 
@@ -44,6 +47,9 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
 
     SwipeRefreshLayout swipeRefreshLayout;
     private EventsAdapter eventsAdapter;
+
+    String lastQuery = EventiConstants.NO_FILTER_STRING;
+    LinearLayoutManager linearLayoutManager;
 
     @Nullable
     @Override
@@ -57,7 +63,20 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
         swipeRefreshLayout.setOnRefreshListener(() -> fragmentEventsPresenter.fetchEventsFromServer(true));
 
-        eventsRecyclerView.setOnScrollListener(new RecyclerView.OnScrollListener() {
+        linearLayoutManager = new LinearLayoutManager(getContext());
+        eventsRecyclerView.setLayoutManager(linearLayoutManager);
+        eventsRecyclerView.setHasFixedSize(true);
+        eventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+                // Triggered only when new data needs to be appended to the list
+                // Add whatever code is needed to append new items to the bottom of the list
+//                loadNextDataFromApi(page);
+                fragmentEventsPresenter.fetchEvents(lastQuery, (page + 1) * OFFSET);
+            }
+
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -67,9 +86,26 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
                                 0 : eventsRecyclerView.getChildAt(0).getTop();
                 swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
             }
-        });
-        // TODO we need load more call for this to work
-//        eventsRecyclerView.setItemAnimator(new SlideInLeftAnimator());
+        };
+        eventsRecyclerView.addOnScrollListener(scrollListener);
+//        eventsRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//
+//            @Override
+//            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//
+//                int topRowVerticalPosition =
+//                        (eventsRecyclerView == null || eventsRecyclerView.getChildCount() == 0) ?
+//                                0 : eventsRecyclerView.getChildAt(0).getTop();
+//                swipeRefreshLayout.setEnabled(topRowVerticalPosition >= 0);
+//
+//                Log.d(">> last vise", linearLayoutManager.findLastVisibleItemPosition() + "");
+//                Log.d(">> child count", linearLayoutManager.getItemCount() + "");
+//                if (linearLayoutManager.findLastCompletelyVisibleItemPosition() == linearLayoutManager.getItemCount() - 2){
+//                    fragmentEventsPresenter.fetchEvents(lastQuery, OFFSET);
+//                }
+//            }
+//        });
 
         return swipeRefreshLayout;
     }
@@ -78,9 +114,9 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        eventsRecyclerView.setHasFixedSize(true);
-        eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        eventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+//        eventsRecyclerView.setHasFixedSize(true);
+//        eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+//        eventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         eventsAdapter = new EventsAdapter(getActivity(), fragmentEventsPresenter);
         eventsRecyclerView.setAdapter(eventsAdapter);
@@ -93,7 +129,7 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
         fragmentEventsPresenter.setView(this);
         fragmentEventsPresenter.fetchLastUpdatedTimestamp();
         fragmentEventsPresenter.fetchEventsFromServer(false);
-        fragmentEventsPresenter.fetchEvents(EventiConstants.NO_FILTER_STRING);
+        fragmentEventsPresenter.fetchEvents(lastQuery, OFFSET);
     }
 
     @Override
@@ -114,7 +150,8 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
 
     @Override
     public void filterList(final String filter) {
-        fragmentEventsPresenter.fetchEvents(filter);
+        lastQuery = filter;
+        fragmentEventsPresenter.fetchEvents(lastQuery, OFFSET);
     }
 
     @Override

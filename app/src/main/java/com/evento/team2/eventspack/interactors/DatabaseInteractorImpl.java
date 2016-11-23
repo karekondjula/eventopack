@@ -28,8 +28,8 @@ public class DatabaseInteractorImpl implements DatabaseInteractor {
     }
 
     @Override
-    public ArrayList<Event> getActiveEvents(String filter) {
-        return EventsDatabase.getInstance().getEvents(filter, String.valueOf(new Date().getTime()));
+    public ArrayList<Event> getActiveEvents(String filter, int offset) {
+        return EventsDatabase.getInstance().getEvents(filter, offset, String.valueOf(new Date().getTime()));
     }
 
     @Override
