@@ -308,19 +308,22 @@ public class EventsDatabase {
         Cursor cursor = database.rawQuery("SELECT * " +
                         " FROM " + Event.Table.TABLE_EVENTS +
                         " WHERE ( " + Event.Table.COLUMN_NAME + " LIKE ? OR " +
-                        Event.Table.COLUMN_NAME + " LIKE ? OR " +
-                        Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
-                        Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
-                        Event.Table.COLUMN_START_DATE_STRING + " LIKE ? )" +
+                                    Event.Table.COLUMN_NAME + " LIKE ? OR " +
+                                    Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
+                                    Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
+                                    Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
+                                    Event.Table.COLUMN_START_DATE_STRING + " LIKE ? " +
+                        " ) " +
                         "   AND ( " + Event.Table.COLUMN_START_TIME_STAMP + " > ? " +
                         "           OR " + Event.Table.COLUMN_START_TIME_STAMP + " < ? AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? " +
                         "       ) " +
                         " ORDER BY " + Event.Table.COLUMN_START_TIME_STAMP + " ASC " +
                         " LIMIT ?",
-                new String[]{"%" + ConversionUtils.convertCyrilicToText(filter) + "%",
+                new String[]{"%" + ConversionUtils.convertTextToCyrilic(filter) + "%",
                         "%" + ConversionUtils.convertCyrilicToText(filter) + "%",
                         filter,
-                        filter,
+                        "%" + ConversionUtils.convertTextToCyrilic(filter) + "%",
+                        "%" + ConversionUtils.convertCyrilicToText(filter) + "%",
                         filter,
                         dateNow,
                         dateNow,
@@ -465,12 +468,14 @@ public class EventsDatabase {
                         Event.Table.COLUMN_NAME + " LIKE ? OR " +
                         Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
                         Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
+                        Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
                         Event.Table.COLUMN_START_DATE_STRING + " LIKE ? ) ");
 
                 whereArgsList.add("%" + ConversionUtils.convertCyrilicToText(filter[1]) + "%");
                 whereArgsList.add("%" + ConversionUtils.convertTextToCyrilic(filter[1]) + "%");
                 whereArgsList.add("%" + filter[1] + "%");
-                whereArgsList.add("%" + filter[1] + "%");
+                whereArgsList.add("%" + ConversionUtils.convertTextToCyrilic(filter[1]) + "%");
+                whereArgsList.add("%" + ConversionUtils.convertCyrilicToText(filter[1]) + "%");
                 whereArgsList.add("%" + filter[1] + "%");
             }
 
@@ -509,13 +514,15 @@ public class EventsDatabase {
                                 Event.Table.COLUMN_NAME + " LIKE ? OR " +
                                 Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
                                 Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
+                                Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
                                 Event.Table.COLUMN_START_DATE_STRING + " LIKE ? )"
                                 : ""),
                 (filter != null && filter.length > 0 ? new String[]{String.valueOf(Event.SAVED),
                         "%" + ConversionUtils.convertCyrilicToText(filter[0]) + "%",
                         "%" + ConversionUtils.convertTextToCyrilic(filter[0]) + "%",
                         "%" + filter[0] + "%",
-                        "%" + filter[0] + "%",
+                        "%" + ConversionUtils.convertCyrilicToText(filter[0]) + "%",
+                        "%" + ConversionUtils.convertTextToCyrilic(filter[0]) + "%",
                         "%" + filter[0] + "%",}
                         : new String[]{String.valueOf(Event.SAVED)}),
                 null,

@@ -30,5 +30,7 @@ public class EventiConstants {
 
     public static final int PERMISSIONS_REQUEST_CODE = 305;
 
+    public static final int OFFSET = 8;
+
     public static final String[] ungrantedPremissions = new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 }

@@ -45,6 +45,10 @@ public class FragmentSavedEvents extends BaseFragment implements FragmentEventsV
         View view = inflater.inflate(R.layout.fragment_saved_events, container, false);
         unbinder = ButterKnife.bind(this, view);
 
+        savedEventsRecyclerView.setHasFixedSize(true);
+        savedEventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        savedEventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
         return view;
     }
 
@@ -53,11 +57,7 @@ public class FragmentSavedEvents extends BaseFragment implements FragmentEventsV
         super.onViewCreated(view, savedInstanceState);
 
         savedEventsAdapter = new EventsAdapter(getActivity(), fragmentEventsPresenter);
-        savedEventsRecyclerView.setHasFixedSize(true);
-        savedEventsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        savedEventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
         savedEventsRecyclerView.setAdapter(savedEventsAdapter);
-
         fragmentEventsPresenter.setView(this);
     }
 

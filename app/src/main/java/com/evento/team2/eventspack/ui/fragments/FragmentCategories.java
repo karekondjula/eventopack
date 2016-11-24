@@ -50,22 +50,19 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
         View view = inflater.inflate(R.layout.fragment_categories, container, false);
         unbinder = ButterKnife.bind(this, view);
 
+        categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        categoriesRecyclerView.setItemAnimator(new DefaultItemAnimator());
+        categoriesRecyclerView.setHasFixedSize(true);
+
         return view;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         categoryAdapter = new CategoriesViewAdapter(getActivity(), new ArrayList<>());
-
-        categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        categoriesRecyclerView.setItemAnimator(new DefaultItemAnimator());
         categoriesRecyclerView.setAdapter(categoryAdapter);
-
-        categoriesRecyclerView.setHasFixedSize(true);
-        categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        categoriesRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
         fragmentCategoriesPresenter.setView(this);
     }
 

@@ -10,6 +10,7 @@ import com.evento.team2.eventspack.interactors.interfaces.PreferencesInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
 import com.evento.team2.eventspack.soapservice.interfaces.ServiceEvento;
+import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.utils.NetworkUtils;
 import com.evento.team2.eventspack.utils.interfaces.MainThread;
 import com.evento.team2.eventspack.views.FragmentEventsView;
@@ -33,7 +34,7 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
     private NotificationsInteractor notificationsInteractor;
 
     String lastQuery = "";
-    int lastOffset = 0;
+    int lastOffset = EventiConstants.OFFSET;
 
     public FragmentEventsPresenterImpl(EventiApplication application, PreferencesInteractor preferencesInteractor, MainThread mainThread,
                                        DatabaseInteractor databaseInteractor, NetworkUtils networkUtils, ServiceEvento serviceEvento,
@@ -55,10 +56,14 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
     @Override
     public void fetchEvents(String query, int offset) {
 
+        lastQuery = query;
+        if (offset != 0) {
+            lastOffset += offset;
+        }
         new Thread() {
             @Override
             public void run() {
-                final ArrayList<Event> eventArrayList = databaseInteractor.getActiveEvents(lastQuery, offset);
+                final ArrayList<Event> eventArrayList = databaseInteractor.getActiveEvents(lastQuery, lastOffset);
 
                 mainThread.post(() -> fragmentEventsView.showEvents(eventArrayList));
             }
@@ -82,10 +87,6 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
 //                        fragmentEventsView.showEvents(eventArrayList);
 //                    }
 //                });
-
-
-        lastQuery = query;
-        lastOffset = offset;
     }
 
     @Override
