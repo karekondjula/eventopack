@@ -16,8 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:cropToPadding="false"
-            android:scaleType="centerCrop"
-            android:transitionName="@string/transition_event_image" />
+            android:scaleType="centerCrop" />
 
         <com.joanzapata.iconify.widget.IconTextView
             android:id="@+id/btn_save_icon"
@@ -42,7 +41,8 @@
         android:maxLines="2"
         android:paddingLeft="@dimen/item_event_text_padding"
         android:paddingRight="@dimen/item_event_text_padding"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:transitionName="@string/transition_event_image" />
 
     <TextView
         android:id="@+id/event_details"

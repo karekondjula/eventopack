@@ -1,4 +1,4 @@
-package com.evento.team2.eventspack.ui.views;
+package com.evento.team2.eventspack.ui.components;
 
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;

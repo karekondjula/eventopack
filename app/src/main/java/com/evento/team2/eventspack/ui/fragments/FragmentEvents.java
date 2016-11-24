@@ -18,7 +18,7 @@ import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
 import com.evento.team2.eventspack.ui.fragments.interfaces.BaseFragment;
-import com.evento.team2.eventspack.ui.views.EndlessRecyclerViewScrollListener;
+import com.evento.team2.eventspack.ui.components.EndlessRecyclerViewScrollListener;
 import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.views.FragmentEventsView;
 

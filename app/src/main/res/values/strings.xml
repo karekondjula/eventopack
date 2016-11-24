@@ -3,6 +3,7 @@
     <string name="facebook_app_id" translatable="false">835820619855102</string>
     <string name="server_client_id" translatable="false">902703939267-5apqh4qdilfbg80b752lv1dvvt7jta0u.apps.googleusercontent.com</string>
     <string name="transition_event_image" translatable="false">transitionEventImage</string>
+    <string name="version_">Version: %s</string>
 
     <string name="action_search">Search</string>
     <string name="drawer_open">Open</string>
