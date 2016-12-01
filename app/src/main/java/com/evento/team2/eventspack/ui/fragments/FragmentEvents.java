@@ -17,8 +17,8 @@ import com.evento.team2.eventspack.adapters.EventsAdapter;
 import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
-import com.evento.team2.eventspack.ui.fragments.interfaces.BaseFragment;
 import com.evento.team2.eventspack.ui.components.EndlessRecyclerViewScrollListener;
+import com.evento.team2.eventspack.ui.fragments.interfaces.BaseFragment;
 import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.views.FragmentEventsView;
 
@@ -44,9 +44,8 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
     TextView emptyAdapterTextView;
 
     SwipeRefreshLayout swipeRefreshLayout;
-    private EventsAdapter eventsAdapter;
+    EventsAdapter eventsAdapter;
 
-    String lastQuery = EventiConstants.NO_FILTER_STRING;
     LinearLayoutManager linearLayoutManager;
 
     @Nullable
@@ -69,7 +68,7 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
         EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-                fragmentEventsPresenter.fetchEvents(lastQuery, page * EventiConstants.OFFSET);
+                fragmentEventsPresenter.fetchEvents(lastQuery, (page + 1) * EventiConstants.OFFSET);
             }
 
             @Override
@@ -123,8 +122,7 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
 
     @Override
     public void filterList(final String filter) {
-        lastQuery = filter;
-        fragmentEventsPresenter.fetchEvents(lastQuery, 0);
+        fragmentEventsPresenter.fetchEvents(filter, 0);
     }
 
     @Override
@@ -133,7 +131,7 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
     }
 
     @Override
-    public void showEvents(ArrayList<Event> eventsArrayList) {
+    public void showEvents(final ArrayList<Event> eventsArrayList) {
         if (eventsAdapter != null) {
 
             if (eventsArrayList == null) {
@@ -146,11 +144,7 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
                     emptyAdapterTextView.setVisibility(View.GONE);
                 }
 
-                // some kind of optimization ... further read is required
-//            eventsAdapter = new EventsAdapter(getActivity());
-//            eventsRecyclerView.swapAdapter(eventsAdapter, false);
-                eventsAdapter.addEvents(eventsArrayList);
-//                eventsAdapter.notifyDataSetChanged();
+                eventsAdapter.updateView(eventsArrayList);
             }
         }
     }

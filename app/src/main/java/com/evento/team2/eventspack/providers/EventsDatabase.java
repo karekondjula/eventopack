@@ -287,7 +287,6 @@ public class EventsDatabase {
         Event event;
         while (!cursor.isAfterLast()) {
             event = cursorToEvent(cursor);
-//            Log.i(">>", event.toString());
             events.add(event);
             cursor.moveToNext();
         }

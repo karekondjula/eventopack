@@ -3,6 +3,8 @@ package com.evento.team2.eventspack.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -22,9 +24,12 @@ import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.joanzapata.iconify.widget.IconTextView;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -86,46 +91,118 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
         calendar.set(Calendar.SECOND, 0);
     }
 
-    public void addEvents(ArrayList<Event> eventArrayList) {
-        // TODO add fancy logic, to find the exact place an event should fit
-        // TODO https://medium.com/@nullthemall/diffutil-is-a-must-797502bc1149#.ebm52aykt
-        // so we use the automatic animation by android (hash maps<id, position>?)
+    public void updateView(ArrayList<Event> eventsArrayList) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
+                new EventsListDiffCallback(events, eventsArrayList));
+        diffResult.dispatchUpdatesTo(this);
 
-//        DiffUtil.calculateDiff(new DiffUtil.Callback() {
-//            @Override
-//            public int getOldListSize() {
-//                return 0;
-//            }
-//
-//            @Override
-//            public int getNewListSize() {
-//                return 0;
-//            }
-//
-//            @Override
-//            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-//                return false;
-//            }
-//
-//            @Override
-//            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-//                return false;
-//            }
-//        }).dispatchUpdatesTo(this);
-
-        events.clear();
-        notifyDataSetChanged();
-
-        for (Event event : eventArrayList) {
-            events.add(event);
-            notifyItemInserted(events.size());
-        }
+        events = eventsArrayList;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_event, parent, false);
         return new ViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position, List<Object> payloads) {
+        if(!payloads.isEmpty()) {
+            Bundle bundle = (Bundle) payloads.get(0);
+            for (String key : bundle.keySet()) {
+                switch (key) {
+                    case Event.Table.COLUMN_NAME:
+                        holder.mEventTitle.setText(bundle.getString(key));
+                        break;
+                    case Event.Table.COLUMN_DETAILS:
+                        holder.mEventDetails.setText(bundle.getString(key));
+                        break;
+                    case Event.Table.COLUMN_START_TIME_STAMP:
+
+                        long startTimeStamp = bundle.getLong(key);
+                        String dateTime = new SimpleDateFormat("HH:mm dd.MM.yyyy", Locale.getDefault()).format(bundle.getLong(key));
+                        String startDateString = dateTime.split(" ")[1];
+
+                        Date startDateEvent;
+                        try {
+                            startDateEvent = DateFormatterUtils.compareDateFormat.parse(startDateString);
+
+                            if (Math.abs(startDateEvent.getTime() - calendar.getTimeInMillis()) < 1000) {
+                                // today (or close enough)
+//              TODO  DateUtils.getRelativeDateTimeString(application, timestamp, DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0).toString();
+
+                                holder.mEventStartTime.setText(startTimeStamp != 0 ? context.getString(R.string.today)
+                                        + " " + DateFormatterUtils.hoursMinutesDateFormat.format(startTimeStamp) : "");
+                                holder.mEventStartTime.setTextColor(context.getResources().getColor(R.color.colorAccent));
+                            } else if (startDateEvent.getTime() - calendar.getTimeInMillis() < 0) {
+                                // event has expired
+                                holder.mEventStartTime.setText(startTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(startTimeStamp)
+                                        : "");
+                                holder.mEventStartTime.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
+                            } else {
+                                // event is on a day != from today
+                                holder.mEventStartTime.setText(startTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(startTimeStamp)
+                                        : "");
+                                holder.mEventStartTime.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+                            }
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case Event.Table.COLUMN_END_TIME_STAMP:
+
+                        long endTimeStamp = bundle.getLong(key);
+                        String endDateString = DateFormatterUtils.compareDateFormat.format(endTimeStamp);
+
+                        if (endTimeStamp != 0) {
+                            try {
+                                Date endDateEvent = DateFormatterUtils.compareDateFormat.parse(endDateString);
+
+                                if (endTimeStamp - calendar.getTimeInMillis() < 0) {
+                                    // end time has also expired
+                                    holder.mEventEndTime.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
+                                } else {
+                                    if (Math.abs(endDateEvent.getTime() - calendar.getTimeInMillis()) < 1000) {
+                                        // end time is today
+                                        holder.mEventEndTime.setText(context.getString(R.string.today) + " " +
+                                                DateFormatterUtils.hoursMinutesDateFormat.format(endTimeStamp));
+                                        holder.mEventEndTime.setTextColor(context.getResources().getColor(R.color.colorAccent));
+                                    } else {
+                                        // end time is still active
+                                        holder.mEventEndTime.setText(DateFormatterUtils.fullDateFormat.format(endTimeStamp));
+                                        holder.mEventEndTime.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+                                    }
+                                }
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+
+                        } else {
+                            holder.mEventEndTime.setText("");
+                        }
+                        break;
+
+                    case Event.Table.COLUMN_LOCATION_STRING:
+                        holder.mEventLocation.setText(bundle.getString(key));
+                        break;
+
+                    case Event.Table.COLUMN_ATTENDING_COUNT:
+                        holder.mEventAttendingCount.setText(bundle.getString(key));
+                        holder.mEventAttending.setVisibility(View.VISIBLE);
+                        break;
+
+                    case Event.Table.COLUMN_PICTURE_URI:
+                        if (TextUtils.isEmpty(bundle.getString(key))) {
+                            Glide.with(holder.mEventImage.getContext()).load(R.drawable.party_image).into(holder.mEventImage);
+                        } else {
+                            Glide.with(context).load(bundle.getString(key)).into(holder.mEventImage);
+                        }
+                        break;
+                }
+            }
+        } else {
+            onBindViewHolder(holder, position);
+        }
     }
 
     @Override
@@ -142,10 +219,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
             if (Math.abs(startDateEvent.getTime() - calendar.getTimeInMillis()) < 1000) {
                 // today (or close enough)
+//              TODO  DateUtils.getRelativeDateTimeString(application, timestamp, DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0).toString();
+
                 holder.mEventStartTime.setText(event.startTimeStamp != 0 ? context.getString(R.string.today)
                         + " " + DateFormatterUtils.hoursMinutesDateFormat.format(event.startTimeStamp) : "");
                 holder.mEventStartTime.setTextColor(context.getResources().getColor(R.color.colorAccent));
-//            holder.mEventEndTime.setTextColor(context.getResources().getColor(R.color.colorAccent));
             } else if (startDateEvent.getTime() - calendar.getTimeInMillis() < 0) {
                 // event has expired
                 holder.mEventStartTime.setText(event.startTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(event.startTimeStamp)
@@ -156,7 +234,6 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
                 holder.mEventStartTime.setText(event.startTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(event.startTimeStamp)
                         : "");
                 holder.mEventStartTime.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
-//            holder.mEventEndTime.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
             }
 
             // TODO refactor

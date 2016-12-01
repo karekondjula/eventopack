@@ -147,13 +147,15 @@ public class ServiceEventoImpl implements ServiceEvento {
                                 databaseInteractor.persistPlace(place);
                             });
 
-                } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_PLACES)) {
-
                 }
-            } else {
+//                else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_PLACES)) {
+//
+//                }
+            }
+//            else {
 //                EventsDatabase.getInstance().persistEvents(Utils.Helpers.createEvents());
 //                Log.i(TAG, "no response ;( ");
-            }
+//            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -161,7 +163,7 @@ public class ServiceEventoImpl implements ServiceEvento {
 
     @Override
     public void getAllCurrentEvents() {
-        HashMap<String, Object> params = new HashMap();
+        HashMap<String, Object> params = new HashMap<>();
         params.put(ServiceEventoImpl.METHOD_NAME_KEY, ServiceEventoImpl.METHOD_GET_ALL_EVENTS);
         callServiceMethod(params);
     }

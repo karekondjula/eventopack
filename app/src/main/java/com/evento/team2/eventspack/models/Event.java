@@ -1,6 +1,7 @@
 package com.evento.team2.eventspack.models;
 
 import android.support.annotation.IntDef;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
@@ -102,7 +103,7 @@ public class Event implements Comparable<Event> {
     }
 
     @Override
-    public int compareTo(Event event) {
+    public int compareTo(@NonNull Event event) {
         if (id == event.id) {
             return 0;
         } else if (id > event.id) {
@@ -124,15 +125,12 @@ public class Event implements Comparable<Event> {
     public boolean equals(Object o) {
         if (o instanceof Event) {
             Event otherEvent = (Event) o;
-            if (id == otherEvent.id
+            return id == otherEvent.id
                     && name.equals(otherEvent.name)
                     && details.equals(otherEvent.details)
                     && location.equals(otherEvent.location)
                     && startTimeStamp == otherEvent.startTimeStamp
-                    && isEventSaved == otherEvent.isEventSaved) {
-                return true;
-            }
-            return false;
+                    && isEventSaved == otherEvent.isEventSaved;
         }
         return super.equals(o);
     }

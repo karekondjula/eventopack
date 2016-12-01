@@ -2,7 +2,6 @@ package com.evento.team2.eventspack.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 
 import com.bumptech.glide.Glide;
 import com.evento.team2.eventspack.models.Event;
@@ -23,8 +22,8 @@ import java.util.concurrent.ExecutionException;
 public class Utils {
     public final static class Helpers {
 
-        public static final String[] EVENTS = {"Abbaye de Belloc", "Abbaye du Mont des Cats", "Abertam", "Abondance", "Ackawi",};
-        public static final String[] EVENTS_DESCRIPTION = {"auch jakosadf sdfsdfasdfasdfsadfsad", "majkata na ", "albert", "donzuav", "japanac",};
+        static final String[] EVENTS = {"Abbaye de Belloc", "Abbaye du Mont des Cats", "Abertam", "Abondance", "Ackawi",};
+        static final String[] EVENTS_DESCRIPTION = {"auch jakosadf sdfsdfasdfasdfsadfsad", "majkata na ", "albert", "donzuav", "japanac",};
 
         public static ArrayList<Event> events;
 
@@ -61,7 +60,6 @@ public class Utils {
 
                     dummyEvent.startTimeString = dateTime.split(" ")[0];
                     dummyEvent.startDateString = dateTime.split(" ")[1];
-//                    Log.i(">>", dummyEvent.toString());
                     events.add(dummyEvent);
                 }
             }

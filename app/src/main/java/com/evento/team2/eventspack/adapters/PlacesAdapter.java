@@ -3,6 +3,7 @@ package com.evento.team2.eventspack.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -31,15 +32,15 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.ViewHolder
 
     static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public final View mView;
+        final View mView;
         @BindView(R.id.place_picture)
-        public ImageView mPlacePicture;
+        ImageView mPlacePicture;
         @BindView(R.id.place_title)
-        public TextView mPlaceTitle;
+        TextView mPlaceTitle;
 //        @BindView(R.id.place_location) TODO maybe number of events in the place?!
 //        public TextView mPlaceLocation;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             mView = view;
             // TODO maybe we should not use BK because we can not unbind the view
@@ -48,19 +49,17 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.ViewHolder
         }
     }
 
-    public void addPlaces(ArrayList<Place> placesArrayList) {
-        places.clear();
-        notifyDataSetChanged();
-
-        for (Place place : placesArrayList) {
-            places.add(place);
-            notifyItemInserted(places.size());
-        }
-    }
-
     public PlacesAdapter(Context context) {
         this.context = context;
         places = new ArrayList<>();
+    }
+
+    public void updateView(ArrayList<Place> placesArrayList) {
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
+                new PlacesListDiffCallback(places, placesArrayList));
+        diffResult.dispatchUpdatesTo(this);
+
+        places = placesArrayList;
     }
 
     @Override

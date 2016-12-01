@@ -58,7 +58,7 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
 
         lastQuery = query;
         if (offset != 0) {
-            lastOffset += offset;
+            lastOffset = offset;
         }
         new Thread() {
             @Override

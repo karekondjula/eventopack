@@ -85,7 +85,7 @@ public class FragmentSavedEvents extends BaseFragment implements FragmentEventsV
     @Override
     public void showEvents(ArrayList<Event> eventsArrayList) {
         if (savedEventsAdapter != null) {
-            savedEventsAdapter.addEvents(eventsArrayList);
+            savedEventsAdapter.updateView(eventsArrayList);
         }
     }
 

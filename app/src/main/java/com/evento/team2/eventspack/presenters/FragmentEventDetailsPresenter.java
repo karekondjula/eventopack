@@ -1,13 +1,11 @@
 package com.evento.team2.eventspack.presenters;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.evento.team2.eventspack.interactors.NotificationsInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.services.TranslateService;
-import com.evento.team2.eventspack.services.models.JsonDetection;
 import com.evento.team2.eventspack.services.models.JsonTranslation;
 import com.evento.team2.eventspack.utils.interfaces.MainThread;
 import com.evento.team2.eventspack.views.FragmentEventDetailsView;
@@ -78,30 +76,30 @@ public class FragmentEventDetailsPresenter {
 
     public void translateToEnglish(Event event) {
 
-        Call<JsonDetection> jsonDetect = service.detect(
-                "trnsl.1.1.20160808T170832Z.353235d926160df6.e608b7d2675e0add16ee340b97cc50d80ff19416",
-                event.details);
-        jsonDetect.enqueue(new Callback<JsonDetection>() {
-            @Override
-            public void onResponse(Call<JsonDetection> call, Response<JsonDetection> response) {
-
-                final JsonDetection jsonTranslation = response.body();
-                final boolean isResponseGood = response.isSuccessful();
-                mainThread.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isResponseGood) {
-                            Log.d(">>", jsonTranslation.lang);
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public void onFailure(Call<JsonDetection> call, Throwable t) {
-                // TODO inform user
-            }
-        });
+//        Call<JsonDetection> jsonDetect = service.detect(
+//                "trnsl.1.1.20160808T170832Z.353235d926160df6.e608b7d2675e0add16ee340b97cc50d80ff19416",
+//                event.details);
+//        jsonDetect.enqueue(new Callback<JsonDetection>() {
+//            @Override
+//            public void onResponse(Call<JsonDetection> call, Response<JsonDetection> response) {
+//
+//                final JsonDetection jsonTranslation = response.body();
+//                final boolean isResponseGood = response.isSuccessful();
+//                mainThread.post(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (isResponseGood) {
+//                            Log.d(">>", jsonTranslation.lang);
+//                        }
+//                    }
+//                });
+//            }
+//
+//            @Override
+//            public void onFailure(Call<JsonDetection> call, Throwable t) {
+//                // TODO inform user
+//            }
+//        });
 
         if (!TextUtils.isEmpty(translatedDetails)) {
             eventDetailsView.setTranslatedDetails(translatedDetails);

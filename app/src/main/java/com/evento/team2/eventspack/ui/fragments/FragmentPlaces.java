@@ -84,8 +84,7 @@ public class FragmentPlaces extends BaseFragment implements FragmentPlacesView {
     @Override
     public void showPlaces(ArrayList<Place> placesArrayList) {
         if (placesAdapter != null) {
-            placesAdapter.addPlaces(placesArrayList);
-//            placesAdapter.notifyDataSetChanged();
+            placesAdapter.updateView(placesArrayList);
         }
     }
 }

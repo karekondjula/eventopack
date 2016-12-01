@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.components.AppComponent;
+import com.evento.team2.eventspack.utils.EventiConstants;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -22,6 +23,7 @@ import butterknife.Unbinder;
 public abstract class BaseFragment extends Fragment {
 
     private SearchView searchView;
+    protected String lastQuery = EventiConstants.NO_FILTER_STRING;
 
     protected Unbinder unbinder;
 
@@ -64,12 +66,14 @@ public abstract class BaseFragment extends Fragment {
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
+                    lastQuery = query;
                     filterList(query);
                     return true;
                 }
 
                 @Override
                 public boolean onQueryTextChange(String newText) {
+                    lastQuery = newText;
                     filterList(newText);
                     return true;
                 }
@@ -88,6 +92,8 @@ public abstract class BaseFragment extends Fragment {
                 searchView.setQuery("", false);
                 searchView.onActionViewCollapsed();
                 searchItem.collapseActionView();
+                lastQuery = "";
+//                filterList(lastQuery);
             });
             searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
             searchView.setQueryRefinementEnabled(true);
