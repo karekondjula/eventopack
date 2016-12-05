@@ -63,6 +63,7 @@
     <string name="gps_network_not_enabled_message">Location is required for the maps functionality to work optimal. Enable it now?</string>
     <string name="open_location_settings">Open location settings</string>
     <string name="cancel">Cancel</string>
+    <string name="loading_data">Loading data …</string>
 
     <plurals name="number_of_saved_events">
         <item quantity="one">%d saved event</item>

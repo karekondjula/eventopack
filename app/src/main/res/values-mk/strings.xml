@@ -60,6 +60,7 @@
     <string name="gps_network_not_enabled_message">Локацијата е потреба за мапите да функционираат оптимално. Вклучи ја сега?</string>
     <string name="open_location_settings">Отвори опции за локација</string>
     <string name="cancel">Откажи</string>
+    <string name="loading_data">Се вчитуваат податоците …</string>
 
     <plurals name="number_of_saved_events">
         <item quantity="one">%d зачуван настан</item>

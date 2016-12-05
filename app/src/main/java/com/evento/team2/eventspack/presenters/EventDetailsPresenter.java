@@ -21,7 +21,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 /**
  * Created by Daniel on 06-Mar-16.
  */
-public class FragmentEventDetailsPresenter {
+public class EventDetailsPresenter {
 
     FragmentEventDetailsView eventDetailsView;
     MainThread mainThread;
@@ -30,9 +30,9 @@ public class FragmentEventDetailsPresenter {
     TranslateService service;
     String translatedDetails;
 
-    public FragmentEventDetailsPresenter(MainThread mainThread,
-                                         DatabaseInteractor databaseInteractor,
-                                         NotificationsInteractor notificationsInteractor) {
+    public EventDetailsPresenter(MainThread mainThread,
+                                 DatabaseInteractor databaseInteractor,
+                                 NotificationsInteractor notificationsInteractor) {
         this.mainThread = mainThread;
         this.databaseInteractor = databaseInteractor;
         this.notificationsInteractor = notificationsInteractor;
@@ -76,6 +76,8 @@ public class FragmentEventDetailsPresenter {
 
     public void translateToEnglish(Event event) {
 
+        eventDetailsView.showTranslatingMessage();
+
 //        Call<JsonDetection> jsonDetect = service.detect(
 //                "trnsl.1.1.20160808T170832Z.353235d926160df6.e608b7d2675e0add16ee340b97cc50d80ff19416",
 //                event.details);
@@ -103,6 +105,7 @@ public class FragmentEventDetailsPresenter {
 
         if (!TextUtils.isEmpty(translatedDetails)) {
             eventDetailsView.setTranslatedDetails(translatedDetails);
+            eventDetailsView.dismissTranslatingMessage();
         } else {
             Call<JsonTranslation> jsonTranslationCall = service.translate("mk-en",
                     "trnsl.1.1.20160808T170832Z.353235d926160df6.e608b7d2675e0add16ee340b97cc50d80ff19416",
@@ -121,6 +124,8 @@ public class FragmentEventDetailsPresenter {
                                 translatedDetails = translatedDetails.substring(1, translatedDetails.length() - 2);
 
                                 eventDetailsView.setTranslatedDetails(translatedDetails);
+
+                                eventDetailsView.dismissTranslatingMessage();
                             }
                         }
                     });

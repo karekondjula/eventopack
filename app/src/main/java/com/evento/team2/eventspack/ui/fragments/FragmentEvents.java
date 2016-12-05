@@ -181,7 +181,6 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
 
     @Override
     public void notifyUserForUpdateInEvent(boolean isSaved, String eventName) {
-
         Snackbar.make(eventsRecyclerView,
                 isSaved ?
                         String.format(getResources().getString(R.string.event_is_saved), eventName) :

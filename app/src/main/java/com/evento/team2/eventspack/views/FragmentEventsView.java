@@ -1,7 +1,5 @@
 package com.evento.team2.eventspack.views;
 
-import android.view.View;
-
 import com.evento.team2.eventspack.models.Event;
 
 import java.util.ArrayList;

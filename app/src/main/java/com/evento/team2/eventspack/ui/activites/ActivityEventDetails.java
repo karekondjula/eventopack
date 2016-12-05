@@ -31,7 +31,6 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -52,7 +51,7 @@ import com.evento.team2.eventspack.components.EventDetailsComponent;
 import com.evento.team2.eventspack.interactors.NotificationsInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.modules.EventDetailsModule;
-import com.evento.team2.eventspack.presenters.FragmentEventDetailsPresenter;
+import com.evento.team2.eventspack.presenters.EventDetailsPresenter;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.utils.Utils;
@@ -71,7 +70,6 @@ import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.EntypoModule;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.joanzapata.iconify.fonts.IoniconsModule;
-import com.joanzapata.iconify.widget.IconTextView;
 
 import javax.inject.Inject;
 
@@ -88,7 +86,7 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
     EventiApplication eventiApplication;
 
     @Inject
-    FragmentEventDetailsPresenter eventDetailsPresenter;
+    EventDetailsPresenter eventDetailsPresenter;
 
     @Inject
     NotificationsInteractor notificationsInteractor;
@@ -123,8 +121,11 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
     @BindView(R.id.bottom_sheet)
     View bottomSheet;
 
+//    @BindView(R.id.translate)
+//    IconTextView translate;
+
     @BindView(R.id.translate)
-    IconTextView translate;
+    ImageView translate;
 
     private Unbinder unbinder;
 
@@ -341,7 +342,7 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
     @OnClick(R.id.translate)
     public void translate(View view)  {
         // TODO show license for translation
-        translate.setText("{ion-code-working spin}");
+//        translate.setText("{ion-code-working spin}");
         if (translated) {
             setTranslatedDetails(event.details);
         } else {
@@ -419,7 +420,7 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
 
     @Override
     public void setTranslatedDetails(String details) {
-        translate.setText("{ion-code-working}");
+//        translate.setText("{ion-code-working}");
         textViewEventDetails.setText(details);
         translated = !translated;
     }
@@ -427,5 +428,22 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
     private static int dipToPixels(Context context, int dipValue) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
+    }
+
+    Snackbar snackbar;
+
+    @Override
+    public void showTranslatingMessage() {
+        snackbar = Snackbar.make(collapsingToolbar,
+                "Translating text...",
+                Snackbar.LENGTH_INDEFINITE);
+        snackbar.show();
+    }
+
+    @Override
+    public void dismissTranslatingMessage() {
+        if (snackbar != null) {
+            snackbar.dismiss();
+        }
     }
 }
