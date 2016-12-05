@@ -342,7 +342,6 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
     @OnClick(R.id.translate)
     public void translate(View view)  {
         // TODO show license for translation
-//        translate.setText("{ion-code-working spin}");
         if (translated) {
             setTranslatedDetails(event.details);
         } else {
@@ -420,7 +419,6 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
 
     @Override
     public void setTranslatedDetails(String details) {
-//        translate.setText("{ion-code-working}");
         textViewEventDetails.setText(details);
         translated = !translated;
     }
@@ -435,7 +433,7 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
     @Override
     public void showTranslatingMessage() {
         snackbar = Snackbar.make(collapsingToolbar,
-                "Translating text...",
+                R.string.translating_text,
                 Snackbar.LENGTH_INDEFINITE);
         snackbar.show();
     }

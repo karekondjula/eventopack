@@ -64,6 +64,7 @@
     <string name="open_location_settings">Open location settings</string>
     <string name="cancel">Cancel</string>
     <string name="loading_data">Loading data …</string>
+    <string name="translating_text">Translating text…</string>
 
     <plurals name="number_of_saved_events">
         <item quantity="one">%d saved event</item>

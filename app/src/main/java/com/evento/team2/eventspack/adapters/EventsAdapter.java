@@ -297,6 +297,11 @@ public class EventsAdapter extends RecyclerView.Adapter<EventsAdapter.ViewHolder
 
         holder.mView.setOnClickListener(view -> {
 
+//            Snackbar.make(view,
+//                    R.string.loading_data,
+//                    Snackbar.LENGTH_LONG)
+//                    .show();
+
             Activity activity = (Activity) view.getContext();
 
             Intent intent = ActivityEventDetails.createIntent(context, event.id);

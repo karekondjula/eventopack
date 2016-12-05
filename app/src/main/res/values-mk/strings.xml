@@ -61,6 +61,7 @@
     <string name="open_location_settings">Отвори опции за локација</string>
     <string name="cancel">Откажи</string>
     <string name="loading_data">Се вчитуваат податоците …</string>
+    <string name="translating_text">Текстот се преведува…</string>
 
     <plurals name="number_of_saved_events">
         <item quantity="one">%d зачуван настан</item>
