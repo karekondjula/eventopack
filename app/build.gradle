@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 def versionMajor = 1
 def versionMinor = 2
-def versionPatch = 10
+def versionPatch = 12
 
 android {
     compileSdkVersion 25
@@ -31,13 +31,13 @@ android {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            resValue "string", "google_maps_api_key", google_maps_debug_key
+            resValue "string", "google_maps_api_key", google_maps_release_key
         }
         debug {
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            resValue "string", "google_maps_api_key", google_maps_release_key
+            resValue "string", "google_maps_api_key", google_maps_debug_key
         }
     }
     lintOptions {

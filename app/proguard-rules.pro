@@ -27,6 +27,8 @@
 -keep @com.bluelinelabs.logansquare.annotation.JsonObject class *
 -keep class **$$JsonObjectMapper { *; }
 
+-keep class android.support.v7.widget.SearchView { *; }
+
 #-keep class javax..** { *; }
 #-keep interface javax.** { *; }
 #-keep class dagger.producers.monitoring.internal.**

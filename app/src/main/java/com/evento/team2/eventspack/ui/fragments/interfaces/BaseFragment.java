@@ -62,42 +62,44 @@ public abstract class BaseFragment extends Fragment {
 
         if (searchItem != null) {
             searchView = (SearchView) searchItem.getActionView();
-            searchView.setQueryHint(getString(R.string.filter));
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    lastQuery = query;
-                    filterList(query);
-                    return true;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    lastQuery = newText;
-                    filterList(newText);
-                    return true;
-                }
-            });
-            searchView.setOnQueryTextFocusChangeListener((view, queryTextFocused) -> {
-                if (!queryTextFocused) {
-                    if (TextUtils.isEmpty(searchView.getQuery())) {
-                        searchItem.collapseActionView();
-                        searchView.setIconified(true);
-                        searchView.setQuery("", false);
+            if (searchView != null) {
+                searchView.setQueryHint(getString(R.string.filter));
+                searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                    @Override
+                    public boolean onQueryTextSubmit(String query) {
+                        lastQuery = query;
+                        filterList(query);
+                        return true;
                     }
-                }
-            });
-            // Get the search close button image view
-            ButterKnife.findById(searchView, R.id.search_close_btn).setOnClickListener(v -> {
-                searchView.setQuery("", false);
-                searchView.onActionViewCollapsed();
-                searchItem.collapseActionView();
-                lastQuery = "";
+
+                    @Override
+                    public boolean onQueryTextChange(String newText) {
+                        lastQuery = newText;
+                        filterList(newText);
+                        return true;
+                    }
+                });
+                searchView.setOnQueryTextFocusChangeListener((view, queryTextFocused) -> {
+                    if (!queryTextFocused) {
+                        if (TextUtils.isEmpty(searchView.getQuery())) {
+                            searchItem.collapseActionView();
+                            searchView.setIconified(true);
+                            searchView.setQuery("", false);
+                        }
+                    }
+                });
+                // Get the search close button image view
+                ButterKnife.findById(searchView, R.id.search_close_btn).setOnClickListener(v -> {
+                    searchView.setQuery("", false);
+                    searchView.onActionViewCollapsed();
+                    searchItem.collapseActionView();
+                    lastQuery = "";
 //                filterList(lastQuery);
-            });
-            searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
-            searchView.setQueryRefinementEnabled(true);
-            searchView.setSubmitButtonEnabled(false);
+                });
+                searchView.setSearchableInfo(searchManager.getSearchableInfo(getActivity().getComponentName()));
+                searchView.setQueryRefinementEnabled(true);
+                searchView.setSubmitButtonEnabled(false);
+            }
         }
 
         super.onCreateOptionsMenu(menu, menuInflater);

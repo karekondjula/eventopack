@@ -38,6 +38,7 @@ import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -121,11 +122,8 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
     @BindView(R.id.bottom_sheet)
     View bottomSheet;
 
-//    @BindView(R.id.translate)
-//    IconTextView translate;
-
     @BindView(R.id.translate)
-    ImageView translate;
+    ImageButton translate;
 
     private Unbinder unbinder;
 
@@ -137,6 +135,7 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
     private MapFragment mapFragment;
     private MarkerOptions markerOptions;
     private Event event;
+    private Snackbar snackbar;
 
     long eventId;
 
@@ -427,8 +426,6 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dipValue, metrics);
     }
-
-    Snackbar snackbar;
 
     @Override
     public void showTranslatingMessage() {
