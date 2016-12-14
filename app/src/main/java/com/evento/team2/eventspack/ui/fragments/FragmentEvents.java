@@ -1,5 +1,7 @@
 package com.evento.team2.eventspack.ui.fragments;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -12,11 +14,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapters.EventsAdapter;
+import com.evento.team2.eventspack.adapters.viewholders.EventViewHolder;
 import com.evento.team2.eventspack.components.AppComponent;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
+import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.ui.components.EndlessRecyclerViewScrollListener;
 import com.evento.team2.eventspack.ui.fragments.interfaces.BaseFragment;
 import com.evento.team2.eventspack.utils.EventiConstants;
@@ -29,10 +35,15 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static com.evento.team2.eventspack.adapters.viewholders.EventViewHolder.ICON_TEXT_VIEW_EMPTY_HEART;
+import static com.evento.team2.eventspack.adapters.viewholders.EventViewHolder.ICON_TEXT_VIEW_EMPTY_HEART_SPIN;
+import static com.evento.team2.eventspack.adapters.viewholders.EventViewHolder.ICON_TEXT_VIEW_FILLED_HEART;
+import static com.evento.team2.eventspack.adapters.viewholders.EventViewHolder.ICON_TEXT_VIEW_FILLED_HEART_SPIN;
+
 /**
  * Created by Daniel on 31-Jul-15.
  */
-public class FragmentEvents extends BaseFragment implements FragmentEventsView {
+public class FragmentEvents extends BaseFragment implements FragmentEventsView, EventViewHolder.EventListener {
 
     @Inject
     FragmentEventsPresenter fragmentEventsPresenter;
@@ -47,6 +58,8 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
     EventsAdapter eventsAdapter;
 
     LinearLayoutManager linearLayoutManager;
+
+    private EventViewHolder lastClickedEventVH;
 
     @Nullable
     @Override
@@ -90,7 +103,7 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        eventsAdapter = new EventsAdapter(getActivity(), fragmentEventsPresenter);
+        eventsAdapter = new EventsAdapter(getActivity(), this);
         eventsRecyclerView.setAdapter(eventsAdapter);
     }
 
@@ -102,6 +115,19 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
         fragmentEventsPresenter.fetchLastUpdatedTimestamp();
         fragmentEventsPresenter.fetchEventsFromServer(false);
         fragmentEventsPresenter.fetchEvents(lastQuery, 0);
+
+        if (lastClickedEventVH != null) {
+            if (lastClickedEventVH.getEvent().isEventSaved) {
+                lastClickedEventVH.getIsEventSaved().setText(ICON_TEXT_VIEW_FILLED_HEART);
+            } else {
+                lastClickedEventVH.getIsEventSaved().setText(ICON_TEXT_VIEW_EMPTY_HEART);
+            }
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
     }
 
     @Override
@@ -187,5 +213,44 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView {
                         String.format(getResources().getString(R.string.event_is_removed), eventName),
                 Snackbar.LENGTH_LONG)
                 .show();
+    }
+
+    @Override
+    public void onHeartClicked(EventViewHolder eventViewHolder) {
+
+        if (!eventViewHolder.getEvent().isEventSaved) {
+            eventViewHolder.getIsEventSaved().setText(ICON_TEXT_VIEW_FILLED_HEART);
+        } else {
+            eventViewHolder.getIsEventSaved().setText(ICON_TEXT_VIEW_EMPTY_HEART);
+        }
+
+        fragmentEventsPresenter.changeSavedStateOfEvent(eventViewHolder.getEvent());
+
+        YoYo.with(Techniques.Tada)
+                .duration(700)
+                .playOn(eventViewHolder.getIsEventSaved());
+    }
+
+    @Override
+    public void onEventClicked(EventViewHolder eventViewHolder) {
+        lastClickedEventVH = eventViewHolder;
+
+        if (eventViewHolder.getEvent().isEventSaved) {
+            eventViewHolder.getIsEventSaved().setText(ICON_TEXT_VIEW_FILLED_HEART_SPIN);
+        } else {
+            eventViewHolder.getIsEventSaved().setText(ICON_TEXT_VIEW_EMPTY_HEART_SPIN);
+        }
+
+        Activity activity = getActivity();
+        Intent intent = ActivityEventDetails.createIntent(getActivity(), eventViewHolder.getEvent().id);
+
+//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+//                ActivityOptions options = ActivityOptions
+//                        .makeSceneTransitionAnimation(activity, holder.mEventTitle, EventiConstants.TRANSITION_EVENT_IMAGE);
+//
+//                activity.startActivity(intent, options.toBundle());
+//            } else {
+        activity.startActivity(intent);
+//            }
     }
 }
