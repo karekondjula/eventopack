@@ -81,12 +81,12 @@ public class CategoriesViewAdapter extends ExpandableRecyclerAdapter<
         super.setHasStableIds(true);
     }
 
-    public class CategoryViewHolder extends ParentViewHolder {
+    class CategoryViewHolder extends ParentViewHolder {
 
         private TextView categoryTextView;
         private ImageView categoryImageView;
 
-        public CategoryViewHolder(View itemView) {
+        CategoryViewHolder(View itemView) {
             super(itemView);
             categoryTextView = (TextView) itemView.findViewById(R.id.category);
             categoryImageView = (ImageView) itemView.findViewById(R.id.category_image);
@@ -135,11 +135,11 @@ public class CategoriesViewAdapter extends ExpandableRecyclerAdapter<
         }
     }
 
-    public class EventViewHolder extends ChildViewHolder {
+    class EventViewHolder extends ChildViewHolder {
 
-        public final View mView;
-        public ImageView mEventImage;
-        public TextView mEventTitle;
+        final View mView;
+        ImageView mEventImage;
+        TextView mEventTitle;
 
 //        @BindView(R.id.event_details)
 //        public TextView mEventDetails;
@@ -157,7 +157,7 @@ public class CategoriesViewAdapter extends ExpandableRecyclerAdapter<
 //        TextView mEventAttendingCount;
 
 
-        public EventViewHolder(View itemView) {
+        EventViewHolder(View itemView) {
             super(itemView);
 
             mView = itemView;

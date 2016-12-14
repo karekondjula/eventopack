@@ -173,25 +173,19 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
         mBottomSheetBehavior.setPeekHeight(dipToPixels(this, 70));
         mBottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
+        eventId = getIntent().getLongExtra(EXTRA_EVENT_ID, 0);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, EventiConstants.ungrantedPremissions, EventiConstants.PERMISSIONS_REQUEST_CODE);
         }
 
         eventDetailsPresenter.setView(this);
-    }
-
-    public static Intent createIntent(Context context, long id) {
-        Intent intent = new Intent(context, ActivityEventDetails.class);
-        intent.putExtra(ActivityEventDetails.EXTRA_EVENT_ID, id);
-
-        return intent;
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        eventId = getIntent().getLongExtra(EXTRA_EVENT_ID, 0);
 
         eventDetailsPresenter.fetchEventDetails(eventId);
     }
@@ -440,5 +434,12 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
         if (snackbar != null) {
             snackbar.dismiss();
         }
+    }
+
+    public static Intent createIntent(Context context, long id) {
+        Intent intent = new Intent(context, ActivityEventDetails.class);
+        intent.putExtra(ActivityEventDetails.EXTRA_EVENT_ID, id);
+
+        return intent;
     }
 }

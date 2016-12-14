@@ -32,9 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.evento.team2.eventspack.adapters.viewholders.EventViewHolder.ICON_TEXT_VIEW_EMPTY_HEART;
-import static com.evento.team2.eventspack.adapters.viewholders.EventViewHolder.ICON_TEXT_VIEW_EMPTY_HEART_SPIN;
 import static com.evento.team2.eventspack.adapters.viewholders.EventViewHolder.ICON_TEXT_VIEW_FILLED_HEART;
-import static com.evento.team2.eventspack.adapters.viewholders.EventViewHolder.ICON_TEXT_VIEW_FILLED_HEART_SPIN;
 
 /**
  * Created by Daniel on 31-Jul-15.
@@ -145,30 +143,8 @@ public class FragmentSavedEvents extends BaseFragment implements FragmentEventsV
                 .playOn(eventViewHolder.getIsEventSaved());
     }
 
-    private EventViewHolder lastClickedEventVH;
-
-    @Override
-    public void onDetach() {
-
-        if (lastClickedEventVH.getEvent().isEventSaved) {
-            lastClickedEventVH.getIsEventSaved().setText(ICON_TEXT_VIEW_FILLED_HEART);
-        } else {
-            lastClickedEventVH.getIsEventSaved().setText(ICON_TEXT_VIEW_EMPTY_HEART);
-        }
-
-        super.onDetach();
-    }
-
     @Override
     public void onEventClicked(EventViewHolder eventViewHolder) {
-        lastClickedEventVH = eventViewHolder;
-
-        if (eventViewHolder.getEvent().isEventSaved) {
-            eventViewHolder.getIsEventSaved().setText(ICON_TEXT_VIEW_FILLED_HEART_SPIN);
-        } else {
-            eventViewHolder.getIsEventSaved().setText(ICON_TEXT_VIEW_EMPTY_HEART_SPIN);
-        }
-
         Activity activity = getActivity();
         Intent intent = ActivityEventDetails.createIntent(getActivity(), eventViewHolder.getEvent().id);
 

@@ -112,18 +112,17 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
 
         fragmentPlaceDetailsPresenter.setView(this);
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, EventiConstants.ungrantedPremissions, EventiConstants.PERMISSIONS_REQUEST_CODE);
-        }
-
-        Intent intent = getIntent();
-        placeId = intent.getLongExtra(EXTRA_ID, 0);
+        placeId = getIntent().getLongExtra(EXTRA_ID, 0);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, EventiConstants.ungrantedPremissions, EventiConstants.PERMISSIONS_REQUEST_CODE);
+        }
 
         if (placeDetailsEventsLinearLayout != null) {
             placeDetailsEventsLinearLayout.removeAllViews();
