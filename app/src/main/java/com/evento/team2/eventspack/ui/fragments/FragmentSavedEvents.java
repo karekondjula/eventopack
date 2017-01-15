@@ -3,7 +3,6 @@ package com.evento.team2.eventspack.ui.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -119,14 +118,19 @@ public class FragmentSavedEvents extends BaseFragment implements FragmentEventsV
     }
 
     @Override
-    public void notifyUserForUpdateInEvent(boolean isSaved, String eventName) {
-        Snackbar.make(savedEventsRecyclerView,
-                isSaved ?
-                        String.format(getResources().getString(R.string.event_is_saved), eventName) :
-                        String.format(getResources().getString(R.string.event_is_removed), eventName),
-                Snackbar.LENGTH_LONG)
-                .show();
+    public void notifyUserForSavedEvent(String eventName) {
+        // no op
     }
+
+//    @Override
+//    public void notifyUserForSavedEvent(boolean isSaved, String eventName) {
+//        Snackbar.make(savedEventsRecyclerView,
+//                isSaved ?
+//                        String.format(getResources().getString(R.string.event_is_saved), eventName) :
+//                        String.format(getResources().getString(R.string.event_is_removed), eventName),
+//                Snackbar.LENGTH_LONG)
+//                .show();
+//    }
 
     @Override
     public void onHeartClicked(EventViewHolder eventViewHolder) {
@@ -156,5 +160,10 @@ public class FragmentSavedEvents extends BaseFragment implements FragmentEventsV
 //            } else {
         activity.startActivity(intent);
 //            }
+    }
+
+    @Override
+    public void onEventSwiped(EventViewHolder eventViewHolder) {
+
     }
 }

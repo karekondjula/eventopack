@@ -19,4 +19,8 @@ public interface FragmentEventsPresenter {
     void fetchSavedEvents(String query);
 
     void changeSavedStateOfEvent(Event event);
+
+    void deleteEvent(Event event);
+
+    void undoDelete(Event event);
 }

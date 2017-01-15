@@ -2,6 +2,7 @@ package com.evento.team2.eventspack.ui.fragments.interfaces;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
@@ -25,6 +26,8 @@ public abstract class BaseFragment extends Fragment {
     private SearchView searchView;
     protected String lastQuery = EventiConstants.NO_FILTER_STRING;
 
+    protected CoordinatorLayout coordinatorLayout;
+
     protected Unbinder unbinder;
 
     @Override
@@ -42,6 +45,8 @@ public abstract class BaseFragment extends Fragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         injectComponent(((EventiApplication) getActivity().getApplication()).getAppComponent());
+
+        coordinatorLayout = (CoordinatorLayout) getActivity().findViewById(R.id.snackbar_coordinator_layout);
     }
 
     @Override

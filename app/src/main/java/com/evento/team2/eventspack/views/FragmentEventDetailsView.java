@@ -9,7 +9,7 @@ public interface FragmentEventDetailsView {
 
     void showEvent(Event event);
 
-    void notifyUserForUpdateInEvent(boolean isSaved);
+    void notifyUserForSavedEvent(boolean isSaved);
 
     void setTranslatedDetails(String details);
 

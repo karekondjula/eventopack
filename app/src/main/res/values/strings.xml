@@ -9,8 +9,9 @@
     <string name="drawer_open">Open</string>
     <string name="drawer_close">Close</string>
 
-    <string name="event_is_saved">Event \'%s\' is saved</string>
-    <string name="event_is_removed">"Event \'%s\' is removed from saved events</string>
+    <string name="event_is_saved">Event is saved</string>
+    <string name="event_is_removed">"Event is removed</string>
+    <string name="undo">UNDO</string>
     <string name="choose_dates">Choose dates</string>
     <string name="events">Events</string>
     <string name="places">Places</string>
@@ -39,9 +40,10 @@
     <string name="filter">Filter…</string>
     <string name="today">Today </string>
     <string name="attending">Attending:</string>
-    <string name="fetching_events">Fetching events …</string>
-    <string name="fetching_places">Fetching places …</string>
+    <string name="fetching_events">Fetching events…</string>
+    <string name="fetching_places">Fetching places…</string>
     <string name="updating_now">Updating now</string>
+    <string name="last_updated">Last updated: %s</string>
 
     <string name="upcoming_event_reminder">Upcoming event reminder</string>
     <string name="saved_event_starts_today">Saved events for today</string>

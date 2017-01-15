@@ -36,6 +36,9 @@ public class Event implements Comparable<Event> {
     public static final int NOT_SAVED = 0;
     public static final int SAVED = 1;
 
+    public static final int NOT_DELETED = 0;
+    public static final int DELETED = 1;
+    public static final int DELETE_FLAG_NOT_SET = -1;
     /**
      * Universal id for the event, same on all devices
      */
@@ -60,6 +63,7 @@ public class Event implements Comparable<Event> {
     @Category
     public int categoryId;
     public String categoryString;
+    public int isDeleted = DELETE_FLAG_NOT_SET;
 
     public Event() {
     }
@@ -175,6 +179,7 @@ public class Event implements Comparable<Event> {
         public static final String COLUMN_ATTENDING_COUNT = "attendingCount";
         public static final String COLUMN_CATEGORY_ID = "categoryId";
         public static final String COLUMN_CATEGORY_STRING = "categoryString";
+        public static final String COLUMN_IS_DELETED = "isDeleted";
 
         // Database creation sql statement
         public static final String TABLE_EVENTS_CREATE = "create table " + TABLE_EVENTS + "("

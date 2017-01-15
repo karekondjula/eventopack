@@ -333,7 +333,7 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
     }
 
     @OnClick(R.id.translate)
-    public void translate(View view)  {
+    public void translate(View view) {
         // TODO show license for translation
         if (translated) {
             setTranslatedDetails(event.details);
@@ -397,15 +397,15 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
     }
 
     @Override
-    public void notifyUserForUpdateInEvent(boolean isSaved) {
+    public void notifyUserForSavedEvent(boolean isSaved) {
         fab.setImageDrawable(event.isEventSaved ? filledHeart : emptyHeart);
 
-        Snackbar.make(bottomSheet,
-                event.isEventSaved ?
-                        String.format(getResources().getString(R.string.event_is_saved), event.name) :
-                        String.format(getResources().getString(R.string.event_is_removed), event.name),
-                Snackbar.LENGTH_LONG)
-                .show();
+        if (event.isEventSaved) {
+            Snackbar.make(bottomSheet,
+                    getString(R.string.event_is_saved),
+                    Snackbar.LENGTH_LONG)
+                    .show();
+        }
     }
 
     private boolean translated = false;

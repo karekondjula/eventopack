@@ -12,13 +12,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingRight="@dimen/card_margin"
-        android:text="{ion-calendar 16sp}" />
+        android:text="{ion-calendar 16sp }" />
+    <!--@color/colorPrimary-->
 
     <TextView
         android:id="@+id/menu_text_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/white"
         android:textSize="16sp"
         android:theme="@style/ThemeOverlay.AppCompat.Light" />
 

@@ -69,6 +69,16 @@ public class FragmentSavedEventsPresenterImpl implements FragmentEventsPresenter
             notificationsInteractor.removeScheduleNotification(event);
         }
 
-        fragmentEventsView.notifyUserForUpdateInEvent(event.isEventSaved, event.name);
+//        fragmentEventsView.notifyUserForSavedEvent(event.isEventSaved, event.name);
+    }
+
+    @Override
+    public void deleteEvent(Event event) {
+        // TODO
+    }
+
+    @Override
+    public void undoDelete(Event event) {
+        // TODO
     }
 }

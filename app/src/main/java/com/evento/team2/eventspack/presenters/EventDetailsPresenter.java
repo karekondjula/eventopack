@@ -71,7 +71,7 @@ public class EventDetailsPresenter {
             notificationsInteractor.removeScheduleNotification(event);
         }
 
-        eventDetailsView.notifyUserForUpdateInEvent(event.isEventSaved);
+        eventDetailsView.notifyUserForSavedEvent(event.isEventSaved);
     }
 
     public void translateToEnglish(Event event) {

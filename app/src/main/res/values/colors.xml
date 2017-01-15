@@ -3,7 +3,7 @@
 
     <color name="colorPrimary">#99cc00</color>
     <color name="colorPrimaryDark">#688f14</color>
-    <color name="colorAccent">#2638C2</color>
+    <color name="colorAccent">#f54408</color>
 
     <color name="colorPrimaryShowcase">#EE99cc00</color>
 
@@ -11,13 +11,11 @@
     <!--<color name="colorPrimaryDark">#C51162</color>-->
     <!--<color name="colorAccent">#FF80AB</color>-->
 
-    <color name="textColorPrimary">#FFFFFF</color>
+    <color name="textColorPrimary">#99cc00</color>
     <color name="windowBackground">#FFFFFF</color>
     <color name="text_highlight">#be56e2bc</color>
     <color name="accent_state_list">#99cc00</color>
     <!-- in settings -->
-
-    <!--<color name="tabsScrollColor">#004D40</color>-->
 
     <color name="ColorYellow">#FFFF00</color>
     <color name="ColorCornsilk">#FFF8DC</color>

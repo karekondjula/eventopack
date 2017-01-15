@@ -3,12 +3,10 @@ package com.evento.team2.eventspack.ui.activites;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -19,7 +17,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.astuetz.PagerSlidingTabStrip;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.ui.fragments.DialogFragmentAbout;
@@ -33,14 +30,11 @@ import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.joanzapata.iconify.fonts.IoniconsModule;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
-public class ActivityMain extends BaseAppCompatActivity {
+public class ActivityMain extends BaseAppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     public static final String ACTION_SAVED_EVENTS = "ACTION_SAVED_EVENTS";
 
@@ -50,11 +44,11 @@ public class ActivityMain extends BaseAppCompatActivity {
     @BindView(R.id.drawer)
     DrawerLayout drawerLayout;
 
-    @BindView(R.id.viewpager)
-    ViewPager viewPager;
+//    @BindView(R.id.viewpager)
+//    ViewPager viewPager;
 
-    @BindView(R.id.tabs)
-    PagerSlidingTabStrip pagerSlidingTabStrip;
+//    @BindView(R.id.tabs)
+//    PagerSlidingTabStrip pagerSlidingTabStrip;
 
     private Unbinder unbinder;
 
@@ -95,6 +89,7 @@ public class ActivityMain extends BaseAppCompatActivity {
             fragmentCategories = (FragmentCategories) getSupportFragmentManager().getFragment(savedInstanceState, FragmentCategories.TAG);
         } else {
             fragmentCategories = FragmentCategories.newInstance();
+            fragmentCategories.setRetainInstance(true);
         }
 
         navigationView.getMenu().getItem(0).setIcon(new IconDrawable(this, IoniconsIcons.ion_calendar)
@@ -158,55 +153,63 @@ public class ActivityMain extends BaseAppCompatActivity {
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
         actionBarDrawerToggle.syncState();
-        setupViewPager(viewPager);
+//        setupViewPager(viewPager);
 
-        pagerSlidingTabStrip.setTextColor(getResources().getColor(android.R.color.white));
-        pagerSlidingTabStrip.setShouldExpand(true);
-        pagerSlidingTabStrip.setViewPager(viewPager);
+//        pagerSlidingTabStrip.setTextColor(getResources().getColor(android.R.color.white));
+//        pagerSlidingTabStrip.setShouldExpand(true);
+//        pagerSlidingTabStrip.setViewPager(viewPager);
 
 //        presentShowcaseSequence();
+
+        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation_view);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container, fragmentEvents, fragmentEvents.getTag())
+                .commit();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//
+//        Intent intent = getIntent();
+//        if (intent != null && intent.getAction() != null) {
+////            boolean goToSavedEvents = intent.getAction().equals(ACTION_SAVED_EVENTS);
+////
+////            int SAVED_EVENTS_ORDINAL_NUMBER = 2;
+////
+////            if (goToSavedEvents) {
+////                new Thread() {
+////                    @Override
+////                    public void run() {
+////
+////                        SystemClock.sleep(700);
+////                        runOnUiThread(new Runnable() {
+////                            @Override
+////                            public void run() {
+//////                                viewPager.setCurrentItem(SAVED_EVENTS_ORDINAL_NUMBER);
+////                            }
+////                        });
+////                    }
+////                }.start();
+////            }
+//        }
+//    }
 
-        Intent intent = getIntent();
-        if (intent != null && intent.getAction() != null) {
-            boolean goToSavedEvents = intent.getAction().equals(ACTION_SAVED_EVENTS);
+//    @Override
+//    protected void onNewIntent(Intent intent) {
+//        super.onNewIntent(intent);
+//        setIntent(intent);
+//    }
 
-            int SAVED_EVENTS_ORDINAL_NUMBER = 2;
-
-            if (goToSavedEvents) {
-                new Thread() {
-                    @Override
-                    public void run() {
-
-                        SystemClock.sleep(700);
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                viewPager.setCurrentItem(SAVED_EVENTS_ORDINAL_NUMBER);
-                            }
-                        });
-                    }
-                }.start();
-            }
-        }
-    }
-
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        //Save the fragment's instance
-        getSupportFragmentManager().putFragment(outState, FragmentCategories.TAG, fragmentCategories);
-    }
+//    @Override
+//    protected void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//
+//        // TODO find fragment by tag
+////        getSupportFragmentManager().putFragment(outState, FragmentCategories.TAG, fragmentCategories);
+//    }
 
     @Override
     protected void onDestroy() {
@@ -222,11 +225,9 @@ public class ActivityMain extends BaseAppCompatActivity {
         searchMenuItem = menu.findItem(R.id.action_search);
 
         menu.findItem(R.id.action_calendar).setIcon(new IconDrawable(this, IoniconsIcons.ion_calendar)
-                .colorRes(android.R.color.white)
                 .actionBarSize());
 
         menu.findItem(R.id.action_map).setIcon(new IconDrawable(this, IoniconsIcons.ion_map)
-                .colorRes(android.R.color.white)
                 .actionBarSize());
 
         return super.onCreateOptionsMenu(menu);
@@ -261,79 +262,108 @@ public class ActivityMain extends BaseAppCompatActivity {
         }
     }
 
-    private void setupViewPager(ViewPager viewPager) {
-        Adapter adapter = new Adapter(getSupportFragmentManager());
-        adapter.addFragment(fragmentEvents, getString(R.string.events));
-        adapter.addFragment(fragmentCategories, getString(R.string.categories));
-        adapter.addFragment(fragmentSavedEvents, getString(R.string.saved));
-        adapter.addFragment(fragmentPlaces, getString(R.string.places));
-        viewPager.setAdapter(adapter);
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-                switch (position) {
-                    case 0:
-//                        fragmentEvents.filterList(EventiConstants.NO_FILTER_STRING);
-//                        fragmentEvents.showLastUpdatedInfo();
-                        break;
-                    case 1:
-                        fragmentCategories.refreshViewIfRequired();
-//                        fragmentCategories.filterList(EventiConstants.NO_FILTER_STRING);
-                        break;
-                    case 2:
-//                        fragmentSavedEvents.filterList(EventiConstants.NO_FILTER_STRING);
-                        break;
-                    case 3:
-//                        fragmentPlaces.filterList(EventiConstants.NO_FILTER_STRING);
-                        break;
-                    default:
-                }
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-    }
+//    private void setupViewPager(ViewPager viewPager) {
+//        Adapter adapter = new Adapter(getSupportFragmentManager());
+//        adapter.addFragment(fragmentEvents, getString(R.string.events));
+//        adapter.addFragment(fragmentCategories, getString(R.string.categories));
+//        adapter.addFragment(fragmentSavedEvents, getString(R.string.saved));
+//        adapter.addFragment(fragmentPlaces, getString(R.string.places));
+//        viewPager.setAdapter(adapter);
+//        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//
+//            @Override
+//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//            }
+//
+//            @Override
+//            public void onPageSelected(int position) {
+//                switch (position) {
+//                    case 0:
+////                        fragmentEvents.filterList(EventiConstants.NO_FILTER_STRING);
+////                        fragmentEvents.showLastUpdatedInfo();
+//                        break;
+//                    case 1:
+//                        fragmentCategories.refreshViewIfRequired();
+////                        fragmentCategories.filterList(EventiConstants.NO_FILTER_STRING);
+//                        break;
+//                    case 2:
+////                        fragmentSavedEvents.filterList(EventiConstants.NO_FILTER_STRING);
+//                        break;
+//                    case 3:
+////                        fragmentPlaces.filterList(EventiConstants.NO_FILTER_STRING);
+//                        break;
+//                    default:
+//                }
+//            }
+//
+//            @Override
+//            public void onPageScrollStateChanged(int state) {
+//            }
+//        });
+//    }
 
     public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, ActivityMain.class);
         return intent;
     }
 
-    private static class Adapter extends FragmentPagerAdapter {
-        private List<Fragment> mFragments = new ArrayList<>();
-        private List<String> mFragmentTitles = new ArrayList<>();
-
-        Adapter(FragmentManager fm) {
-            super(fm);
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Fragment nextFragment;
+        switch (item.getItemId()) {
+            // TODO find fragment by tag
+            case R.id.events:
+                nextFragment = fragmentEvents;
+                break;
+            case R.id.categories:
+                nextFragment = fragmentCategories;
+                break;
+            case R.id.saved:
+                nextFragment = fragmentSavedEvents;
+                break;
+            case R.id.places:
+                nextFragment = fragmentPlaces;
+                break;
+            default:
+                return false;
+        }
+        if (nextFragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container, nextFragment, nextFragment.getTag())
+                    .commit();
         }
 
-        void addFragment(Fragment fragment, String title) {
-            mFragments.add(fragment);
-            mFragmentTitles.add(title);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return mFragments.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return mFragments.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position) {
-            return mFragmentTitles.get(position);
-        }
+        return true;
     }
+
+//    private static class Adapter extends FragmentPagerAdapter {
+//        private List<Fragment> mFragments = new ArrayList<>();
+//        private List<String> mFragmentTitles = new ArrayList<>();
+//
+//        Adapter(FragmentManager fm) {
+//            super(fm);
+//        }
+//
+//        void addFragment(Fragment fragment, String title) {
+//            mFragments.add(fragment);
+//            mFragmentTitles.add(title);
+//        }
+//
+//        @Override
+//        public Fragment getItem(int position) {
+//            return mFragments.get(position);
+//        }
+//
+//        @Override
+//        public int getCount() {
+//            return mFragments.size();
+//        }
+//
+//        @Override
+//        public CharSequence getPageTitle(int position) {
+//            return mFragmentTitles.get(position);
+//        }
+//    }
 
     //    @OnClick(R.id.fab)
 //    public void fabAction(View view) {

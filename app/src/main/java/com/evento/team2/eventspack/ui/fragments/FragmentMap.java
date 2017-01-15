@@ -164,7 +164,8 @@ public class FragmentMap extends BaseFragment implements OnMapReadyCallback, Goo
         calendar = Calendar.getInstance();
         setCalendarOnStartOfDay(calendar);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.spinner_navigation_labes, R.layout.spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(),
+                R.array.spinner_navigation_labes, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
 

@@ -2,8 +2,8 @@
 /local.properties
 /build
 .idea
-google-maps-keys
 todo.txt
 eventopack.iml
 gradle.properties
 libs/
+/keystore.properties

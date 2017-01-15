@@ -38,6 +38,7 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
     public interface EventListener {
         void onHeartClicked(EventViewHolder eventViewHolder);
         void onEventClicked(EventViewHolder eventViewHolder);
+        void onEventSwiped(EventViewHolder eventViewHolder);
     }
 
     @BindView(R.id.event_picture)
@@ -62,11 +63,13 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
     private Context context;
     private Event event;
     private Calendar calendar;
+    private EventListener eventListener;
 
     public EventViewHolder(View view, Context context, Calendar calendar, EventListener eventListener) {
         super(view);
         this.context = context;
         this.calendar = calendar;
+        this.eventListener = eventListener;
 
         ButterKnife.bind(this, view);
 
@@ -256,5 +259,9 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
 
     public IconTextView getIsEventSaved() {
         return isEventSaved;
+    }
+
+    public void viewSwiped() {
+        eventListener.onEventSwiped(this);
     }
 }

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.evento.team2.eventspack.R;
+import com.evento.team2.eventspack.adapters.interfaces.ItemTouchHelperAdapter;
 import com.evento.team2.eventspack.adapters.viewholders.EventViewHolder;
 import com.evento.team2.eventspack.models.Event;
 
@@ -19,7 +20,7 @@ import java.util.List;
 /**
  * Created by Daniel on 12-Aug-15.
  */
-public class EventsAdapter extends RecyclerView.Adapter<EventViewHolder> {
+public class EventsAdapter extends RecyclerView.Adapter<EventViewHolder> implements ItemTouchHelperAdapter {
 
     private final static Date TODAY = new Date();
 
@@ -57,8 +58,8 @@ public class EventsAdapter extends RecyclerView.Adapter<EventViewHolder> {
 
     @Override
     public void onBindViewHolder(EventViewHolder holder, int position, List<Object> payloads) {
-        if(!payloads.isEmpty()) {
-           holder.setItem(payloads);
+        if (!payloads.isEmpty()) {
+            holder.setItem(payloads);
         } else {
             onBindViewHolder(holder, position);
         }
@@ -84,5 +85,25 @@ public class EventsAdapter extends RecyclerView.Adapter<EventViewHolder> {
     @Override
     public void setHasStableIds(boolean hasStableIds) {
         super.setHasStableIds(true);
+    }
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+        // no op
+    }
+
+    @Override
+    public void onItemDismiss(RecyclerView.ViewHolder viewHolder) {
+
+        ((EventViewHolder)viewHolder).viewSwiped();
+
+        ArrayList<Event> updatedList = (ArrayList<Event>) events.clone();
+        updatedList.remove(viewHolder.getAdapterPosition());
+
+        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(
+                new EventsListDiffCallback(events, updatedList));
+        diffResult.dispatchUpdatesTo(this);
+
+        events = updatedList;
     }
 }

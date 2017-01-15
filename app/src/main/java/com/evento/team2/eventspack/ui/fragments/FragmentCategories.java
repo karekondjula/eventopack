@@ -44,13 +44,16 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
 
     private CategoriesViewAdapter categoryAdapter;
 
+    LinearLayoutManager layoutManager;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.fragment_categories, container, false);
         unbinder = ButterKnife.bind(this, view);
 
-        categoriesRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        layoutManager = new LinearLayoutManager(getActivity());
+        categoriesRecyclerView.setLayoutManager(layoutManager);
         categoriesRecyclerView.setItemAnimator(new DefaultItemAnimator());
         categoriesRecyclerView.setHasFixedSize(true);
 
@@ -64,18 +67,43 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
         categoryAdapter = new CategoriesViewAdapter(getActivity(), new ArrayList<>());
         categoriesRecyclerView.setAdapter(categoryAdapter);
         fragmentCategoriesPresenter.setView(this);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
 
         fragmentCategoriesPresenter.fetchCategoriesWithActiveEvents(EventiConstants.NO_FILTER_STRING);
     }
 
-    public static FragmentCategories newInstance() {
-        return new FragmentCategories();
-    }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//
+//        fragmentCategoriesPresenter.fetchCategoriesWithActiveEvents(EventiConstants.NO_FILTER_STRING);
+//    }
+//
+//    Parcelable listState;
+//
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//
+//        outState.putParcelable("SAVED_LAYOUT_MANAGER", categoriesRecyclerView.getLayoutManager().onSaveInstanceState());
+//    }
+//
+//    @Override
+//    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+//        super.onActivityCreated(savedInstanceState);
+//
+//        if (savedInstanceState != null) {
+//            listState = savedInstanceState.getParcelable("SAVED_LAYOUT_MANAGER");
+//        }
+//    }
+//
+//    @Override
+//    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+//        super.onViewStateRestored(savedInstanceState);
+//
+//        if (savedInstanceState != null) {
+//            listState = savedInstanceState.getParcelable("SAVED_LAYOUT_MANAGER");
+//        }
+//    }
 
     @Override
     public void filterList(final String filter) {
@@ -106,14 +134,17 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
 
             if(categoriesRecyclerView != null) {
                 categoriesRecyclerView.setAdapter(categoryAdapter);
+
+                if (expandedParentsList != null) {
+                    for(int expandedParent : expandedParentsList) {
+                        categoryAdapter.expandParent(expandedParent);
+                    }
+                    categoryAdapter.notifyDataSetChanged();
+                }
+
+//                categoriesRecyclerView.getLayoutManager().onRestoreInstanceState(listState);
             }
 
-            if (expandedParentsList != null) {
-                for(int expandedParent : expandedParentsList) {
-                    categoryAdapter.expandParent(expandedParent);
-                }
-                categoryAdapter.notifyDataSetChanged();
-            }
         }
     }
 
@@ -127,5 +158,9 @@ public class FragmentCategories extends BaseFragment implements FragmentCategori
                 fragmentCategoriesPresenter.fetchCategoriesWithActiveEvents(EventiConstants.NO_FILTER_STRING);
             }
         }
+    }
+
+    public static FragmentCategories newInstance() {
+        return new FragmentCategories();
     }
 }

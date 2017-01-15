@@ -9,6 +9,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentEventsPresenter;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.ui.components.EndlessRecyclerViewScrollListener;
+import com.evento.team2.eventspack.ui.components.EventsItemTouchHelperCallback;
 import com.evento.team2.eventspack.ui.fragments.interfaces.BaseFragment;
 import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.views.FragmentEventsView;
@@ -44,6 +46,8 @@ import static com.evento.team2.eventspack.adapters.viewholders.EventViewHolder.I
  * Created by Daniel on 31-Jul-15.
  */
 public class FragmentEvents extends BaseFragment implements FragmentEventsView, EventViewHolder.EventListener {
+
+    public static final int NO_CHANGE_IN_PAGE_SIZE_VALUE = 0;
 
     @Inject
     FragmentEventsPresenter fragmentEventsPresenter;
@@ -105,6 +109,9 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView, 
 
         eventsAdapter = new EventsAdapter(getActivity(), this);
         eventsRecyclerView.setAdapter(eventsAdapter);
+        ItemTouchHelper.Callback callback = new EventsItemTouchHelperCallback(eventsAdapter);
+        ItemTouchHelper touchHelper = new ItemTouchHelper(callback);
+        touchHelper.attachToRecyclerView(eventsRecyclerView);
     }
 
     @Override
@@ -114,7 +121,7 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView, 
         fragmentEventsPresenter.setView(this);
         fragmentEventsPresenter.fetchLastUpdatedTimestamp();
         fragmentEventsPresenter.fetchEventsFromServer(false);
-        fragmentEventsPresenter.fetchEvents(lastQuery, 0);
+        fragmentEventsPresenter.fetchEvents(lastQuery, NO_CHANGE_IN_PAGE_SIZE_VALUE);
 
         if (lastClickedEventVH != null) {
             if (lastClickedEventVH.getEvent().isEventSaved) {
@@ -160,8 +167,7 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView, 
     public void showEvents(final ArrayList<Event> eventsArrayList) {
         if (eventsAdapter != null) {
 
-            if (eventsArrayList == null) {
-                // empty database
+            if (eventsArrayList == null) { // empty database
                 if (emptyAdapterTextView != null) {
                     emptyAdapterTextView.setVisibility(View.VISIBLE);
                 }
@@ -191,26 +197,24 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView, 
 
     @Override
     public void showLastUpdatedTimestampMessage(String lastUpdateTimestamp) {
-        Snackbar.make(eventsRecyclerView,
-                "Last updated: " + lastUpdateTimestamp,
+        Snackbar.make(coordinatorLayout,
+                String.format(getString(R.string.last_updated), lastUpdateTimestamp),
                 Snackbar.LENGTH_SHORT)
                 .show();
     }
 
     @Override
     public void showNoInternetConnectionMessage() {
-        Snackbar.make(eventsRecyclerView,
+        Snackbar.make(coordinatorLayout,
                 R.string.no_internet_connection_cached_events,
                 Snackbar.LENGTH_LONG)
                 .show();
     }
 
     @Override
-    public void notifyUserForUpdateInEvent(boolean isSaved, String eventName) {
-        Snackbar.make(eventsRecyclerView,
-                isSaved ?
-                        String.format(getResources().getString(R.string.event_is_saved), eventName) :
-                        String.format(getResources().getString(R.string.event_is_removed), eventName),
+    public void notifyUserForSavedEvent(String eventName) {
+        Snackbar.make(coordinatorLayout,
+                getString(R.string.event_is_saved),
                 Snackbar.LENGTH_LONG)
                 .show();
     }
@@ -252,5 +256,16 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView, 
 //            } else {
         activity.startActivity(intent);
 //            }
+    }
+
+    @Override
+    public void onEventSwiped(EventViewHolder eventViewHolder) {
+        fragmentEventsPresenter.deleteEvent(eventViewHolder.getEvent());
+
+        Snackbar.make(coordinatorLayout, getString(R.string.event_is_removed), Snackbar.LENGTH_LONG)
+                .setAction(getString(R.string.undo), view -> {
+                    Event event = eventViewHolder.getEvent();
+                    fragmentEventsPresenter.undoDelete(event);
+                }).show();
     }
 }

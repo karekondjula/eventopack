@@ -6,8 +6,9 @@
     <string name="drawer_open">Отвори</string>
     <string name="drawer_close">Исклучи</string>
 
-    <string name="event_is_saved">Настанот \'%s\' е зачуван</string>
-    <string name="event_is_removed">Настанот \'%s\' отсранет од зачувани настани</string>
+    <string name="event_is_saved">Настанот е зачуван</string>
+    <string name="event_is_removed">Настанот e избришан</string>
+    <string name="undo">ВРАТИ</string>
     <string name="choose_dates">Избери датуми</string>
     <string name="events">Настани</string>
     <string name="places">Места</string>
@@ -39,6 +40,7 @@
     <string name="fetching_events">Превземање на настани …</string>
     <string name="fetching_places">Превземање на места …</string>
     <string name="updating_now">Превземање…</string>
+    <string name="last_updated">Последно ажурирање: %s</string>
 
     <string name="upcoming_event_reminder">Потсетување за настан</string>
     <string name="saved_event_starts_today">Зачувани настан за денес</string>

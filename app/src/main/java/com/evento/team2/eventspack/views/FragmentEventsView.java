@@ -19,5 +19,5 @@ public interface FragmentEventsView {
 
     void showNoInternetConnectionMessage();
 
-    void notifyUserForUpdateInEvent(boolean isSaved, String eventName);
+    void notifyUserForSavedEvent(String eventName);
 }

@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import static com.evento.team2.eventspack.ui.fragments.FragmentEvents.NO_CHANGE_IN_PAGE_SIZE_VALUE;
+
 /**
  * Created by Daniel on 10-Jan-16.
  */
@@ -57,7 +59,7 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
     public void fetchEvents(String query, int offset) {
 
         lastQuery = query;
-        if (offset != 0) {
+        if (offset != NO_CHANGE_IN_PAGE_SIZE_VALUE) {
             lastOffset = offset;
         }
         new Thread() {
@@ -168,6 +170,21 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
             notificationsInteractor.removeScheduleNotification(event);
         }
 
-        fragmentEventsView.notifyUserForUpdateInEvent(event.isEventSaved, event.name);
+        if (event.isEventSaved) {
+            mainThread.post(() -> fragmentEventsView.notifyUserForSavedEvent(event.name));
+        }
+    }
+
+    @Override
+    public void deleteEvent(Event event) {
+        event.isDeleted = Event.DELETED;
+        databaseInteractor.persistEvent(event);
+    }
+
+    @Override
+    public void undoDelete(Event event) {
+        event.isDeleted = Event.NOT_DELETED;
+        databaseInteractor.persistEvent(event);
+        fetchEvents(lastQuery, lastOffset);
     }
 }
