@@ -180,24 +180,12 @@
                             android:textAppearance="@style/TextAppearance.AppCompat.Title"
                             android:theme="@style/Widget.CardContent.EventDetails.Title" />
 
-                        <LinearLayout
-                            android:id="@+id/eventAttending"
+                        <TextView
+                            android:id="@+id/event_attending"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/attending"
-                                android:theme="@style/Widget.CardContent.EventDetails.Content" />
-
-                            <TextView
-                                android:id="@+id/eventAttendingCount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:theme="@style/Widget.CardContent.EventDetails.Content" />
-                        </LinearLayout>
+                            android:text="@string/attending"
+                            android:theme="@style/Widget.CardContent.EventDetails.Content" />
 
                         <TextView
                             android:id="@+id/event_details"

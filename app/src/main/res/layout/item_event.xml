@@ -48,75 +48,47 @@
         android:id="@+id/event_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
         android:maxLines="1"
         android:paddingBottom="@dimen/item_event_text_padding"
         android:paddingLeft="@dimen/item_event_text_padding"
         android:paddingRight="@dimen/item_event_text_padding" />
 
-    <LinearLayout
-        android:id="@+id/eventAttending"
+    <TextView
+        android:id="@+id/time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/item_event_text_padding"
+        android:layout_alignParentLeft="true"
+        android:maxLines="1"
         android:paddingLeft="@dimen/item_event_text_padding"
-        android:paddingRight="@dimen/item_event_text_padding">
+        android:paddingRight="@dimen/item_event_text_padding" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="7dp">
 
         <TextView
+            android:id="@+id/event_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/event_attending"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingLeft="@dimen/item_event_text_padding"
+            android:paddingRight="@dimen/item_event_text_padding" />
+
+        <TextView
+            android:id="@+id/event_attending"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/card_margin"
+            android:layout_alignParentRight="true"
+            android:paddingLeft="@dimen/item_event_text_padding"
+            android:paddingRight="@dimen/item_event_text_padding"
             android:text="@string/attending" />
 
-        <TextView
-            android:id="@+id/eventAttendingCount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-    </LinearLayout>
-
-    <TableLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/item_event_text_padding"
-        android:paddingRight="@dimen/item_event_text_padding"
-        android:stretchColumns="1">
-
-        <TableRow>
-
-            <TextView
-                android:paddingRight="5dp"
-                android:text="@string/start" />
-
-            <TextView
-                android:id="@+id/event_start_time"
-                android:singleLine="true" />
-            <!-- 31.10.2015 20:00-->
-
-        </TableRow>
-
-        <TableRow>
-
-            <TextView
-                android:paddingRight="5dp"
-                android:text="@string/end" />
-
-            <TextView
-                android:id="@+id/event_end_time"
-                android:singleLine="true" />
-            <!-- 31.10.2015 20:00-->
-
-        </TableRow>
-
-    </TableLayout>
-
-    <TextView
-        android:id="@+id/event_location"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingBottom="7dp"
-        android:paddingLeft="@dimen/item_event_text_padding"
-        android:paddingRight="@dimen/item_event_text_padding"
-        android:singleLine="true" />
+    </RelativeLayout>
 
     <View
         android:layout_width="match_parent"

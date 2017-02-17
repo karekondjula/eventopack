@@ -1,31 +1,12 @@
 package com.evento.team2.eventspack.presenters;
 
-import android.content.Intent;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentCalendarPresenter;
-import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.utils.interfaces.MainThread;
 import com.evento.team2.eventspack.views.FragmentCalendarView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
-
-import butterknife.ButterKnife;
-import de.hdodenhof.circleimageview.CircleImageView;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by Daniel on 10-Jan-16.

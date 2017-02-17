@@ -252,9 +252,7 @@ public class EventsDatabase {
         values.put(Event.Table.COLUMN_CATEGORY_ID, event.categoryId);
         values.put(Event.Table.COLUMN_CATEGORY_STRING, event.categoryString);
 
-        if (event.isDeleted != Event.DELETE_FLAG_NOT_SET) {
-            values.put(Event.Table.COLUMN_IS_DELETED, event.isDeleted == Event.DELETED);
-        }
+        values.put(Event.Table.COLUMN_IS_DELETED, event.isDeleted == Event.DELETED);
 
         long updateRows = database.update(Event.Table.TABLE_EVENTS,
                 values,
@@ -283,8 +281,8 @@ public class EventsDatabase {
 
         Cursor cursor = database.query(Event.Table.TABLE_EVENTS,
                 allColumnsEvent,
-                Event.Table.COLUMN_IS_DELETED + " <> ? ",
-                new String[]{String.valueOf(Event.DELETED)},
+                Event.Table.COLUMN_IS_DELETED + " = ? ",
+                new String[]{String.valueOf(Event.NOT_DELETED)},
                 null,
                 null,
                 Event.Table.COLUMN_START_TIME_STAMP + " ASC");
@@ -312,8 +310,8 @@ public class EventsDatabase {
 
         Cursor cursor = database.rawQuery("SELECT * " +
                         " FROM " + Event.Table.TABLE_EVENTS +
-                        " WHERE " + Event.Table.COLUMN_IS_DELETED + " <> ? AND " +
-                        "( " + Event.Table.COLUMN_NAME + " LIKE ? OR " +
+                        " WHERE " + Event.Table.COLUMN_IS_DELETED + " = ? AND " +
+                        " ( " + Event.Table.COLUMN_NAME + " LIKE ? OR " +
                                 Event.Table.COLUMN_NAME + " LIKE ? OR " +
                                 Event.Table.COLUMN_DETAILS + " LIKE ? OR " +
                                 Event.Table.COLUMN_LOCATION_STRING + " LIKE ? OR " +
@@ -325,7 +323,7 @@ public class EventsDatabase {
                         "       ) " +
                         " ORDER BY " + Event.Table.COLUMN_START_TIME_STAMP + " ASC " +
                         " LIMIT ?",
-                new String[]{ String.valueOf(Event.DELETED),
+                new String[]{ String.valueOf(Event.NOT_DELETED),
                         "%" + ConversionUtils.convertTextToCyrilic(filter) + "%",
                         "%" + ConversionUtils.convertCyrilicToText(filter) + "%",
                         filter,
@@ -364,14 +362,14 @@ public class EventsDatabase {
         ArrayList<String> whereArgsList = new ArrayList<String>();
 
         where = new StringBuilder();
-        where.append(Event.Table.COLUMN_IS_DELETED + " <> ? " +
+        where.append(Event.Table.COLUMN_IS_DELETED + " = ? " +
                 " AND ( " +
                 "( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? < 86400000 AND " + Event.Table.COLUMN_START_TIME_STAMP + " - ? >= 0 " + ") " +
                 " OR " +
                 "( " + Event.Table.COLUMN_START_TIME_STAMP + " - ? <= 0 AND " + Event.Table.COLUMN_END_TIME_STAMP + " > ? ) " +
                 " ) "
         );
-        whereArgsList.add(String.valueOf(Event.DELETED));
+        whereArgsList.add(String.valueOf(Event.NOT_DELETED));
         whereArgsList.add(timestamp);
         whereArgsList.add(timestamp);
         whereArgsList.add(timestamp);
@@ -409,7 +407,7 @@ public class EventsDatabase {
         if (filter != null) {
             where = new StringBuilder();
             if (filter.length > 0) {
-                where.append(Event.Table.COLUMN_IS_DELETED + " <> ? " +
+                where.append(Event.Table.COLUMN_IS_DELETED + " = ? AND " +
                         " ( " +
                         " (" + Event.Table.COLUMN_LATITUDE + " LIKE ? AND " +
                                 Event.Table.COLUMN_LONGITUDE + " LIKE ? ) " +
@@ -422,7 +420,7 @@ public class EventsDatabase {
                         ")"
                 );
 
-                whereArgsList.add(String.valueOf(Event.DELETED));
+                whereArgsList.add(String.valueOf(Event.NOT_DELETED));
                 whereArgsList.add("%" + filter[0] + "%");
                 whereArgsList.add("%" + filter[1] + "%");
                 whereArgsList.add("%" + filter[2] + "%");
@@ -461,9 +459,9 @@ public class EventsDatabase {
         String whereArgs[] = null;
         ArrayList<String> whereArgsList = new ArrayList<>();
 
-        where.append(Event.Table.COLUMN_CATEGORY_ID + " = ? AND " + Event.Table.COLUMN_IS_DELETED + " <> ? ");
+        where.append(Event.Table.COLUMN_CATEGORY_ID + " = ? AND " + Event.Table.COLUMN_IS_DELETED + " = ? ");
         whereArgsList.add(String.valueOf(categoryId));
-        whereArgsList.add(String.valueOf(Event.DELETED));
+        whereArgsList.add(String.valueOf(Event.NOT_DELETED));
 
         if (filter != null) {
             if (filter.length > 0) {
@@ -562,12 +560,12 @@ public class EventsDatabase {
 
         where = new StringBuilder();
         where.append(Event.Table.COLUMN_IS_EVENT_SAVED + " = ? " +
-                " AND " + Event.Table.COLUMN_IS_DELETED + " <> ? " +
+                " AND " + Event.Table.COLUMN_IS_DELETED + " = ? " +
                 " AND " + Event.Table.COLUMN_START_TIME_STAMP + " - ? > 0 " +
                 " AND " + Event.Table.COLUMN_START_TIME_STAMP + " - ? <= 86400000 "
         );
         whereArgsList.add(String.valueOf(Event.SAVED));
-        whereArgsList.add(String.valueOf(Event.DELETED));
+        whereArgsList.add(String.valueOf(Event.NOT_DELETED));
         whereArgsList.add(timestamp);
         whereArgsList.add(timestamp);
 

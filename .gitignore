@@ -1,9 +1,10 @@
 .gradle
 /local.properties
 /build
-.idea
+.idea/
 todo.txt
 eventopack.iml
 gradle.properties
 libs/
 /keystore.properties
+projectFilesBackup/

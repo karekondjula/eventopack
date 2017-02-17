@@ -25,6 +25,9 @@ import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
 import com.evento.team2.eventspack.ui.fragments.FragmentPlaces;
 import com.evento.team2.eventspack.ui.fragments.FragmentSavedEvents;
 import com.evento.team2.eventspack.utils.EventiConstants;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.Iconify;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
@@ -44,12 +47,6 @@ public class ActivityMain extends BaseAppCompatActivity implements BottomNavigat
     @BindView(R.id.drawer)
     DrawerLayout drawerLayout;
 
-//    @BindView(R.id.viewpager)
-//    ViewPager viewPager;
-
-//    @BindView(R.id.tabs)
-//    PagerSlidingTabStrip pagerSlidingTabStrip;
-
     private Unbinder unbinder;
 
     private FragmentEvents fragmentEvents;// = FragmentEvents.newInstance();
@@ -57,6 +54,8 @@ public class ActivityMain extends BaseAppCompatActivity implements BottomNavigat
     private FragmentSavedEvents fragmentSavedEvents;// = FragmentSavedEvents.newInstance();
     private FragmentPlaces fragmentPlaces;// = FragmentPlaces.newInstance();
     private MenuItem searchMenuItem;
+
+    InterstitialAd mInterstitialAd;
 
     static {
         Iconify.with(new IoniconsModule());
@@ -83,6 +82,26 @@ public class ActivityMain extends BaseAppCompatActivity implements BottomNavigat
         fragmentEvents = FragmentEvents.newInstance();
         fragmentSavedEvents = FragmentSavedEvents.newInstance();
         fragmentPlaces = FragmentPlaces.newInstance();
+
+        mInterstitialAd = new InterstitialAd(this);
+        mInterstitialAd.setAdUnitId("ca-app-pub-1241381799711971/7368641640");
+
+        mInterstitialAd.setAdListener(new AdListener() {
+            @Override
+            public void onAdClosed() {
+                AdRequest adRequest = new AdRequest.Builder()
+                        .addTestDevice("android_studio:ad_template")
+                        .build();
+
+                mInterstitialAd.loadAd(adRequest);
+                finish();
+            }
+        });
+
+        AdRequest adRequest = new AdRequest.Builder()
+                .setRequestAgent("android_studio:ad_template")
+                .build();
+        mInterstitialAd.loadAd(adRequest);
 
         if (savedInstanceState != null) {
             // restore fragment categories due to is complicated parent-child adapter
@@ -153,49 +172,16 @@ public class ActivityMain extends BaseAppCompatActivity implements BottomNavigat
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
         actionBarDrawerToggle.syncState();
-//        setupViewPager(viewPager);
-
-//        pagerSlidingTabStrip.setTextColor(getResources().getColor(android.R.color.white));
-//        pagerSlidingTabStrip.setShouldExpand(true);
-//        pagerSlidingTabStrip.setViewPager(viewPager);
 
 //        presentShowcaseSequence();
 
-        BottomNavigationView bottomNavigationView = (BottomNavigationView) findViewById(R.id.bottom_navigation_view);
+        BottomNavigationView bottomNavigationView = ButterKnife.findById(this, R.id.bottom_navigation_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
 
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragmentEvents, fragmentEvents.getTag())
                 .commit();
     }
-
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//
-//        Intent intent = getIntent();
-//        if (intent != null && intent.getAction() != null) {
-////            boolean goToSavedEvents = intent.getAction().equals(ACTION_SAVED_EVENTS);
-////
-////            int SAVED_EVENTS_ORDINAL_NUMBER = 2;
-////
-////            if (goToSavedEvents) {
-////                new Thread() {
-////                    @Override
-////                    public void run() {
-////
-////                        SystemClock.sleep(700);
-////                        runOnUiThread(new Runnable() {
-////                            @Override
-////                            public void run() {
-//////                                viewPager.setCurrentItem(SAVED_EVENTS_ORDINAL_NUMBER);
-////                            }
-////                        });
-////                    }
-////                }.start();
-////            }
-//        }
-//    }
 
 //    @Override
 //    protected void onNewIntent(Intent intent) {
@@ -258,49 +244,11 @@ public class ActivityMain extends BaseAppCompatActivity implements BottomNavigat
         if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
             drawerLayout.closeDrawers();
         } else {
-            super.onBackPressed();
+            if (mInterstitialAd.isLoaded()) {
+                mInterstitialAd.show();
+            }
         }
     }
-
-//    private void setupViewPager(ViewPager viewPager) {
-//        Adapter adapter = new Adapter(getSupportFragmentManager());
-//        adapter.addFragment(fragmentEvents, getString(R.string.events));
-//        adapter.addFragment(fragmentCategories, getString(R.string.categories));
-//        adapter.addFragment(fragmentSavedEvents, getString(R.string.saved));
-//        adapter.addFragment(fragmentPlaces, getString(R.string.places));
-//        viewPager.setAdapter(adapter);
-//        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//
-//            @Override
-//            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//            }
-//
-//            @Override
-//            public void onPageSelected(int position) {
-//                switch (position) {
-//                    case 0:
-////                        fragmentEvents.filterList(EventiConstants.NO_FILTER_STRING);
-////                        fragmentEvents.showLastUpdatedInfo();
-//                        break;
-//                    case 1:
-//                        fragmentCategories.refreshViewIfRequired();
-////                        fragmentCategories.filterList(EventiConstants.NO_FILTER_STRING);
-//                        break;
-//                    case 2:
-////                        fragmentSavedEvents.filterList(EventiConstants.NO_FILTER_STRING);
-//                        break;
-//                    case 3:
-////                        fragmentPlaces.filterList(EventiConstants.NO_FILTER_STRING);
-//                        break;
-//                    default:
-//                }
-//            }
-//
-//            @Override
-//            public void onPageScrollStateChanged(int state) {
-//            }
-//        });
-//    }
 
     public static Intent createIntent(Context context) {
         Intent intent = new Intent(context, ActivityMain.class);
@@ -336,38 +284,4 @@ public class ActivityMain extends BaseAppCompatActivity implements BottomNavigat
         return true;
     }
 
-//    private static class Adapter extends FragmentPagerAdapter {
-//        private List<Fragment> mFragments = new ArrayList<>();
-//        private List<String> mFragmentTitles = new ArrayList<>();
-//
-//        Adapter(FragmentManager fm) {
-//            super(fm);
-//        }
-//
-//        void addFragment(Fragment fragment, String title) {
-//            mFragments.add(fragment);
-//            mFragmentTitles.add(title);
-//        }
-//
-//        @Override
-//        public Fragment getItem(int position) {
-//            return mFragments.get(position);
-//        }
-//
-//        @Override
-//        public int getCount() {
-//            return mFragments.size();
-//        }
-//
-//        @Override
-//        public CharSequence getPageTitle(int position) {
-//            return mFragmentTitles.get(position);
-//        }
-//    }
-
-    //    @OnClick(R.id.fab)
-//    public void fabAction(View view) {
-//    maybe use this for creating a new event
-//        Snackbar.make(view, "Here's a Snackbar", Snackbar.LENGTH_LONG).setAction("Action", null).show();
-//    }
 }

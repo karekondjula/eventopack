@@ -38,7 +38,6 @@ public class Event implements Comparable<Event> {
 
     public static final int NOT_DELETED = 0;
     public static final int DELETED = 1;
-    public static final int DELETE_FLAG_NOT_SET = -1;
     /**
      * Universal id for the event, same on all devices
      */
@@ -63,7 +62,7 @@ public class Event implements Comparable<Event> {
     @Category
     public int categoryId;
     public String categoryString;
-    public int isDeleted = DELETE_FLAG_NOT_SET;
+    public int isDeleted = NOT_DELETED;
 
     public Event() {
     }

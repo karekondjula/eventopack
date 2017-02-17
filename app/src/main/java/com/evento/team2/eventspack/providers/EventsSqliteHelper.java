@@ -10,7 +10,7 @@ import com.evento.team2.eventspack.models.Place;
 /**
  * Created by Daniel on 15-Aug-15.
  */
-public class EventsSqliteHelper extends SQLiteOpenHelper {
+class EventsSqliteHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "events.db";
     private static final int DATABASE_VERSION = 4;

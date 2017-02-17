@@ -37,7 +37,9 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
 
     public interface EventListener {
         void onHeartClicked(EventViewHolder eventViewHolder);
+
         void onEventClicked(EventViewHolder eventViewHolder);
+
         void onEventSwiped(EventViewHolder eventViewHolder);
     }
 
@@ -47,18 +49,18 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
     TextView mEventTitle;
     @BindView(R.id.event_details)
     TextView mEventDetails;
-    @BindView(R.id.event_start_time)
-    TextView mEventStartTime;
-    @BindView(R.id.event_end_time)
-    TextView mEventEndTime;
+    @BindView(R.id.time)
+    TextView mTime;
+    //    @BindView(R.id.event_end_time)
+//    TextView mEventEndTime;
     @BindView(R.id.event_location)
     TextView mEventLocation;
     @BindView(R.id.btn_save_icon)
     public IconTextView isEventSaved;
-    @BindView(R.id.eventAttending)
-    View mEventAttending;
-    @BindView(R.id.eventAttendingCount)
-    TextView mEventAttendingCount;
+    @BindView(R.id.event_attending)
+    TextView mEventAttending;
+//    @BindView(R.id.eventAttendingCount)
+//    TextView mEventAttendingCount;
 
     private Context context;
     private Event event;
@@ -94,45 +96,47 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
             Date startDateEvent, endDateEvent;
             startDateEvent = DateFormatterUtils.compareDateFormat.parse(event.startDateString);
 
+            String time = "";
+            int startTextColor = 0, endTextColor;
+
             if (Math.abs(startDateEvent.getTime() - calendar.getTimeInMillis()) < 1000) {
                 // today (or close enough)
 //              TODO  DateUtils.getRelativeDateTimeString(application, timestamp, DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0).toString();
 
-                mEventStartTime.setText(event.startTimeStamp != 0 ? context.getString(R.string.today)
+                time = time.concat(event.startTimeStamp != 0 ? context.getString(R.string.today)
                         + " " + DateFormatterUtils.hoursMinutesDateFormat.format(event.startTimeStamp) : "");
-                mEventStartTime.setTextColor(context.getResources().getColor(R.color.colorAccent));
+                startTextColor = context.getResources().getColor(R.color.colorAccent);
             } else if (startDateEvent.getTime() - calendar.getTimeInMillis() < 0) {
                 // event has expired
-                mEventStartTime.setText(event.startTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(event.startTimeStamp)
-                        : "");
-                mEventStartTime.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
+                time = time.concat(event.startTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(event.startTimeStamp) : "");
+                startTextColor = context.getResources().getColor(android.R.color.holo_red_dark);
             } else {
                 // event is on a day != from today
-                mEventStartTime.setText(event.startTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(event.startTimeStamp)
+                time = time.concat(event.startTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(event.startTimeStamp)
                         : "");
-                mEventStartTime.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
-            }
-
+                startTextColor = context.getResources().getColor(R.color.colorPrimaryDark);
+            };
+            time = time.concat(" / ");
             // TODO refactor
             if (event.endTimeStamp != 0) {
                 endDateEvent = DateFormatterUtils.compareDateFormat.parse(event.endDateString);
                 if (event.endTimeStamp - calendar.getTimeInMillis() < 0) {
                     // end time has also expired
-                    mEventEndTime.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
+                    endTextColor = context.getResources().getColor(android.R.color.holo_red_dark);
                 } else {
                     if (Math.abs(endDateEvent.getTime() - calendar.getTimeInMillis()) < 1000) {
                         // end time is today
-                        mEventEndTime.setText(context.getString(R.string.today) + " " + DateFormatterUtils.hoursMinutesDateFormat.format(event.endTimeStamp));
-                        mEventEndTime.setTextColor(context.getResources().getColor(R.color.colorAccent));
+                        time = time.concat(context.getString(R.string.today) + " " + DateFormatterUtils.hoursMinutesDateFormat.format(event.endTimeStamp));
+                        endTextColor = context.getResources().getColor(R.color.colorAccent);
                     } else {
                         // end time is still active
-                        mEventEndTime.setText(DateFormatterUtils.fullDateFormat.format(event.endTimeStamp));
-                        mEventEndTime.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+                        time = time.concat(DateFormatterUtils.fullDateFormat.format(event.endTimeStamp));
+                        endTextColor = context.getResources().getColor(R.color.colorPrimaryDark);
                     }
                 }
-            } else {
-                mEventEndTime.setText("");
             }
+            mTime.setText(time);
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -152,7 +156,7 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
         }
 
         if (!TextUtils.isEmpty(event.attendingCount)) {
-            mEventAttendingCount.setText(event.attendingCount);
+            mEventAttending.setText(context.getString(R.string.attending, event.attendingCount));
         } else {
             mEventAttending.setVisibility(View.GONE);
         }
@@ -176,26 +180,29 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
 
                     Date startDateEvent;
                     try {
+                        String startTime = "";
                         startDateEvent = DateFormatterUtils.compareDateFormat.parse(startDateString);
 
                         if (Math.abs(startDateEvent.getTime() - calendar.getTimeInMillis()) < 1000) {
                             // today (or close enough)
 //              TODO  DateUtils.getRelativeDateTimeString(application, timestamp, DateUtils.MINUTE_IN_MILLIS, DateUtils.WEEK_IN_MILLIS, 0).toString();
 
-                            mEventStartTime.setText(startTimeStamp != 0 ? context.getString(R.string.today)
+                            startTime = startTime.concat(startTimeStamp != 0 ? context.getString(R.string.today)
                                     + " " + DateFormatterUtils.hoursMinutesDateFormat.format(startTimeStamp) : "");
-                            mEventStartTime.setTextColor(context.getResources().getColor(R.color.colorAccent));
+
+//                            mEventStartTime.setTextColor(context.getResources().getColor(R.color.colorAccent));
                         } else if (startDateEvent.getTime() - calendar.getTimeInMillis() < 0) {
                             // event has expired
-                            mEventStartTime.setText(startTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(startTimeStamp)
+                            startTime = startTime.concat(startTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(startTimeStamp)
                                     : "");
-                            mEventStartTime.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
+//                            mEventStartTime.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
                         } else {
                             // event is on a day != from today
-                            mEventStartTime.setText(startTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(startTimeStamp)
+                            startTime = startTime.concat(startTimeStamp != 0 ? DateFormatterUtils.fullDateFormat.format(startTimeStamp)
                                     : "");
-                            mEventStartTime.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+//                            mEventStartTime.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
                         }
+                        mTime.setText(startTime);
                     } catch (ParseException e) {
                         e.printStackTrace();
                     }
@@ -207,29 +214,31 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
 
                     if (endTimeStamp != 0) {
                         try {
+                            String endTime = "";
+
                             Date endDateEvent = DateFormatterUtils.compareDateFormat.parse(endDateString);
 
                             if (endTimeStamp - calendar.getTimeInMillis() < 0) {
                                 // end time has also expired
-                                mEventEndTime.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
+//                                mEventEndTime.setTextColor(context.getResources().getColor(android.R.color.holo_red_dark));
                             } else {
                                 if (Math.abs(endDateEvent.getTime() - calendar.getTimeInMillis()) < 1000) {
                                     // end time is today
-                                    mEventEndTime.setText(context.getString(R.string.today) + " " +
+                                    endTime = endTime.concat(context.getString(R.string.today) + " " +
                                             DateFormatterUtils.hoursMinutesDateFormat.format(endTimeStamp));
-                                    mEventEndTime.setTextColor(context.getResources().getColor(R.color.colorAccent));
+//                                    mEventEndTime.setTextColor(context.getResources().getColor(R.color.colorAccent));
                                 } else {
                                     // end time is still active
-                                    mEventEndTime.setText(DateFormatterUtils.fullDateFormat.format(endTimeStamp));
-                                    mEventEndTime.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
+                                    endTime = endTime.concat(DateFormatterUtils.fullDateFormat.format(endTimeStamp));
+//                                    mEventEndTime.setTextColor(context.getResources().getColor(R.color.colorPrimaryDark));
                                 }
                             }
+                            mTime.setText(mTime.getText().toString().concat(" / ").concat(endTime));
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }
-
                     } else {
-                        mEventEndTime.setText("");
+                        mTime.setText("");
                     }
                     break;
 
@@ -238,7 +247,7 @@ public class EventViewHolder extends RecyclerView.ViewHolder {
                     break;
 
                 case Event.Table.COLUMN_ATTENDING_COUNT:
-                    mEventAttendingCount.setText(bundle.getString(key));
+                    mEventAttending.setText(context.getString(R.string.attending, bundle.getString(key)));
                     mEventAttending.setVisibility(View.VISIBLE);
                     break;
 

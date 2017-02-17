@@ -34,7 +34,7 @@ public class ConversionUtils {
 
         int i = 0;
 
-        line = line.replaceAll("ч|ѓ|ш|љ|њ|ц|г|с", "%");
+        line = line.replaceAll("ч|ѓ|ш|љ|њ|ц|г|с|ж", "%");
 
         for (String item : listLat) {
             line = line.replaceAll(item, listCyr[i]);
@@ -48,7 +48,7 @@ public class ConversionUtils {
 
         int i = 0;
 
-        line = line.replaceAll("ch|gj|sh|lj|nj|c|g|s", "%");
+        line = line.replaceAll("ch|gj|sh|lj|nj|c|g|s|z", "%");
 
         for (String item : listCyr) {
             line = line.replaceAll(item, listLat[i]);
@@ -78,6 +78,8 @@ public class ConversionUtils {
         event.attendingCount = jsonEvent.attending_count;
         event.categoryId = jsonEvent.category_id;
         event.categoryString = jsonEvent.category;
+
+        event.isDeleted = Event.NOT_DELETED;
 
         return event;
     }

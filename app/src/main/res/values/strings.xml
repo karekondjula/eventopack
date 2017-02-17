@@ -2,6 +2,7 @@
     <string name="app_name">EVENTI</string>
     <string name="facebook_app_id" translatable="false">835820619855102</string>
     <string name="server_client_id" translatable="false">902703939267-5apqh4qdilfbg80b752lv1dvvt7jta0u.apps.googleusercontent.com</string>
+    <string name="interstitial_full_screen" translatable="false">ca-app-pub-1241381799711971/7368641640</string>
     <string name="transition_event_image" translatable="false">transitionEventImage</string>
     <string name="version_">Version: %s</string>
 
@@ -39,7 +40,7 @@
 
     <string name="filter">Filter…</string>
     <string name="today">Today </string>
-    <string name="attending">Attending:</string>
+    <string name="attending">Attending: %s</string>
     <string name="fetching_events">Fetching events…</string>
     <string name="fetching_places">Fetching places…</string>
     <string name="updating_now">Updating now</string>

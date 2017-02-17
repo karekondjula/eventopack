@@ -121,7 +121,7 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView, 
         fragmentEventsPresenter.setView(this);
         fragmentEventsPresenter.fetchLastUpdatedTimestamp();
         fragmentEventsPresenter.fetchEventsFromServer(false);
-        fragmentEventsPresenter.fetchEvents(lastQuery, NO_CHANGE_IN_PAGE_SIZE_VALUE);
+//        fragmentEventsPresenter.fetchEvents(lastQuery, NO_CHANGE_IN_PAGE_SIZE_VALUE);
 
         if (lastClickedEventVH != null) {
             if (lastClickedEventVH.getEvent().isEventSaved) {
@@ -262,7 +262,7 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView, 
     public void onEventSwiped(EventViewHolder eventViewHolder) {
         fragmentEventsPresenter.deleteEvent(eventViewHolder.getEvent());
 
-        Snackbar.make(coordinatorLayout, getString(R.string.event_is_removed), Snackbar.LENGTH_LONG)
+        Snackbar.make(coordinatorLayout, getString(R.string.event_is_removed), Snackbar.LENGTH_INDEFINITE)
                 .setAction(getString(R.string.undo), view -> {
                     Event event = eventViewHolder.getEvent();
                     fragmentEventsPresenter.undoDelete(event);

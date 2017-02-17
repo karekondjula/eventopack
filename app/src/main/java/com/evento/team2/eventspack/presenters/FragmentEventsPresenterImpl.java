@@ -127,6 +127,8 @@ public class FragmentEventsPresenterImpl implements FragmentEventsPresenter {
                     }
 
                     mainThread.post(fragmentEventsView::stopRefreshAnimation);
+                } else {
+                    fetchEvents(lastQuery, lastOffset);
                 }
             }
         }.start();

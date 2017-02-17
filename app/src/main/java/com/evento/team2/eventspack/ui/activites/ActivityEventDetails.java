@@ -113,11 +113,8 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
     @BindView(R.id.event_details)
     TextView textViewEventDetails;
 
-    @BindView(R.id.eventAttending)
-    View textViewEventAttending;
-
-    @BindView(R.id.eventAttendingCount)
-    TextView textViewEventAttendingCount;
+    @BindView(R.id.event_attending)
+    TextView textViewEventAttending;
 
     @BindView(R.id.bottom_sheet)
     View bottomSheet;
@@ -388,7 +385,7 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
         textViewEventDetails.setText(event.details);
 
         if (!TextUtils.isEmpty(event.attendingCount)) {
-            textViewEventAttendingCount.setText(event.attendingCount);
+            textViewEventAttending.setText(getString(R.string.attending, event.attendingCount));
         } else {
             textViewEventAttending.setVisibility(View.GONE);
         }

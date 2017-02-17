@@ -5,7 +5,6 @@ import com.evento.team2.eventspack.BuildConfig;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.models.Event;
-import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.soapservice.interfaces.ServiceEvento;
 import com.evento.team2.eventspack.soapservice.models.JsonEvent;
 import com.evento.team2.eventspack.utils.ConversionUtils;
@@ -20,8 +19,6 @@ import org.ksoap2.transport.HttpTransportSE;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import rx.Observable;
 
 /**
  * Created by Daniel on 18-Aug-15.
@@ -136,21 +133,26 @@ public class ServiceEventoImpl implements ServiceEvento {
                 } else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_EVENTS)) {
                     ArrayList<JsonEvent> jsonEventArrayList = new ArrayList<>(LoganSquare.parseList((String) responseMap.get(RESPONSE_KEY), JsonEvent.class));
 
-                    Observable<JsonEvent> jsonEventsObservable = Observable.from(jsonEventArrayList);
+                    Event event;
+                    for (JsonEvent jsonEvent : jsonEventArrayList) {
+                        event = ConversionUtils.convertJsonEventToEvent(jsonEvent);
+                        databaseInteractor.persistEvent(event);
+                        databaseInteractor.persistPlace(ConversionUtils.extractPlaceFromEvent(event));
+                    }
 
-                    jsonEventsObservable
-                            .subscribe(jsonEvent -> {
-                                Event event = ConversionUtils.convertJsonEventToEvent(jsonEvent);
-                                databaseInteractor.persistEvent(event);
-
-                                Place place = ConversionUtils.extractPlaceFromEvent(event);
-                                databaseInteractor.persistPlace(place);
-                            });
+//                    Observable<JsonEvent> jsonEventsObservable = Observable.from(jsonEventArrayList);
+//
+//                    jsonEventsObservable
+//                            .subscribe(jsonEvent -> {
+//                                Event event = ConversionUtils.convertJsonEventToEvent(jsonEvent);
+//                                databaseInteractor.persistEvent(event);
+//
+//                                Place place = ConversionUtils.extractPlaceFromEvent(event);
+//                                databaseInteractor.persistPlace(place);
+//                            });
 
                 }
-//                else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_PLACES)) {
-//
-//                }
+//                else if (responseMap.get(METHOD_NAME_KEY).equals(METHOD_GET_ALL_PLACES)) {}
             }
 //            else {
 //                EventsDatabase.getInstance().persistEvents(Utils.Helpers.createEvents());
