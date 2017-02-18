@@ -15,11 +15,6 @@
 -dontwarn android.support.**
 -dontwarn dagger.producers.monitoring.internal.**
 -dontwarn okio.**
--dontwarn retrofit2.Platform$Java8
-
-#-dontwarn com.squareup.okhttp.**
-#-dontwarn retrofit.**
-#-dontwarn rx.**
 
 -keep class org.xmlpull.v1.** { *; }
 
@@ -29,8 +24,15 @@
 
 -keep class android.support.v7.widget.SearchView { *; }
 
-#-keep class javax..** { *; }
-#-keep interface javax.** { *; }
-#-keep class dagger.producers.monitoring.internal.**
-#-keep interface javax.inject.** { *; }
-#-keepattributes Signature
+-keep class com.evento.team2.eventspack.services.models.JsonTranslation { *; } # required for yandex translation
+
+# Platform calls Class.forName on types which do not exist on Android to determine platform.
+-dontnote retrofit2.Platform
+# Platform used when running on RoboVM on iOS. Will not be used at runtime.
+-dontnote retrofit2.Platform$IOS$MainThreadExecutor
+# Platform used when running on Java 8 VMs. Will not be used at runtime.
+-dontwarn retrofit2.Platform$Java8
+# Retain generic type information for use by reflection by converters and adapters.
+-keepattributes Signature
+# Retain declared checked exceptions for use by a Proxy instance.
+-keepattributes Exceptions
