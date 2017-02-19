@@ -24,6 +24,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
+            android:background="@drawable/ripple_effect"
             android:padding="7dp"
             android:shadowColor="#22000000"
             android:shadowDx="3"

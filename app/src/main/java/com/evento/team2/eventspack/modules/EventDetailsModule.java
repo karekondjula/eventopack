@@ -4,6 +4,7 @@ import com.evento.team2.eventspack.interactors.NotificationsInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.presenters.EventDetailsPresenter;
 import com.evento.team2.eventspack.scopes.EventDetailsScope;
+import com.evento.team2.eventspack.services.TranslateService;
 import com.evento.team2.eventspack.utils.interfaces.MainThread;
 
 import dagger.Module;
@@ -17,9 +18,9 @@ public class EventDetailsModule {
 
     @Provides
     @EventDetailsScope
-    EventDetailsPresenter provideFragmentEventDetailsPresenter(MainThread mainThread,
-                                                               DatabaseInteractor databaseInteractor,
-                                                               NotificationsInteractor notificationsInteractor) {
-        return new EventDetailsPresenter(mainThread, databaseInteractor, notificationsInteractor);
+    EventDetailsPresenter provideFragmentEventDetailsPresenter(MainThread mainThread, DatabaseInteractor databaseInteractor,
+                                                               NotificationsInteractor notificationsInteractor,
+                                                               TranslateService translateService) {
+        return new EventDetailsPresenter(mainThread, databaseInteractor, notificationsInteractor, translateService);
     }
 }

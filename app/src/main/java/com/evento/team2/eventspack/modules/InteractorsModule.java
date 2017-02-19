@@ -8,6 +8,7 @@ import com.evento.team2.eventspack.interactors.PreferencesInteractorImpl;
 import com.evento.team2.eventspack.interactors.interfaces.AlarmManagerInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.DatabaseInteractor;
 import com.evento.team2.eventspack.interactors.interfaces.PreferencesInteractor;
+import com.evento.team2.eventspack.services.TranslateService;
 import com.evento.team2.eventspack.soapservice.ServiceEventoImpl;
 import com.evento.team2.eventspack.soapservice.interfaces.ServiceEvento;
 import com.evento.team2.eventspack.utils.NetworkUtils;
@@ -16,6 +17,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Daniel on 12-Jan-16.
@@ -57,5 +60,15 @@ public class InteractorsModule {
     @Singleton
     ServiceEvento provideServiceEvento(EventiApplication eventiApplication, DatabaseInteractor databaseInteractor) {
         return new ServiceEventoImpl(eventiApplication, databaseInteractor);
+    }
+
+    @Provides
+    @Singleton
+    TranslateService provideTranslateService() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://translate.yandex.net/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        return retrofit.create(TranslateService.class);
     }
 }

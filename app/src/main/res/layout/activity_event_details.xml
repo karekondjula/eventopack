@@ -21,9 +21,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
+            android:transitionName="transitionEventImage"
             app:contentScrim="?attr/colorPrimary"
-            app:layout_scrollFlags="scroll|enterAlwaysCollapsed"
-            android:transitionName="transitionEventImage" >
+            app:layout_scrollFlags="scroll|enterAlwaysCollapsed">
 
             <ImageView
                 android:id="@+id/backdrop"
@@ -137,7 +137,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Infinity, Skopje, Macedonia"
-                        android:theme="@style/Widget.CardContent.EventDetails.Content"/>
+                        android:theme="@style/Widget.CardContent.EventDetails.Content" />
 
                     <fragment
                         android:id="@+id/event_detail_map"
@@ -164,9 +164,9 @@
                         android:id="@+id/translate"
                         android:layout_width="60dp"
                         android:layout_alignParentRight="true"
-                        app:srcCompat="@drawable/ic_translate_icon"
-                        app:layout_aspectRatio="178%"
-                        android:background="?attr/selectableItemBackgroundBorderless" />
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        app:layout_aspectRatio="200%"
+                        app:srcCompat="@drawable/ic_translate_icon" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -239,6 +239,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="@drawable/ripple_effect"
                     android:contentDescription="share_on_fb"
                     android:gravity="center"
                     android:shadowColor="#22000000"
@@ -254,6 +255,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="@drawable/ripple_effect"
                     android:contentDescription="share_on_gplus"
                     android:gravity="center"
                     android:shadowColor="#22000000"
@@ -268,6 +270,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="@drawable/ripple_effect"
                     android:contentDescription="share_on_twitter"
                     android:gravity="center"
                     android:shadowColor="#22000000"
@@ -282,6 +285,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="@drawable/ripple_effect"
                     android:contentDescription="share_on_other"
                     android:gravity="center"
                     android:shadowColor="#22000000"

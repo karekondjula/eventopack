@@ -13,6 +13,7 @@ import com.evento.team2.eventspack.receivers.DailyEventsReminderReceiver;
 import com.evento.team2.eventspack.receivers.DownloadEventsReceiver;
 import com.evento.team2.eventspack.receivers.NotificationEventsReceiver;
 import com.evento.team2.eventspack.receivers.WeeklyEventsReceiver;
+import com.evento.team2.eventspack.services.TranslateService;
 import com.evento.team2.eventspack.ui.activites.ActivityMain;
 import com.evento.team2.eventspack.ui.fragments.FragmentCategories;
 import com.evento.team2.eventspack.ui.fragments.FragmentEvents;
@@ -44,5 +45,6 @@ public interface AppComponent {
     MainThread mainThread();
     DatabaseInteractor databaseInteractor();
     NotificationsInteractor notificationsInteractor();
+    TranslateService translateService();
     EventiApplication eventiApplication();
 }

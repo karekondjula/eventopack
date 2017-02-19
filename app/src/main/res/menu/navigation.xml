@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/events"
+        android:icon="@drawable/eventi_notification_icon"
+        android:title="@string/events" />
+
+    <item
+        android:id="@+id/categories"
+        android:icon="@drawable/ic_menu"
+        android:title="@string/categories" />
+
+    <item
+        android:id="@+id/saved"
+        android:icon="@drawable/ic_favorite_border_black_48dp"
+        android:title="@string/saved" />
+
+    <item
+        android:id="@+id/places"
+        android:icon="@drawable/ic_pin_drop_black_48dp"
+        android:title="@string/places" />
+
+</menu>

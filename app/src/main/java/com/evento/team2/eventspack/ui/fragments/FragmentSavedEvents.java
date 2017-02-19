@@ -10,8 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.adapters.EventsAdapter;
 import com.evento.team2.eventspack.adapters.viewholders.EventViewHolder;
@@ -141,10 +139,6 @@ public class FragmentSavedEvents extends BaseFragment implements FragmentEventsV
         }
 
         fragmentEventsPresenter.changeSavedStateOfEvent(eventViewHolder.getEvent());
-
-        YoYo.with(Techniques.Tada)
-                .duration(700)
-                .playOn(eventViewHolder.getIsEventSaved());
     }
 
     @Override

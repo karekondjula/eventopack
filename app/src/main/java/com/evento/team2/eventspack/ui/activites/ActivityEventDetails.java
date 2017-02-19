@@ -43,8 +43,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.daimajia.androidanimations.library.Techniques;
-import com.daimajia.androidanimations.library.YoYo;
 import com.evento.team2.eventspack.EventiApplication;
 import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.components.DaggerEventDetailsComponent;
@@ -252,10 +250,6 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
     @OnClick(R.id.fab_add_to_saved)
     public void saveEvent(View view) {
         eventDetailsPresenter.changeSavedStateOfEvent(event);
-
-        YoYo.with(Techniques.Tada)
-                .duration(700)
-                .playOn(view);
     }
 
     @OnClick(R.id.backdrop)
@@ -265,10 +259,6 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
 
     @OnClick(R.id.share_facebook)
     public void shareOnFacebook(View view) {
-
-        YoYo.with(Techniques.Tada)
-                .duration(700)
-                .playOn(view);
 
         ShareDialog shareDialog = new ShareDialog(this);
 
@@ -288,10 +278,6 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
     @OnClick(R.id.share_gplus)
     public void shareOnGplus(View view) {
 
-        YoYo.with(Techniques.Tada)
-                .duration(700)
-                .playOn(view);
-
         Intent shareIntent = new PlusShare.Builder(this)
                 .setType("text/plain")
                 .setText(getString(R.string.promo_message))
@@ -304,10 +290,6 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
     @OnClick(R.id.share_twitter)
     public void shareOnTwitter(View view) {
 
-        YoYo.with(Techniques.Tada)
-                .duration(700)
-                .playOn(view);
-
         String tweetUrl = "https://twitter.com/intent/tweet?text="
                 + getString(R.string.promo_message) + " at "
                 + "http://www.facebook.com/events/".concat(String.valueOf(event.facebookId));
@@ -317,10 +299,6 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
 
     @OnClick(R.id.share_on_other)
     public void shareOnOther(View view) {
-
-        YoYo.with(Techniques.Tada)
-                .duration(700)
-                .playOn(view);
 
         Intent sharingIntent = new Intent(Intent.ACTION_SEND);
         sharingIntent.setType("text/*");

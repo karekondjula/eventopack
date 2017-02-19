@@ -15,8 +15,6 @@ import java.util.Arrays;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Daniel on 06-Mar-16.
@@ -27,23 +25,15 @@ public class EventDetailsPresenter {
     MainThread mainThread;
     DatabaseInteractor databaseInteractor;
     private NotificationsInteractor notificationsInteractor;
-    TranslateService service;
+    TranslateService translateService;
     String translatedDetails;
 
-    public EventDetailsPresenter(MainThread mainThread,
-                                 DatabaseInteractor databaseInteractor,
-                                 NotificationsInteractor notificationsInteractor) {
+    public EventDetailsPresenter(MainThread mainThread, DatabaseInteractor databaseInteractor,
+                                 NotificationsInteractor notificationsInteractor, TranslateService translateService) {
         this.mainThread = mainThread;
         this.databaseInteractor = databaseInteractor;
         this.notificationsInteractor = notificationsInteractor;
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://translate.yandex.net/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        // TODO daggerify retrofit and TranslateService
-        service = retrofit.create(TranslateService.class);
+        this.translateService = translateService;
     }
 
     public void setView(FragmentEventDetailsView fragmentEventDetailsView) {
@@ -107,8 +97,8 @@ public class EventDetailsPresenter {
             eventDetailsView.setTranslatedDetails(translatedDetails);
             eventDetailsView.dismissTranslatingMessage();
         } else {
-            Call<JsonTranslation> jsonTranslationCall = service.translate("mk-en",
-                    "trnsl.1.1.20160808T170832Z.353235d926160df6.e608b7d2675e0add16ee340b97cc50d80ff19416",
+            Call<JsonTranslation> jsonTranslationCall = translateService.translate("mk-en",
+                    "trnsl.1.1.20170217T010551Z.374758616c73478a.0c1422580b92a08b63f38a67b3e601507f8388b5",
                     event.details);
             jsonTranslationCall.enqueue(new Callback<JsonTranslation>() {
                 @Override
