@@ -46,10 +46,12 @@ import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.models.Place;
 import com.evento.team2.eventspack.modules.PlaceDetailsModule;
 import com.evento.team2.eventspack.presenters.interfaces.FragmentPlaceDetailsPresenter;
+import com.evento.team2.eventspack.utils.AdsUtils;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.utils.Utils;
 import com.evento.team2.eventspack.views.FragmentPlaceDetailsView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -102,6 +104,8 @@ public class ActivityPlaceDetails extends AppCompatActivity implements FragmentP
                 .placeDetailsModule(new PlaceDetailsModule())
                 .build();
         placeDetailsComponent.inject(this);
+
+        AdsUtils.enableAds(ButterKnife.findById(this, R.id.banner_ad_view));
 
         final Toolbar toolbar = ButterKnife.findById(this, R.id.toolbar);
         setSupportActionBar(toolbar);

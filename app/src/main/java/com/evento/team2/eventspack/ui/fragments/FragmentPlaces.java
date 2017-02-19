@@ -29,6 +29,8 @@ import butterknife.ButterKnife;
  */
 public class FragmentPlaces extends BaseFragment implements FragmentPlacesView {
 
+    public static final String TAG = "FragmentPlaces";
+
     @Inject
     FragmentPlacesPresenter fragmentPlacesPresenter;
 

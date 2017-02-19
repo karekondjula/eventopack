@@ -45,6 +45,7 @@ import static com.evento.team2.eventspack.adapters.viewholders.EventViewHolder.I
  */
 public class FragmentEvents extends BaseFragment implements FragmentEventsView, EventViewHolder.EventListener {
 
+    public static final String TAG = "FragmentEvents";
     public static final int NO_CHANGE_IN_PAGE_SIZE_VALUE = 0;
 
     @Inject
@@ -59,7 +60,7 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView, 
     SwipeRefreshLayout swipeRefreshLayout;
     EventsAdapter eventsAdapter;
 
-    LinearLayoutManager linearLayoutManager;
+    LinearLayoutManager layoutManager;
 
     private EventViewHolder lastClickedEventVH;
 
@@ -75,12 +76,13 @@ public class FragmentEvents extends BaseFragment implements FragmentEventsView, 
         swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary, R.color.colorPrimaryDark, R.color.colorAccent);
         swipeRefreshLayout.setOnRefreshListener(() -> fragmentEventsPresenter.fetchEventsFromServer(true));
 
-        linearLayoutManager = new LinearLayoutManager(getContext());
-        eventsRecyclerView.setLayoutManager(linearLayoutManager);
+        layoutManager = new LinearLayoutManager(getContext());
+//        layoutManager = new GridLayoutManager(getContext(), 2);
+        eventsRecyclerView.setLayoutManager(layoutManager);
         eventsRecyclerView.setHasFixedSize(true);
         eventsRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(linearLayoutManager) {
+        EndlessRecyclerViewScrollListener scrollListener = new EndlessRecyclerViewScrollListener(layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
                 fragmentEventsPresenter.fetchEvents(lastQuery, (page + 1) * EventiConstants.OFFSET);

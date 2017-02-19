@@ -55,6 +55,14 @@
             android:orientation="vertical"
             android:paddingTop="24dp">
 
+            <com.google.android.gms.ads.AdView
+                android:id="@+id/banner_ad_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/card_margin"
+                app:adSize="BANNER"
+                app:adUnitId="@string/banner_ad_unit_id" />
+
             <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

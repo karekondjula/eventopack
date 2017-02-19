@@ -2,7 +2,9 @@
     <string name="app_name">EVENTI</string>
     <string name="facebook_app_id" translatable="false">835820619855102</string>
     <string name="server_client_id" translatable="false">902703939267-5apqh4qdilfbg80b752lv1dvvt7jta0u.apps.googleusercontent.com</string>
-    <string name="interstitial_full_screen" translatable="false">ca-app-pub-1241381799711971/7368641640</string>
+    <string name="interstitial_full_screen_ad_unit_id" translatable="false">ca-app-pub-1241381799711971/7368641640</string>
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-1241381799711971/1908387241</string>
+
     <string name="transition_event_image" translatable="false">transitionEventImage</string>
     <string name="version_">Version: %s</string>
 

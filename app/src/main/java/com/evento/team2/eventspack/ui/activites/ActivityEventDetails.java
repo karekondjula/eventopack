@@ -51,6 +51,7 @@ import com.evento.team2.eventspack.interactors.NotificationsInteractor;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.modules.EventDetailsModule;
 import com.evento.team2.eventspack.presenters.EventDetailsPresenter;
+import com.evento.team2.eventspack.utils.AdsUtils;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.evento.team2.eventspack.utils.EventiConstants;
 import com.evento.team2.eventspack.utils.Utils;
@@ -151,6 +152,8 @@ public class ActivityEventDetails extends BaseAppCompatActivity implements Fragm
                 .eventDetailsModule(new EventDetailsModule())
                 .build();
         eventDetailsComponent.inject(this);
+
+        AdsUtils.enableAds(ButterKnife.findById(this, R.id.banner_ad_view));
 
         emptyHeart = new IconDrawable(this, IoniconsIcons.ion_android_favorite_outline).colorRes(android.R.color.white).actionBarSize();
         filledHeart = new IconDrawable(this, IoniconsIcons.ion_android_favorite).colorRes(R.color.colorPrimary).actionBarSize();

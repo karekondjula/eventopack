@@ -15,14 +15,14 @@
         android:id="@+id/action_calendar"
         android:icon="@android:drawable/ic_menu_my_calendar"
         android:orderInCategory="2"
-        android:title="Calendar"
+        android:title="@string/calendar"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_map"
         android:icon="@android:drawable/ic_dialog_map"
         android:orderInCategory="3"
-        android:title="Map"
+        android:title="@string/map"
         app:showAsAction="ifRoom" />
 
 </menu>

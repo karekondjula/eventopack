@@ -14,6 +14,7 @@ import com.evento.team2.eventspack.receivers.DailyEventsReminderReceiver;
 import com.evento.team2.eventspack.receivers.DownloadEventsReceiver;
 import com.evento.team2.eventspack.receivers.NotificationEventsReceiver;
 import com.facebook.FacebookSdk;
+import com.google.android.gms.ads.MobileAds;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -74,6 +75,7 @@ public class EventiApplication extends Application {
         alarmManagerInteractor.scheduleRepeating(dailyReminderIntent, nineAmCalendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY);
 //        alarmManagerInteractor.scheduleRepeating(dailyReminderIntent, NOW, 1000 * 60);
 
+        MobileAds.initialize(getApplicationContext(), "ca-app-pub-1241381799711971~4415175246");
         FacebookSdk.sdkInitialize(getApplicationContext());
 //        AppEventsLogger.activateApp(this);
 

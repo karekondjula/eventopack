@@ -36,6 +36,8 @@ import static com.evento.team2.eventspack.adapters.viewholders.EventViewHolder.I
  */
 public class FragmentSavedEvents extends BaseFragment implements FragmentEventsView, EventViewHolder.EventListener {
 
+    public static final String TAG = "FragmentSavedEvents";
+
     @Inject
     FragmentSavedEventsPresenterImpl fragmentEventsPresenter;
 

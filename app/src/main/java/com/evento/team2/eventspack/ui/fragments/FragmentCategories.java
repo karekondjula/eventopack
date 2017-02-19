@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
  */
 public class FragmentCategories extends BaseFragment implements FragmentCategoriesView {
 
-    public static final String TAG = "fragmentCategories";
+    public static final String TAG = "FragmentCategories";
 
     @Inject
     FragmentCategoriesPresenter fragmentCategoriesPresenter;

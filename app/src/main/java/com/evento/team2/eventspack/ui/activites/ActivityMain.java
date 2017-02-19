@@ -84,13 +84,13 @@ public class ActivityMain extends BaseAppCompatActivity implements BottomNavigat
         fragmentPlaces = FragmentPlaces.newInstance();
 
         mInterstitialAd = new InterstitialAd(this);
-        mInterstitialAd.setAdUnitId("ca-app-pub-1241381799711971/7368641640");
+        mInterstitialAd.setAdUnitId(getString(R.string.interstitial_full_screen_ad_unit_id));
 
         mInterstitialAd.setAdListener(new AdListener() {
             @Override
             public void onAdClosed() {
                 AdRequest adRequest = new AdRequest.Builder()
-                        .addTestDevice("android_studio:ad_template")
+                        .addTestDevice("eventi:interstitial_ad")
                         .build();
 
                 mInterstitialAd.loadAd(adRequest);
@@ -99,7 +99,7 @@ public class ActivityMain extends BaseAppCompatActivity implements BottomNavigat
         });
 
         AdRequest adRequest = new AdRequest.Builder()
-                .setRequestAgent("android_studio:ad_template")
+                .setRequestAgent("eventi:interstitial_ad")
                 .build();
         mInterstitialAd.loadAd(adRequest);
 
@@ -172,8 +172,6 @@ public class ActivityMain extends BaseAppCompatActivity implements BottomNavigat
         drawerLayout.setDrawerListener(actionBarDrawerToggle);
 
         actionBarDrawerToggle.syncState();
-
-//        presentShowcaseSequence();
 
         BottomNavigationView bottomNavigationView = ButterKnife.findById(this, R.id.bottom_navigation_view);
         bottomNavigationView.setOnNavigationItemSelectedListener(this);
@@ -258,26 +256,42 @@ public class ActivityMain extends BaseAppCompatActivity implements BottomNavigat
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         Fragment nextFragment;
+        String tag;
         switch (item.getItemId()) {
-            // TODO find fragment by tag
             case R.id.events:
-                nextFragment = fragmentEvents;
+                tag = FragmentEvents.TAG;
+                nextFragment = getSupportFragmentManager().findFragmentByTag(tag);
+                if (nextFragment == null) {
+                    nextFragment = fragmentEvents;
+                }
                 break;
             case R.id.categories:
-                nextFragment = fragmentCategories;
+                tag = FragmentCategories.TAG;
+                nextFragment = getSupportFragmentManager().findFragmentByTag(tag);
+                if (nextFragment == null) {
+                    nextFragment = fragmentCategories;
+                }
                 break;
             case R.id.saved:
-                nextFragment = fragmentSavedEvents;
+                tag = FragmentSavedEvents.TAG;
+                nextFragment = getSupportFragmentManager().findFragmentByTag(tag);
+                if (nextFragment == null) {
+                    nextFragment = fragmentSavedEvents;
+                }
                 break;
             case R.id.places:
-                nextFragment = fragmentPlaces;
+                tag = FragmentPlaces.TAG;
+                nextFragment = getSupportFragmentManager().findFragmentByTag(tag);
+                if (nextFragment == null) {
+                    nextFragment = fragmentPlaces;
+                }
                 break;
             default:
                 return false;
         }
         if (nextFragment != null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, nextFragment, nextFragment.getTag())
+                    .replace(R.id.fragment_container, nextFragment, tag)
                     .commit();
         }
 
