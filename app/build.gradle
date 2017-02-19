@@ -98,8 +98,9 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     compile "com.google.android.gms:play-services-maps:$playServicesVersion"
     compile "com.google.android.gms:play-services-plus:$playServicesVersion"
-    compile "com.google.android.gms:play-services-ads:$playServicesVersion"
     compile "com.google.firebase:firebase-core:$playServicesVersion"
+    compile "com.google.firebase:firebase-ads:$playServicesVersion"
+
     compile "com.android.support:appcompat-v7:$supportLibraryVersion"
     compile "com.android.support:design:$supportLibraryVersion"
     compile "com.android.support:recyclerview-v7:$supportLibraryVersion"

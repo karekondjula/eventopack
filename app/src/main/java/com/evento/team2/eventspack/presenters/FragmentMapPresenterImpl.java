@@ -11,8 +11,10 @@ import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.ui.activites.ActivityPlaceDetails;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
 import com.evento.team2.eventspack.utils.EventiConstants;
+import com.evento.team2.eventspack.utils.Utils;
 import com.evento.team2.eventspack.utils.interfaces.MainThread;
 import com.evento.team2.eventspack.views.FragmentMapView;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -61,7 +63,8 @@ public class FragmentMapPresenterImpl implements FragmentMapPresenter {
                         markerOptions = new MarkerOptions()
                                 .position(new LatLng(event.location.latitude, event.location.longitude))
                                 .title(event.name)
-                                .snippet(event.locationString);
+                                .snippet(event.locationString)
+                                .icon(BitmapDescriptorFactory.fromResource(Utils.fetchDrawableForCategory(event.categoryId)));
 
                         hashMapLatLngId.put(markerOptions.getPosition(), event);
                         markerOptionsArrayList.add(markerOptions);
@@ -128,7 +131,8 @@ public class FragmentMapPresenterImpl implements FragmentMapPresenter {
                                 .position(new LatLng(event.location.latitude,
                                         event.location.longitude))
                                 .title(event.name)
-                                .snippet(event.locationString);
+                                .snippet(event.locationString)
+                                .icon(BitmapDescriptorFactory.fromResource(Utils.fetchDrawableForCategory(event.categoryId)));
 
                         hashMapLatLngId.put(markerOptions.getPosition(), event);
                         markerOptionsArrayList.add(markerOptions);
@@ -153,7 +157,8 @@ public class FragmentMapPresenterImpl implements FragmentMapPresenter {
                 .position(new LatLng(event.location.latitude,
                         event.location.longitude))
                 .title(event.name)
-                .snippet(event.details);
+                .snippet(event.details)
+                .icon(BitmapDescriptorFactory.fromResource(Utils.fetchDrawableForCategory(event.categoryId)));
 
         hashMapLatLngId.put(markerOptions.getPosition(), event);
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 
 import com.bumptech.glide.Glide;
+import com.evento.team2.eventspack.R;
 import com.evento.team2.eventspack.models.Event;
 import com.google.android.gms.maps.model.LatLng;
 
@@ -105,5 +106,43 @@ public class Utils {
                 }
             }
         }.start();
+    }
+
+    public static int fetchDrawableForCategory(int categoryId) {
+        switch (categoryId) {
+            case Event.FUN:
+                return R.drawable.fun;
+
+            case Event.CINEMA:
+                return R.drawable.ic_movie_black_24dp;
+
+            case Event.CULTURE:
+                return R.drawable.culture;
+
+            case Event.FESTIVAL:
+                return R.drawable.ic_surround_sound_black_24dp;
+
+            case Event.PROMOTION:
+                return R.drawable.promotion;
+
+            case Event.SPORT:
+                return R.drawable.ic_directions_run_black_24dp;
+
+            case Event.FAIR:
+                return R.drawable.ic_shopping_basket_black_24dp;
+
+            case Event.EDUCATION:
+                return R.drawable.ic_import_contacts_black_24dp;
+
+            case Event.CONCERTS:
+                return R.drawable.ic_library_music_black_24dp;
+
+            case Event.OTHER:
+                return R.drawable.ic_group_black_24dp;
+
+            default:
+                return R.drawable.ic_group_black_24dp;
+        }
+
     }
 }

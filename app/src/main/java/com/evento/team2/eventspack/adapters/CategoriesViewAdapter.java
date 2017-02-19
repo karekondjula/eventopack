@@ -19,6 +19,7 @@ import com.evento.team2.eventspack.models.Category;
 import com.evento.team2.eventspack.models.Event;
 import com.evento.team2.eventspack.ui.activites.ActivityEventDetails;
 import com.evento.team2.eventspack.utils.DateFormatterUtils;
+import com.evento.team2.eventspack.utils.Utils;
 
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class CategoriesViewAdapter extends ExpandableRecyclerAdapter<
         CategoriesViewAdapter.CategoryViewHolder, CategoriesViewAdapter.EventViewHolder> {
 
     Context context;
-//    private List<Category> categoryList;
+    //    private List<Category> categoryList;
     private LayoutInflater inflater;
 
     public CategoriesViewAdapter(Context context, List<Category> parentItemList) {
@@ -95,38 +96,7 @@ public class CategoriesViewAdapter extends ExpandableRecyclerAdapter<
         public void bind(Category category) {
             categoryTextView.setText(context.getResources().getString(category.categoryNameId));
 
-            switch (category.categoryId) {
-                case Event.FUN:
-                    categoryImageView.setImageResource(R.drawable.fun);
-                    break;
-                case Event.CINEMA:
-                    categoryImageView.setImageResource(R.drawable.ic_movie_black_24dp);
-                    break;
-                case Event.CULTURE:
-                    categoryImageView.setImageResource(R.drawable.culture);
-                    break;
-                case Event.FESTIVAL:
-                    categoryImageView.setImageResource(R.drawable.ic_surround_sound_black_24dp);
-                    break;
-                case Event.PROMOTION:
-                    categoryImageView.setImageResource(R.drawable.promotion);
-                    break;
-                case Event.SPORT:
-                    categoryImageView.setImageResource(R.drawable.ic_directions_run_black_24dp);
-                    break;
-                case Event.FAIR:
-                    categoryImageView.setImageResource(R.drawable.ic_shopping_basket_black_24dp);
-                    break;
-                case Event.EDUCATION:
-                    categoryImageView.setImageResource(R.drawable.ic_import_contacts_black_24dp);
-                    break;
-                case Event.CONCERTS:
-                    categoryImageView.setImageResource(R.drawable.ic_library_music_black_24dp);
-                    break;
-                case Event.OTHER:
-                    categoryImageView.setImageResource(R.drawable.ic_group_black_24dp);
-                    break;
-            }
+            categoryImageView.setImageResource(Utils.fetchDrawableForCategory(category.categoryId));
         }
 
         @Override
@@ -188,7 +158,7 @@ public class CategoriesViewAdapter extends ExpandableRecyclerAdapter<
 //
 //                    context.startActivity(intent, options.toBundle());
 //                } else {
-                    context.startActivity(intent);
+                context.startActivity(intent);
 //                }
 
             });
