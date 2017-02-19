@@ -82,7 +82,7 @@ public class FragmentCalendar extends Fragment implements FragmentCalendarView {
         args.putInt(CaldroidFragment.START_DAY_OF_WEEK, CaldroidFragment.MONDAY);
         args.putInt(CaldroidFragment.MONTH, calendar.get(Calendar.MONTH) + 1);
         args.putInt(CaldroidFragment.YEAR, calendar.get(Calendar.YEAR));
-//        args.putBoolean(CaldroidFragment.SQUARE_TEXT_VIEW_CELL, false); // maybe use it in smaller devices
+//        args.putBoolean(CaldroidFragment.SQUARE_TEXT_VIEW_CELL, false); // TODO maybe use it in smaller devices
         caldroidFragment.setArguments(args);
 
         FragmentTransaction t = getChildFragmentManager().beginTransaction();
@@ -168,7 +168,7 @@ public class FragmentCalendar extends Fragment implements FragmentCalendarView {
 
     @Override
     public void showCalendarEvents(ArrayList<Event> eventArrayList) {
-        if (getActivity() != null) {
+        if (getActivity() != null && eventArrayList != null) {
             Date eventDate;
             Calendar calendar = Calendar.getInstance();
 
@@ -199,7 +199,7 @@ public class FragmentCalendar extends Fragment implements FragmentCalendarView {
 
         calendarEventsLinearLayout.removeAllViews();
 
-        if (getActivity() != null) {
+        if (getActivity() != null && eventArrayList != null) {
             for (final Event event : eventArrayList) {
                 final View calendarItemView = LayoutInflater.from(getActivity()).inflate(R.layout.item_small, calendarEventsLinearLayout, false);
                 ImageView calendarEventImageView = ButterKnife.findById(calendarItemView, R.id.small_event_picture);
